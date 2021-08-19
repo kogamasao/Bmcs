@@ -1,0 +1,54 @@
+﻿@page
+@model Bmcs.Pages.Member.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Member[0].MemberName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member[0].MemberClass)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member[0].UniformNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member[0].EntryDatetime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Member) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemberName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemberClass)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UniformNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EntryDatetime)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.MemberID">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.MemberID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.MemberID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
