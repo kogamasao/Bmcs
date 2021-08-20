@@ -15,12 +15,14 @@ namespace Bmcs
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            Env = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Env { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -36,8 +38,18 @@ namespace Bmcs
 
             services.AddRazorPages();
 
-            services.AddDbContext<BmcsContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("BmcsContext")));
+            if (Env.IsDevelopment())
+            {
+                services.AddDbContext<BmcsContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("SqlServerConnectionString")));
+            }
+            else
+            {
+                services.AddDbContext<BmcsContext>(options =>
+                    options.UseCosmos(Configuration.GetConnectionString("CosmosAccountEndpoint")
+                        , Configuration.GetConnectionString("CosmosAccountKey")
+                        , Configuration.GetConnectionString("CosmosDatabaseName")));
+            }
 
         }
 

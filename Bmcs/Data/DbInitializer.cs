@@ -14,7 +14,7 @@ namespace Bmcs.Data
             context.Database.EnsureCreated();
 
             // Look for any students.
-            if (context.Teams.Any())
+            if (context.Teams.ToList().Any())
             {
                 return;   // DB has been seeded
             }
