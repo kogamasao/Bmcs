@@ -10,7 +10,7 @@ using Bmcs.Models;
 
 namespace Bmcs.Pages.Team
 {
-    public class IndexModel : PageModel
+    public class IndexModel : PageModelBase
     {
         private readonly Bmcs.Data.BmcsContext _context;
 
@@ -21,9 +21,26 @@ namespace Bmcs.Pages.Team
 
         public IList<Models.Team> Team { get;set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            if (!IsLogin())
+            {
+                return Redirect("/Error");
+            }
+
             Team = await _context.Teams.ToListAsync();
+
+            return Page();
         }
+
+        //public async Task OnGetAsync()
+        //{
+        //    if(!IsLogin())
+        //    {
+        //        Redirect("/Error");
+        //    }
+
+        //    Team = await _context.Teams.ToListAsync();
+        //}
     }
 }

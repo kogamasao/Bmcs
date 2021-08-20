@@ -37,6 +37,17 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
+    /// ポジショングループ
+    /// </summary>
+    public enum PositionGroupClass
+    {
+        Pitcher = 1,
+        Catcher = 2,
+        Infielder = 3,
+        Outfielder = 4,
+    }
+
+    /// <summary>
     /// ポジション
     /// </summary>
     public enum PositionClass
@@ -50,5 +61,35 @@ namespace Bmcs.Enum
         Left = 7,
         Center = 8,
         Right = 9,
+        DH = 10,
+    }
+
+    /// <summary>
+    /// 勝敗
+    /// </summary>
+    public enum WinLoseClass
+    {
+        Win = 1,
+        Lose = 2,
+        Draw = 3,
+    }
+
+    /// <summary>
+    /// ステータス
+    /// </summary>
+    public enum StatusClass
+    {
+        Incomplete = 1,
+        Editing = 2,
+        Complete = 9,
+    }
+
+    /// <summary>
+    /// 表裏区分
+    /// </summary>
+    public enum TopButtomClass
+    {
+        Top = 1,
+        Buttom = 2,
     }
 }
