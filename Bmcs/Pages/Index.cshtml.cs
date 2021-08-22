@@ -6,10 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bmcs.Models;
+using Bmcs.Constans;
 
 namespace Bmcs.Pages
 {
-    public class IndexModel : PageModel
+    public class IndexModel : PageModelBase
     {
         private readonly ILogger<IndexModel> _logger;
 
@@ -20,8 +22,7 @@ namespace Bmcs.Pages
 
         public void OnGet()
         {
-            HttpContext.Session.SetString("a", "value");
-
+            HttpContext.Session.SetString(SessionConstant.UserID, "value");
         }
     }
 }
