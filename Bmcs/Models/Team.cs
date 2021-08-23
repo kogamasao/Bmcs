@@ -37,7 +37,7 @@ namespace Bmcs.Models
         public string TeamEmailAddress { get; set; }
 
         [Display(Name = "メッセージ")]
-        public string Message { get; set; }
+        public string MessageDetail { get; set; }
 
         [DefaultValue(true)]
         [Display(Name = "公開フラグ")]
@@ -48,5 +48,27 @@ namespace Bmcs.Models
         public bool DeleteFLG { get; set; }
 
         public ICollection<Member> Members { get; set; }
+
+        public ICollection<Order> Orders { get; set; }
+
+        public ICollection<Game> Games { get; set; }
+
+        public ICollection<InningScore> InningScores { get; set; }
+
+        public ICollection<GameScene> GameScenes { get; set; }
+
+        public ICollection<GameSceneDetail> GameSceneDetails { get; set; }
+
+        public ICollection<GameSceneRunner> GameSceneRunners { get; set; }
+
+        public ICollection<GameScoreFielder> GameScoreFielders { get; set; }
+
+        public ICollection<GameScorePitcher> GameScorePitchers { get; set; }
+
+        [InverseProperty(nameof(Message.Teams))]
+        public ICollection<Message> Messages { get; set; }
+
+        [InverseProperty(nameof(Message.ReplyTeams))]
+        public ICollection<Message> ReplyMessages { get; set; }
     }
 }

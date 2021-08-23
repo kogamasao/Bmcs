@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace Bmcs.Models
 {
-    public class User : DataModelBase
+    public class UserAccount : DataModelBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [StringLength(50)]
         [Display(Name = "ユーザID")]
-        public string UserID { get; set; }
+        public string UserAccountID { get; set; }
 
         [Required]
         [StringLength(50)]
         [Display(Name = "ユーザ名")]
-        public string UserName { get; set; }
+        public string UserAccountName { get; set; }
 
         [StringLength(50)]
         [Display(Name = "チームID")]

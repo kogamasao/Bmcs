@@ -14,11 +14,6 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Member.MemberID" class="control-label"></label>
-                <input asp-for="Member.MemberID" class="form-control" />
-                <span asp-validation-for="Member.MemberID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Member.TeamID" class="control-label"></label>
                 <select asp-for="Member.TeamID" class ="form-control" asp-items="ViewBag.TeamID"></select>
             </div>
@@ -33,14 +28,54 @@
                 <span asp-validation-for="Member.MemberClass" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Member.BatClass" class="control-label"></label>
+                <input asp-for="Member.BatClass" class="form-control" />
+                <span asp-validation-for="Member.BatClass" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.ThrowClass" class="control-label"></label>
+                <input asp-for="Member.ThrowClass" class="form-control" />
+                <span asp-validation-for="Member.ThrowClass" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.PositionGroupClass" class="control-label"></label>
+                <input asp-for="Member.PositionGroupClass" class="form-control" />
+                <span asp-validation-for="Member.PositionGroupClass" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Member.UniformNumber" class="control-label"></label>
                 <input asp-for="Member.UniformNumber" class="form-control" />
                 <span asp-validation-for="Member.UniformNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Member.MessageDetail" class="control-label"></label>
+                <textarea asp-for="Member.MessageDetail" class="form-control"></textarea>
+                <span asp-validation-for="Member.MessageDetail" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Member.DeleteFLG" /> @Html.DisplayNameFor(model => model.Member.DeleteFLG)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.EntryUserID" class="control-label"></label>
+                <input asp-for="Member.EntryUserID" class="form-control" />
+                <span asp-validation-for="Member.EntryUserID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Member.EntryDatetime" class="control-label"></label>
                 <input asp-for="Member.EntryDatetime" class="form-control" />
                 <span asp-validation-for="Member.EntryDatetime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.UpdateUserID" class="control-label"></label>
+                <input asp-for="Member.UpdateUserID" class="form-control" />
+                <span asp-validation-for="Member.UpdateUserID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.UpdateDatetime" class="control-label"></label>
+                <input asp-for="Member.UpdateDatetime" class="form-control" />
+                <span asp-validation-for="Member.UpdateDatetime" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

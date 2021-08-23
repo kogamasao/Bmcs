@@ -1,0 +1,84 @@
+﻿@page
+@model Bmcs.Pages.UserAccount.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserAccount[0].UserAccountName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserAccount[0].Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserAccount[0].EmailAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserAccount[0].DeleteFLG)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserAccount[0].Team)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserAccount[0].EntryUserID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserAccount[0].EntryDatetime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserAccount[0].UpdateUserID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserAccount[0].UpdateDatetime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.UserAccount) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserAccountName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeleteFLG)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Team.TeamID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EntryUserID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EntryDatetime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateUserID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDatetime)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.UserAccountID">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.UserAccountID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.UserAccountID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

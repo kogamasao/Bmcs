@@ -28,6 +28,10 @@ namespace Bmcs.Models
         [StringLength(50)]
         public string OpponentTeamName { get; set; }
 
+        [Display(Name = "球場")]
+        [StringLength(50)]
+        public string StadiumName { get; set; }
+
         [Display(Name = "勝敗")]
         public WinLoseClass? WinLoseClass { get; set; }
 
@@ -49,5 +53,17 @@ namespace Bmcs.Models
         public bool DeleteFLG { get; set; }
 
         public Team Team { get; set; }
+
+        public ICollection<GameScene> GameScenes { get; set; }
+
+        public ICollection<InningScore> InningScores { get; set; }
+
+        public ICollection<GameSceneDetail> GameSceneDetails { get; set; }
+
+        public ICollection<GameSceneRunner> GameSceneRunners { get; set; }
+
+        public ICollection<GameScorePitcher> GameScorePitchers { get; set; }
+
+        public ICollection<GameScoreFielder> GameScoreFielders { get; set; }
     }
 }

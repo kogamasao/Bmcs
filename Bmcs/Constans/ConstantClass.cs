@@ -11,5 +11,7 @@ namespace Bmcs.Constans
     public static class SessionConstant
     {
         public static readonly string UserID = "UserID";
+
+        public static readonly string TeamID = "TeamID";
     }
 }

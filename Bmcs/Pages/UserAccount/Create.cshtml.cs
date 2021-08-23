@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Bmcs.Data;
 using Bmcs.Models;
 
-namespace Bmcs.Pages.Member
+namespace Bmcs.Pages.UserAccount
 {
     public class CreateModel : PageModel
     {
@@ -26,7 +26,7 @@ namespace Bmcs.Pages.Member
         }
 
         [BindProperty]
-        public Models.Member Member { get; set; }
+        public Models.UserAccount UserAccount { get; set; }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://aka.ms/RazorPagesCRUD.
@@ -37,7 +37,7 @@ namespace Bmcs.Pages.Member
                 return Page();
             }
 
-            _context.Members.Add(Member);
+            _context.UserAccounts.Add(UserAccount);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

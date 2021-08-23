@@ -23,6 +23,10 @@ namespace Bmcs.Models
         public string TeamID { get; set; }
 
         [Required]
+        [Display(Name = "イニング")]
+        public int Inning { get; set; }
+
+        [Required]
         [Display(Name = "表裏")]
         public TopButtomClass? TopButtomClass { get; set; }
 
@@ -30,5 +34,13 @@ namespace Bmcs.Models
         public int? Score { get; set; }
 
         public Game Game { get; set; }
+
+        public Team Team { get; set; }
+
+        public ICollection<GameScene> GameScenes { get; set; }
+
+        public ICollection<GameSceneDetail> GameSceneDetails { get; set; }
+
+        public ICollection<GameSceneRunner> GameSceneRunners { get; set; }
     }
 }

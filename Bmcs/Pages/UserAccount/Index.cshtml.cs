@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
 
-namespace Bmcs.Pages.Member
+namespace Bmcs.Pages.UserAccount
 {
     public class IndexModel : PageModel
     {
@@ -19,12 +19,12 @@ namespace Bmcs.Pages.Member
             _context = context;
         }
 
-        public IList<Models.Member> Member { get;set; }
+        public IList<Models.UserAccount> UserAccount { get;set; }
 
         public async Task OnGetAsync()
         {
-            Member = await _context.Members
-                .Include(m => m.Team).ToListAsync();
+            UserAccount = await _context.UserAccounts
+                .Include(u => u.Team).ToListAsync();
         }
     }
 }

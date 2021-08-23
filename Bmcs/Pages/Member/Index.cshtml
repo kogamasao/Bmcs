@@ -20,10 +20,37 @@
                 @Html.DisplayNameFor(model => model.Member[0].MemberClass)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Member[0].BatClass)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member[0].ThrowClass)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member[0].PositionGroupClass)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Member[0].UniformNumber)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Member[0].MessageDetail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member[0].DeleteFLG)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member[0].Team)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member[0].EntryUserID)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Member[0].EntryDatetime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member[0].UpdateUserID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member[0].UpdateDatetime)
             </th>
             <th></th>
         </tr>
@@ -38,10 +65,37 @@
                 @Html.DisplayFor(modelItem => item.MemberClass)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.BatClass)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ThrowClass)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PositionGroupClass)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.UniformNumber)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.MessageDetail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeleteFLG)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Team.TeamID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EntryUserID)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.EntryDatetime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateUserID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDatetime)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.MemberID">Edit</a> |

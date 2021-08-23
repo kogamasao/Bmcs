@@ -1,0 +1,75 @@
+﻿@page
+@model Bmcs.Pages.UserAccount.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>UserAccount</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="UserAccount.UserAccountID" />
+            <div class="form-group">
+                <label asp-for="UserAccount.UserAccountName" class="control-label"></label>
+                <input asp-for="UserAccount.UserAccountName" class="form-control" />
+                <span asp-validation-for="UserAccount.UserAccountName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserAccount.TeamID" class="control-label"></label>
+                <select asp-for="UserAccount.TeamID" class="form-control" asp-items="ViewBag.TeamID"></select>
+                <span asp-validation-for="UserAccount.TeamID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserAccount.Password" class="control-label"></label>
+                <input asp-for="UserAccount.Password" class="form-control" />
+                <span asp-validation-for="UserAccount.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserAccount.EmailAddress" class="control-label"></label>
+                <input asp-for="UserAccount.EmailAddress" class="form-control" />
+                <span asp-validation-for="UserAccount.EmailAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="UserAccount.DeleteFLG" /> @Html.DisplayNameFor(model => model.UserAccount.DeleteFLG)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserAccount.EntryUserID" class="control-label"></label>
+                <input asp-for="UserAccount.EntryUserID" class="form-control" />
+                <span asp-validation-for="UserAccount.EntryUserID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserAccount.EntryDatetime" class="control-label"></label>
+                <input asp-for="UserAccount.EntryDatetime" class="form-control" />
+                <span asp-validation-for="UserAccount.EntryDatetime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserAccount.UpdateUserID" class="control-label"></label>
+                <input asp-for="UserAccount.UpdateUserID" class="form-control" />
+                <span asp-validation-for="UserAccount.UpdateUserID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserAccount.UpdateDatetime" class="control-label"></label>
+                <input asp-for="UserAccount.UpdateDatetime" class="form-control" />
+                <span asp-validation-for="UserAccount.UpdateDatetime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

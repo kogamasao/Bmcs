@@ -85,11 +85,123 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
+    /// 攻撃守備区分
+    /// </summary>
+    public enum OffenseDefenseClass
+    {
+        Offense = 1,
+        Defense = 2,
+    }
+
+    /// <summary>
     /// 表裏区分
     /// </summary>
     public enum TopButtomClass
     {
         Top = 1,
         Buttom = 2,
+    }
+
+    /// <summary>
+    /// 出場区分
+    /// </summary>
+    public enum ParticipationClass
+    {
+        Start = 1,
+        PinchHitter = 2,
+        PinchRunner = 3,
+        Defense = 4,
+    }
+
+    /// <summary>
+    /// 打球区分
+    /// </summary>
+    public enum HitBallClass
+    {
+        Ground = 1,
+        Liner = 2,
+        Fly = 3,
+        NoHit = 4,
+    }
+
+    /// <summary>
+    /// 結果区分
+    /// </summary>
+    public enum ResultClass
+    {
+        Strikeout = 1,
+        MissedStrikeout = 2,
+        Out = 3,
+        DoublePlay = 4,
+        Error = 5,
+        FourBalls = 11,
+        DeadBall = 12,
+        Sacrifice = 13,
+        SacrificeFly = 14,
+        SingleHit = 21,
+        DoubleHit = 22,
+        TripleHit = 23,
+        HomeRun = 24,
+    }
+
+    /// <summary>
+    /// ランナー区分
+    /// </summary>
+    public enum RunnerClass
+    {
+        None = 1,
+        First = 2,
+        Second = 3,
+        Third = 4,
+        FirstSecond = 5,
+        FirstThird = 6,
+        SecondThird = 7,
+        FullBase = 8,
+    }
+
+    /// <summary>
+    /// シーン結果区分
+    /// </summary>
+    public enum SceneResultClass
+    {
+        SceneChange = 1,
+        Result = 2,
+    }
+
+    /// <summary>
+    /// 詳細結果区分
+    /// </summary>
+    public enum DetailResultClass
+    {
+        PickOffBallOut = 1,
+        StolenBaseOut = 2,
+        StolenBaseSccess = 3,
+        Balk = 4,
+        WildPitch = 5,
+        PassBall = 6,
+        Error = 7,
+        AssistOut = 8,
+        Other = 99,
+    }
+
+    /// <summary>
+    /// ランナー結果区分
+    /// </summary>
+    public enum RunnerResultClass
+    {
+        Out = 1,
+        OnFirstBase = 2,
+        OnSecondBase = 3,
+        OnThirdBase = 4,
+        Run = 5,
+    }
+
+    /// <summary>
+    /// メッセージ区分
+    /// </summary>
+    public enum MessageClass
+    {
+        Post = 1,
+        Reply = 2,
     }
 }

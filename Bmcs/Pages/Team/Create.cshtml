@@ -34,9 +34,49 @@
                 <span asp-validation-for="Team.TeamNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Team.TeamPassword" class="control-label"></label>
+                <input asp-for="Team.TeamPassword" class="form-control" />
+                <span asp-validation-for="Team.TeamPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Team.TeamEmailAddress" class="control-label"></label>
+                <input asp-for="Team.TeamEmailAddress" class="form-control" />
+                <span asp-validation-for="Team.TeamEmailAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Team.MessageDetail" class="control-label"></label>
+                <input asp-for="Team.MessageDetail" class="form-control" />
+                <span asp-validation-for="Team.MessageDetail" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Team.PublicFLG" /> @Html.DisplayNameFor(model => model.Team.PublicFLG)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Team.DeleteFLG" /> @Html.DisplayNameFor(model => model.Team.DeleteFLG)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Team.EntryUserID" class="control-label"></label>
+                <input asp-for="Team.EntryUserID" class="form-control" />
+                <span asp-validation-for="Team.EntryUserID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Team.EntryDatetime" class="control-label"></label>
                 <input asp-for="Team.EntryDatetime" class="form-control" />
                 <span asp-validation-for="Team.EntryDatetime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Team.UpdateUserID" class="control-label"></label>
+                <input asp-for="Team.UpdateUserID" class="form-control" />
+                <span asp-validation-for="Team.UpdateUserID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Team.UpdateDatetime" class="control-label"></label>
+                <input asp-for="Team.UpdateDatetime" class="form-control" />
+                <span asp-validation-for="Team.UpdateDatetime" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

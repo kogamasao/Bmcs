@@ -12,10 +12,8 @@ namespace Bmcs.Models
     public class Member : DataModelBase
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [StringLength(50)]
         [Display(Name = "メンバーID")]
-        public string MemberID { get; set; }
+        public int MemberID { get; set; }
 
         [StringLength(50)]
         [Display(Name = "チームID")]
@@ -43,12 +41,24 @@ namespace Bmcs.Models
 
         [DataType(DataType.MultilineText)]
         [Display(Name = "メッセージ")]
-        public string Message { get; set; }
+        public string MessageDetail { get; set; }
 
         [DefaultValue(false)]
         [Display(Name = "削除フラグ")]
         public bool DeleteFLG { get; set; }
 
         public Team Team { get; set; }
+
+        public ICollection<Order> Orders { get; set; }
+
+        public ICollection<GameScene> GameScenes { get; set; }
+
+        public ICollection<GameSceneDetail> GameSceneDetails { get; set; }
+
+        public ICollection<GameSceneRunner> GameSceneRunners { get; set; }
+
+        public ICollection<GameScorePitcher> GameScorePitchers { get; set; }
+
+        public ICollection<GameScoreFielder> GameScoreFielders { get; set; }
     }
 }
