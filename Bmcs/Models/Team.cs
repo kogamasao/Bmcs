@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bmcs.Models
 {
-    public class Team : DataModelBase
+    public class Team : DataModelBase, IValidatableObject
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

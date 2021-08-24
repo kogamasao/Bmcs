@@ -40,6 +40,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.UserAccount[0].UpdateDatetime)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserAccount[0].TimeStamp)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -72,6 +75,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UpdateDatetime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeStamp)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.UserAccountID">Edit</a> |

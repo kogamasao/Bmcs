@@ -9,6 +9,12 @@ namespace Bmcs.Data
 {
     public class BmcsContext : DbContext
     {
+        public BmcsContext()
+           : base()
+        {
+
+        }
+
         public BmcsContext (DbContextOptions<BmcsContext> options)
             : base(options)
         {
@@ -53,32 +59,33 @@ namespace Bmcs.Data
                 .HasForeignKey(m => m.ReplyTeamID);
         }
 
-//        protected override DbEntityValidationResult ValidateEntity (
-//    System.Data.Entity.Infrastructure.DbEntityEntry entityEntry,
-//    IDictionary<object, object> items)
-//{
-//    var result = new DbEntityValidationResult(entityEntry, new List<DbValidationError>());
 
-//    if (entityEntry.Entity is Post post && entityEntry.State == EntityState.Added)
-//    {
-//        // Check for uniqueness of post title
-//        if (Posts.Where(p => p.Title == post.Title).Any())
-//        {
-//            result.ValidationErrors.Add(
-//                    new System.Data.Entity.Validation.DbValidationError(
-//                        nameof(Title),
-//                        "Post title must be unique."));
-//        }
-//    }
+        //        protected override DbEntityValidationResult ValidateEntity (
+        //    System.Data.Entity.Infrastructure.DbEntityEntry entityEntry,
+        //    IDictionary<object, object> items)
+        //{
+        //    var result = new DbEntityValidationResult(entityEntry, new List<DbValidationError>());
 
-//    if (result.ValidationErrors.Count > 0)
-//    {
-//        return result;
-//    }
-//    else
-//    {
-//        return base.ValidateEntity(entityEntry, items);
-//    }
-//}
+        //    if (entityEntry.Entity is Post post && entityEntry.State == EntityState.Added)
+        //    {
+        //        // Check for uniqueness of post title
+        //        if (Posts.Where(p => p.Title == post.Title).Any())
+        //        {
+        //            result.ValidationErrors.Add(
+        //                    new System.Data.Entity.Validation.DbValidationError(
+        //                        nameof(Title),
+        //                        "Post title must be unique."));
+        //        }
+        //    }
+
+        //    if (result.ValidationErrors.Count > 0)
+        //    {
+        //        return result;
+        //    }
+        //    else
+        //    {
+        //        return base.ValidateEntity(entityEntry, items);
+        //    }
+        //}
     }
 }
