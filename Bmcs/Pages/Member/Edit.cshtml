@@ -14,6 +14,7 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Member.MemberID" />
+            <input type="hidden" asp-for="Member.TimeStamp" />
             <div class="form-group">
                 <label asp-for="Member.TeamID" class="control-label"></label>
                 <select asp-for="Member.TeamID" class="form-control" asp-items="ViewBag.TeamID"></select>

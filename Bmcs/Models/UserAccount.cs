@@ -12,11 +12,12 @@ namespace Bmcs.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Required(ErrorMessage = "{0}は必須です。")]
         [StringLength(50)]
         [Display(Name = "ユーザID")]
         public string UserAccountID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "{0}は必須です。")]
         [StringLength(50)]
         [Display(Name = "ユーザ名")]
         public string UserAccountName { get; set; }
@@ -25,10 +26,16 @@ namespace Bmcs.Models
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "{0}は必須です。")]
         [DataType(DataType.Password)]
         [Display(Name = "パスワード")]
         public string Password { get; set; }
+
+        [Required(ErrorMessage = "{0}は必須です。")]
+        [NotMapped]
+        [DataType(DataType.Password)]
+        [Display(Name = "確認用パスワード")]
+        public string ConfirmPassword { get; set; }
 
         [DataType(DataType.EmailAddress)]
         [Display(Name = "メールアドレス")]
@@ -39,5 +46,15 @@ namespace Bmcs.Models
         public bool DeleteFLG { get; set; }
 
         public Team Team { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Password != ConfirmPassword)
+            {
+                yield return new ValidationResult(
+                    "パスワードが一致していません。",
+                    new[] { nameof(Password), nameof(ConfirmPassword) });
+            }
+        }
     }
 }

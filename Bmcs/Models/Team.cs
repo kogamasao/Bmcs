@@ -12,11 +12,12 @@ namespace Bmcs.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [StringLength(50)]
+        [Required(ErrorMessage ="{0}は必須です。")]
+        [StringLength(50, ErrorMessage ="{0}は50桁以内で入力してください。" )]
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "{0}は必須です。")]
         [Display(Name = "チーム名")]
         [StringLength(50)]
         public string TeamName { get; set; }
@@ -27,15 +28,22 @@ namespace Bmcs.Models
         [Display(Name = "チーム人数")]
         public int? TeamNumber { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "{0}は必須です。")]
         [DataType(DataType.Password)]
         [Display(Name = "パスワード")]
         public string TeamPassword { get; set; }
+
+        [NotMapped]
+        [Required(ErrorMessage = "{0}は必須です。")]
+        [DataType(DataType.Password)]
+        [Display(Name = "確認用パスワード")]
+        public string ConfirmTeamPassword { get; set; }
 
         [DataType(DataType.EmailAddress)]
         [Display(Name = "メールアドレス")]
         public string TeamEmailAddress { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "メッセージ")]
         public string MessageDetail { get; set; }
 
@@ -70,5 +78,15 @@ namespace Bmcs.Models
 
         [InverseProperty(nameof(Message.ReplyTeams))]
         public ICollection<Message> ReplyMessages { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (TeamPassword != ConfirmTeamPassword)
+            {
+                yield return new ValidationResult(
+                    "パスワードが一致していません。",
+                    new[] { nameof(TeamPassword), nameof(ConfirmTeamPassword) });
+            }
+        }
     }
 }

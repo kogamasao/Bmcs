@@ -42,11 +42,6 @@ namespace Bmcs.Data
             modelBuilder.Entity<Message>().ToTable("Message");
             modelBuilder.Entity<Order>().ToTable("Order");
 
-            //modelBuilder.Entity<InningScore>()
-            //   .HasMany(m => m.GameScenes)
-            //   .WithOne(t => t.InningScore)
-            //   .HasForeignKey(m => m.InningScoreID);
-
             modelBuilder.Entity<Team>()
                   .HasMany(m => m.Messages)
                   .WithOne(t => t.Teams)
@@ -57,5 +52,33 @@ namespace Bmcs.Data
                 .WithOne(t => t.ReplyTeams)
                 .HasForeignKey(m => m.ReplyTeamID);
         }
+
+//        protected override DbEntityValidationResult ValidateEntity (
+//    System.Data.Entity.Infrastructure.DbEntityEntry entityEntry,
+//    IDictionary<object, object> items)
+//{
+//    var result = new DbEntityValidationResult(entityEntry, new List<DbValidationError>());
+
+//    if (entityEntry.Entity is Post post && entityEntry.State == EntityState.Added)
+//    {
+//        // Check for uniqueness of post title
+//        if (Posts.Where(p => p.Title == post.Title).Any())
+//        {
+//            result.ValidationErrors.Add(
+//                    new System.Data.Entity.Validation.DbValidationError(
+//                        nameof(Title),
+//                        "Post title must be unique."));
+//        }
+//    }
+
+//    if (result.ValidationErrors.Count > 0)
+//    {
+//        return result;
+//    }
+//    else
+//    {
+//        return base.ValidateEntity(entityEntry, items);
+//    }
+//}
     }
 }

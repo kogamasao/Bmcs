@@ -16,7 +16,7 @@ namespace Bmcs.Models
         public int GameScoreFielderID { get; set; }
         
         [Display(Name = "試合ID")]
-        public int GameID { get; set; }
+        public int? GameID { get; set; }
 
         [StringLength(50)]
         [Display(Name = "チームID")]
@@ -24,7 +24,7 @@ namespace Bmcs.Models
 
         [Required]
         [Display(Name = "メンバーID")]
-        public int MemberID { get; set; }
+        public int? MemberID { get; set; }
 
         [StringLength(200)]
         [Display(Name = "詳細")]

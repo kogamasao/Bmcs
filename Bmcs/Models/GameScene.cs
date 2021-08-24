@@ -23,7 +23,7 @@ namespace Bmcs.Models
         public string TeamID { get; set; }
 
         [Display(Name = "イニングスコアID")]
-        public int InningScoreID { get; set; }
+        public int? InningScoreID { get; set; }
 
         [Required]
         [Display(Name = "攻撃守備区分")]

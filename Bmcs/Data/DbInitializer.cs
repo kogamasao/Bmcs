@@ -21,9 +21,9 @@ namespace Bmcs.Data
             }
 
             var userAccounts = new UserAccount[]
-           {
+            {
                 new UserAccount{UserAccountID="ADMIN", UserAccountName="管理者",Password="ADMIN",TeamID="YG", EmailAddress="", DeleteFLG = false,EntryDatetime=DateTime.Now, EntryUserID="ADMIN"},
-           };
+            };
 
             context.UserAccounts.AddRange(userAccounts);
 

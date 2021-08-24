@@ -16,20 +16,20 @@ namespace Bmcs.Models
         public int GameSceneDetailID { get; set; }
 
         [Display(Name = "試合シーンID")]
-        public int GameSceneID { get; set; }
+        public int? GameSceneID { get; set; }
         
         [Display(Name = "試合ID")]
-        public int GameID { get; set; }
+        public int? GameID { get; set; }
 
         [Display(Name = "イニングスコアID")]
-        public int InningScoreID { get; set; }
+        public int? InningScoreID { get; set; }
 
         [StringLength(50)]
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
 
         [Display(Name = "メンバーID")]
-        public int MemberID { get; set; }
+        public int? MemberID { get; set; }
 
         [Required]
         [Display(Name = "シーン結果区分")]

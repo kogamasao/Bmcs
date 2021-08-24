@@ -23,5 +23,9 @@ namespace Bmcs.Models
 
         [Display(Name = "更新日時")]
         public DateTime? UpdateDatetime { get; set; }
+
+        [Timestamp]
+        [Display(Name = "タイムスタンプ")]
+        public byte[] TimeStamp { get; set; }
     }
 }

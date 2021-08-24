@@ -37,7 +37,7 @@ namespace Bmcs.Pages.Member
             {
                 return NotFound();
             }
-           ViewData["TeamID"] = new SelectList(_context.Teams, "TeamID", "TeamID");
+            ViewData["TeamID"] = new SelectList(_context.Teams, "TeamID", "TeamID");
             return Page();
         }
 
@@ -54,7 +54,30 @@ namespace Bmcs.Pages.Member
 
             try
             {
-                await _context.SaveChangesAsync();
+                var memberToUpdate = await _context.Members.FindAsync(Member.MemberID);
+
+                if (memberToUpdate == null)
+                {
+                    return NotFound();
+                }
+
+                if (await TryUpdateModelAsync<Models.Member>(
+                    memberToUpdate
+                  , "member"
+                  , s => s.TeamID
+                  , s => s.MemberName
+                  , s => s.MemberClass
+                  , s => s.BatClass
+                  , s => s.ThrowClass
+                  , s => s.PositionGroupClass
+                  , s => s.UniformNumber
+                  , s => s.MessageDetail
+                  , s => s.DeleteFLG
+                  , s => s.UpdateUserID
+                  , s => s.UpdateDatetime))
+                {
+                    await _context.SaveChangesAsync();
+                }
             }
             catch (DbUpdateConcurrencyException)
             {

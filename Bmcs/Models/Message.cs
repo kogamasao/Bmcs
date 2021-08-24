@@ -28,6 +28,7 @@ namespace Bmcs.Models
         [Display(Name = "返信チームID")]
         public string ReplyTeamID { get; set; }
 
+        [DataType(DataType.MultilineText)]
         [Display(Name = "メッセージ")]
         public string MessageDetail { get; set; }
 
