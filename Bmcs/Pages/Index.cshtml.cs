@@ -15,7 +15,7 @@ namespace Bmcs.Pages
     {
         private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public IndexModel(ILogger<IndexModel> logger, Bmcs.Data.BmcsContext context) : base(context)
         {
             _logger = logger;
         }

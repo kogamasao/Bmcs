@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Bmcs.Data;
 
 namespace Bmcs.Models
 {
@@ -13,12 +15,12 @@ namespace Bmcs.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Required(ErrorMessage = "{0}は必須です。")]
-        [StringLength(50)]
+        [StringLength(50, ErrorMessage = "{0}は50桁以内で入力してください。")]
         [Display(Name = "ユーザID")]
         public string UserAccountID { get; set; }
 
         [Required(ErrorMessage = "{0}は必須です。")]
-        [StringLength(50)]
+        [StringLength(50, ErrorMessage = "{0}は50桁以内で入力してください。")]
         [Display(Name = "ユーザ名")]
         public string UserAccountName { get; set; }
 
@@ -44,6 +46,11 @@ namespace Bmcs.Models
         [DefaultValue(false)]
         [Display(Name = "削除フラグ")]
         public bool DeleteFLG { get; set; }
+
+        [NotMapped]
+        [DataType(DataType.Password)]
+        [Display(Name = "チームパスワード")]
+        public string TeamPassword { get; set; }
 
         public Team Team { get; set; }
 

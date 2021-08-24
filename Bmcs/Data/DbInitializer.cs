@@ -11,7 +11,7 @@ namespace Bmcs.Data
     {
         public static void Initialize(BmcsContext context)
         {
-            context.Database.EnsureDeleted();
+            //context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
             // Look for any students.

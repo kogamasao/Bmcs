@@ -37,8 +37,34 @@ namespace Bmcs.Pages.Member
                 return Page();
             }
 
-            _context.Members.Add(Member);
-            await _context.SaveChangesAsync();
+            //-----------------------------
+
+            var memberToUpdate = new Models.Member();
+
+
+            if (await TryUpdateModelAsync<Models.Member>(
+                memberToUpdate
+              , "member"
+              , s => s.TeamID
+              , s => s.MemberName
+              , s => s.MemberClass
+              , s => s.BatClass
+              , s => s.ThrowClass
+              , s => s.PositionGroupClass
+              , s => s.UniformNumber
+              , s => s.MessageDetail
+              , s => s.DeleteFLG
+              , s => s.UpdateUserID
+              , s => s.UpdateDatetime))
+            {
+                _context.Members.Add(memberToUpdate);
+
+                await _context.SaveChangesAsync();
+            }
+            ////-----------------------------
+            ///
+            //_context.Members.Add(Member);
+            //await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

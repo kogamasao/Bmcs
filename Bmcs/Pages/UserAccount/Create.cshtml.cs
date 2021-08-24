@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,18 +11,17 @@ using Bmcs.Models;
 
 namespace Bmcs.Pages.UserAccount
 {
-    public class CreateModel : PageModel
+    public class CreateModel : PageModelBase
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public CreateModel(Bmcs.Data.BmcsContext context)
+        public CreateModel(Bmcs.Data.BmcsContext context) : base(context)
         {
-            _context = context;
+
         }
 
         public IActionResult OnGet()
         {
-        ViewData["TeamID"] = new SelectList(_context.Teams, "TeamID", "TeamID");
+            base.GetSelectList();
+
             return Page();
         }
 
@@ -32,13 +32,47 @@ namespace Bmcs.Pages.UserAccount
         // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return Page();
-            }
+                if (!ModelState.IsValid)
+                {
+                    return Page();
+                }
+               
+                var dbUserAccount = Context.UserAccounts.FirstOrDefault(r => r.UserAccountID == UserAccount.UserAccountID);
 
-            _context.UserAccounts.Add(UserAccount);
-            await _context.SaveChangesAsync();
+                if (dbUserAccount != null)
+                {
+                    ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.UserAccountID), "入力したユーザIDは既に使用されています。");
+
+                    return Page();
+                }
+
+
+                var userAccount = new Models.UserAccount();
+
+                if (await TryUpdateModelAsync<Models.UserAccount>(
+                    userAccount
+                  , "userAccount"
+                  , s => s.UserAccountID
+                  , s => s.UserAccountName
+                  , s => s.Password
+                  , s => s.ConfirmPassword
+                  , s => s.TeamID
+                  , s => s.TeamPassword
+                  , s => s.EmailAddress))
+                {
+                    userAccount.DeleteFLG = false;
+                    Context.UserAccounts.Add(userAccount);
+                    base.SetEntryInfo(userAccount);
+
+                    await Context.SaveChangesAsync();
+                }
+            }
+            catch
+            {
+                throw;
+            }
 
             return RedirectToPage("./Index");
         }
