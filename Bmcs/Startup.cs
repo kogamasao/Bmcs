@@ -46,13 +46,21 @@ namespace Bmcs
             {
                 services.AddDbContext<BmcsContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SqlServerConnectionString")));
+
+                //services.AddDbContext<BmcsContext>(options =>
+                //  options.UseCosmos(Configuration.GetConnectionString("CosmosAccountEndpoint")
+                //      , Configuration.GetConnectionString("CosmosAccountKey")
+                //      , Configuration.GetConnectionString("CosmosDatabaseName")));
             }
             else
             {
                 services.AddDbContext<BmcsContext>(options =>
-                    options.UseCosmos(Configuration.GetConnectionString("CosmosAccountEndpoint")
-                        , Configuration.GetConnectionString("CosmosAccountKey")
-                        , Configuration.GetConnectionString("CosmosDatabaseName")));
+                 options.UseSqlServer(Configuration.GetConnectionString("AzureDatabaseConnectionString")));
+
+                //services.AddDbContext<BmcsContext>(options =>
+                //    options.UseCosmos(Configuration.GetConnectionString("CosmosAccountEndpoint")
+                //        , Configuration.GetConnectionString("CosmosAccountKey")
+                //        , Configuration.GetConnectionString("CosmosDatabaseName")));
             }
 
             //services.AddAntiforgery(options =>
