@@ -10,21 +10,26 @@ using Bmcs.Models;
 
 namespace Bmcs.Pages.UserAccount
 {
-    public class IndexModel : PageModel
+    public class IndexModel : PageModelBase
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public IndexModel(Bmcs.Data.BmcsContext context)
+        public IndexModel(BmcsContext context) : base(context)
         {
-            _context = context;
+
         }
 
         public IList<Models.UserAccount> UserAccount { get;set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            UserAccount = await _context.UserAccounts
+            if (!base.IsLogin() || !base.IsAdmin())
+            {
+                return NotFound();
+            }
+
+            UserAccount = await Context.UserAccounts
                 .Include(u => u.Team).ToListAsync();
+
+            return Page();
         }
     }
 }

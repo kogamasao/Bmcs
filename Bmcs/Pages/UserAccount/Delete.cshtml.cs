@@ -10,13 +10,11 @@ using Bmcs.Models;
 
 namespace Bmcs.Pages.UserAccount
 {
-    public class DeleteModel : PageModel
+    public class DeleteModel : PageModelBase
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public DeleteModel(Bmcs.Data.BmcsContext context)
+        public DeleteModel(BmcsContext context) : base(context)
         {
-            _context = context;
+
         }
 
         [BindProperty]
@@ -24,34 +22,42 @@ namespace Bmcs.Pages.UserAccount
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
-            if (id == null)
+            if (id == null || !base.IsLogin() || !base.IsAdmin())
             {
                 return NotFound();
             }
 
-            UserAccount = await _context.UserAccounts
+            UserAccount = await Context.UserAccounts
                 .Include(u => u.Team).FirstOrDefaultAsync(m => m.UserAccountID == id);
 
             if (UserAccount == null)
             {
                 return NotFound();
             }
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                UserAccount = await Context.UserAccounts.FindAsync(id);
+
+                if (UserAccount != null)
+                {
+                    UserAccount.DeleteFLG = true;
+                    await Context.SaveChangesAsync();
+                }
             }
-
-            UserAccount = await _context.UserAccounts.FindAsync(id);
-
-            if (UserAccount != null)
+            catch (DbUpdateConcurrencyException)
             {
-                _context.UserAccounts.Remove(UserAccount);
-                await _context.SaveChangesAsync();
+                throw;
             }
 
             return RedirectToPage("./Index");

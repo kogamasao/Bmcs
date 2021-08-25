@@ -10,10 +10,18 @@ namespace Bmcs.Constans
     /// </summary>
     public static class SessionConstant
     {
-        public static readonly string UserID = "UserID";
+        public static readonly string UserAccountID = "UserAccountID";
 
         public static readonly string TeamID = "TeamID";
 
         public static readonly string AdminFLG = "AdminFLG";
+    }
+
+    /// <summary>
+    /// システム定数
+    /// </summary>
+    public static class SystemConstant
+    {
+        public static readonly string AdminUserAccountID = "ADMIN";
     }
 }

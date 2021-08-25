@@ -15,14 +15,14 @@ namespace Bmcs
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
-            Env = env;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
-        public IWebHostEnvironment Env { get; }
+        public IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -42,7 +42,7 @@ namespace Bmcs
                     //options.Conventions.AddPageRoute("/Login/Index", "");
                 });
 
-            if (Env.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 services.AddDbContext<BmcsContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SqlServerConnectionString")));
@@ -70,9 +70,9 @@ namespace Bmcs
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
         {
-            if (env.IsDevelopment())
+            if (environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }

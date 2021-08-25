@@ -55,6 +55,15 @@ namespace Bmcs.Models
         [Display(Name = "削除フラグ")]
         public bool DeleteFLG { get; set; }
 
+        [NotMapped]
+        [Display(Name = "チーム")]
+        public string TeamIDName {
+            get
+            {
+                return TeamID + " " + TeamName;
+            }
+        }
+
         public ICollection<Member> Members { get; set; }
 
         public ICollection<Order> Orders { get; set; }

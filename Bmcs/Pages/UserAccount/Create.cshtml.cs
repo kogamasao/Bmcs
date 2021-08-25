@@ -8,15 +8,20 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Bmcs.Data;
 using Bmcs.Models;
+using Bmcs.Function;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bmcs.Pages.UserAccount
 {
     public class CreateModel : PageModelBase
     {
-        public CreateModel(Bmcs.Data.BmcsContext context) : base(context)
+        public CreateModel(BmcsContext context) : base(context)
         {
 
         }
+
+        [BindProperty]
+        public Models.UserAccount UserAccount { get; set; }
 
         public IActionResult OnGet()
         {
@@ -24,21 +29,19 @@ namespace Bmcs.Pages.UserAccount
 
             return Page();
         }
-
-        [BindProperty]
-        public Models.UserAccount UserAccount { get; set; }
-
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
+        
         public async Task<IActionResult> OnPostAsync()
         {
             try
             {
+                base.GetSelectList();
+
                 if (!ModelState.IsValid)
                 {
                     return Page();
                 }
                
+                //ユーザIDチェック
                 var dbUserAccount = Context.UserAccounts.FirstOrDefault(r => r.UserAccountID == UserAccount.UserAccountID);
 
                 if (dbUserAccount != null)
@@ -48,19 +51,34 @@ namespace Bmcs.Pages.UserAccount
                     return Page();
                 }
 
+                //チームパスワードチェック
+                if(!string.IsNullOrEmpty(UserAccount.TeamID))
+                { 
+                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID
+                                                            && r.TeamPassword == UserAccount.TeamPassword.NullToEmpty());
 
+                    if (dbTeam == null)
+                    {
+                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "パスワードが間違っています。");
+
+                        return Page();
+                    }
+                }
+
+                //データ作成
                 var userAccount = new Models.UserAccount();
 
                 if (await TryUpdateModelAsync<Models.UserAccount>(
                     userAccount
-                  , "userAccount"
+                  , nameof(Models.UserAccount)
                   , s => s.UserAccountID
                   , s => s.UserAccountName
                   , s => s.Password
                   , s => s.ConfirmPassword
+                  , s => s.EmailAddress
                   , s => s.TeamID
                   , s => s.TeamPassword
-                  , s => s.EmailAddress))
+                  ))
                 {
                     userAccount.DeleteFLG = false;
                     Context.UserAccounts.Add(userAccount);
@@ -69,7 +87,7 @@ namespace Bmcs.Pages.UserAccount
                     await Context.SaveChangesAsync();
                 }
             }
-            catch
+            catch (DbUpdateConcurrencyException)
             {
                 throw;
             }

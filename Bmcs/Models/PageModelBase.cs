@@ -47,7 +47,7 @@ namespace Bmcs.Models
         /// <returns></returns>
         public bool IsLogin()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(SessionConstant.UserID)))
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(SessionConstant.UserAccountID)))
             {
                 return false;
             }
@@ -76,7 +76,7 @@ namespace Bmcs.Models
         public void SetEntryInfo<T>(T dataModelBase) where T : DataModelBase
         {
             dataModelBase.EntryDatetime = DateTime.Now;
-            dataModelBase.EntryUserID = HttpContext.Session.GetString(SessionConstant.UserID);
+            dataModelBase.EntryUserID = HttpContext.Session.GetString(SessionConstant.UserAccountID);
             dataModelBase.UpdateDatetime = dataModelBase.EntryDatetime;
             dataModelBase.UpdateUserID = dataModelBase.EntryUserID;
         }
@@ -88,7 +88,7 @@ namespace Bmcs.Models
         public void SetUpdateInfo<T>(T dataModelBase) where T : DataModelBase
         {
             dataModelBase.UpdateDatetime = DateTime.Now;
-            dataModelBase.UpdateUserID = HttpContext.Session.GetString(SessionConstant.UserID);
+            dataModelBase.UpdateUserID = HttpContext.Session.GetString(SessionConstant.UserAccountID);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Bmcs.Models
         public void GetSelectList()
         {
             //チームID
-            TeamIDList = AddFirstItem(new SelectList(Context.Teams, nameof(Team.TeamID), nameof(Team.TeamName), string.Empty)
+            TeamIDList = AddFirstItem(new SelectList(Context.Teams.Where(r => r.DeleteFLG == false), nameof(Team.TeamID), nameof(Team.TeamIDName), string.Empty)
                                     , new SelectListItem(string.Empty, string.Empty));
         }
 

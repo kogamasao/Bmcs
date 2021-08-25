@@ -8,16 +8,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Microsoft.AspNetCore.Http;
+using Bmcs.Constans;
+using Bmcs.Function;
 
 namespace Bmcs.Pages.UserAccount
 {
-    public class EditModel : PageModel
+    public class EditModel : PageModelBase
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public EditModel(Bmcs.Data.BmcsContext context)
+        public EditModel(BmcsContext context) : base(context)
         {
-            _context = context;
+
         }
 
         [BindProperty]
@@ -25,55 +26,95 @@ namespace Bmcs.Pages.UserAccount
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
-            if (id == null)
+            if (!base.IsLogin())
             {
                 return NotFound();
             }
 
-            UserAccount = await _context.UserAccounts
+            if (id == null)
+            {
+                id = HttpContext.Session.GetString(SessionConstant.UserAccountID);
+            }
+            else
+            {
+                if(!base.IsAdmin())
+                {
+                    return NotFound();
+                }
+            }
+
+            UserAccount = await Context.UserAccounts
                 .Include(u => u.Team).FirstOrDefaultAsync(m => m.UserAccountID == id);
 
             if (UserAccount == null)
             {
                 return NotFound();
             }
-           ViewData["TeamID"] = new SelectList(_context.Teams, "TeamID", "TeamID");
+
+            base.GetSelectList();
+            
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            base.GetSelectList();
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _context.Attach(UserAccount).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserAccountExists(UserAccount.UserAccountID))
+                //チームパスワードチェック
+                if (!string.IsNullOrEmpty(UserAccount.TeamID))
+                {
+                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID
+                                                            && r.TeamPassword == UserAccount.TeamPassword.NullToEmpty());
+
+                    if (dbTeam == null)
+                    {
+                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "パスワードが間違っています。");
+
+                        return Page();
+                    }
+                }
+
+                //データ更新
+                var userAccount = await Context.UserAccounts.FindAsync(UserAccount.UserAccountID);
+                
+                if (userAccount == null)
                 {
                     return NotFound();
                 }
-                else
+
+                //紐づき解除
+                userAccount.Team = null;
+
+                if (await TryUpdateModelAsync(
+                    userAccount
+                  , nameof(Models.UserAccount)
+                  //, s => s.UserAccountID
+                  , s => s.UserAccountName
+                  , s => s.Password
+                  , s => s.ConfirmPassword
+                  , s => s.EmailAddress
+                  , s => s.TeamID
+                  , s => s.TeamPassword
+                  ))
                 {
-                    throw;
+                    base.SetUpdateInfo(userAccount);
+
+                    await Context.SaveChangesAsync();
                 }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
             }
 
             return RedirectToPage("./Index");
-        }
-
-        private bool UserAccountExists(string id)
-        {
-            return _context.UserAccounts.Any(e => e.UserAccountID == id);
         }
     }
 }
