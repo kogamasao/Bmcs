@@ -7,16 +7,18 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Bmcs.Data;
 using Bmcs.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using Bmcs.Constans;
+using Bmcs.Function;
 
 namespace Bmcs.Pages.Team
 {
-    public class CreateModel : PageModel
+    public class CreateModel : PageModelBase
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public CreateModel(Bmcs.Data.BmcsContext context)
+        public CreateModel(BmcsContext context) : base(context)
         {
-            _context = context;
+
         }
 
         public IActionResult OnGet()
@@ -27,19 +29,76 @@ namespace Bmcs.Pages.Team
         [BindProperty]
         public Models.Team Team { get; set; }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return Page();
+                if (!ModelState.IsValid)
+                {
+                    return Page();
+                }
+
+                //チームIDチェック
+                var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == Team.TeamID);
+
+                if (dbTeam != null)
+                {
+                    ModelState.AddModelError(nameof(Models.Team) + "." + nameof(Models.Team.TeamID), "入力したチームIDは既に使用されています。");
+
+                    return Page();
+                }
+
+                //データ作成
+                var team = new Models.Team();
+
+                //POST値セット
+                this.TryUpdateModel(team);
+                //エントリ情報セット
+                base.SetEntryInfo(team);
+
+                Context.Teams.Add(team);
+
+                if (!base.IsAdmin())
+                {
+                    //ユーザ情報取得
+                    var userAccount = Context.UserAccounts.FirstOrDefault(r => r.UserAccountID == HttpContext.Session.GetString(SessionConstant.UserAccountID).NullToEmpty());
+
+                    if (userAccount != null)
+                    {
+                        userAccount.TeamID = team.TeamID.NullToEmpty();
+                        //更新情報セット
+                        base.SetUpdateInfo(userAccount);
+                    }
+
+                    //ログイン情報セット
+                    HttpContext.Session.SetString(SessionConstant.TeamID, team.TeamID.NullToEmpty());
+                }
+
+                await Context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
             }
 
-            _context.Teams.Add(Team);
-            await _context.SaveChangesAsync();
-
             return RedirectToPage("./Index");
+        }
+
+        /// <summary>
+        /// POST値をモデルにセット
+        /// </summary>
+        /// <param name="team"></param>
+        private void TryUpdateModel(Models.Team team)
+        {
+            team.TeamID = Team.TeamID;
+            team.TeamName = Team.TeamName;
+            team.TeamPassword = Team.TeamPassword;
+            team.RepresentativeName = Team.RepresentativeName;
+            team.TeamNumber = Team.TeamNumber;
+            team.TeamEmailAddress = Team.TeamEmailAddress;
+            team.MessageDetail = Team.MessageDetail;
+            team.PublicFLG = Team.PublicFLG;
+            team.DeleteFLG = false;
         }
     }
 }

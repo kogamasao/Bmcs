@@ -10,13 +10,11 @@ using Bmcs.Models;
 
 namespace Bmcs.Pages.Team
 {
-    public class DetailsModel : PageModel
+    public class DetailsModel : PageModelBase
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public DetailsModel(Bmcs.Data.BmcsContext context)
+        public DetailsModel(BmcsContext context) : base(context)
         {
-            _context = context;
+
         }
 
         public Models.Team Team { get; set; }
@@ -28,12 +26,13 @@ namespace Bmcs.Pages.Team
                 return NotFound();
             }
 
-            Team = await _context.Teams.FirstOrDefaultAsync(m => m.TeamID == id);
+            Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == id);
 
-            if (Team == null)
+            if (Team == null || !Team.PublicFLG)
             {
                 return NotFound();
             }
+
             return Page();
         }
     }

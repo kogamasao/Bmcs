@@ -10,6 +10,8 @@ using Bmcs.Data;
 using Bmcs.Models;
 using Bmcs.Function;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using Bmcs.Constans;
 
 namespace Bmcs.Pages.UserAccount
 {
@@ -68,23 +70,19 @@ namespace Bmcs.Pages.UserAccount
                 //データ作成
                 var userAccount = new Models.UserAccount();
 
-                if (await TryUpdateModelAsync<Models.UserAccount>(
-                    userAccount
-                  , nameof(Models.UserAccount)
-                  , s => s.UserAccountID
-                  , s => s.UserAccountName
-                  , s => s.Password
-                  , s => s.ConfirmPassword
-                  , s => s.EmailAddress
-                  , s => s.TeamID
-                  , s => s.TeamPassword
-                  ))
-                {
-                    userAccount.DeleteFLG = false;
-                    Context.UserAccounts.Add(userAccount);
-                    base.SetEntryInfo(userAccount);
+                //POST値セット
+                this.TryUpdateModel(userAccount);
+                //エントリ情報セット
+                base.SetEntryInfo(userAccount);
 
-                    await Context.SaveChangesAsync();
+                Context.UserAccounts.Add(userAccount);
+                await Context.SaveChangesAsync();
+
+                if(!base.IsAdmin())
+                { 
+                    //ログイン情報セット
+                    HttpContext.Session.SetString(SessionConstant.UserAccountID, userAccount.UserAccountID.NullToEmpty());
+                    HttpContext.Session.SetString(SessionConstant.TeamID, userAccount.TeamID.NullToEmpty());
                 }
             }
             catch (DbUpdateConcurrencyException)
@@ -92,7 +90,29 @@ namespace Bmcs.Pages.UserAccount
                 throw;
             }
 
-            return RedirectToPage("./Index");
+            //管理者でない、かつチーム未登録の場合
+            if (!base.IsAdmin() && string.IsNullOrEmpty(HttpContext.Session.GetString(SessionConstant.TeamID)))
+            {
+                return RedirectToPage("./Team/Create");
+            }
+            else
+            { 
+                return RedirectToPage("./Index");
+            }
+        }
+
+        /// <summary>
+        /// POST値をモデルにセット
+        /// </summary>
+        /// <param name="userAccount"></param>
+        private void TryUpdateModel(Models.UserAccount userAccount)
+        {
+            userAccount.UserAccountID = UserAccount.UserAccountID;
+            userAccount.UserAccountName = UserAccount.UserAccountName;
+            userAccount.Password = UserAccount.Password;
+            userAccount.EmailAddress = UserAccount.EmailAddress;
+            userAccount.TeamID = UserAccount.TeamID;
+            userAccount.DeleteFLG = false;
         }
     }
 }

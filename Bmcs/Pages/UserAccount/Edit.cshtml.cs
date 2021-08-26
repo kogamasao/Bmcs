@@ -37,7 +37,7 @@ namespace Bmcs.Pages.UserAccount
             }
             else
             {
-                if(!base.IsAdmin())
+                if (!base.IsAdmin())
                 {
                     return NotFound();
                 }
@@ -52,7 +52,7 @@ namespace Bmcs.Pages.UserAccount
             }
 
             base.GetSelectList();
-            
+
             return Page();
         }
 
@@ -83,31 +83,18 @@ namespace Bmcs.Pages.UserAccount
 
                 //データ更新
                 var userAccount = await Context.UserAccounts.FindAsync(UserAccount.UserAccountID);
-                
+
                 if (userAccount == null)
                 {
                     return NotFound();
                 }
 
-                //紐づき解除
-                userAccount.Team = null;
+                //POST値セット
+                this.TryUpdateModel(userAccount);
+                //更新情報セット
+                base.SetUpdateInfo(userAccount);
 
-                if (await TryUpdateModelAsync(
-                    userAccount
-                  , nameof(Models.UserAccount)
-                  //, s => s.UserAccountID
-                  , s => s.UserAccountName
-                  , s => s.Password
-                  , s => s.ConfirmPassword
-                  , s => s.EmailAddress
-                  , s => s.TeamID
-                  , s => s.TeamPassword
-                  ))
-                {
-                    base.SetUpdateInfo(userAccount);
-
-                    await Context.SaveChangesAsync();
-                }
+                await Context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -115,6 +102,18 @@ namespace Bmcs.Pages.UserAccount
             }
 
             return RedirectToPage("./Index");
+        }
+
+        /// <summary>
+        /// POST値をモデルにセット
+        /// </summary>
+        /// <param name="userAccount"></param>
+        private void TryUpdateModel(Models.UserAccount userAccount)
+        {
+            userAccount.UserAccountName = UserAccount.UserAccountName;
+            userAccount.Password = UserAccount.Password;
+            userAccount.EmailAddress = UserAccount.EmailAddress;
+            userAccount.TeamID = UserAccount.TeamID;
         }
     }
 }

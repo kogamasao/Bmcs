@@ -8,16 +8,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Microsoft.AspNetCore.Http;
+using Bmcs.Constans;
 
 namespace Bmcs.Pages.Team
 {
-    public class EditModel : PageModel
+    public class EditModel : PageModelBase
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public EditModel(Bmcs.Data.BmcsContext context)
+        public EditModel(BmcsContext context) : base(context)
         {
-            _context = context;
+
         }
 
         [BindProperty]
@@ -25,22 +25,33 @@ namespace Bmcs.Pages.Team
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
-            if (id == null)
+            if (!base.IsLogin())
             {
                 return NotFound();
             }
 
-            Team = await _context.Teams.FirstOrDefaultAsync(m => m.TeamID == id);
+            if (id == null)
+            {
+                id = HttpContext.Session.GetString(SessionConstant.TeamID);
+            }
+            else
+            {
+                if (!base.IsAdmin())
+                {
+                    return NotFound();
+                }
+            }
+
+            Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == id);
 
             if (Team == null)
             {
                 return NotFound();
             }
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -48,30 +59,44 @@ namespace Bmcs.Pages.Team
                 return Page();
             }
 
-            _context.Attach(Team).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TeamExists(Team.TeamID))
+                //データ更新
+                var team = await Context.Teams.FindAsync(Team.TeamID);
+
+                if (team == null)
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                //POST値セット
+                this.TryUpdateModel(team);
+                //更新情報セット
+                base.SetUpdateInfo(team);
+
+                await Context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
             }
 
             return RedirectToPage("./Index");
         }
 
-        private bool TeamExists(string id)
+        /// <summary>
+        /// POST値をモデルにセット
+        /// </summary>
+        /// <param name="team"></param>
+        private void TryUpdateModel(Models.Team team)
         {
-            return _context.Teams.Any(e => e.TeamID == id);
+            team.TeamName = Team.TeamName;
+            team.TeamPassword = Team.TeamPassword;
+            team.RepresentativeName = Team.RepresentativeName;
+            team.TeamNumber = Team.TeamNumber;
+            team.TeamEmailAddress = Team.TeamEmailAddress;
+            team.MessageDetail = Team.MessageDetail;
+            team.PublicFLG = Team.PublicFLG;
         }
     }
 }

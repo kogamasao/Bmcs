@@ -2,13 +2,13 @@
 @model Bmcs.Pages.Team.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "チーム情報";
 }
 
-<h1>Details</h1>
+<h1>チーム情報</h1>
 
 <div>
-    <h4>Team</h4>
+    <h4></h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -30,12 +30,6 @@
             @Html.DisplayFor(model => model.Team.TeamNumber)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.TeamPassword)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.TeamPassword)
-        </dd>
-        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Team.TeamEmailAddress)
         </dt>
         <dd class="col-sm-10">
@@ -47,45 +41,8 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Team.MessageDetail)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.PublicFLG)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.PublicFLG)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.DeleteFLG)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.DeleteFLG)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.EntryUserID)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.EntryUserID)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.EntryDatetime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.EntryDatetime)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.UpdateUserID)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.UpdateUserID)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.UpdateDatetime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.UpdateDatetime)
-        </dd>
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Team.TeamID">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="./Index">チーム一覧</a>
 </div>

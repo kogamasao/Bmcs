@@ -10,20 +10,29 @@ using Bmcs.Models;
 
 namespace Bmcs.Pages.Team
 {
-    public class IndexModel : PageModel
+    public class IndexModel : PageModelBase
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public IndexModel(Bmcs.Data.BmcsContext context)
+        public IndexModel(BmcsContext context) : base(context)
         {
-            _context = context;
+
         }
 
         public IList<Models.Team> Team { get;set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            Team = await _context.Teams.ToListAsync();
+            if (base.IsAdmin())
+            { 
+                //全チーム
+                Team = await Context.Teams.ToListAsync();
+            }
+            else
+            {
+                //公開チームのみ
+                Team = await Context.Teams.Where(r => r.PublicFLG == true && r.DeleteFLG == false).ToListAsync();
+            }
+
+            return Page();
         }
     }
 }

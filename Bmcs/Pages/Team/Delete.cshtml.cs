@@ -10,13 +10,11 @@ using Bmcs.Models;
 
 namespace Bmcs.Pages.Team
 {
-    public class DeleteModel : PageModel
+    public class DeleteModel : PageModelBase
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public DeleteModel(Bmcs.Data.BmcsContext context)
+        public DeleteModel(BmcsContext context) : base(context)
         {
-            _context = context;
+
         }
 
         [BindProperty]
@@ -24,33 +22,41 @@ namespace Bmcs.Pages.Team
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
-            if (id == null)
+            if (id == null || !base.IsLogin() || !base.IsAdmin())
             {
                 return NotFound();
             }
 
-            Team = await _context.Teams.FirstOrDefaultAsync(m => m.TeamID == id);
+            Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == id);
 
             if (Team == null)
             {
                 return NotFound();
             }
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var team = await Context.Teams.FindAsync(id);
+
+                if (team != null)
+                {
+                    team.DeleteFLG = true;
+                    await Context.SaveChangesAsync();
+                }
             }
-
-            Team = await _context.Teams.FindAsync(id);
-
-            if (Team != null)
+            catch (DbUpdateConcurrencyException)
             {
-                _context.Teams.Remove(Team);
-                await _context.SaveChangesAsync();
+                throw;
             }
 
             return RedirectToPage("./Index");
