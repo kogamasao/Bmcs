@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Bmcs.Data;
+using Bmcs.Models;
 
 namespace Bmcs.Pages
 {
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public class ErrorModel : PageModel
+    public class ErrorModel : PageModelBase
     {
         public string RequestId { get; set; }
 
@@ -18,7 +20,7 @@ namespace Bmcs.Pages
 
         private readonly ILogger<ErrorModel> _logger;
 
-        public ErrorModel(ILogger<ErrorModel> logger)
+        public ErrorModel(ILogger<ErrorModel> logger, BmcsContext context) : base(context)
         {
             _logger = logger;
         }

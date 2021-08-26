@@ -18,10 +18,26 @@ namespace Bmcs.Constans
     }
 
     /// <summary>
+    /// ViewData定数
+    /// </summary>
+    public static class ViewDataConstant
+    {
+        public static readonly string Title = "Title";
+
+        public static readonly string TeamID = "TeamID";
+
+        public static readonly string AdminFLG = "AdminFLG";
+    }
+
+    /// <summary>
     /// システム定数
     /// </summary>
     public static class SystemConstant
     {
         public static readonly string AdminUserAccountID = "ADMIN";
+
+        public static readonly string PageModePublic = "PageModePublic";
+
+        public static readonly string PageModePrivate = "PageModePrivate";
     }
 }

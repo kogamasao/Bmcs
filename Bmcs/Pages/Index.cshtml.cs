@@ -71,7 +71,7 @@ namespace Bmcs.Pages
             }
             else
             { 
-                return RedirectToPage("./Team/Index");
+                return RedirectToPage("./Top/Index");
             }
         }
     }

@@ -10,31 +10,29 @@ using Bmcs.Models;
 
 namespace Bmcs.Pages.UserAccount
 {
-    public class DetailsModel : PageModel
+    public class DetailsModel : PageModelBase
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public DetailsModel(Bmcs.Data.BmcsContext context)
+        public DetailsModel(BmcsContext context) : base(context)
         {
-            _context = context;
+
         }
 
         public Models.UserAccount UserAccount { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
-            if (id == null)
+            if (id == null || !base.IsLogin() || !base.IsAdmin())
             {
                 return NotFound();
             }
-
-            UserAccount = await _context.UserAccounts
-                .Include(u => u.Team).FirstOrDefaultAsync(m => m.UserAccountID == id);
+            UserAccount = await Context.UserAccounts
+                      .Include(u => u.Team).FirstOrDefaultAsync(m => m.UserAccountID == id);
 
             if (UserAccount == null)
             {
                 return NotFound();
             }
+
             return Page();
         }
     }

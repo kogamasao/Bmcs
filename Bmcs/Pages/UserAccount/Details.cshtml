@@ -2,15 +2,21 @@
 @model Bmcs.Pages.UserAccount.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData[ViewDataConstant.Title] = "ユーザ情報(管理者)";
 }
 
-<h1>Details</h1>
+<h1>ユーザ情報(管理者)</h1>
 
 <div>
-    <h4>UserAccount</h4>
+    <h4></h4>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserAccount.UserAccountID)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserAccount.UserAccountID)
+        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UserAccount.UserAccountName)
         </dt>
@@ -36,10 +42,16 @@
             @Html.DisplayFor(model => model.UserAccount.DeleteFLG)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.Team)
+            @Html.DisplayNameFor(model => model.UserAccount.TeamID)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.Team.TeamID)
+            @Html.DisplayFor(model => model.UserAccount.TeamID)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserAccount.Team.TeamName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserAccount.Team.TeamName)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UserAccount.EntryUserID)
@@ -65,15 +77,9 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.UserAccount.UpdateDatetime)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.TimeStamp)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.TimeStamp)
-        </dd>
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.UserAccount.UserAccountID">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="./Edit" asp-route-id="@Model.UserAccount.UserAccountID">編集</a> |
+    <a asp-page="./Index">ユーザ一覧</a>
 </div>

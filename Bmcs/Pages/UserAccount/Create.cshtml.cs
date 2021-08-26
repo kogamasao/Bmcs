@@ -96,8 +96,8 @@ namespace Bmcs.Pages.UserAccount
                 return RedirectToPage("./Team/Create");
             }
             else
-            { 
-                return RedirectToPage("./Index");
+            {
+                return RedirectToPage("./Top/Index");
             }
         }
 

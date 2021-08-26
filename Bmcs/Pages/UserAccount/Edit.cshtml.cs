@@ -101,7 +101,14 @@ namespace Bmcs.Pages.UserAccount
                 throw;
             }
 
-            return RedirectToPage("./Index");
+            if (base.IsAdmin())
+            {
+                return RedirectToPage("./Index");
+            }
+            else
+            {
+                return RedirectToPage("../Top/Index");
+            }
         }
 
         /// <summary>

@@ -1,0 +1,50 @@
+﻿@page
+@model Bmcs.Pages.Top.IndexModel
+@using Bmcs.Constans;
+@{
+    ViewData[ViewDataConstant.Title] = "Top";
+}
+
+<h1>Top</h1>
+
+<div class="row">
+    <div class="col-md-6 offset-md-3 text-center">
+        @if (Model.IsLogin())
+        {
+            <h6 class="display-4">Team Management</h6>
+            <p>まずはメンバー登録をしましょう</p>
+            <p>試合一覧から試合の結果を入力し、その結果を成績一覧で確認できます</p>
+            <div class="form-group">
+                <a class="btn btn-primary btn-block" asp-page="/Game/Index">試合一覧</a>
+            </div>
+            <div class="form-group">
+                <a class="btn btn-primary btn-block" asp-page="/Score/Index">成績一覧</a>
+            </div>
+            <div class="form-group">
+                <a class="btn btn-primary btn-block" asp-page="/Member/Index">メンバー一覧</a>
+            </div>
+            <div class="form-group">
+                <a class="btn btn-primary btn-block" asp-page="/Team/Edit">チーム情報</a>
+            </div>
+            <p></p>
+        }
+        <h6 class="display-4">Communication</h6>
+        <p>公開されているチームの情報を確認できます</p>
+        <p>メッセージを送って、他チームと連絡を取り合うことができます</p>
+        <div class="form-group">
+            <a class="btn btn-primary btn-block" asp-page="/Team/Index">公開チーム一覧</a>
+        </div>
+        <div class="form-group">
+            <a class="btn btn-primary btn-block" asp-page="/Score/Index">公開チーム成績一覧</a>
+        </div>
+        <div class="form-group">
+            <a class="btn btn-primary btn-block" asp-page="/Message/Index">メッセージ</a>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
