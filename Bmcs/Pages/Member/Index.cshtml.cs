@@ -24,18 +24,16 @@ namespace Bmcs.Pages.Member
 
         public Models.Team Team { get; set; }
 
+        public bool IsMyTeam { get; set; }
+
         public async Task<IActionResult> OnGetAsync(string teamID)
         {
-            bool isMyTeam = false;
+            IsMyTeam = false;
 
-            if (!base.IsLogin())
+            if (teamID == null
+                || teamID == HttpContext.Session.GetString(SessionConstant.TeamID))
             {
-                return NotFound();
-            }
-
-            if (teamID == null)
-            {
-                isMyTeam = true;
+                IsMyTeam = true;
                 teamID = HttpContext.Session.GetString(SessionConstant.TeamID);
             }
 
@@ -50,7 +48,7 @@ namespace Bmcs.Pages.Member
                     .Include(m => m.Team)
                     .Where(r => r.TeamID == teamID
                         && r.Team.DeleteFLG == false
-                        && ((r.Team.PublicFLG == true && !isMyTeam) || isMyTeam)
+                        && ((r.Team.PublicFLG == true && !IsMyTeam) || IsMyTeam)
                         && r.DeleteFLG == false).ToListAsync();
             }
             else

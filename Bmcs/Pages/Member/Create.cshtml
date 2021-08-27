@@ -2,20 +2,22 @@
 @model Bmcs.Pages.Member.CreateModel
 
 @{
-    ViewData[ViewDataConstant.Title] = "Create";
+    ViewData[ViewDataConstant.Title] = "メンバー追加";
 }
 
-<h1>Create</h1>
+<h1>メンバー追加</h1>
 
-<h4>Member</h4>
+<h4>@Model.Member.Team.TeamName</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Member.TeamID" />
             <div class="form-group">
-                <label asp-for="Member.TeamID" class="control-label"></label>
-                <select asp-for="Member.TeamID" class ="form-control" asp-items="ViewBag.TeamID"></select>
+                <label asp-for="Member.UniformNumber" class="control-label"></label>
+                <input asp-for="Member.UniformNumber" class="form-control" />
+                <span asp-validation-for="Member.UniformNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Member.MemberName" class="control-label"></label>
@@ -24,68 +26,34 @@
             </div>
             <div class="form-group">
                 <label asp-for="Member.MemberClass" class="control-label"></label>
-                <input asp-for="Member.MemberClass" class="form-control" />
-                <span asp-validation-for="Member.MemberClass" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.BatClass" class="control-label"></label>
-                <input asp-for="Member.BatClass" class="form-control" />
-                <span asp-validation-for="Member.BatClass" class="text-danger"></span>
+                <select asp-for="Member.MemberClass" class="form-control" asp-items="Model.MemberClassList"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Member.ThrowClass" class="control-label"></label>
-                <input asp-for="Member.ThrowClass" class="form-control" />
-                <span asp-validation-for="Member.ThrowClass" class="text-danger"></span>
+                <select asp-for="Member.ThrowClass" class="form-control" asp-items="Model.ThrowClassList"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Member.BatClass" class="control-label"></label>
+                <select asp-for="Member.BatClass" class="form-control" asp-items="Model.BatClassList"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Member.PositionGroupClass" class="control-label"></label>
-                <input asp-for="Member.PositionGroupClass" class="form-control" />
-                <span asp-validation-for="Member.PositionGroupClass" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.UniformNumber" class="control-label"></label>
-                <input asp-for="Member.UniformNumber" class="form-control" />
-                <span asp-validation-for="Member.UniformNumber" class="text-danger"></span>
+                <select asp-for="Member.PositionGroupClass" class="form-control" asp-items="Model.PositionGroupClassList"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Member.MessageDetail" class="control-label"></label>
                 <textarea asp-for="Member.MessageDetail" class="form-control"></textarea>
                 <span asp-validation-for="Member.MessageDetail" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Member.DeleteFLG" /> @Html.DisplayNameFor(model => model.Member.DeleteFLG)
-                </label>
-            </div>
             <div class="form-group">
-                <label asp-for="Member.EntryUserID" class="control-label"></label>
-                <input asp-for="Member.EntryUserID" class="form-control" />
-                <span asp-validation-for="Member.EntryUserID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.EntryDatetime" class="control-label"></label>
-                <input asp-for="Member.EntryDatetime" class="form-control" />
-                <span asp-validation-for="Member.EntryDatetime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.UpdateUserID" class="control-label"></label>
-                <input asp-for="Member.UpdateUserID" class="form-control" />
-                <span asp-validation-for="Member.UpdateUserID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.UpdateDatetime" class="control-label"></label>
-                <input asp-for="Member.UpdateDatetime" class="form-control" />
-                <span asp-validation-for="Member.UpdateDatetime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="登録" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-page="Index">Back to List</a>
+    <a asp-page="Index" asp-route-teamID="@Model.Member.Team.TeamID">メンバー一覧</a>
 </div>
 
 @section Scripts {

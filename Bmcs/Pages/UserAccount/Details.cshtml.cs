@@ -26,6 +26,7 @@ namespace Bmcs.Pages.UserAccount
             {
                 return NotFound();
             }
+
             UserAccount = await Context.UserAccounts
                       .Include(u => u.Team).FirstOrDefaultAsync(m => m.UserAccountID == id);
 

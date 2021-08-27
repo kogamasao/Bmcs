@@ -79,9 +79,9 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
-    /// 打席区分
+    /// 投区分
     /// </summary>
-    public enum BatClass
+    public enum ThrowClass
     {
         [Description("両")]
         Switch = 1,
@@ -92,9 +92,9 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
-    /// 投区分
+    /// 打席区分
     /// </summary>
-    public enum ThrowClass
+    public enum BatClass
     {
         [Description("両")]
         Switch = 1,
@@ -179,7 +179,7 @@ namespace Bmcs.Enum
     /// </summary>
     public enum StatusClass
     {
-        [Description("未完了")]
+        [Description("試合前")]
         Incomplete = 1,
         [Description("編集中")]
         Editing = 2,

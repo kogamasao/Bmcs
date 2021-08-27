@@ -8,16 +8,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using Bmcs.Constans;
 
 namespace Bmcs.Pages.Member
 {
-    public class EditModel : PageModel
+    public class EditModel : PageModelBase<EditModel>
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public EditModel(Bmcs.Data.BmcsContext context)
+        public EditModel(ILogger<EditModel> logger, BmcsContext context) : base(logger, context)
         {
-            _context = context;
+
         }
 
         [BindProperty]
@@ -25,78 +26,77 @@ namespace Bmcs.Pages.Member
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            if (!base.IsLogin())
+            {
+                return NotFound();
+            }
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            Member = await _context.Members
+            Member = await Context.Members
                 .Include(m => m.Team).FirstOrDefaultAsync(m => m.MemberID == id);
 
-            if (Member == null)
+            if (Member == null
+                || (Member.TeamID != HttpContext.Session.GetString(SessionConstant.TeamID)
+                    && !base.IsAdmin())
+                )
             {
                 return NotFound();
             }
-            ViewData["TeamID"] = new SelectList(_context.Teams, "TeamID", "TeamID");
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            _context.Attach(Member).State = EntityState.Modified;
-
             try
             {
-                var memberToUpdate = await _context.Members.FindAsync(Member.MemberID);
+                if (!ModelState.IsValid)
+                {
+                    return Page();
+                }
 
-                if (memberToUpdate == null)
+                //データ作成
+                var member = await Context.Members.FindAsync(Member.MemberID);
+
+                if (member == null)
                 {
                     return NotFound();
                 }
 
-                if (await TryUpdateModelAsync<Models.Member>(
-                    memberToUpdate
-                  , "member"
-                  , s => s.TeamID
-                  , s => s.MemberName
-                  , s => s.MemberClass
-                  , s => s.BatClass
-                  , s => s.ThrowClass
-                  , s => s.PositionGroupClass
-                  , s => s.UniformNumber
-                  , s => s.MessageDetail
-                  , s => s.DeleteFLG
-                  , s => s.UpdateUserID
-                  , s => s.UpdateDatetime))
-                {
-                    await _context.SaveChangesAsync();
-                }
+                //POST値セット
+                this.TryUpdateModel(member);
+                //エントリ情報セット
+                base.SetUpdateInfo(member);
+
+                await Context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MemberExists(Member.MemberID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index", new { teamID = Member.TeamID });
+
         }
 
-        private bool MemberExists(int id)
+        /// <summary>
+        /// POST値をモデルにセット
+        /// </summary>
+        /// <param name="member"></param>
+        private void TryUpdateModel(Models.Member member)
         {
-            return _context.Members.Any(e => e.MemberID == id);
+            member.MemberName = Member.MemberName;
+            member.MemberClass = Member.MemberClass;
+            member.BatClass = Member.BatClass;
+            member.ThrowClass = Member.ThrowClass;
+            member.PositionGroupClass = Member.PositionGroupClass;
+            member.UniformNumber = Member.UniformNumber;
+            member.MessageDetail = Member.MessageDetail;
         }
+
     }
 }

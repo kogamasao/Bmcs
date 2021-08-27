@@ -2,45 +2,15 @@
 @model Bmcs.Pages.Member.DetailsModel
 
 @{
-    ViewData[ViewDataConstant.Title] = "Details";
+    ViewData[ViewDataConstant.Title] = "メンバー情報";
 }
 
-<h1>Details</h1>
+<h1>メンバー情報</h1>
 
 <div>
-    <h4>Member</h4>
+    <h4>@Model.Member.Team.TeamName</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.MemberName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.MemberName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.MemberClass)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.MemberClass)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.BatClass)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.BatClass)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.ThrowClass)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.ThrowClass)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.PositionGroupClass)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.PositionGroupClass)
-        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Member.UniformNumber)
         </dt>
@@ -48,56 +18,70 @@
             @Html.DisplayFor(model => model.Member.UniformNumber)
         </dd>
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Member.MemberName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Member.MemberName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Member.MemberClassName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Member.MemberClassName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Member.ThrowClassName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Member.ThrowClassName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Member.BatClassName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Member.BatClassName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Member.PositionGroupClassName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Member.PositionGroupClassName)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Member.MessageDetail)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Member.MessageDetail)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.DeleteFLG)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.DeleteFLG)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.Team)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.Team.TeamID)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.EntryUserID)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.EntryUserID)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.EntryDatetime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.EntryDatetime)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.UpdateUserID)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.UpdateUserID)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.UpdateDatetime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.UpdateDatetime)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.TimeStamp)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.TimeStamp)
-        </dd>
+        @if (Model.IsAdmin())
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Member.EntryUserID)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Member.EntryUserID)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Member.EntryDatetime)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Member.EntryDatetime)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Member.UpdateUserID)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Member.UpdateUserID)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Member.UpdateDatetime)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Member.UpdateDatetime)
+            </dd>
+        }
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.Member.MemberID">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="./Index" asp-route-teamID="@Model.Member.Team.TeamID">メンバー一覧</a>
 </div>

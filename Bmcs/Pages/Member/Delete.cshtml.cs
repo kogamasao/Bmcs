@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using Bmcs.Constans;
 
 namespace Bmcs.Pages.Member
 {
-    public class DeleteModel : PageModel
+    public class DeleteModel : PageModelBase<DeleteModel>
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public DeleteModel(Bmcs.Data.BmcsContext context)
+        public DeleteModel(ILogger<DeleteModel> logger, BmcsContext context) : base(logger, context)
         {
-            _context = context;
+
         }
 
         [BindProperty]
@@ -24,37 +25,53 @@ namespace Bmcs.Pages.Member
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            if (!base.IsLogin())
+            {
+                return NotFound();
+            }
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            Member = await _context.Members
+            Member = await Context.Members
                 .Include(m => m.Team).FirstOrDefaultAsync(m => m.MemberID == id);
 
-            if (Member == null)
+            if (Member == null
+                || (Member.TeamID != HttpContext.Session.GetString(SessionConstant.TeamID)
+                    && !base.IsAdmin())
+                )
             {
                 return NotFound();
             }
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var member = await Context.Members.FindAsync(id);
+
+                if (member != null)
+                {
+                    member.DeleteFLG = true;
+                    await Context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
             }
 
-            Member = await _context.Members.FindAsync(id);
-
-            if (Member != null)
-            {
-                _context.Members.Remove(Member);
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index", new { teamID = Member.TeamID });
         }
     }
 }

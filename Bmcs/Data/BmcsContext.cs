@@ -21,21 +21,25 @@ namespace Bmcs.Data
 
         }
 
-        public DbSet<Bmcs.Models.UserAccount> UserAccounts { get; set; }
-        public DbSet<Bmcs.Models.Team> Teams { get; set; }
-        public DbSet<Bmcs.Models.Member> Members { get; set; }
-        public DbSet<Bmcs.Models.Game> Games { get; set; }
-        public DbSet<Bmcs.Models.GameScene> GameScenes { get; set; }
-        public DbSet<Bmcs.Models.GameSceneDetail> GameSceneDetails { get; set; }
-        public DbSet<Bmcs.Models.GameSceneRunner> GameSceneRunners { get; set; }
-        public DbSet<Bmcs.Models.GameScoreFielder> GameScoreFielders { get; set; }
-        public DbSet<Bmcs.Models.GameScorePitcher> GameScorePitchers { get; set; }
-        public DbSet<Bmcs.Models.InningScore> InningScores { get; set; }
-        public DbSet<Bmcs.Models.Message> Messages { get; set; }
-        public DbSet<Bmcs.Models.Order> Orders { get; set; }
+        public DbSet<SystemAdmin> SystemAdmins { get; set; }
+        public DbSet<UserAccount> UserAccounts { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<Member> Members { get; set; }
+        public DbSet<Game> Games { get; set; }
+        public DbSet<GameScene> GameScenes { get; set; }
+        public DbSet<GameSceneDetail> GameSceneDetails { get; set; }
+        public DbSet<GameSceneRunner> GameSceneRunners { get; set; }
+        public DbSet<GameScoreFielder> GameScoreFielders { get; set; }
+        public DbSet<GameScorePitcher> GameScorePitchers { get; set; }
+        public DbSet<InningScore> InningScores { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //modelBuilder.UseCollation("SQL_Latin1_General_CP1_CS_AS");
+
+            modelBuilder.Entity<SystemAdmin>().ToTable("SystemAdmin");
             modelBuilder.Entity<UserAccount>().ToTable("UserAccount");
             modelBuilder.Entity<Team>().ToTable("Team");
             modelBuilder.Entity<Member>().ToTable("Member");

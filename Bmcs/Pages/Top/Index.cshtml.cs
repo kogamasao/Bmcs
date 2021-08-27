@@ -18,9 +18,15 @@ namespace Bmcs.Pages.Top
 
         }
 
-        public void OnGet()
-        {
+        public Models.SystemAdmin SystemAdmin { get; set; }
 
+        public async Task<IActionResult> OnGetAsync()
+        {
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FirstOrDefaultAsync();
+     
+            return Page();
         }
+
     }
 }

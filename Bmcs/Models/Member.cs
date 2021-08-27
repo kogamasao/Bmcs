@@ -19,6 +19,10 @@ namespace Bmcs.Models
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
 
+        [StringLength(3)]
+        [Display(Name = "背番号")]
+        public string UniformNumber { get; set; }
+
         [StringLength(50)]
         [Display(Name = "名前")]
         public string MemberName { get; set; }
@@ -28,18 +32,11 @@ namespace Bmcs.Models
 
         [NotMapped]
         [Display(Name = "メンバー区分")]
-        public string MemberClassName { get; set; }
-
-        [Display(Name = "打")]
-        public BatClass? BatClass { get; set; }
-
-        [NotMapped]
-        [Display(Name = "打")]
-        public string BatClassName
+        public string MemberClassName
         {
             get
             {
-                return BatClass.GetEnumName();
+                return MemberClass.GetEnumName();
             }
         }
 
@@ -56,6 +53,19 @@ namespace Bmcs.Models
             }
         }
 
+        [Display(Name = "打")]
+        public BatClass? BatClass { get; set; }
+
+        [NotMapped]
+        [Display(Name = "打")]
+        public string BatClassName
+        {
+            get
+            {
+                return BatClass.GetEnumName();
+            }
+        }
+
         [Display(Name = "ポジション")]
         public PositionGroupClass? PositionGroupClass { get; set; }
 
@@ -68,10 +78,6 @@ namespace Bmcs.Models
                 return PositionGroupClass.GetEnumName();
             }
         }
-
-        [StringLength(3)]
-        [Display(Name = "背番号")]
-        public string UniformNumber { get; set; }
 
         [DataType(DataType.MultilineText)]
         [Display(Name = "メッセージ")]
