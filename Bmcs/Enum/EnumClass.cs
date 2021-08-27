@@ -68,12 +68,12 @@ namespace Bmcs.Enum
     {
         [Description("監督")]
         Manager = 1,
-        [Description("コーチ")]
-        Coach = 2,
-        [Description("選手")]
-        Player = 3,
         [Description("選手兼監督")]
-        PlayingManager = 4,
+        PlayingManager = 2,
+        [Description("コーチ")]
+        Coach = 3,
+        [Description("選手")]
+        Player = 4,
         [Description("マネージャー")]
         Assistant = 5,
     }

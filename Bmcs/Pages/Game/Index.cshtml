@@ -1,0 +1,130 @@
+﻿@page
+@model Bmcs.Pages.Game.IndexModel
+
+@{
+    ViewData[ViewDataConstant.Title] = "試合一覧";
+}
+
+<h1>試合一覧</h1>
+
+<h4>@Model.Team.TeamName</h4>
+@if (Model.IsMyTeam)
+{
+    <p>
+        <a asp-page="Create">試合へ</a>
+    </p>
+}
+<div class="table-responsive">
+    <table class="table table-hover table-sm table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].GameDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].GameClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].OpponentTeamName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].StadiumName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].WinLoseClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].Score)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].OpponentTeamScore)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].TopButtomClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].StatusClassName)
+                </th>
+                @if (Model.IsAdmin())
+                {
+                    <th>
+                        @Html.DisplayNameFor(model => model.Game[0].EntryUserID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Game[0].EntryDatetime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Game[0].UpdateUserID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Game[0].UpdateDatetime)
+                    </th>
+                }
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Game)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GameDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GameClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OpponentTeamName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StadiumName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WinLoseClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Score)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OpponentTeamScore)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TopButtomClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StatusClassName)
+                </td>
+                @if (Model.IsAdmin())
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EntryUserID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EntryDatetime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UpdateUserID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UpdateDatetime)
+                    </td>
+                }
+                @if (Model.IsMyTeam || Model.IsAdmin())
+                {
+                    <td>
+                        <a asp-page="./Edit" asp-route-id="@item.GameID">編集</a> |
+                        <a asp-page="./Details" asp-route-id="@item.GameID">詳細</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.GameID">削除</a>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a asp-page="./Details" asp-route-id="@item.GameID">詳細</a>
+                    </td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

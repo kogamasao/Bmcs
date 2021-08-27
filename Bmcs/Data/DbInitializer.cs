@@ -353,6 +353,38 @@ namespace Bmcs.Data
                 new Member
                 {
                       TeamID = "YG"
+                    , UniformNumber = "00"
+                    , MemberName = "湯浅　大"
+                    , MemberClass = Enum.MemberClass.Player
+                    , ThrowClass = ThrowClass.Right
+                    , BatClass = BatClass.Right
+                    , PositionGroupClass = PositionGroupClass.Infielder
+                    , MessageDetail = ""
+                    , DeleteFLG = false
+                    , EntryDatetime = DateTime.Now
+                    , EntryUserID = "ADMIN"
+                    , UpdateDatetime = DateTime.Now
+                    , UpdateUserID = "ADMIN"
+                },
+                 new Member
+                {
+                      TeamID = "YG"
+                    , UniformNumber = "0"
+                    , MemberName = "増田　大輝"
+                    , MemberClass = Enum.MemberClass.Player
+                    , ThrowClass = ThrowClass.Right
+                    , BatClass = BatClass.Right
+                    , PositionGroupClass = PositionGroupClass.Infielder
+                    , MessageDetail = ""
+                    , DeleteFLG = false
+                    , EntryDatetime = DateTime.Now
+                    , EntryUserID = "ADMIN"
+                    , UpdateDatetime = DateTime.Now
+                    , UpdateUserID = "ADMIN"
+                },
+                new Member
+                {
+                      TeamID = "YG"
                     , UniformNumber = "20"
                     , MemberName = "戸郷　翔征"
                     , MemberClass = Enum.MemberClass.Player

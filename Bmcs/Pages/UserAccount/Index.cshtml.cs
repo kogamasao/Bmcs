@@ -28,7 +28,10 @@ namespace Bmcs.Pages.UserAccount
             }
 
             UserAccount = await Context.UserAccounts
-                .Include(u => u.Team).ToListAsync();
+                .Include(u => u.Team)
+                .OrderBy(r => r.TeamID)
+                .ThenBy(r => r.UserAccountID)
+                .ToListAsync();
 
             return Page();
         }

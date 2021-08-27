@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
 
-namespace Bmcs.Pages.Member
+namespace Bmcs.Pages.Game
 {
     public class IndexModel : PageModelBase<IndexModel>
     {
@@ -20,7 +20,7 @@ namespace Bmcs.Pages.Member
 
         }
 
-        public IList<Models.Member> Member { get;set; }
+        public IList<Models.Game> Game { get;set; }
 
         public Models.Team Team { get; set; }
 
@@ -35,32 +35,31 @@ namespace Bmcs.Pages.Member
                 teamID = HttpContext.Session.GetString(SessionConstant.TeamID);
             }
 
-            if(string.IsNullOrEmpty(teamID))
+            if (string.IsNullOrEmpty(teamID))
             {
                 return NotFound();
             }
 
             if (!base.IsAdmin())
             {
-                Member = await Context.Members
+                Game = await Context.Games
                     .Include(m => m.Team)
                     .Where(r => r.TeamID == teamID
                         && r.Team.DeleteFLG == false
                         && ((r.Team.PublicFLG == true && !IsMyTeam) || IsMyTeam)
                         && r.DeleteFLG == false)
-                    .OrderBy(r => r.MemberClass)
-                    .ThenBy(r => r.PositionGroupClass)
-                    .ThenBy(r => r.UniformNumber)
+                    .OrderBy(r => r.GameDate)
+                    .ThenBy(r => r.GameID)
                     .ToListAsync();
             }
             else
             {
-                Member = await Context.Members
+                Game = await Context.Games
                     .Include(m => m.Team)
-                    .Where(r => r.TeamID == teamID)
-                    .OrderBy(r => r.MemberClass)
-                    .ThenBy(r => r.PositionGroupClass)
-                    .ThenBy(r => r.UniformNumber)
+                    .Where(r => r.TeamID == teamID
+                        && r.DeleteFLG == false)
+                    .OrderBy(r => r.GameDate)
+                    .ThenBy(r => r.GameID)
                     .ToListAsync();
             }
 

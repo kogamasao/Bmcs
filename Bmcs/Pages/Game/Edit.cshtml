@@ -1,0 +1,105 @@
+﻿@page
+@model Bmcs.Pages.Game.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Game</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Game.GameID" />
+            <div class="form-group">
+                <label asp-for="Game.TeamID" class="control-label"></label>
+                <select asp-for="Game.TeamID" class="form-control" asp-items="ViewBag.TeamID"></select>
+                <span asp-validation-for="Game.TeamID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.GameDate" class="control-label"></label>
+                <input asp-for="Game.GameDate" class="form-control" />
+                <span asp-validation-for="Game.GameDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.GameClass" class="control-label"></label>
+                <input asp-for="Game.GameClass" class="form-control" />
+                <span asp-validation-for="Game.GameClass" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.OpponentTeamName" class="control-label"></label>
+                <input asp-for="Game.OpponentTeamName" class="form-control" />
+                <span asp-validation-for="Game.OpponentTeamName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.StadiumName" class="control-label"></label>
+                <input asp-for="Game.StadiumName" class="form-control" />
+                <span asp-validation-for="Game.StadiumName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.WinLoseClass" class="control-label"></label>
+                <input asp-for="Game.WinLoseClass" class="form-control" />
+                <span asp-validation-for="Game.WinLoseClass" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.Score" class="control-label"></label>
+                <input asp-for="Game.Score" class="form-control" />
+                <span asp-validation-for="Game.Score" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.OpponentTeamScore" class="control-label"></label>
+                <input asp-for="Game.OpponentTeamScore" class="form-control" />
+                <span asp-validation-for="Game.OpponentTeamScore" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.TopButtomClass" class="control-label"></label>
+                <input asp-for="Game.TopButtomClass" class="form-control" />
+                <span asp-validation-for="Game.TopButtomClass" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.StatusClass" class="control-label"></label>
+                <input asp-for="Game.StatusClass" class="form-control" />
+                <span asp-validation-for="Game.StatusClass" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Game.DeleteFLG" /> @Html.DisplayNameFor(model => model.Game.DeleteFLG)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.EntryUserID" class="control-label"></label>
+                <input asp-for="Game.EntryUserID" class="form-control" />
+                <span asp-validation-for="Game.EntryUserID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.EntryDatetime" class="control-label"></label>
+                <input asp-for="Game.EntryDatetime" class="form-control" />
+                <span asp-validation-for="Game.EntryDatetime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.UpdateUserID" class="control-label"></label>
+                <input asp-for="Game.UpdateUserID" class="form-control" />
+                <span asp-validation-for="Game.UpdateUserID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Game.UpdateDatetime" class="control-label"></label>
+                <input asp-for="Game.UpdateDatetime" class="form-control" />
+                <span asp-validation-for="Game.UpdateDatetime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

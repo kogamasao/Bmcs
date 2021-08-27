@@ -46,6 +46,11 @@ namespace Bmcs.Models
         public readonly BmcsContext Context;
 
         /// <summary>
+        /// マイチームフラグ
+        /// </summary>
+        public bool IsMyTeam { get; set; }
+
+        /// <summary>
         /// チームIDリスト
         /// </summary>
         public SelectList TeamIDList

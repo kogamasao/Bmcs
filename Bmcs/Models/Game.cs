@@ -24,8 +24,18 @@ namespace Bmcs.Models
         [Display(Name = "日付")]
         public DateTime GameDate { get; set; }
 
-        [Display(Name = "種別")]
+        [Display(Name = "試合種別")]
         public GameClass? GameClass { get; set; }
+
+        [NotMapped]
+        [Display(Name = "試合種別")]
+        public string GameClassName
+        {
+            get
+            {
+                return GameClass.GetEnumName();
+            }
+        }
 
         [Display(Name = "相手チーム名")]
         [StringLength(50)]
@@ -38,6 +48,16 @@ namespace Bmcs.Models
         [Display(Name = "勝敗")]
         public WinLoseClass? WinLoseClass { get; set; }
 
+        [NotMapped]
+        [Display(Name = "勝敗")]
+        public string WinLoseClassName
+        {
+            get
+            {
+                return WinLoseClass.GetEnumName();
+            }
+        }
+
         [Display(Name = "得点")]
         public int? Score { get; set; }
 
@@ -48,8 +68,28 @@ namespace Bmcs.Models
         [Display(Name = "先攻後攻")]
         public TopButtomClass? TopButtomClass { get; set; }
 
+        [NotMapped]
+        [Display(Name = "先攻後攻")]
+        public string TopButtomClassName
+        {
+            get
+            {
+                return TopButtomClass.GetEnumName();
+            }
+        }
+
         [Display(Name = "ステータス")]
         public StatusClass? StatusClass { get; set; }
+
+        [NotMapped]
+        [Display(Name = "ステータス")]
+        public string StatusClassName
+        {
+            get
+            {
+                return StatusClass.GetEnumName();
+            }
+        }
 
         [DefaultValue(false)]
         [Display(Name = "削除フラグ")]

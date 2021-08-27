@@ -25,12 +25,17 @@ namespace Bmcs.Pages.Team
             if (base.IsAdmin())
             { 
                 //全チーム
-                Team = await Context.Teams.ToListAsync();
+                Team = await Context.Teams
+                                .OrderBy(r => r.TeamID)
+                                .ToListAsync();
+
             }
             else
             {
                 //公開チームのみ
-                Team = await Context.Teams.Where(r => r.PublicFLG == true && r.DeleteFLG == false).ToListAsync();
+                Team = await Context.Teams.Where(r => r.PublicFLG == true && r.DeleteFLG == false)
+                                        .OrderBy(r => r.TeamID)
+                                        .ToListAsync();
             }
 
             return Page();
