@@ -75,9 +75,12 @@
     </div>
 </div>
 
+@if(Model.IsAdmin())
+{ 
 <div>
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="./Index">チーム一覧</a>
 </div>
+}
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

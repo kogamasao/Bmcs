@@ -11,8 +11,12 @@
 <p>
     <a asp-page="Create">ユーザ作成</a>
 </p>
+<p>※すべてのチームが表示対象です</p>
 }
-<p>※公開チームのみ表示されます</p>
+else
+{
+<p>※公開チームのみ表示対象です</p>
+}
 <div class="table-responsive">
     <table class="table table-hover table-sm table-bordered">
         <thead class="thead-light">
@@ -27,7 +31,7 @@
                     @Html.DisplayNameFor(model => model.Team[0].RepresentativeName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Team[0].TeamCategoryClassName)
+                    @Html.DisplayNameFor(model => model.Team[0].TeamCategoryClass)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Team[0].UseBallClassName)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bmcs.Data;
 using Bmcs.Models;
+using Bmcs.Enum;
 
 namespace Bmcs.Data
 {
@@ -22,15 +23,15 @@ namespace Bmcs.Data
 
             var userAccounts = new UserAccount[]
             {
-                new UserAccount{UserAccountID="ADMIN", UserAccountName="管理者",Password="ADMIN",TeamID="YG", EmailAddress="", DeleteFLG = false,EntryDatetime=DateTime.Now, EntryUserID="ADMIN"},
+                new UserAccount{UserAccountID="ADMIN", UserAccountName="管理者",Password="1",TeamID="YG", EmailAddress="", DeleteFLG = false,EntryDatetime=DateTime.Now, EntryUserID="ADMIN"},
             };
 
             context.UserAccounts.AddRange(userAccounts);
 
             var teams = new Team[]
             {
-                new Team{TeamID="YG", TeamName="読売ジャイアンツ",RepresentativeName="原辰徳",TeamNumber=70, TeamPassword="", TeamEmailAddress="", MessageDetail="",  PublicFLG=true, DeleteFLG = false,EntryDatetime=DateTime.Now,UpdateDatetime=DateTime.Now},
-                new Team{TeamID="HT",TeamName="阪神タイガース",RepresentativeName="矢野燿大",TeamNumber=69,TeamPassword="", TeamEmailAddress="", MessageDetail="",  PublicFLG=true, DeleteFLG = false,EntryDatetime=DateTime.Now,UpdateDatetime=DateTime.Now}
+                new Team{TeamID="YG", TeamName="読売ジャイアンツ",RepresentativeName="原辰徳", TeamCategoryClass= TeamCategoryClass.Proffessional,UseBallClass=UseBallClass.Hard,ActivityBase="東京", TeamNumber=70, TeamPassword="1", TeamEmailAddress="", MessageDetail="東京ドームが本拠地です。",  PublicFLG=true, DeleteFLG = false,EntryDatetime=DateTime.Now,UpdateDatetime=DateTime.Now},
+                new Team{TeamID="HT",TeamName="阪神タイガース",RepresentativeName="矢野燿大",TeamCategoryClass= TeamCategoryClass.Proffessional,UseBallClass=UseBallClass.Hard,ActivityBase="兵庫",TeamNumber=69,TeamPassword="1", TeamEmailAddress="", MessageDetail="甲子園が本拠地です。",  PublicFLG=true, DeleteFLG = false,EntryDatetime=DateTime.Now,UpdateDatetime=DateTime.Now}
             };
 
             context.Teams.AddRange(teams);
@@ -38,7 +39,7 @@ namespace Bmcs.Data
             var members = new Member[]
             {
                 new Member{TeamID="YG",MemberName="原辰徳",MemberClass=Enum.MemberClass.Manager, BatClass=null, ThrowClass=null, UniformNumber="88",MessageDetail="",DeleteFLG=false, EntryDatetime=DateTime.Now, UpdateDatetime=DateTime.Now},
-                new Member{TeamID="YG",MemberName="坂本勇人",MemberClass=Enum.MemberClass.Player, BatClass=null, ThrowClass=null, UniformNumber="6",MessageDetail="",DeleteFLG=false, EntryDatetime=DateTime.Now, UpdateDatetime=DateTime.Now},
+                new Member{TeamID="YG",MemberName="坂本勇人",MemberClass=Enum.MemberClass.Player, BatClass=BatClass.Right, ThrowClass=ThrowClass.Right, UniformNumber="6",MessageDetail="",DeleteFLG=false, EntryDatetime=DateTime.Now, UpdateDatetime=DateTime.Now},
                 new Member{TeamID="HT",MemberName="矢野燿大",MemberClass=Enum.MemberClass.Manager, BatClass=null, ThrowClass=null, UniformNumber="87",MessageDetail="",DeleteFLG=false, EntryDatetime=DateTime.Now, UpdateDatetime=DateTime.Now},
             };
 
