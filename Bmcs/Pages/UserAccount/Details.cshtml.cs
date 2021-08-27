@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Bmcs.Pages.UserAccount
 {
-    public class DetailsModel : PageModelBase
+    public class DetailsModel : PageModelBase<DetailsModel>
     {
-        public DetailsModel(BmcsContext context) : base(context)
+        public DetailsModel(ILogger<DetailsModel> logger, BmcsContext context) : base(logger, context)
         {
 
         }

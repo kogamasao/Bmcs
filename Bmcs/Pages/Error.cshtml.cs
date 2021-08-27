@@ -12,17 +12,15 @@ using Bmcs.Models;
 namespace Bmcs.Pages
 {
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public class ErrorModel : PageModelBase
+    public class ErrorModel : PageModelBase<ErrorModel>
     {
         public string RequestId { get; set; }
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-        private readonly ILogger<ErrorModel> _logger;
-
-        public ErrorModel(ILogger<ErrorModel> logger, BmcsContext context) : base(context)
+        public ErrorModel(ILogger<ErrorModel> logger, BmcsContext context) : base(logger, context)
         {
-            _logger = logger;
+
         }
 
         public void OnGet()

@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Bmcs.Pages.Member
 {
-    public class IndexModel : PageModelBase
+    public class IndexModel : PageModelBase<IndexModel>
     {
-        public IndexModel(BmcsContext context) : base(context)
+        public IndexModel(ILogger<IndexModel> logger, BmcsContext context) : base(logger, context)
         {
 
         }

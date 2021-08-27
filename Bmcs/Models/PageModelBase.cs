@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,12 +17,28 @@ namespace Bmcs.Models
     /// <summary>
     /// ページモデルベース
     /// </summary>
-    public abstract class PageModelBase : PageModel
+    public abstract class PageModelBase<T> : PageModel
     {
-        public PageModelBase(Bmcs.Data.BmcsContext context)
+        public PageModelBase(ILogger<T> logger, BmcsContext context) 
+        {
+            Logger = logger;
+            Context = context;
+        }
+
+        public PageModelBase(ILogger<T> logger)
+        {
+            Logger = logger;
+        }
+
+        public PageModelBase(BmcsContext context)
         {
             Context = context;
         }
+
+        /// <summary>
+        /// ログ
+        /// </summary>
+        public readonly ILogger<T> Logger;
 
         /// <summary>
         /// DBコンテキスト
@@ -330,7 +347,7 @@ namespace Bmcs.Models
         /// エントリ情報セット
         /// </summary>
         /// <returns></returns>
-        public void SetEntryInfo<T>(T dataModelBase) where T : DataModelBase
+        public void SetEntryInfo<TModel>(TModel dataModelBase) where TModel : DataModelBase
         {
             dataModelBase.EntryDatetime = DateTime.Now;
             dataModelBase.EntryUserID = HttpContext.Session.GetString(SessionConstant.UserAccountID);
@@ -342,7 +359,7 @@ namespace Bmcs.Models
         /// エントリ情報セット
         /// </summary>
         /// <returns></returns>
-        public void SetUpdateInfo<T>(T dataModelBase) where T : DataModelBase
+        public void SetUpdateInfo<TModel>(TModel dataModelBase) where TModel : DataModelBase
         {
             dataModelBase.UpdateDatetime = DateTime.Now;
             dataModelBase.UpdateUserID = HttpContext.Session.GetString(SessionConstant.UserAccountID);

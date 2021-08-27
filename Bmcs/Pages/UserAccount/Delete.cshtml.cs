@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Bmcs.Pages.UserAccount
 {
-    public class DeleteModel : PageModelBase
+    public class DeleteModel : PageModelBase<DeleteModel>
     {
-        public DeleteModel(BmcsContext context) : base(context)
+        public DeleteModel(ILogger<DeleteModel> logger, BmcsContext context) : base(logger, context)
         {
 
         }

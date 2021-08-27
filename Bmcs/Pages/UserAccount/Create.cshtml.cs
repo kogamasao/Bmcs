@@ -12,12 +12,13 @@ using Bmcs.Function;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
+using Microsoft.Extensions.Logging;
 
 namespace Bmcs.Pages.UserAccount
 {
-    public class CreateModel : PageModelBase
+    public class CreateModel : PageModelBase<CreateModel>
     {
-        public CreateModel(BmcsContext context) : base(context)
+        public CreateModel(ILogger<CreateModel> logger, BmcsContext context) : base(logger, context)
         {
 
         }

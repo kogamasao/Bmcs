@@ -11,12 +11,13 @@ using Bmcs.Models;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
 using Bmcs.Function;
+using Microsoft.Extensions.Logging;
 
 namespace Bmcs.Pages.UserAccount
 {
-    public class EditModel : PageModelBase
+    public class EditModel : PageModelBase<EditModel>
     {
-        public EditModel(BmcsContext context) : base(context)
+        public EditModel(ILogger<EditModel> logger, BmcsContext context) : base(logger, context)
         {
 
         }

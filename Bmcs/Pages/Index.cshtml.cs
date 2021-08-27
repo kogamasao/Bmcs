@@ -14,13 +14,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bmcs.Pages
 {
-    public class IndexModel : PageModelBase
+    public class IndexModel : PageModelBase<IndexModel>
     {
-        private readonly ILogger<IndexModel> _logger;
-
-        public IndexModel(ILogger<IndexModel> logger, BmcsContext context) : base(context)
+        public IndexModel(ILogger<IndexModel> logger, BmcsContext context) : base(logger, context)
         {
-            _logger = logger;
+            
         }
 
         [BindProperty]

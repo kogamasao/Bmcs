@@ -10,13 +10,11 @@ using Bmcs.Data;
 
 namespace Bmcs.Pages
 {
-    public class PrivacyModel : PageModelBase
+    public class PrivacyModel : PageModelBase<PrivacyModel>
     {
-        private readonly ILogger<IndexModel> _logger;
-
-        public PrivacyModel(ILogger<IndexModel> logger, BmcsContext context) : base(context)
+        public PrivacyModel(ILogger<PrivacyModel> logger, BmcsContext context) : base(logger, context)
         {
-            _logger = logger;
+
         }
 
         public void OnGet()
