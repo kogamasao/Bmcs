@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using Bmcs.Constans;
 
 namespace Bmcs.Pages.Member
 {
@@ -20,10 +22,52 @@ namespace Bmcs.Pages.Member
 
         public IList<Models.Member> Member { get;set; }
 
-        public async Task OnGetAsync()
+        public Models.Team Team { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(string teamID)
         {
-            Member = await Context.Members
-                .Include(m => m.Team).ToListAsync();
+            bool isMyTeam = false;
+
+            if (!base.IsLogin())
+            {
+                return NotFound();
+            }
+
+            if (teamID == null)
+            {
+                isMyTeam = true;
+                teamID = HttpContext.Session.GetString(SessionConstant.TeamID);
+            }
+
+            if(string.IsNullOrEmpty(teamID))
+            {
+                return NotFound();
+            }
+
+            if (!base.IsAdmin())
+            {
+                Member = await Context.Members
+                    .Include(m => m.Team)
+                    .Where(r => r.TeamID == teamID
+                        && r.Team.DeleteFLG == false
+                        && ((r.Team.PublicFLG == true && !isMyTeam) || isMyTeam)
+                        && r.DeleteFLG == false).ToListAsync();
+            }
+            else
+            {
+                Member = await Context.Members
+                    .Include(m => m.Team)
+                    .Where(r => r.TeamID == teamID).ToListAsync();
+            }
+
+            Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID);
+
+            if (Team == null)
+            {
+                return NotFound();
+            }
+
+            return Page();
         }
     }
 }

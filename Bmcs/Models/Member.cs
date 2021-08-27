@@ -26,14 +26,48 @@ namespace Bmcs.Models
         [Display(Name = "メンバー区分")]
         public MemberClass? MemberClass { get; set; }
 
+        [NotMapped]
+        [Display(Name = "メンバー区分")]
+        public string MemberClassName { get; set; }
+
         [Display(Name = "打")]
         public BatClass? BatClass { get; set; }
+
+        [NotMapped]
+        [Display(Name = "打")]
+        public string BatClassName
+        {
+            get
+            {
+                return BatClass.GetEnumName();
+            }
+        }
 
         [Display(Name = "投")]
         public ThrowClass? ThrowClass { get; set; }
 
+        [NotMapped]
+        [Display(Name = "投")]
+        public string ThrowClassName
+        {
+            get
+            {
+                return ThrowClass.GetEnumName();
+            }
+        }
+
         [Display(Name = "ポジション")]
         public PositionGroupClass? PositionGroupClass { get; set; }
+
+        [NotMapped]
+        [Display(Name = "ポジション")]
+        public string PositionGroupClassName
+        {
+            get
+            {
+                return PositionGroupClass.GetEnumName();
+            }
+        }
 
         [StringLength(3)]
         [Display(Name = "背番号")]

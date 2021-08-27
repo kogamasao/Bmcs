@@ -6,109 +6,105 @@
 }
 
 <h1>メンバー一覧</h1>
-
+<h4>@Model.Team.TeamName</h4>
 <p>
     <a asp-page="Create">メンバー追加</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].MemberName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].MemberClass)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].BatClass)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].ThrowClass)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].PositionGroupClass)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].UniformNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].MessageDetail)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].DeleteFLG)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].Team)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].EntryUserID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].EntryDatetime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].UpdateUserID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].UpdateDatetime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member[0].TimeStamp)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Member) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MemberName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MemberClass)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BatClass)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThrowClass)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PositionGroupClass)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UniformNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MessageDetail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeleteFLG)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Team.TeamID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EntryUserID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EntryDatetime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdateUserID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdateDatetime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TimeStamp)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.MemberID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.MemberID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.MemberID">Delete</a>
-            </td>
-        </tr>
+<div class="table-responsive">
+    <table class="table table-hover table-sm table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].MemberName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].MemberClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].BatClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].ThrowClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].PositionGroupClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].UniformNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].MessageDetail)
+                </th>
+                @if (Model.IsAdmin())
+                {
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].DeleteFLG)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].EntryUserID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].EntryDatetime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].UpdateUserID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].UpdateDatetime)
+                </th>
+                }
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Member) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BatClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ThrowClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PositionGroupClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UniformNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MessageDetail)
+                </td>
+                @if (Model.IsAdmin())
+                {
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeleteFLG)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EntryUserID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EntryDatetime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateUserID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateDatetime)
+                </td>
+                }
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.MemberID">編集</a> |
+                    <a asp-page="./Details" asp-route-id="@item.MemberID">詳細</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.MemberID">削除</a>
+                </td>
+            </tr>
 }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
