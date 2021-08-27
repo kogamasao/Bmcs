@@ -6,16 +6,34 @@
 }
 
 <h1>チーム一覧</h1>
+@if(Model.IsAdmin())
+{
+<p>
+    <a asp-page="Create">ユーザ作成</a>
+</p>
+}
 <p>※公開チームのみ表示されます</p>
 <div class="table-responsive">
     <table class="table table-hover table-sm table-bordered">
         <thead class="thead-light">
             <tr>
                 <th>
+                    @Html.DisplayNameFor(model => model.Team[0].TeamID)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Team[0].TeamName)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Team[0].RepresentativeName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Team[0].TeamCategoryClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Team[0].UseBallClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Team[0].ActivityBase)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Team[0].TeamNumber)
@@ -58,10 +76,22 @@
             {
             <tr>
                 <td>
+                    @Html.DisplayFor(modelItem => item.TeamID)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.TeamName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.RepresentativeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeamCategoryClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UseBallClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ActivityBase)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.TeamNumber)

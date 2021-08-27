@@ -27,8 +27,6 @@ namespace Bmcs.Pages.UserAccount
 
         public IActionResult OnGet()
         {
-            base.GetSelectList();
-
             return Page();
         }
         
@@ -36,8 +34,6 @@ namespace Bmcs.Pages.UserAccount
         {
             try
             {
-                base.GetSelectList();
-
                 if (!ModelState.IsValid)
                 {
                     return Page();
@@ -93,11 +89,11 @@ namespace Bmcs.Pages.UserAccount
             //管理者でない、かつチーム未登録の場合
             if (!base.IsAdmin() && string.IsNullOrEmpty(HttpContext.Session.GetString(SessionConstant.TeamID)))
             {
-                return RedirectToPage("./Team/Create");
+                return RedirectToPage("/Team/Create");
             }
             else
             {
-                return RedirectToPage("./Top/Index");
+                return RedirectToPage("/Top/Index");
             }
         }
 

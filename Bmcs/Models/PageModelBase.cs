@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Bmcs.Constans;
 using Bmcs.Data;
+using Bmcs.Enum;
 
 namespace Bmcs.Models
 {
@@ -22,9 +23,265 @@ namespace Bmcs.Models
             Context = context;
         }
 
+        /// <summary>
+        /// DBコンテキスト
+        /// </summary>
         public readonly BmcsContext Context;
 
-        public SelectList TeamIDList { get; set; }
+        /// <summary>
+        /// チームIDリスト
+        /// </summary>
+        public SelectList TeamIDList
+        { 
+            get
+            {
+                return AddFirstItem(new SelectList(Context.Teams.Where(r => r.DeleteFLG == false), nameof(Team.TeamID), nameof(Team.TeamIDName), string.Empty)
+                    , new SelectListItem(string.Empty, string.Empty));
+            }
+        }
+
+        /// <summary>
+        /// 試合区分リスト
+        /// </summary>
+        public SelectList GameClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<GameClass>();
+            }
+        }
+
+        /// <summary>
+        /// チーム分類区分リスト
+        /// </summary>
+        public SelectList TeamCategoryClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<TeamCategoryClass>();
+            }
+        }
+
+        /// <summary>
+        /// 使用球リスト
+        /// </summary>
+        public SelectList UseBallClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<UseBallClass>();
+            }
+        }
+
+        /// <summary>
+        /// メンバー区分リスト
+        /// </summary>
+        public SelectList MemberClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<MemberClass>();
+            }
+        }
+
+        /// <summary>
+        /// 打席区分リスト
+        /// </summary>
+        public SelectList BatClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<BatClass>();
+            }
+        }
+
+        /// <summary>
+        /// 投区分リスト
+        /// </summary>
+        public SelectList ThrowClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<ThrowClass>();
+            }
+        }
+
+        /// <summary>
+        /// 投球フォーム区分リスト
+        /// </summary>
+        public SelectList ThrowFormClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<ThrowFormClass>();
+            }
+        }
+
+        /// <summary>
+        /// ポジショングループ区分リスト
+        /// </summary>
+        public SelectList PositionGroupClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<PositionGroupClass>();
+            }
+        }
+
+        /// <summary>
+        /// ポジション区分リスト
+        /// </summary>
+        public SelectList PositionClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<PositionClass>();
+            }
+        }
+
+        /// <summary>
+        /// 勝敗区分リスト
+        /// </summary>
+        public SelectList WinLoseClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<WinLoseClass>();
+            }
+        }
+
+        /// <summary>
+        /// ステータス区分リスト
+        /// </summary>
+        public SelectList StatusClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<StatusClass>();
+            }
+        }
+
+        /// <summary>
+        /// 攻守区分リスト
+        /// </summary>
+        public SelectList OffenseDefenseClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<OffenseDefenseClass>();
+            }
+        }
+
+        /// <summary>
+        /// 表裏区分リスト
+        /// </summary>
+        public SelectList TopButtomClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<TopButtomClass>();
+            }
+        }
+
+        /// <summary>
+        /// 出場区分リスト
+        /// </summary>
+        public SelectList ParticipationClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<ParticipationClass>();
+            }
+        }
+
+        /// <summary>
+        /// 打球方向区分リスト
+        /// </summary>
+        public SelectList HittingDirectionClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<HittingDirectionClass>();
+            }
+
+        }
+        /// <summary>
+        /// 打球区分リスト
+        /// </summary>
+        public SelectList HitBallClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<HitBallClass>();
+            }
+        }
+
+        /// <summary>
+        /// 結果区分リスト
+        /// </summary>
+        public SelectList ResultClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<ResultClass>();
+            }
+        }
+
+        /// <summary>
+        /// ランナー区分リスト
+        /// </summary>
+        public SelectList RunnerClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<RunnerClass>();
+            }
+        }
+
+        /// <summary>
+        /// シーン結果区分リスト
+        /// </summary>
+        public SelectList SceneResultClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<SceneResultClass>();
+            }
+        }
+
+        /// <summary>
+        /// 詳細結果区分リスト
+        /// </summary>
+        public SelectList DetailResultClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<DetailResultClass>();
+            }
+        }
+
+        /// <summary>
+        /// ランナー結果区分リスト
+        /// </summary>
+        public SelectList RunnerResultClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<RunnerResultClass>();
+            }
+        }
+
+        /// <summary>
+        /// メッセージ区分リスト
+        /// </summary>
+        public SelectList MessageClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<MessageClass>();
+            }
+        }
+
 
         public override void OnPageHandlerExecuted(PageHandlerExecutedContext context)
         {
@@ -89,17 +346,6 @@ namespace Bmcs.Models
         {
             dataModelBase.UpdateDatetime = DateTime.Now;
             dataModelBase.UpdateUserID = HttpContext.Session.GetString(SessionConstant.UserAccountID);
-        }
-
-        /// <summary>
-        /// SelectList取得
-        /// </summary>
-        /// <returns></returns>
-        public void GetSelectList()
-        {
-            //チームID
-            TeamIDList = AddFirstItem(new SelectList(Context.Teams.Where(r => r.DeleteFLG == false), nameof(Team.TeamID), nameof(Team.TeamIDName), string.Empty)
-                                    , new SelectListItem(string.Empty, string.Empty));
         }
 
         /// <summary>

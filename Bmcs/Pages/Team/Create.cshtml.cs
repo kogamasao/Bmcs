@@ -81,7 +81,14 @@ namespace Bmcs.Pages.Team
                 throw;
             }
 
-            return RedirectToPage("./Index");
+            if (base.IsAdmin())
+            {
+                return RedirectToPage("./Index");
+            }
+            else
+            {
+                return RedirectToPage("/Top/Index");
+            }
         }
 
         /// <summary>
@@ -94,6 +101,9 @@ namespace Bmcs.Pages.Team
             team.TeamName = Team.TeamName;
             team.TeamPassword = Team.TeamPassword;
             team.RepresentativeName = Team.RepresentativeName;
+            team.TeamCategoryClass = Team.TeamCategoryClass;
+            team.UseBallClass = Team.UseBallClass;
+            team.ActivityBase = Team.ActivityBase;
             team.TeamNumber = Team.TeamNumber;
             team.TeamEmailAddress = Team.TeamEmailAddress;
             team.MessageDetail = Team.MessageDetail;

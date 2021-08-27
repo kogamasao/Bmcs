@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Bmcs.Enum;
 
 namespace Bmcs.Models
 {
@@ -24,6 +25,36 @@ namespace Bmcs.Models
 
         [Display(Name = "代表者名")]
         public string RepresentativeName { get; set; }
+
+        [Display(Name = "チーム分類")]
+        public TeamCategoryClass? TeamCategoryClass { get; set; }
+
+        [NotMapped]
+        [Display(Name = "チーム分類")]
+        public string TeamCategoryClassName 
+        {
+            get
+            {
+                return TeamCategoryClass.GetEnumName();
+            }     
+        }
+
+        [Display(Name = "使用球")]
+        public UseBallClass? UseBallClass { get; set; }
+
+        [NotMapped]
+        [Display(Name = "使用球")]
+        public string UseBallClassName
+        {
+            get
+            {
+                return UseBallClass.GetEnumName();
+            }
+        }
+
+        [Display(Name = "活動拠点")]
+        [StringLength(50)]
+        public string ActivityBase { get; set; }
 
         [Display(Name = "チーム人数")]
         public int? TeamNumber { get; set; }

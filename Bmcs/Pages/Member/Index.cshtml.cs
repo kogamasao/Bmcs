@@ -10,20 +10,18 @@ using Bmcs.Models;
 
 namespace Bmcs.Pages.Member
 {
-    public class IndexModel : PageModel
+    public class IndexModel : PageModelBase
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public IndexModel(Bmcs.Data.BmcsContext context)
+        public IndexModel(BmcsContext context) : base(context)
         {
-            _context = context;
+
         }
 
         public IList<Models.Member> Member { get;set; }
 
         public async Task OnGetAsync()
         {
-            Member = await _context.Members
+            Member = await Context.Members
                 .Include(m => m.Team).ToListAsync();
         }
     }

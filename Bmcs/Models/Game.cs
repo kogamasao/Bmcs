@@ -24,6 +24,9 @@ namespace Bmcs.Models
         [Display(Name = "日付")]
         public DateTime GameDate { get; set; }
 
+        [Display(Name = "種別")]
+        public GameClass? GameClass { get; set; }
+
         [Display(Name = "相手チーム名")]
         [StringLength(50)]
         public string OpponentTeamName { get; set; }

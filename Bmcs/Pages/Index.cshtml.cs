@@ -28,7 +28,10 @@ namespace Bmcs.Pages
 
         public void OnGet()
         {
-
+            //ログイン情報クリア
+            HttpContext.Session.SetString(SessionConstant.UserAccountID, string.Empty);
+            HttpContext.Session.SetString(SessionConstant.TeamID, string.Empty);
+            HttpContext.Session.SetString(SessionConstant.AdminFLG, string.Empty);
         }
 
         public async Task<IActionResult> OnPostAsync()

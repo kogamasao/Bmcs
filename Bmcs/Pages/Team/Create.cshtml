@@ -1,5 +1,6 @@
 ﻿@page
 @model Bmcs.Pages.Team.CreateModel
+@using Bmcs.Enum
 
 @{
     ViewData[ViewDataConstant.Title] = "チーム作成";
@@ -10,7 +11,7 @@
 <h4></h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -37,6 +38,19 @@
                 <label asp-for="Team.RepresentativeName" class="control-label"></label>
                 <input asp-for="Team.RepresentativeName" class="form-control" />
                 <span asp-validation-for="Team.RepresentativeName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Team.TeamCategoryClass" class="control-label"></label>
+                <select asp-for="Team.TeamCategoryClass" class="form-control" asp-items="Model.TeamCategoryClassList"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Team.UseBallClass" class="control-label"></label>
+                <select asp-for="Team.UseBallClass" class="form-control" asp-items="Model.UseBallClassList"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Team.ActivityBase" class="control-label"></label>
+                <input asp-for="Team.ActivityBase" class="form-control" />
+                <span asp-validation-for="Team.ActivityBase" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Team.TeamNumber" class="control-label"></label>

@@ -43,7 +43,7 @@ namespace Bmcs.Models
 
         [Required]
         [Display(Name = "打球方向")]
-        public PositionClass? PositionClass { get; set; }
+        public HittingDirectionClass? HittingDirectionClass { get; set; }
 
         [Required]
         [Display(Name = "打球")]

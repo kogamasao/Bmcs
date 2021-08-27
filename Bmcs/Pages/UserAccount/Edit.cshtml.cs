@@ -51,15 +51,11 @@ namespace Bmcs.Pages.UserAccount
                 return NotFound();
             }
 
-            base.GetSelectList();
-
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            base.GetSelectList();
-
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -107,7 +103,7 @@ namespace Bmcs.Pages.UserAccount
             }
             else
             {
-                return RedirectToPage("../Top/Index");
+                return RedirectToPage("/Top/Index");
             }
         }
 
