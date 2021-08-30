@@ -63,7 +63,7 @@ namespace Bmcs.Pages.Game
             //日時
             Game.GameDate = DateTime.Now;
             //表裏タイプ
-            Game.TopButtomClass = TopButtomClass.Top;
+            Game.BatFirstBatSecondClass = BatFirstBatSecondClass.First;
             //試合入力タイプ
             Game.GameInputTypeClass = GameInputTypeClass.ByBatter;
 
@@ -72,6 +72,8 @@ namespace Bmcs.Pages.Game
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var gameID = 0;
+
             try
             {
                 if (!ModelState.IsValid)
@@ -90,13 +92,15 @@ namespace Bmcs.Pages.Game
                 Context.Games.Add(game);
 
                 await Context.SaveChangesAsync();
+
+                gameID = game.GameID;
             }
             catch (DbUpdateConcurrencyException)
             {
                 throw;
             }
 
-            return RedirectToPage("./Index", new { teamID = Game.TeamID });
+            return RedirectToPage("/Order/Edit", new { gameID = gameID });
 
         }
 
@@ -112,9 +116,9 @@ namespace Bmcs.Pages.Game
             game.OpponentTeamName = Game.OpponentTeamName;
             game.StadiumName = Game.StadiumName;
             game.WeatherClass = Game.WeatherClass;
-            game.TopButtomClass = Game.TopButtomClass;
+            game.BatFirstBatSecondClass = Game.BatFirstBatSecondClass;
             game.GameInputTypeClass = Game.GameInputTypeClass;
-            game.StatusClass = StatusClass.Incomplete;
+            game.StatusClass = StatusClass.BeforeGame;
             game.DeleteFLG = false;
         }
     }

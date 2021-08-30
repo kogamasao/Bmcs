@@ -38,12 +38,11 @@
                 <label asp-for="Game.WeatherClass" class="control-label"></label>
                 <select asp-for="Game.WeatherClass" class="form-control" asp-items="Model.WeatherClassList"></select>
             </div>
-            @if (Model.Game.StatusClass == StatusClass.Incomplete)
+            @if (Model.Game.StatusClass == StatusClass.BeforeGame)
             {
                 <div class="form-group">
-                    <label asp-for="Game.TopButtomClass" class="control-label"></label>
-                    <input asp-for="Game.TopButtomClass" class="form-control" />
-                    <span asp-validation-for="Game.TopButtomClass" class="text-danger"></span>
+                    <label asp-for="Game.BatFirstBatSecondClass" class="control-label"></label>
+                    <select asp-for="Game.BatFirstBatSecondClass" class="form-control" asp-items="Model.BatFirstBatSecondClassList"></select>
                 </div>
                 <div class="form-group">
                     <label asp-for="Game.GameInputTypeClass" class="control-label"></label>
@@ -52,7 +51,7 @@
             }
             else
             {
-                <input type="hidden" asp-for="Game.TopButtomClass" />
+                <input type="hidden" asp-for="Game.BatFirstBatSecondClass" />
                 <input type="hidden" asp-for="Game.GameInputTypeClass" />
             }
             <div class="form-group">

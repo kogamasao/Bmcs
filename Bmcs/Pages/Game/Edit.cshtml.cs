@@ -79,7 +79,7 @@ namespace Bmcs.Pages.Game
                 throw;
             }
 
-            return RedirectToPage("./Index", new { teamID = Game.TeamID });
+            return RedirectToPage("/Order/Edit", new { gameID = Game.GameID });
 
         }
 
@@ -94,7 +94,7 @@ namespace Bmcs.Pages.Game
             game.OpponentTeamName = Game.OpponentTeamName;
             game.StadiumName = Game.StadiumName;
             game.WeatherClass = Game.WeatherClass;
-            game.TopButtomClass = Game.TopButtomClass;
+            game.BatFirstBatSecondClass = Game.BatFirstBatSecondClass;
             game.GameInputTypeClass = Game.GameInputTypeClass;
         }
     }

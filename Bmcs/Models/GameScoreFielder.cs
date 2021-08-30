@@ -75,6 +75,9 @@ namespace Bmcs.Models
         [Display(Name = "犠牲")]
         public int? SacrificeFly { get; set; }
 
+        [Display(Name = "残塁")]
+        public int? LeftOnBase { get; set; }
+
         [Display(Name = "得点圏打席")]
         public int? ScoringPositionPlateappearance { get; set; }
 
@@ -90,7 +93,7 @@ namespace Bmcs.Models
         [Display(Name = "併殺打")]
         public int? DobblePlay { get; set; }
 
-        [Display(Name = "失策")]
+        [Display(Name = "敵失策")]
         public int? Error { get; set; }
 
         [Display(Name = "被盗塁企画数")]
@@ -101,6 +104,9 @@ namespace Bmcs.Models
 
         [Display(Name = "補殺")]
         public int? Assist { get; set; }
+
+        [Display(Name = "失策")]
+        public int? OwnError { get; set; }
 
         public Game Game { get; set; }
 

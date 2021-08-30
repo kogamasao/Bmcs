@@ -87,6 +87,16 @@ namespace Bmcs.Models
         [Display(Name = "削除フラグ")]
         public bool DeleteFLG { get; set; }
 
+        [NotMapped]
+        [Display(Name = "選手名")]
+        public string UniformNumberMemberName
+        {
+            get
+            {
+                return UniformNumber + " " + MemberName;
+            }
+        }
+
         public Team Team { get; set; }
 
         public ICollection<Order> Orders { get; set; }

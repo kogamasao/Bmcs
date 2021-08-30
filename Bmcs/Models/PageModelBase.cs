@@ -51,6 +51,11 @@ namespace Bmcs.Models
         public bool IsMyTeam { get; set; }
 
         /// <summary>
+        /// チームID
+        /// </summary>
+        public string TeamID { get; set; }
+
+        /// <summary>
         /// チームIDリスト
         /// </summary>
         public SelectList TeamIDList
@@ -58,6 +63,18 @@ namespace Bmcs.Models
             get
             {
                 return AddFirstItem(new SelectList(Context.Teams.Where(r => r.DeleteFLG == false), nameof(Team.TeamID), nameof(Team.TeamIDName), string.Empty)
+                    , new SelectListItem(string.Empty, string.Empty));
+            }
+        }
+
+        /// <summary>
+        /// メンバーIDリスト
+        /// </summary>
+        public SelectList MemberIDList
+        {
+            get
+            {
+                return AddFirstItem(new SelectList(Context.Members.Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false).OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty)
                     , new SelectListItem(string.Empty, string.Empty));
             }
         }
@@ -213,6 +230,17 @@ namespace Bmcs.Models
             get
             {
                 return EnumClass.GetSelectList<OffenseDefenseClass>();
+            }
+        }
+
+        /// <summary>
+        /// 攻守区分リスト
+        /// </summary>
+        public SelectList BatFirstBatSecondClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<BatFirstBatSecondClass>(false);
             }
         }
 

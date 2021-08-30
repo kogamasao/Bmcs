@@ -208,11 +208,11 @@ namespace Bmcs.Enum
     public enum StatusClass
     {
         [Description("試合前")]
-        Incomplete = 1,
-        [Description("編集中")]
-        Editing = 2,
-        [Description("完了")]
-        Complete = 9,
+        BeforeGame = 1,
+        [Description("試合中")]
+        DuringGame = 2,
+        [Description("試合終了")]
+        EndGame = 9,
     }
 
     /// <summary>
@@ -224,6 +224,17 @@ namespace Bmcs.Enum
         Offense = 1,
         [Description("守")]
         Defense = 2,
+    }
+
+    /// <summary>
+    /// 先攻後攻区分
+    /// </summary>
+    public enum BatFirstBatSecondClass
+    {
+        [Description("先攻")]
+        First = 1,
+        [Description("後攻")]
+        Second = 2,
     }
 
     /// <summary>
@@ -411,6 +422,8 @@ namespace Bmcs.Enum
         OnThirdBase = 4,
         [Description("得点")]
         Run = 5,
+        [Description("残塁")]
+        LeftOnBase = 6,
     }
 
     /// <summary>

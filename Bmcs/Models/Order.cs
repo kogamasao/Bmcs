@@ -25,10 +25,9 @@ namespace Bmcs.Models
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
 
-        [Display(Name = "メンバーID")]
+        [Display(Name = "選手")]
         public int? MemberID { get; set; }
 
-        [Required]
         [Column(TypeName = "decimal(4, 2)")]
         [Display(Name = "打順")]
         public decimal? BattingOrder { get; set; }
@@ -36,12 +35,21 @@ namespace Bmcs.Models
         [Display(Name = "出場順")]
         public int? ParticipationIndex { get; set; }
 
-        [Required]
         [Display(Name = "守備")]
         public PositionClass? PositionClass { get; set; }
 
         [Display(Name = "出場")]
         public ParticipationClass? ParticipationClass { get; set; }
+
+        [NotMapped]
+        [Display(Name = "打順")]
+        public string DisplayBattingOrder
+        {
+            get
+            {
+                return Convert.ToDecimal(BattingOrder).ToString("#.##");
+            }
+        }
 
         public Game Game { get; set; }
 

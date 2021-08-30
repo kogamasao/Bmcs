@@ -96,21 +96,19 @@ namespace Bmcs.Models
             }
         }
 
-        [Required]
         [Display(Name = "先攻後攻")]
-        public TopButtomClass? TopButtomClass { get; set; }
+        public BatFirstBatSecondClass? BatFirstBatSecondClass { get; set; }
 
         [NotMapped]
         [Display(Name = "先攻後攻")]
-        public string TopButtomClassName
+        public string BatFirstBatSecondClassName
         {
             get
             {
-                return TopButtomClass.GetEnumName();
+                return BatFirstBatSecondClass.GetEnumName();
             }
         }
 
-        [Required]
         [Display(Name = "試合入力タイプ")]
         public GameInputTypeClass? GameInputTypeClass { get; set; }
 

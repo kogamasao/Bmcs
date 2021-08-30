@@ -1,0 +1,75 @@
+﻿@page
+@model Bmcs.Pages.Order.EditModel
+
+
+<h1>@ViewData[ViewDataConstant.Title]</h1>
+
+<h4>@Model.Game.Team.TeamName</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Game.GameID" />
+            <div class="table-responsive">
+                <table class="table table-hover table-sm table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.OrderList[0].DisplayBattingOrder)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.OrderList[0].MemberID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.OrderList[0].PositionClass)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.OrderList.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => Model.OrderList[i].DisplayBattingOrder)
+                                </td>
+                                <td>
+                                    <select asp-for="@Model.OrderList[i].MemberID" class="form-control" asp-items="@Model.MemberIDList"></select>
+                                </td>
+                                <td>
+                                    <select asp-for="@Model.OrderList[i].PositionClass" class="form-control" asp-items="@Model.PositionClassList"></select>
+                                </td>
+                                <td>
+                                    <input type="hidden" asp-for="@Model.OrderList[i].GameID" />
+                                    <input type="hidden" asp-for="@Model.OrderList[i].TeamID" />
+                                    <input type="hidden" asp-for="@Model.OrderList[i].GameSceneID" />
+                                    <input type="hidden" asp-for="@Model.OrderList[i].BattingOrder" />
+                                    <input type="hidden" asp-for="@Model.OrderList[i].ParticipationIndex" />
+                                    <input type="hidden" asp-for="@Model.OrderList[i].ParticipationClass" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="登録" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    @if (Model.OrderList.FirstOrDefault().GameSceneID == null)
+    {
+        <a asp-page="/Game/Edit" asp-route-id="@Model.Game.GameID">試合情報へ戻る</a>
+    }
+    else
+    {
+        <a asp-page="./Index">試合へ戻る</a>
+    }
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
