@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Microsoft.Extensions.Logging;
+using Bmcs.Constans;
+using Microsoft.AspNetCore.Http;
 
 namespace Bmcs.Pages.Game
 {
-    public class DetailsModel : PageModel
+    public class DetailsModel : PageModelBase<DetailsModel>
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public DetailsModel(Bmcs.Data.BmcsContext context)
+        public DetailsModel(ILogger<DetailsModel> logger, BmcsContext context) : base(logger, context)
         {
-            _context = context;
+
         }
 
         public Models.Game Game { get; set; }
@@ -28,13 +29,24 @@ namespace Bmcs.Pages.Game
                 return NotFound();
             }
 
-            Game = await _context.Games
-                .Include(g => g.Team).FirstOrDefaultAsync(m => m.GameID == id);
+            Game = await Context.Games
+                .Include(m => m.Team).FirstOrDefaultAsync(m => m.GameID == id);
 
             if (Game == null)
             {
                 return NotFound();
             }
+
+            if (!base.IsAdmin()
+                && (Game.Team.DeleteFLG == true
+                    || (Game.Team.PublicFLG == false && Game.TeamID != HttpContext.Session.GetString(SessionConstant.TeamID))
+                    || Game.DeleteFLG == true
+                    )
+                )
+            {
+                return NotFound();
+            }
+
             return Page();
         }
     }

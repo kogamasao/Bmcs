@@ -162,6 +162,17 @@ namespace Bmcs.Models
         }
 
         /// <summary>
+        /// 天候区分リスト
+        /// </summary>
+        public SelectList WeatherClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<WeatherClass>();
+            }
+        }
+
+        /// <summary>
         /// 勝敗区分リスト
         /// </summary>
         public SelectList WinLoseClassList
@@ -169,6 +180,17 @@ namespace Bmcs.Models
             get
             {
                 return EnumClass.GetSelectList<WinLoseClass>();
+            }
+        }
+
+         /// <summary>
+        /// 試合入力タイプ区分リスト
+        /// </summary>
+        public SelectList GameInputTypeClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<GameInputTypeClass>(false);
             }
         }
 
@@ -201,7 +223,7 @@ namespace Bmcs.Models
         {
             get
             {
-                return EnumClass.GetSelectList<TopButtomClass>();
+                return EnumClass.GetSelectList<TopButtomClass>(false);
             }
         }
 

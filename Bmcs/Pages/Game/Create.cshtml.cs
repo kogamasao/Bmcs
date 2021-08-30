@@ -7,40 +7,115 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Bmcs.Data;
 using Bmcs.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using Bmcs.Constans;
+using Microsoft.EntityFrameworkCore;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.Game
 {
-    public class CreateModel : PageModel
+    public class CreateModel : PageModelBase<CreateModel>
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public CreateModel(Bmcs.Data.BmcsContext context)
+        public CreateModel(ILogger<CreateModel> logger, BmcsContext context) : base(logger, context)
         {
-            _context = context;
-        }
 
-        public IActionResult OnGet()
-        {
-        ViewData["TeamID"] = new SelectList(_context.Teams, "TeamID", "TeamID");
-            return Page();
         }
 
         [BindProperty]
         public Models.Game Game { get; set; }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnGetAsync(string teamID)
         {
-            if (!ModelState.IsValid)
+            if (!base.IsLogin())
             {
-                return Page();
+                return NotFound();
             }
 
-            _context.Games.Add(Game);
-            await _context.SaveChangesAsync();
+            //マイチーム以外を指定して管理者でない
+            if (!string.IsNullOrEmpty(teamID)
+                && teamID != HttpContext.Session.GetString(SessionConstant.TeamID)
+                && !base.IsAdmin())
+            {
+                return NotFound();
+            }
 
-            return RedirectToPage("./Index");
+            if (teamID == null)
+            {
+                teamID = HttpContext.Session.GetString(SessionConstant.TeamID);
+            }
+
+            if (string.IsNullOrEmpty(teamID))
+            {
+                return NotFound();
+            }
+
+            Game = new Models.Game();
+            Game.Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID);
+
+            if (Game.Team == null)
+            {
+                return NotFound();
+            }
+
+            //チームID
+            Game.TeamID = Game.Team.TeamID;
+            //日時
+            Game.GameDate = DateTime.Now;
+            //表裏タイプ
+            Game.TopButtomClass = TopButtomClass.Top;
+            //試合入力タイプ
+            Game.GameInputTypeClass = GameInputTypeClass.ByBatter;
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return Page();
+                }
+
+                //データ作成
+                var game = new Models.Game();
+
+                //POST値セット
+                this.TryUpdateModel(game);
+                //エントリ情報セット
+                base.SetEntryInfo(game);
+
+                Context.Games.Add(game);
+
+                await Context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
+            return RedirectToPage("./Index", new { teamID = Game.TeamID });
+
+        }
+
+        /// <summary>
+        /// POST値をモデルにセット
+        /// </summary>
+        /// <param name="game"></param>
+        private void TryUpdateModel(Models.Game game)
+        {
+            game.TeamID = Game.TeamID;
+            game.GameDate = Game.GameDate;
+            game.GameClass = Game.GameClass;
+            game.OpponentTeamName = Game.OpponentTeamName;
+            game.StadiumName = Game.StadiumName;
+            game.WeatherClass = Game.WeatherClass;
+            game.TopButtomClass = Game.TopButtomClass;
+            game.GameInputTypeClass = Game.GameInputTypeClass;
+            game.StatusClass = StatusClass.Incomplete;
+            game.DeleteFLG = false;
         }
     }
 }

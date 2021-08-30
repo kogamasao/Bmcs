@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Bmcs.Enum;
+using Bmcs.Function;
 
 namespace Bmcs.Models
 {
@@ -45,6 +46,19 @@ namespace Bmcs.Models
         [StringLength(50)]
         public string StadiumName { get; set; }
 
+        [Display(Name = "天候")]
+        public WeatherClass? WeatherClass { get; set; }
+
+        [NotMapped]
+        [Display(Name = "天候")]
+        public string WeatherClassName
+        {
+            get
+            {
+                return WeatherClass.GetEnumName();
+            }
+        }
+
         [Display(Name = "勝敗")]
         public WinLoseClass? WinLoseClass { get; set; }
 
@@ -64,6 +78,24 @@ namespace Bmcs.Models
         [Display(Name = "失点")]
         public int? OpponentTeamScore { get; set; }
 
+        [NotMapped]
+        [Display(Name = "スコア")]
+        public string GameScore
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(Score.NullToEmpty())
+                    && !string.IsNullOrEmpty(OpponentTeamScore.NullToEmpty()))
+                {
+                    return Score.NullToEmpty() +"-"+ OpponentTeamScore.NullToEmpty();
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
         [Required]
         [Display(Name = "先攻後攻")]
         public TopButtomClass? TopButtomClass { get; set; }
@@ -75,6 +107,20 @@ namespace Bmcs.Models
             get
             {
                 return TopButtomClass.GetEnumName();
+            }
+        }
+
+        [Required]
+        [Display(Name = "試合入力タイプ")]
+        public GameInputTypeClass? GameInputTypeClass { get; set; }
+
+        [NotMapped]
+        [Display(Name = "試合入力タイプ")]
+        public string GameInputTypeClassName
+        {
+            get
+            {
+                return GameInputTypeClass.GetEnumName();
             }
         }
 

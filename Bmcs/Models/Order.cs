@@ -29,14 +29,17 @@ namespace Bmcs.Models
         public int? MemberID { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(4, 2)")]
         [Display(Name = "打順")]
-        public int? BattingOrder { get; set; }
+        public decimal? BattingOrder { get; set; }
+
+        [Display(Name = "出場順")]
+        public int? ParticipationIndex { get; set; }
 
         [Required]
         [Display(Name = "守備")]
         public PositionClass? PositionClass { get; set; }
 
-        [Required]
         [Display(Name = "出場")]
         public ParticipationClass? ParticipationClass { get; set; }
 

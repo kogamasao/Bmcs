@@ -31,16 +31,19 @@
                     @Html.DisplayNameFor(model => model.Game[0].StadiumName)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.Game[0].WeatherClassName)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Game[0].WinLoseClassName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Game[0].Score)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Game[0].OpponentTeamScore)
+                    @Html.DisplayNameFor(model => model.Game[0].GameScore)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Game[0].TopButtomClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].GameInputTypeClassName)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Game[0].StatusClassName)
@@ -80,16 +83,19 @@
                     @Html.DisplayFor(modelItem => item.StadiumName)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.WeatherClassName)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.WinLoseClassName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Score)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OpponentTeamScore)
+                    @Html.DisplayFor(modelItem => item.GameScore)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.TopButtomClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GameInputTypeClassName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StatusClassName)

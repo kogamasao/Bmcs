@@ -13,11 +13,21 @@ namespace Bmcs.Function
         /// <summary>
         /// NULL値を空文字に変換する
         /// </summary>
-        /// <param name="s"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static string NullToEmpty(this string s)
+        public static string NullToEmpty<T>(this T? value) where T : struct
         {
-            return s ?? string.Empty;
+            return value == null ? string.Empty : value.ToString();
+        }
+
+        /// <summary>
+        /// NULL値を空文字に変換する
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string NullToEmpty(this string value)
+        {
+            return value == null ? string.Empty : value.ToString();
         }
     }
 }

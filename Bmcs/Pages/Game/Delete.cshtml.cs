@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Microsoft.Extensions.Logging;
+using Bmcs.Constans;
+using Microsoft.AspNetCore.Http;
 
 namespace Bmcs.Pages.Game
 {
-    public class DeleteModel : PageModel
+    public class DeleteModel : PageModelBase<DeleteModel>
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public DeleteModel(Bmcs.Data.BmcsContext context)
+        public DeleteModel(ILogger<DeleteModel> logger, BmcsContext context) : base(logger, context)
         {
-            _context = context;
+
         }
 
         [BindProperty]
@@ -24,37 +25,53 @@ namespace Bmcs.Pages.Game
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            if (!base.IsLogin())
+            {
+                return NotFound();
+            }
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            Game = await _context.Games
-                .Include(g => g.Team).FirstOrDefaultAsync(m => m.GameID == id);
+            Game = await Context.Games
+                .Include(m => m.Team).FirstOrDefaultAsync(m => m.GameID == id);
 
-            if (Game == null)
+            if (Game == null
+                || (Game.TeamID != HttpContext.Session.GetString(SessionConstant.TeamID)
+                    && !base.IsAdmin())
+                )
             {
                 return NotFound();
             }
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var game = await Context.Games.FindAsync(id);
+
+                if (game != null)
+                {
+                    game.DeleteFLG = true;
+                    await Context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
             }
 
-            Game = await _context.Games.FindAsync(id);
-
-            if (Game != null)
-            {
-                _context.Games.Remove(Game);
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index", new { teamID = Game.TeamID });
         }
     }
 }

@@ -162,16 +162,44 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
+    /// 天候
+    /// </summary>
+    public enum WeatherClass
+    {
+        [Description("晴")]
+        Sunny = 1,
+        [Description("曇")]
+        Cloudy = 2,
+        [Description("雨")]
+        Rain = 3,
+        [Description("雷")]
+        Thunder = 4,
+        [Description("雪")]
+        Snow = 5,
+    }
+
+    /// <summary>
     /// 勝敗
     /// </summary>
     public enum WinLoseClass
     {
-        [Description("勝")]
+        [Description("〇")]
         Win = 1,
-        [Description("負")]
+        [Description("●")]
         Lose = 2,
-        [Description("分")]
+        [Description("△")]
         Draw = 3,
+    }
+
+    /// <summary>
+    /// 試合入力タイプ
+    /// </summary>
+    public enum GameInputTypeClass
+    {
+        [Description("試合結果のみ")]
+        OnlyGame = 1,
+        [Description("打者毎")]
+        ByBatter = 2,
     }
 
     /// <summary>
@@ -405,10 +433,14 @@ namespace Bmcs.Enum
         /// SelectList取得
         /// </summary>
         /// <returns></returns>
-        public static SelectList GetSelectList<T>() where T : struct
+        public static SelectList GetSelectList<T>(bool isEmptyItem = true) where T : struct
         {
             var selectList = new List<SelectListItem>();
-            selectList.Add(new SelectListItem(string.Empty, string.Empty));
+            
+            if(isEmptyItem)
+            { 
+                selectList.Add(new SelectListItem(string.Empty, string.Empty));
+            }
 
             foreach (var value in System.Enum.GetValues(typeof(T)))
             {

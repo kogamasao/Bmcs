@@ -8,16 +8,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Microsoft.Extensions.Logging;
+using Bmcs.Constans;
+using Microsoft.AspNetCore.Http;
 
 namespace Bmcs.Pages.Game
 {
-    public class EditModel : PageModel
+    public class EditModel : PageModelBase<EditModel>
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public EditModel(Bmcs.Data.BmcsContext context)
+        public EditModel(ILogger<EditModel> logger, BmcsContext context) : base(logger, context)
         {
-            _context = context;
+
         }
 
         [BindProperty]
@@ -25,55 +26,76 @@ namespace Bmcs.Pages.Game
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            if (!base.IsLogin())
+            {
+                return NotFound();
+            }
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            Game = await _context.Games
-                .Include(g => g.Team).FirstOrDefaultAsync(m => m.GameID == id);
+            Game = await Context.Games
+                .Include(m => m.Team).FirstOrDefaultAsync(m => m.GameID == id);
 
-            if (Game == null)
+            if (Game == null
+                || (Game.TeamID != HttpContext.Session.GetString(SessionConstant.TeamID)
+                    && !base.IsAdmin())
+                )
             {
                 return NotFound();
             }
-           ViewData["TeamID"] = new SelectList(_context.Teams, "TeamID", "TeamID");
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            _context.Attach(Game).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GameExists(Game.GameID))
+                if (!ModelState.IsValid)
+                {
+                    return Page();
+                }
+
+                //データ作成
+                var game = await Context.Games.FindAsync(Game.GameID);
+
+                if (game == null)
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                //POST値セット
+                this.TryUpdateModel(game);
+                //エントリ情報セット
+                base.SetUpdateInfo(game);
+
+                await Context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index", new { teamID = Game.TeamID });
+
         }
 
-        private bool GameExists(int id)
+        /// <summary>
+        /// POST値をモデルにセット
+        /// </summary>
+        /// <param name="member"></param>
+        private void TryUpdateModel(Models.Game game)
         {
-            return _context.Games.Any(e => e.GameID == id);
+            game.GameDate = Game.GameDate;
+            game.GameClass = Game.GameClass;
+            game.OpponentTeamName = Game.OpponentTeamName;
+            game.StadiumName = Game.StadiumName;
+            game.WeatherClass = Game.WeatherClass;
+            game.TopButtomClass = Game.TopButtomClass;
+            game.GameInputTypeClass = Game.GameInputTypeClass;
         }
     }
 }
