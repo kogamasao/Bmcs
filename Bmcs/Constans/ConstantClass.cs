@@ -27,6 +27,12 @@ namespace Bmcs.Constans
         public static readonly string TeamID = "TeamID";
 
         public static readonly string AdminFLG = "AdminFLG";
+
+        public static readonly string OrderIndex = "OrderIndex";
+
+        public static readonly string MemberIDList = "MemberIDList";
+
+        public static readonly string PositionClassList = "PositionClassList";
     }
 
     /// <summary>

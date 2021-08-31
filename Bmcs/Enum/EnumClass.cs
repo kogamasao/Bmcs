@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -13,11 +14,11 @@ namespace Bmcs.Enum
     /// </summary>
     public enum GameClass
     {
-        [Description("公式戦")]
+        [Display(Name = "公式戦")]
         Official = 1,
-        [Description("練習試合")]
+        [Display(Name = "練習試合")]
         Practice = 2,
-        [Description("その他")]
+        [Display(Name = "その他")]
         Other = 9,
     }
 
@@ -26,21 +27,21 @@ namespace Bmcs.Enum
     /// </summary>
     public enum TeamCategoryClass
     {
-        [Description("小学生")]
+        [Display(Name = "小学生")]
         ElementarySchool = 1,
-        [Description("中学生")]
+        [Display(Name = "中学生")]
         JuniorHighSchool = 2,
-        [Description("高校生")]
+        [Display(Name = "高校生")]
         HighSchool = 3,
-        [Description("大学生")]
+        [Display(Name = "大学生")]
         University = 4,
-        [Description("社会人")]
+        [Display(Name = "社会人")]
         Adult = 5,
-        [Description("独立リーグ")]
+        [Display(Name = "独立リーグ")]
         Independent = 6,
-        [Description("プロ")]
+        [Display(Name = "プロ")]
         Proffessional = 7,
-        [Description("その他")]
+        [Display(Name = "その他")]
         Other = 9,
     }
 
@@ -49,15 +50,15 @@ namespace Bmcs.Enum
     /// </summary>
     public enum UseBallClass
     {
-        [Description("硬式")]
+        [Display(Name = "硬式")]
         Hard = 1,
-        [Description("準硬式")]
+        [Display(Name = "準硬式")]
         SemiRigid = 2,
-        [Description("軟式")] 
+        [Display(Name = "軟式")] 
         Rubber = 3,
-        [Description("ソフトボール")] 
+        [Display(Name = "ソフトボール")] 
         SoftBall = 4,
-        [Description("その他")] 
+        [Display(Name = "その他")] 
         Other = 5,
     }
 
@@ -66,15 +67,15 @@ namespace Bmcs.Enum
     /// </summary>
     public enum MemberClass
     {
-        [Description("監督")]
+        [Display(Name = "監督")]
         Manager = 1,
-        [Description("選手兼監督")]
+        [Display(Name = "選手兼監督")]
         PlayingManager = 2,
-        [Description("コーチ")]
+        [Display(Name = "コーチ")]
         Coach = 3,
-        [Description("選手")]
+        [Display(Name = "選手")]
         Player = 4,
-        [Description("マネージャー")]
+        [Display(Name = "マネージャー")]
         Assistant = 5,
     }
 
@@ -83,11 +84,11 @@ namespace Bmcs.Enum
     /// </summary>
     public enum ThrowClass
     {
-        [Description("両")]
+        [Display(Name = "両")]
         Switch = 1,
-        [Description("右")]
+        [Display(Name = "右")]
         Right = 2,
-        [Description("左")]
+        [Display(Name = "左")]
         Left = 3,
     }
 
@@ -96,11 +97,11 @@ namespace Bmcs.Enum
     /// </summary>
     public enum BatClass
     {
-        [Description("両")]
+        [Display(Name = "両")]
         Switch = 1,
-        [Description("右")]
+        [Display(Name = "右")]
         Right = 2,
-        [Description("左")]
+        [Display(Name = "左")]
         Left = 3,
     }
 
@@ -109,13 +110,13 @@ namespace Bmcs.Enum
     /// </summary>
     public enum ThrowFormClass
     {
-        [Description("オーバー")]
+        [Display(Name = "オーバー")]
         Over = 1,
-        [Description("スリークォーター")]
+        [Display(Name = "スリークォーター")]
         ThreeQuarter = 2,
-        [Description("サイド")]
+        [Display(Name = "サイド")]
         Side = 3,
-        [Description("アンダー")]
+        [Display(Name = "アンダー")]
         Under = 4,
     }
 
@@ -124,13 +125,13 @@ namespace Bmcs.Enum
     /// </summary>
     public enum PositionGroupClass
     {
-        [Description("投手")]
+        [Display(Name = "投手")]
         Pitcher = 1,
-        [Description("捕手")]
+        [Display(Name = "捕手")]
         Catcher = 2,
-        [Description("内野手")]
+        [Display(Name = "内野手")]
         Infielder = 3,
-        [Description("外野手")]
+        [Display(Name = "外野手")]
         Outfielder = 4,
     }
 
@@ -139,25 +140,25 @@ namespace Bmcs.Enum
     /// </summary>
     public enum PositionClass
     {
-        [Description("投")]
+        [Display(Name = "投")]
         Pitcher = 1,
-        [Description("捕")]
+        [Display(Name = "捕")]
         Catcher = 2,
-        [Description("一")]
+        [Display(Name = "一")]
         First = 3,
-        [Description("二")]
+        [Display(Name = "二")]
         Second = 4,
-        [Description("三")]
+        [Display(Name = "三")]
         Third = 5,
-        [Description("遊")]
+        [Display(Name = "遊")]
         ShortStop = 6,
-        [Description("左")]
+        [Display(Name = "左")]
         Left = 7,
-        [Description("中")]
+        [Display(Name = "中")]
         Center = 8,
-        [Description("右")]
+        [Display(Name = "右")]
         Right = 9,
-        [Description("指")]
+        [Display(Name = "指")]
         DH = 10,
     }
 
@@ -166,15 +167,15 @@ namespace Bmcs.Enum
     /// </summary>
     public enum WeatherClass
     {
-        [Description("晴")]
+        [Display(Name = "晴")]
         Sunny = 1,
-        [Description("曇")]
+        [Display(Name = "曇")]
         Cloudy = 2,
-        [Description("雨")]
+        [Display(Name = "雨")]
         Rain = 3,
-        [Description("雷")]
+        [Display(Name = "雷")]
         Thunder = 4,
-        [Description("雪")]
+        [Display(Name = "雪")]
         Snow = 5,
     }
 
@@ -183,11 +184,11 @@ namespace Bmcs.Enum
     /// </summary>
     public enum WinLoseClass
     {
-        [Description("〇")]
+        [Display(Name = "〇")]
         Win = 1,
-        [Description("●")]
+        [Display(Name = "●")]
         Lose = 2,
-        [Description("△")]
+        [Display(Name = "△")]
         Draw = 3,
     }
 
@@ -196,9 +197,9 @@ namespace Bmcs.Enum
     /// </summary>
     public enum GameInputTypeClass
     {
-        [Description("試合結果のみ")]
+        [Display(Name = "試合結果のみ")]
         OnlyGame = 1,
-        [Description("打者毎")]
+        [Display(Name = "打者毎")]
         ByBatter = 2,
     }
 
@@ -207,11 +208,11 @@ namespace Bmcs.Enum
     /// </summary>
     public enum StatusClass
     {
-        [Description("試合前")]
+        [Display(Name = "試合前")]
         BeforeGame = 1,
-        [Description("試合中")]
+        [Display(Name = "試合中")]
         DuringGame = 2,
-        [Description("試合終了")]
+        [Display(Name = "試合終了")]
         EndGame = 9,
     }
 
@@ -220,9 +221,9 @@ namespace Bmcs.Enum
     /// </summary>
     public enum OffenseDefenseClass
     {
-        [Description("攻")]
+        [Display(Name = "攻")]
         Offense = 1,
-        [Description("守")]
+        [Display(Name = "守")]
         Defense = 2,
     }
 
@@ -231,9 +232,9 @@ namespace Bmcs.Enum
     /// </summary>
     public enum BatFirstBatSecondClass
     {
-        [Description("先攻")]
+        [Display(Name = "先攻")]
         First = 1,
-        [Description("後攻")]
+        [Display(Name = "後攻")]
         Second = 2,
     }
 
@@ -242,9 +243,9 @@ namespace Bmcs.Enum
     /// </summary>
     public enum TopButtomClass
     {
-        [Description("表")]
+        [Display(Name = "表")]
         Top = 1,
-        [Description("裏")]
+        [Display(Name = "裏")]
         Buttom = 2,
     }
 
@@ -253,13 +254,13 @@ namespace Bmcs.Enum
     /// </summary>
     public enum ParticipationClass
     {
-        [Description("スタメン")]
+        [Display(Name = "スタメン")]
         Start = 1,
-        [Description("代打")]
+        [Display(Name = "代打")]
         PinchHitter = 2,
-        [Description("代走")]
+        [Display(Name = "代走")]
         PinchRunner = 3,
-        [Description("守備")]
+        [Display(Name = "守備")]
         Defense = 4,
     }
 
@@ -268,29 +269,29 @@ namespace Bmcs.Enum
     /// </summary>
     public enum HittingDirectionClass
     {
-        [Description("無")]
+        [Display(Name = "無")]
         None = 1,
-        [Description("投")]
+        [Display(Name = "投")]
         Pitcher = 2,
-        [Description("捕")]
+        [Display(Name = "捕")]
         Catcher = 3,
-        [Description("一")]
+        [Display(Name = "一")]
         First = 4,
-        [Description("二")]
+        [Display(Name = "二")]
         Second = 5,
-        [Description("三")]
+        [Display(Name = "三")]
         Third = 6,
-        [Description("遊")]
+        [Display(Name = "遊")]
         ShortStop = 7,
-        [Description("左")]
+        [Display(Name = "左")]
         Left = 8,
-        [Description("左中間")]
+        [Display(Name = "左中間")]
         LeftCenter = 9,
-        [Description("中")]
+        [Display(Name = "中")]
         Center = 10,
-        [Description("右中間")]
+        [Display(Name = "右中間")]
         RightCenter = 11,
-        [Description("右")]
+        [Display(Name = "右")]
         Right = 12,
     }
 
@@ -299,13 +300,13 @@ namespace Bmcs.Enum
     /// </summary>
     public enum HitBallClass
     {
-        [Description("無")]
+        [Display(Name = "無")]
         NoHit = 1,
-        [Description("ゴロ")]
+        [Display(Name = "ゴロ")]
         Ground = 2,
-        [Description("ライナー")]
+        [Display(Name = "ライナー")]
         Liner = 3,
-        [Description("フライ")]
+        [Display(Name = "フライ")]
         Fly = 4,
     }
 
@@ -314,37 +315,37 @@ namespace Bmcs.Enum
     /// </summary>
     public enum ResultClass
     {
-        [Description("空三振")]
+        [Display(Name = "空三振")]
         Strikeout = 1,
-        [Description("見逃三振")]
+        [Display(Name = "見逃三振")]
         MissedStrikeout = 2,
-        [Description("振り逃げ")]
+        [Display(Name = "振り逃げ")]
         UncaughtThirdStrike = 3,
-        [Description("アウト")]
+        [Display(Name = "アウト")]
         Out = 4,
-        [Description("併殺")]
+        [Display(Name = "併殺")]
         DoublePlay = 5,
-        [Description("エラー")]
+        [Display(Name = "エラー")]
         Error = 6,
-        [Description("野選")]
+        [Display(Name = "野選")]
         FieldersChoice = 7,
-        [Description("四球")]
+        [Display(Name = "四球")]
         FourBalls = 11,
-        [Description("死球")]
+        [Display(Name = "死球")]
         DeadBall = 12,
-        [Description("犠打")]
+        [Display(Name = "犠打")]
         Sacrifice = 13,
-        [Description("犠牲")]
+        [Display(Name = "犠牲")]
         SacrificeFly = 14,
-        [Description("打撃妨害")]
+        [Display(Name = "打撃妨害")]
         BatterInterference = 15,
-        [Description("安打")]
+        [Display(Name = "安打")]
         SingleHit = 21,
-        [Description("二塁打")]
+        [Display(Name = "二塁打")]
         DoubleHit = 22,
-        [Description("三塁打")]
+        [Display(Name = "三塁打")]
         TripleHit = 23,
-        [Description("本塁打")]
+        [Display(Name = "本塁打")]
         HomeRun = 24,
     }
 
@@ -353,21 +354,21 @@ namespace Bmcs.Enum
     /// </summary>
     public enum RunnerClass
     {
-        [Description("無")]
+        [Display(Name = "無")]
         None = 1,
-        [Description("一塁")]
+        [Display(Name = "一塁")]
         First = 2,
-        [Description("二塁")]
+        [Display(Name = "二塁")]
         Second = 3,
-        [Description("三塁")]
+        [Display(Name = "三塁")]
         Third = 4,
-        [Description("一二塁")]
+        [Display(Name = "一二塁")]
         FirstSecond = 5,
-        [Description("一三塁")]
+        [Display(Name = "一三塁")]
         FirstThird = 6,
-        [Description("二三塁")]
+        [Display(Name = "二三塁")]
         SecondThird = 7,
-        [Description("満塁")]
+        [Display(Name = "満塁")]
         FullBase = 8,
     }
 
@@ -376,9 +377,9 @@ namespace Bmcs.Enum
     /// </summary>
     public enum SceneResultClass
     {
-        [Description("打席前")]
+        [Display(Name = "打席前")]
         SceneChange = 1,
-        [Description("打席後")]
+        [Display(Name = "打席後")]
         Result = 2,
     }
 
@@ -387,23 +388,23 @@ namespace Bmcs.Enum
     /// </summary>
     public enum DetailResultClass
     {
-        [Description("牽制死")]
+        [Display(Name = "牽制死")]
         PickOffBallOut = 1,
-        [Description("盗塁死")]
+        [Display(Name = "盗塁死")]
         StolenBaseOut = 2,
-        [Description("盗塁")]
+        [Display(Name = "盗塁")]
         StolenBaseSccess = 3,
-        [Description("ボーク")]
+        [Display(Name = "ボーク")]
         Balk = 4,
-        [Description("WP")]
+        [Display(Name = "WP")]
         WildPitch = 5,
-        [Description("PB")]
+        [Display(Name = "PB")]
         PassBall = 6,
-        [Description("エラー")]
+        [Display(Name = "エラー")]
         Error = 7,
-        [Description("補殺")]
+        [Display(Name = "補殺")]
         AssistOut = 8,
-        [Description("その他")]
+        [Display(Name = "その他")]
         Other = 99,
     }
 
@@ -412,17 +413,17 @@ namespace Bmcs.Enum
     /// </summary>
     public enum RunnerResultClass
     {
-        [Description("アウト")]
+        [Display(Name = "アウト")]
         Out = 1,
-        [Description("一塁")]
+        [Display(Name = "一塁")]
         OnFirstBase = 2,
-        [Description("二塁")]
+        [Display(Name = "二塁")]
         OnSecondBase = 3,
-        [Description("三塁")]
+        [Display(Name = "三塁")]
         OnThirdBase = 4,
-        [Description("得点")]
+        [Display(Name = "得点")]
         Run = 5,
-        [Description("残塁")]
+        [Display(Name = "残塁")]
         LeftOnBase = 6,
     }
 
@@ -431,9 +432,9 @@ namespace Bmcs.Enum
     /// </summary>
     public enum MessageClass
     {
-        [Description("投稿")]
+        [Display(Name = "投稿")]
         Post = 1,
-        [Description("返信")]
+        [Display(Name = "返信")]
         Reply = 2,
     }
 
@@ -479,9 +480,9 @@ namespace Bmcs.Enum
 
             FieldInfo fi = enumValue.GetType().GetField(enumValue.ToString());
 
-            var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            var attributes = (DisplayAttribute[])fi.GetCustomAttributes(typeof(DisplayAttribute), false);
 
-            var desciptionString = attributes.Select(n => n.Description).FirstOrDefault();
+            var desciptionString = attributes.Select(n => n.Name).FirstOrDefault();
 
             if (desciptionString != null)
             {

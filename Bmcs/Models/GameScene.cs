@@ -25,6 +25,9 @@ namespace Bmcs.Models
         [Display(Name = "イニングスコアID")]
         public int? InningScoreID { get; set; }
 
+        [Display(Name = "イニングインデックス")]
+        public int? InningIndex { get; set; }
+
         [Required]
         [Display(Name = "攻撃守備区分")]
         public OffenseDefenseClass? OffenseDefenseClass { get; set; }
