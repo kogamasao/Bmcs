@@ -28,6 +28,10 @@ namespace Bmcs.Models
         [Display(Name = "イニングインデックス")]
         public int? InningIndex { get; set; }
 
+        [Column(TypeName = "decimal(4, 2)")]
+        [Display(Name = "打順")]
+        public decimal? BattingOrder { get; set; }
+
         [Required]
         [Display(Name = "攻撃守備区分")]
         public OffenseDefenseClass? OffenseDefenseClass { get; set; }

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
 using Bmcs.Enum;
+using Bmcs.Function;
 
 namespace Bmcs.Pages.Order
 {
@@ -24,6 +25,10 @@ namespace Bmcs.Pages.Order
 
         [BindProperty]
         public IList<Models.Order> OrderList { get; set; }
+
+        [BindProperty]
+        public IList<Models.Order> OnlyDefenseList { get; set; }
+
         [BindProperty]
         public Models.Game Game { get; set; }
 
@@ -126,6 +131,15 @@ namespace Bmcs.Pages.Order
                 ViewData[ViewDataConstant.Title] = "選手交代";
             }
 
+            //守備のみ
+            OnlyDefenseList = new List<Models.Order>();
+
+            foreach(var order in OrderList.Where(r => r.BattingOrder == null).ToList())
+            {
+                OnlyDefenseList.Add(order);
+                OrderList.Remove(order);
+            }
+
             return Page();
         }
 
@@ -138,6 +152,41 @@ namespace Bmcs.Pages.Order
                     return Page();
                 }
 
+                //再取得
+                Game = await Context.Games
+                    .Include(m => m.Team).FirstOrDefaultAsync(m => m.GameID == Game.GameID);
+                //試合シーンID
+                GameSceneID = OrderList.FirstOrDefault().GameSceneID;
+                //チームID
+                base.TeamID = Game.TeamID;
+
+                //未入力チェック
+                if (OrderList.Any(r => r.MemberID == null || r.PositionClass == null)
+                    || OnlyDefenseList.Any(r => r.MemberID == null || r.PositionClass == null))
+                {
+                    ModelState.AddModelError(nameof(Models.Game) + "." + nameof(Models.Game.GameID), "未指定の行があります。不要であれば行削除してください。");
+
+                    return Page();
+                }
+
+                //投手チェック
+                if (OrderList.Where(r => r.PositionClass == PositionClass.Pitcher).Count()
+                    + OnlyDefenseList.Where(r => r.PositionClass == PositionClass.Pitcher).Count() != 1)
+                {
+                    ModelState.AddModelError(nameof(Models.Game) + "." + nameof(Models.Game.GameID), "投手は必ず一人指定してください。");
+
+                    return Page();
+                }
+
+                //捕手チェック
+                if (OrderList.Where(r => r.PositionClass == PositionClass.Catcher).Count()
+                    + OnlyDefenseList.Where(r => r.PositionClass == PositionClass.Catcher).Count() != 1)
+                {
+                    ModelState.AddModelError(nameof(Models.Game) + "." + nameof(Models.Game.GameID), "捕手は必ず一人指定してください。");
+
+                    return Page();
+
+                }
                 //削除対象
                 var deleteOrderList = await Context.Orders
                                         .Where(m => m.GameID == OrderList.FirstOrDefault().GameID
@@ -171,6 +220,12 @@ namespace Bmcs.Pages.Order
         /// <param name="member"></param>
         private void TryUpdateModel(List<Models.Order> orderList)
         {
+            //守備のみを追加
+            foreach (var order in OnlyDefenseList)
+            {
+                OrderList.Add(order);
+            }
+
             foreach (var order in OrderList)
             {
                 var newOrder = new Models.Order();
