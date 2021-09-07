@@ -15,7 +15,7 @@ namespace Bmcs.Data
 
         }
 
-        public BmcsContext (DbContextOptions<BmcsContext> options)
+        public BmcsContext(DbContextOptions<BmcsContext> options)
             : base(options)
         {
 
@@ -53,10 +53,20 @@ namespace Bmcs.Data
             modelBuilder.Entity<Message>().ToTable("Message");
             modelBuilder.Entity<Order>().ToTable("Order");
 
+            modelBuilder.Entity<Member>()
+                .HasMany(m => m.PitcherGameScenes)
+                .WithOne(t => t.PitcherMember)
+                .HasForeignKey(m => m.PitcherMemberID);
+
+            modelBuilder.Entity<Member>()
+                .HasMany(m => m.BatterGameScenes)
+                .WithOne(t => t.BatterMember)
+                .HasForeignKey(m => m.BatterMemberID);
+
             modelBuilder.Entity<Team>()
-                  .HasMany(m => m.Messages)
-                  .WithOne(t => t.Teams)
-                  .HasForeignKey(m => m.TeamID);
+                .HasMany(m => m.Messages)
+                .WithOne(t => t.Teams)
+                .HasForeignKey(m => m.TeamID);
 
             modelBuilder.Entity<Team>()
                 .HasMany(m => m.ReplyMessages)

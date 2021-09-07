@@ -423,8 +423,14 @@ namespace Bmcs.Enum
         OnThirdBase = 4,
         [Display(Name = "得点")]
         Run = 5,
+        [Display(Name = "得点(打点無)")]
+        RunExceptRBI = 6,
+        [Display(Name = "得点(自責無)")]
+        RunExceptEarnedRun = 7,
+        [Display(Name = "得点(打点自責無)")]
+        RunExceptRBIEarnedRun = 8,
         [Display(Name = "残塁")]
-        LeftOnBase = 6,
+        LeftOnBase = 9,
     }
 
     /// <summary>

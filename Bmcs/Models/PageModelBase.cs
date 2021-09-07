@@ -23,16 +23,19 @@ namespace Bmcs.Models
         {
             Logger = logger;
             Context = context;
+            IsMemberIDNeedEmpty = true;
         }
 
         public PageModelBase(ILogger<T> logger)
         {
             Logger = logger;
+            IsMemberIDNeedEmpty = true;
         }
 
         public PageModelBase(BmcsContext context)
         {
             Context = context;
+            IsMemberIDNeedEmpty = true;
         }
 
         /// <summary>
@@ -56,6 +59,11 @@ namespace Bmcs.Models
         public string TeamID { get; set; }
 
         /// <summary>
+        /// メンバーID空必要フラグ
+        /// </summary>
+        public bool IsMemberIDNeedEmpty { get; set; }
+
+        /// <summary>
         /// チームIDリスト
         /// </summary>
         public SelectList TeamIDList
@@ -74,8 +82,41 @@ namespace Bmcs.Models
         {
             get
             {
-                return AddFirstItem(new SelectList(Context.Members.Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false).OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty)
-                    , new SelectListItem(string.Empty, string.Empty));
+                if(IsMemberIDNeedEmpty)
+                { 
+                    return AddFirstItem(new SelectList(Context.Members.Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false).OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty)
+                        , new SelectListItem(string.Empty, string.Empty));
+                }
+                else
+                {
+                    return new SelectList(Context.Members.Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false).OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 相手投手メンバーIDリスト
+        /// </summary>
+        public SelectList OpponentPitcherMemberIDList
+        {
+            get
+            {
+                return new SelectList(Context.Members
+                                    .Where(r => r.SystemDataFLG && r.PositionGroupClass == PositionGroupClass.Pitcher)
+                                        .OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
+            }
+        }
+
+        /// <summary>
+        /// 相手野手メンバーIDリスト
+        /// </summary>
+        public SelectList OpponentFielderMemberIDList
+        {
+            get
+            {
+                return new SelectList(Context.Members
+                                    .Where(r => r.SystemDataFLG && r.PositionGroupClass != PositionGroupClass.Pitcher)
+                                        .OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
             }
         }
 

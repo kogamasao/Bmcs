@@ -95,6 +95,26 @@ namespace Bmcs.Data
 
             var teams = new Team[]
             {
+                 new Team
+                {
+                      TeamID = "SYSTEM"
+                    , TeamName = "システムチーム"
+                    , RepresentativeName = "システム"
+                    , TeamCategoryClass = TeamCategoryClass.Other
+                    , UseBallClass = UseBallClass.Other
+                    , ActivityBase = "システム"
+                    , TeamNumber = 10
+                    , TeamPassword = "SYSTEM"
+                    , TeamEmailAddress = ""
+                    , MessageDetail= ""
+                    , PublicFLG = false
+                    , SystemDataFLG = true
+                    , DeleteFLG = false
+                    , EntryDatetime = DateTime.Now
+                    , EntryUserID = "ADMIN"
+                    , UpdateDatetime = DateTime.Now
+                    , UpdateUserID = "ADMIN"
+                },
                 new Team
                 {
                       TeamID = "YG"
@@ -108,6 +128,7 @@ namespace Bmcs.Data
                     , TeamEmailAddress = ""
                     , MessageDetail= "東京ドームが本拠地です。"
                     , PublicFLG = true
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -127,6 +148,7 @@ namespace Bmcs.Data
                     , TeamEmailAddress = ""
                     , MessageDetail= "甲子園が本拠地です。"
                     , PublicFLG = true
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -146,6 +168,7 @@ namespace Bmcs.Data
                     , TeamEmailAddress = ""
                     , MessageDetail= "30代のチームです。"
                     , PublicFLG = false
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -160,6 +183,108 @@ namespace Bmcs.Data
             {
                 new Member
                 {
+                      TeamID = "SYSTEM"
+                    , UniformNumber = "11"
+                    , MemberName = "投手(未設定)"
+                    , MemberClass = Enum.MemberClass.Player
+                    , ThrowClass = null
+                    , BatClass = null
+                    , PositionGroupClass =  PositionGroupClass.Pitcher
+                    , MessageDetail = ""
+                    , SystemDataFLG = true
+                    , DeleteFLG = false
+                    , EntryDatetime = DateTime.Now
+                    , EntryUserID = "ADMIN"
+                    , UpdateDatetime = DateTime.Now
+                    , UpdateUserID = "ADMIN"
+                },
+                new Member
+                {
+                      TeamID = "SYSTEM"
+                    , UniformNumber = "12"
+                    , MemberName = "投手(右)"
+                    , MemberClass = Enum.MemberClass.Player
+                    , ThrowClass = ThrowClass.Right
+                    , BatClass = null
+                    , PositionGroupClass = PositionGroupClass.Pitcher
+                    , MessageDetail = ""
+                    , SystemDataFLG = true
+                    , DeleteFLG = false
+                    , EntryDatetime = DateTime.Now
+                    , EntryUserID = "ADMIN"
+                    , UpdateDatetime = DateTime.Now
+                    , UpdateUserID = "ADMIN"
+                },
+                new Member
+                {
+                      TeamID = "SYSTEM"
+                    , UniformNumber = "13"
+                    , MemberName = "投手(左)"
+                    , MemberClass = Enum.MemberClass.Player
+                    , ThrowClass = ThrowClass.Left
+                    , BatClass = null
+                    , PositionGroupClass = PositionGroupClass.Pitcher
+                    , MessageDetail = ""
+                    , SystemDataFLG = true
+                    , DeleteFLG = false
+                    , EntryDatetime = DateTime.Now
+                    , EntryUserID = "ADMIN"
+                    , UpdateDatetime = DateTime.Now
+                    , UpdateUserID = "ADMIN"
+                },
+                new Member
+                {
+                      TeamID = "SYSTEM"
+                    , UniformNumber = "1"
+                    , MemberName = "打者(未設定)"
+                    , MemberClass = Enum.MemberClass.Player
+                    , ThrowClass = null
+                    , BatClass = null
+                    , PositionGroupClass = PositionGroupClass.Catcher
+                    , MessageDetail = ""
+                    , SystemDataFLG = true
+                    , DeleteFLG = false
+                    , EntryDatetime = DateTime.Now
+                    , EntryUserID = "ADMIN"
+                    , UpdateDatetime = DateTime.Now
+                    , UpdateUserID = "ADMIN"
+                },
+                new Member
+                {
+                      TeamID = "SYSTEM"
+                    , UniformNumber = "2"
+                    , MemberName = "打者(右)"
+                    , MemberClass = Enum.MemberClass.Player
+                    , ThrowClass = null
+                    , BatClass = BatClass.Right
+                    , PositionGroupClass = PositionGroupClass.Infielder
+                    , MessageDetail = ""
+                    , SystemDataFLG = true
+                    , DeleteFLG = false
+                    , EntryDatetime = DateTime.Now
+                    , EntryUserID = "ADMIN"
+                    , UpdateDatetime = DateTime.Now
+                    , UpdateUserID = "ADMIN"
+                },
+                 new Member
+                {
+                      TeamID = "SYSTEM"
+                    , UniformNumber = "3"
+                    , MemberName = "打者(左)"
+                    , MemberClass = Enum.MemberClass.Player
+                    , ThrowClass = null
+                    , BatClass = BatClass.Left
+                    , PositionGroupClass = PositionGroupClass.Outfielder
+                    , MessageDetail = ""
+                    , SystemDataFLG = true
+                    , DeleteFLG = false
+                    , EntryDatetime = DateTime.Now
+                    , EntryUserID = "ADMIN"
+                    , UpdateDatetime = DateTime.Now
+                    , UpdateUserID = "ADMIN"
+                },
+                new Member
+                {
                       TeamID = "YG"
                     , UniformNumber = "88"
                     , MemberName = "原　辰徳"
@@ -168,6 +293,7 @@ namespace Bmcs.Data
                     , BatClass = null
                     , PositionGroupClass = null
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -184,6 +310,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Infielder
                     , MessageDetail = "主将"
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -200,6 +327,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Pitcher
                     , MessageDetail = "投手主将"
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -216,6 +344,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Left
                     , PositionGroupClass = PositionGroupClass.Outfielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -232,6 +361,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Left
                     , PositionGroupClass = PositionGroupClass.Infielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -248,6 +378,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Catcher
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -264,6 +395,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Infielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -280,6 +412,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Infielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -296,6 +429,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Left
                     , PositionGroupClass = PositionGroupClass.Outfielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -312,6 +446,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Left
                     , PositionGroupClass = PositionGroupClass.Outfielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -328,6 +463,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Left
                     , PositionGroupClass = PositionGroupClass.Catcher
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -344,6 +480,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Outfielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -360,6 +497,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Infielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -376,6 +514,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Infielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -392,6 +531,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Pitcher
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -408,6 +548,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Pitcher
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -424,6 +565,7 @@ namespace Bmcs.Data
                     , BatClass = null
                     , PositionGroupClass = null
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -440,6 +582,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Left
                     , PositionGroupClass = PositionGroupClass.Infielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -456,6 +599,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Catcher
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -472,6 +616,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Pitcher
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -488,6 +633,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Infielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -504,6 +650,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Infielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -520,6 +667,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Infielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -536,6 +684,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Outfielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -552,6 +701,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Infielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -568,6 +718,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Outfielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -584,6 +735,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Outfielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -600,6 +752,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Outfielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -616,6 +769,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Outfielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
@@ -632,6 +786,7 @@ namespace Bmcs.Data
                     , BatClass = BatClass.Right
                     , PositionGroupClass = PositionGroupClass.Outfielder
                     , MessageDetail = ""
+                    , SystemDataFLG = false
                     , DeleteFLG = false
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"

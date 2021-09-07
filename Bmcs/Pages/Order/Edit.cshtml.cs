@@ -210,8 +210,7 @@ namespace Bmcs.Pages.Order
                 throw;
             }
 
-            return RedirectToPage("./Index", new { teamID = Game.TeamID });
-
+            return RedirectToPage("/GameScene/Edit", new { gameID = Game.GameID, gameSceneID = GameSceneID });
         }
 
         /// <summary>

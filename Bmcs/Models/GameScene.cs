@@ -44,9 +44,14 @@ namespace Bmcs.Models
         [Display(Name = "ランナー")]
         public RunnerClass? SceneRunnerClass { get; set; }
 
-        [Required]
-        [Display(Name = "メンバーID")]
-        public int MemberID { get; set; }
+        [ForeignKey(nameof(PitcherMember)), Column(Order = 0)]
+
+        [Display(Name = "投手メンバーID")]
+        public int? PitcherMemberID { get; set; }
+
+        [ForeignKey(nameof(BatterMember)), Column(Order = 1)]
+        [Display(Name = "打者メンバーID")]
+        public int? BatterMemberID { get; set; }
 
         [Required]
         [Display(Name = "打球方向")]
@@ -63,8 +68,11 @@ namespace Bmcs.Models
         [Display(Name = "得点失点")]
         public int? Run { get; set; }
 
-        [Display(Name = "打点自責点")]
-        public int? RBIEarnedRun { get; set; }
+        [Display(Name = "打点")]
+        public int? RBI { get; set; }
+
+        [Display(Name = "自責点")]
+        public int? EarnedRun { get; set; }
 
         [Required]
         [Display(Name = "結果Outカウント")]
@@ -80,7 +88,11 @@ namespace Bmcs.Models
 
         public Team Team { get; set; }
 
-        public Member Member { get; set; }
+        [ForeignKey("PitcherMemberID")]
+        public virtual Member PitcherMember { get; set; }
+
+        [ForeignKey("BatterMemberID")]
+        public virtual Member BatterMember { get; set; }
 
         public ICollection<Order> Orders { get; set; }
 

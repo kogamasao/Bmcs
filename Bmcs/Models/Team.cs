@@ -83,6 +83,10 @@ namespace Bmcs.Models
         public bool PublicFLG { get; set; }
 
         [DefaultValue(false)]
+        [Display(Name = "システムデータフラグ")]
+        public bool SystemDataFLG { get; set; }
+
+        [DefaultValue(false)]
         [Display(Name = "削除フラグ")]
         public bool DeleteFLG { get; set; }
 

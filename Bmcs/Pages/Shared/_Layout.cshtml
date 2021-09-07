@@ -24,23 +24,23 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Top/Index">Top</a>
                         </li>
 
-                        @if(Model.IsLogin())
+                        @if (Model.IsLogin())
                         {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Game/Index">試合一覧</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Score/Index">成績一覧</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Member/Index">メンバー一覧</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Team/Edit">チーム情報</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/UserAccount/Edit">ユーザ情報</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Game/Index">試合一覧</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Score/Index">成績一覧</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Member/Index">メンバー一覧</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Team/Edit">チーム情報</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/UserAccount/Edit">ユーザ情報</a>
+                            </li>
                         }
 
                         <li class="nav-item">
@@ -53,24 +53,24 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Message/Index">メッセージ</a>
                         </li>
 
-                        @if(Model.IsAdmin())
+                        @if (Model.IsAdmin())
                         {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/UserAccount/Index">ユーザ一覧</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/UserAccount/Index">ユーザ一覧</a>
+                            </li>
                         }
 
-                        @if(Model.IsLogin())
+                        @if (Model.IsLogin())
                         {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">ログアウト</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">ログアウト</a>
+                            </li>
                         }
                         else
                         {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">ログイン</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">ログイン</a>
+                            </li>
                         }
                     </ul>
                 </div>
