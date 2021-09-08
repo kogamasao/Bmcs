@@ -32,6 +32,10 @@ namespace Bmcs.Models
         public int? MemberID { get; set; }
 
         [Required]
+        [Display(Name = "ランナー")]
+        public RunnerClass? RunnerClass { get; set; }
+
+        [Required]
         [Display(Name = "シーン結果区分")]
         public SceneResultClass? SceneResultClass { get; set; }
 

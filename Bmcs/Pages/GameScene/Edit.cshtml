@@ -9,10 +9,29 @@
 <div class="row">
     <div class="col-md-6">
         <form method="post">
-
+            
+            <div class="form-group">
+                @if (Model.GameScene.InningIndex != 1)
+                {
+                    <input type="button" value="前回打者でチェンジ" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.BeforeBatterChange" />
+                }
+                @if (Model.GameScene.Inning != 1 || Model.GameScene.TopButtomClass != TopButtomClass.Top || Model.GameScene.InningIndex != 1)
+                {
+                    <input type="button" value="前回打者で試合終了" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.BeforeBatterGameSet" />
+                }    
+            </div>
+            
             <span asp-validation-for="Game.GameID" class="text-danger"></span>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Game.GameID" />
+            <input type="hidden" asp-for="GameScene.GameSceneID" />
+            <input type="hidden" asp-for="GameScene.Inning" />
+            <input type="hidden" asp-for="GameScene.InningIndex" />
+            <input type="hidden" asp-for="GameScene.TopButtomClass" />
+            <input type="hidden" asp-for="GameScene.BattingOrder" />
+            <input type="hidden" asp-for="GameScene.OffenseDefenseClass" />
+            <input type="hidden" asp-for="GameScene.SceneOutCount" />
+            <input type="hidden" asp-for="GameScene.RunnerSceneClass" />
             <div class="table-responsive">
                 <table class="table table-sm table-bordered" id="inning-score">
                     <thead class="thead-light">
@@ -81,8 +100,17 @@
                                     @inning.Score
                                 </td>
                             }
+
                             @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count(); i < 9; i++)
                             {
+                                <td class="text-center">
+                                </td>
+                            }
+
+                            @if (Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() > 9
+                      && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
+                            {
+
                                 <td class="text-center">
                                 </td>
                             }
@@ -96,7 +124,7 @@
             @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Defense)
             {
                 <div class="form-group">
-                    <a class="btn btn-success" asp-page="/Order/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameSceneID">守備変更</a>
+                    <a class="btn btn-success" asp-page="/Order/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID">守備変更</a>
                 </div>
             }
             <div class="table-responsive">
@@ -137,14 +165,22 @@
                             <th>
                                 打者
                             </th>
+                            <th>
+                                打球方向
+                            </th>
+                            <th>
+                                打球
+                            </th>
+                            <th>
+                                結果
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="text-center">
+                            <td class="text-center align-middle">
                                 @Model.GameScene.BattingOrder
                             </td>
-
                             @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
                             {
                                 <td>
@@ -157,61 +193,118 @@
                                     <select asp-for="@Model.GameScene.BatterMemberID" class="form-control" asp-items="@Model.OpponentFielderMemberIDList"></select>
                                 </td>
                             }
-                        </tr>          
+                            <td>
+                                <select asp-for="@Model.GameScene.HittingDirectionClass" class="form-control" asp-items="@Model.HittingDirectionClassList"></select>
+                            </td>
+                            <td>
+                                <select asp-for="@Model.GameScene.HitBallClass" class="form-control" asp-items="@Model.HitBallClassList"></select>
+                            </td>
+                            <td>
+                                <select asp-for="@Model.GameScene.ResultClass" class="form-control" asp-items="@Model.ResultClassList"></select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>
+
+                            </th>
+                            <th>
+                                ランナー
+                            </th>
+                            <th>
+                                結果
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.AfterGameSceneRunnerList.Count; i++)
+                        {
+                            <tr>
+                                <td class="align-middle">
+                                    @Model.AfterGameSceneRunnerList[i].RunnerClass.GetEnumName()
+                                    <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].RunnerClass" />
+                                    <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].SceneResultClass" />
+                                </td>
+
+                                @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
+                                {
+                                    <td>
+                                        <select asp-for="@Model.AfterGameSceneRunnerList[i].MemberID" class="form-control" asp-items="@Model.MemberIDList"></select>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <select asp-for="@Model.AfterGameSceneRunnerList[i].MemberID" class="form-control" asp-items="@Model.OpponentFielderMemberIDList"></select>
+                                    </td>
+                                }
+                                <td>
+                                    <select asp-for="@Model.AfterGameSceneRunnerList[i].RunnerResultClass" class="form-control" asp-items="@Model.RunnerResultClassList"></select>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
 
             @*<div class="table-responsive">
-            <table class="table table-hover table-sm table-bordered" id="only-defense">
-                <thead class="thead-light">
-                    <tr>
-                        <th style="width: 10%;">
+                    <table class="table table-hover table-sm table-bordered" id="only-defense">
+                        <thead class="thead-light">
+                            <tr>
+                                <th style="width: 10%;">
 
-                        </th>
-                        <th style="width: 50%;">
-                            @Html.DisplayNameFor(model => model.OrderList[0].MemberID)
-                        </th>
-                        <th style="width: 20%;">
-                            @Html.DisplayNameFor(model => model.OrderList[0].PositionClass)
-                        </th>
-                        <th style="width: 20%;">
+                                </th>
+                                <th style="width: 50%;">
+                                    @Html.DisplayNameFor(model => model.OrderList[0].MemberID)
+                                </th>
+                                <th style="width: 20%;">
+                                    @Html.DisplayNameFor(model => model.OrderList[0].PositionClass)
+                                </th>
+                                <th style="width: 20%;">
 
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < Model.OnlyDefenseList.Count; i++)
-                    {
-                        <tr id="@("OnlyDefenseList_" + i.ToString())">
-                            <td class="js-displaybattingorder">
-                            </td>
-                            <td>
-                                <select asp-for="@Model.OnlyDefenseList[i].MemberID" class="form-control js-memberid js-rename" asp-items="@Model.MemberIDList"></select>
-                            </td>
-                            <td>
-                                <select asp-for="@Model.OnlyDefenseList[i].PositionClass" class="form-control js-positionclass js-rename" asp-items="@Model.PositionClassList"></select>
-                            </td>
-                            <td>
-                                <input type="button" value="削除" class="btn btn-danger js-only-defense-delete js-rename" data-index="@i" />
-                                <input class="js-battingorder js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].BattingOrder" />
-                                <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].GameID" />
-                                <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].TeamID" />
-                                <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].GameSceneID" />
-                                <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].ParticipationIndex" />
-                                <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].ParticipationClass" />
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>*@
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.OnlyDefenseList.Count; i++)
+                            {
+                                <tr id="@("OnlyDefenseList_" + i.ToString())">
+                                    <td class="js-displaybattingorder">
+                                    </td>
+                                    <td>
+                                        <select asp-for="@Model.OnlyDefenseList[i].MemberID" class="form-control js-memberid js-rename" asp-items="@Model.MemberIDList"></select>
+                                    </td>
+                                    <td>
+                                        <select asp-for="@Model.OnlyDefenseList[i].PositionClass" class="form-control js-positionclass js-rename" asp-items="@Model.PositionClassList"></select>
+                                    </td>
+                                    <td>
+                                        <input type="button" value="削除" class="btn btn-danger js-only-defense-delete js-rename" data-index="@i" />
+                                        <input class="js-battingorder js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].BattingOrder" />
+                                        <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].GameID" />
+                                        <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].TeamID" />
+                                        <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].GameSceneID" />
+                                        <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].ParticipationIndex" />
+                                        <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].ParticipationClass" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>*@
             <div class="form-group">
-                <input type="button" value="守備のみ追加" class="btn btn-success" id="add-only-defense" />
+                <input type="button" value="次の打者へ" class="btn btn-primary js-submit" data-submitclass="@GameSceneSubmitClass.NextBatter" />
             </div>
             <div class="form-group">
-                <input type="submit" value="登録" class="btn btn-primary" />
+                <input type="button" value="この打者でチェンジ" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterChange" />
+                <input type="button" value="この打者で試合終了" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterGameSet" />
             </div>
+            <input id="game-scene-submit-class" type="hidden" asp-for="@Model.GameSceneSubmitClass" />
         </form>
     </div>
 </div>

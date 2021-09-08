@@ -45,5 +45,7 @@ namespace Bmcs.Constans
         public static readonly string PageModePublic = "PageModePublic";
 
         public static readonly string PageModePrivate = "PageModePrivate";
+
+        public static readonly int TempGameSceneID = -1;
     }
 }

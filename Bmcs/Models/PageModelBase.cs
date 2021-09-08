@@ -314,7 +314,7 @@ namespace Bmcs.Models
         {
             get
             {
-                return EnumClass.GetSelectList<HittingDirectionClass>();
+                return EnumClass.GetSelectList<HittingDirectionClass>(false);
             }
 
         }
@@ -325,7 +325,7 @@ namespace Bmcs.Models
         {
             get
             {
-                return EnumClass.GetSelectList<HitBallClass>();
+                return EnumClass.GetSelectList<HitBallClass>(false);
             }
         }
 
@@ -336,18 +336,18 @@ namespace Bmcs.Models
         {
             get
             {
-                return EnumClass.GetSelectList<ResultClass>();
+                return EnumClass.GetSelectList<ResultClass>(false);
             }
         }
 
         /// <summary>
         /// ランナー区分リスト
         /// </summary>
-        public SelectList RunnerClassList
+        public SelectList RunnerSceneClassList
         {
             get
             {
-                return EnumClass.GetSelectList<RunnerClass>();
+                return EnumClass.GetSelectList<RunnerSceneClass>();
             }
         }
 
@@ -380,7 +380,7 @@ namespace Bmcs.Models
         {
             get
             {
-                return EnumClass.GetSelectList<RunnerResultClass>();
+                return EnumClass.GetSelectList<RunnerResultClass>(false);
             }
         }
 

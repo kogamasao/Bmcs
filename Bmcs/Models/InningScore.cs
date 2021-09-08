@@ -33,6 +33,10 @@ namespace Bmcs.Models
         [Display(Name = "得点")]
         public int? Score { get; set; }
 
+        [DefaultValue(false)]
+        [Display(Name = "最終回フラグ")]
+        public bool LastInningFLG { get; set; }
+
         public Game Game { get; set; }
 
         public Team Team { get; set; }

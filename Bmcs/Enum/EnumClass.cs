@@ -347,12 +347,14 @@ namespace Bmcs.Enum
         TripleHit = 23,
         [Display(Name = "本塁打")]
         HomeRun = 24,
+        [Display(Name = "継続")]
+        Continue = 25,
     }
 
     /// <summary>
-    /// ランナー区分
+    /// ランナーシーン区分
     /// </summary>
-    public enum RunnerClass
+    public enum RunnerSceneClass
     {
         [Display(Name = "無")]
         None = 1,
@@ -409,6 +411,21 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
+    /// ランナー区分
+    /// </summary>
+    public enum RunnerClass
+    {
+        [Display(Name = "打者")]
+        Batter = 1,
+        [Display(Name = "一塁")]
+        OnFirstBase = 2,
+        [Display(Name = "二塁")]
+        OnSecondBase = 3,
+        [Display(Name = "三塁")]
+        OnThirdBase = 4,
+    }
+
+    /// <summary>
     /// ランナー結果区分
     /// </summary>
     public enum RunnerResultClass
@@ -442,6 +459,23 @@ namespace Bmcs.Enum
         Post = 1,
         [Display(Name = "返信")]
         Reply = 2,
+    }
+
+    /// <summary>
+    /// 試合シーンSubmit区分
+    /// </summary>
+    public enum GameSceneSubmitClass
+    {
+        [Display(Name = "次打者")]
+        NextBatter = 1,
+        [Display(Name = "この打者でチェンジ")]
+        ThisBatterChange = 2,
+        [Display(Name = "前回打者でチェンジ")]
+        BeforeBatterChange = 3,
+        [Display(Name = "この打者で試合終了")]
+        ThisBatterGameSet = 4,
+        [Display(Name = "前回打者で試合終了")]
+        BeforeBatterGameSet = 5,
     }
 
     /// <summary>

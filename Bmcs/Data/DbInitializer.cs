@@ -185,7 +185,7 @@ namespace Bmcs.Data
                 {
                       TeamID = "SYSTEM"
                     , UniformNumber = "11"
-                    , MemberName = "投手(未設定)"
+                    , MemberName = "投手(左右未設定)"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = null
                     , BatClass = null
@@ -202,7 +202,7 @@ namespace Bmcs.Data
                 {
                       TeamID = "SYSTEM"
                     , UniformNumber = "12"
-                    , MemberName = "投手(右)"
+                    , MemberName = "投手(右投手)"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = ThrowClass.Right
                     , BatClass = null
@@ -219,7 +219,7 @@ namespace Bmcs.Data
                 {
                       TeamID = "SYSTEM"
                     , UniformNumber = "13"
-                    , MemberName = "投手(左)"
+                    , MemberName = "投手(左投手)"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = ThrowClass.Left
                     , BatClass = null
@@ -236,7 +236,7 @@ namespace Bmcs.Data
                 {
                       TeamID = "SYSTEM"
                     , UniformNumber = "1"
-                    , MemberName = "打者(未設定)"
+                    , MemberName = "野手(打席未設定)"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = null
                     , BatClass = null
@@ -253,7 +253,7 @@ namespace Bmcs.Data
                 {
                       TeamID = "SYSTEM"
                     , UniformNumber = "2"
-                    , MemberName = "打者(右)"
+                    , MemberName = "野手(右打者)"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = null
                     , BatClass = BatClass.Right
@@ -270,7 +270,7 @@ namespace Bmcs.Data
                 {
                       TeamID = "SYSTEM"
                     , UniformNumber = "3"
-                    , MemberName = "打者(左)"
+                    , MemberName = "野手(左打者)"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = null
                     , BatClass = BatClass.Left

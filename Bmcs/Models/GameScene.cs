@@ -25,6 +25,12 @@ namespace Bmcs.Models
         [Display(Name = "イニングスコアID")]
         public int? InningScoreID { get; set; }
 
+        [Display(Name = "イニング")]
+        public int Inning { get; set; }
+
+        [Display(Name = "表裏")]
+        public TopButtomClass? TopButtomClass { get; set; }
+
         [Display(Name = "イニングインデックス")]
         public int? InningIndex { get; set; }
 
@@ -42,15 +48,15 @@ namespace Bmcs.Models
 
         [Required]
         [Display(Name = "ランナー")]
-        public RunnerClass? SceneRunnerClass { get; set; }
+        public RunnerSceneClass? RunnerSceneClass { get; set; }
 
         [ForeignKey(nameof(PitcherMember)), Column(Order = 0)]
 
-        [Display(Name = "投手メンバーID")]
+        [Display(Name = "投手")]
         public int? PitcherMemberID { get; set; }
 
         [ForeignKey(nameof(BatterMember)), Column(Order = 1)]
-        [Display(Name = "打者メンバーID")]
+        [Display(Name = "打者")]
         public int? BatterMemberID { get; set; }
 
         [Required]
@@ -74,13 +80,15 @@ namespace Bmcs.Models
         [Display(Name = "自責点")]
         public int? EarnedRun { get; set; }
 
-        [Required]
         [Display(Name = "結果Outカウント")]
         public int? ResultOutCount { get; set; }
 
-        [Required]
         [Display(Name = "結果ランナー")]
-        public RunnerClass? ResultSceneRunnerClass { get; set; }
+        public RunnerSceneClass? ResultRunnerSceneClass { get; set; }
+
+        [DefaultValue(false)]
+        [Display(Name = "チェンジフラグ")]
+        public bool ChangeFLG { get; set; }
 
         public Game Game { get; set; }
 
