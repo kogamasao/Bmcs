@@ -21,8 +21,8 @@ namespace Bmcs.Models
         [Display(Name = "試合ID")]
         public int? GameID { get; set; }
 
-        [Display(Name = "イニングスコアID")]
-        public int? InningScoreID { get; set; }
+        //[Display(Name = "イニングスコアID")]
+        //public int? InningScoreID { get; set; }
 
         [StringLength(50)]
         [Display(Name = "チームID")]
@@ -43,7 +43,7 @@ namespace Bmcs.Models
 
         public GameScene GameScene { get; set; }
 
-        public InningScore InningScore { get; set; }
+        //public InningScore InningScore { get; set; }
 
         public Team Team { get; set; }
 

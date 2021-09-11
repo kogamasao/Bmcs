@@ -42,6 +42,9 @@ namespace Bmcs.Models
         [Display(Name = "セーブ")]
         public int? Save { get; set; }
 
+        [Display(Name = "先発")]
+        public int? Starter { get; set; }
+
         [Display(Name = "完投")]
         public int? CompleteGame { get; set; }
 
