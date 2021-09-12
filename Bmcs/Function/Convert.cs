@@ -29,5 +29,15 @@ namespace Bmcs.Function
         {
             return value == null ? string.Empty : value.ToString();
         }
+
+        /// <summary>
+        /// 小数値表示
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string DisplayDecimal(this decimal? value)
+        {
+            return System.Convert.ToDecimal(value).ToString("#.##");
+        }
     }
 }

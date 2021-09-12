@@ -44,7 +44,7 @@ namespace Bmcs.Models
 
         [Required]
         [Display(Name = "OUTカウント")]
-        public int? SceneOutCount { get; set; }
+        public int? OutCount { get; set; }
 
         [Required]
         [Display(Name = "ランナー")]

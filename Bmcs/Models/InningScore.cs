@@ -43,8 +43,5 @@ namespace Bmcs.Models
 
         public ICollection<GameScene> GameScenes { get; set; }
 
-        public ICollection<GameSceneDetail> GameSceneDetails { get; set; }
-
-        public ICollection<GameSceneRunner> GameSceneRunners { get; set; }
     }
 }

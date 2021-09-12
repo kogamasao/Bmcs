@@ -17,7 +17,7 @@
                     <thead class="thead-light">
                         <tr>
                             <th style="width: 10%;">
-                                @Html.DisplayNameFor(model => model.OrderList[0].DisplayBattingOrder)
+                                @Html.DisplayNameFor(model => model.OrderList[0].BattingOrder)
                             </th>
                             <th style="width: 50%;">
                                 @Html.DisplayNameFor(model => model.OrderList[0].MemberID)
@@ -35,7 +35,7 @@
                         {
                             <tr id="@("OrderList_" + i.ToString())">
                                 <td class="text-center align-middle js-displaybattingorder">
-                                    @Html.DisplayFor(modelItem => Model.OrderList[i].DisplayBattingOrder)
+                                    @Model.OrderList[i].BattingOrder.DisplayDecimal()
                                 </td>
                                 <td>
                                     <select asp-for="@Model.OrderList[i].MemberID" class="form-control js-memberid js-rename" asp-items="@Model.MemberIDList"></select>

@@ -30,7 +30,7 @@
             <input type="hidden" asp-for="GameScene.TopButtomClass" />
             <input type="hidden" asp-for="GameScene.BattingOrder" />
             <input type="hidden" asp-for="GameScene.OffenseDefenseClass" />
-            <input type="hidden" asp-for="GameScene.SceneOutCount" />
+            <input type="hidden" asp-for="GameScene.OutCount" />
             <input type="hidden" asp-for="GameScene.RunnerSceneClass" />
             <div class="table-responsive">
                 <table class="table table-sm table-bordered" id="inning-score">
@@ -179,7 +179,7 @@
                     <tbody>
                         <tr>
                             <td class="text-center align-middle">
-                                @Model.GameScene.BattingOrder
+                                @Model.GameScene.BattingOrder.DisplayDecimal()
                             </td>
                             @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
                             {
@@ -228,6 +228,7 @@
                             <tr>
                                 <td class="align-middle">
                                     @Model.AfterGameSceneRunnerList[i].RunnerClass.GetEnumName()
+                                    <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].BattingOrder" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].RunnerClass" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].SceneResultClass" />
                                 </td>
