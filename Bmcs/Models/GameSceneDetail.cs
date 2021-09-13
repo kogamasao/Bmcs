@@ -21,9 +21,6 @@ namespace Bmcs.Models
         [Display(Name = "試合ID")]
         public int? GameID { get; set; }
 
-        //[Display(Name = "イニングスコアID")]
-        //public int? InningScoreID { get; set; }
-
         [StringLength(50)]
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
@@ -31,19 +28,15 @@ namespace Bmcs.Models
         [Display(Name = "メンバーID")]
         public int? MemberID { get; set; }
 
-        [Required]
         [Display(Name = "シーン結果区分")]
         public SceneResultClass? SceneResultClass { get; set; }
 
-        [Required]
         [Display(Name = "結果")]
         public DetailResultClass? DetailResultClass { get; set; }
 
         public Game Game { get; set; }
 
         public GameScene GameScene { get; set; }
-
-        //public InningScore InningScore { get; set; }
 
         public Team Team { get; set; }
 

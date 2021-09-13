@@ -15,6 +15,9 @@ namespace Bmcs.Models
         [Display(Name = "システム管理ID")]
         public int SystemAdminID { get; set; }
 
+        [Display(Name = "メッセージタイトル")]
+        public string MessageTitle { get; set; }
+
         [DataType(DataType.MultilineText)]
         [Display(Name = "メッセージ")]
         public string MessageDetail { get; set; }

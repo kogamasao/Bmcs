@@ -23,19 +23,16 @@ namespace Bmcs.Models
         {
             Logger = logger;
             Context = context;
-            IsMemberIDNeedEmpty = true;
         }
 
         public PageModelBase(ILogger<T> logger)
         {
             Logger = logger;
-            IsMemberIDNeedEmpty = true;
         }
 
         public PageModelBase(BmcsContext context)
         {
             Context = context;
-            IsMemberIDNeedEmpty = true;
         }
 
         /// <summary>
@@ -82,15 +79,52 @@ namespace Bmcs.Models
         {
             get
             {
-                if(IsMemberIDNeedEmpty)
-                { 
-                    return AddFirstItem(new SelectList(Context.Members.Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false).OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty)
-                        , new SelectListItem(string.Empty, string.Empty));
-                }
-                else
-                {
-                    return new SelectList(Context.Members.Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false).OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
-                }
+                return AddFirstItem(new SelectList(Context.Members.Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false).OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty)
+                    , new SelectListItem(string.Empty, string.Empty));
+            }
+        }
+
+        /// <summary>
+        /// メンバーIDリスト(空なし)
+        /// </summary>
+        public SelectList MemberIDNoEmptyList
+        {
+            get
+            {
+                return new SelectList(Context.Members.Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false).OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
+            }
+        }
+
+        /// <summary>
+        /// メンバーIDリスト(相手チーム含む)
+        /// </summary>
+        public SelectList MemberIDIncludeOpponentMemberList
+        {
+            get
+            {
+                var memberList = new SelectList(Context.Members
+                                                .Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false)
+                                                .OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
+
+                var opponentMemberList = new SelectList(Context.Members
+                                                .Where(r => r.SystemDataFLG)
+                                                .OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
+
+                return AddFirstItem((SelectList)memberList.Union(opponentMemberList), new SelectListItem(string.Empty, string.Empty));
+            }
+        }
+
+        /// <summary>
+        /// 相手メンバーIDリスト
+        /// </summary>
+        public SelectList OpponentMemberIDList
+        {
+            get
+            {
+                return AddFirstItem(new SelectList(Context.Members
+                                    .Where(r => r.SystemDataFLG)
+                                        .OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty)
+                    , new SelectListItem(string.Empty, string.Empty));
             }
         }
 
@@ -363,9 +397,9 @@ namespace Bmcs.Models
         }
 
         /// <summary>
-        /// 詳細結果区分リスト
+        /// シーン詳細結果区分リスト
         /// </summary>
-        public SelectList DetailResultClassList
+        public SelectList BeforeDetailResultClassList
         {
             get
             {
@@ -373,6 +407,17 @@ namespace Bmcs.Models
             }
         }
 
+        /// <summary>
+        /// 結果詳細結果区分リスト
+        /// </summary>
+        public SelectList AfterDetailResultClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<DetailResultClass>(true, (int)DetailResultClass.Error);
+            }
+
+        }
         /// <summary>
         /// ランナー結果区分リスト
         /// </summary>

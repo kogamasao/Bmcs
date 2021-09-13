@@ -390,22 +390,22 @@ namespace Bmcs.Enum
     /// </summary>
     public enum DetailResultClass
     {
-        [Display(Name = "牽制死")]
+        [Display(Name = "牽制死(投手)")]
         PickOffBallOut = 1,
-        [Display(Name = "盗塁死")]
-        StolenBaseOut = 2,
-        [Display(Name = "盗塁")]
-        StolenBaseSccess = 3,
-        [Display(Name = "ボーク")]
-        Balk = 4,
-        [Display(Name = "WP")]
-        WildPitch = 5,
-        [Display(Name = "PB")]
-        PassBall = 6,
-        [Display(Name = "エラー")]
-        Error = 7,
-        [Display(Name = "補殺")]
-        AssistOut = 8,
+        [Display(Name = "ボーク(投手)")]
+        Balk = 2,
+        [Display(Name = "WP(投手)")]
+        WildPitch = 3,
+        [Display(Name = "PB(捕手)")]
+        PassBall = 4,
+        [Display(Name = "盗塁(走者)")]
+        StolenBaseSccess = 5,
+        [Display(Name = "盗塁死(走者)")]
+        StolenBaseOut = 6,
+        [Display(Name = "エラー(野手)")]
+        Error = 11,
+        [Display(Name = "補殺(野手)")]
+        AssistOut = 12,
         [Display(Name = "その他")]
         Other = 99,
     }
@@ -487,7 +487,7 @@ namespace Bmcs.Enum
         /// SelectList取得
         /// </summary>
         /// <returns></returns>
-        public static SelectList GetSelectList<T>(bool isEmptyItem = true) where T : struct
+        public static SelectList GetSelectList<T>(bool isEmptyItem = true, int? borderValue = null) where T : struct
         {
             var selectList = new List<SelectListItem>();
             
@@ -498,6 +498,11 @@ namespace Bmcs.Enum
 
             foreach (var value in System.Enum.GetValues(typeof(T)))
             {
+                if(borderValue != null && ((int)value) < borderValue)
+                {
+                    continue;
+                }
+
                 selectList.Add(new SelectListItem(value.GetEnumName(), ((int)value).ToString()));
             }
 

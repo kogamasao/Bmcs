@@ -25,7 +25,8 @@ namespace Bmcs.Data
             {
                 new SystemAdmin
                 {
-                      MessageDetail = "管理者よりお知らせ<br />まだリリース前です<br />アカウント、チーム、メンバー登録は作成済"
+                      MessageTitle = "トップ画面お知らせ"
+                    , MessageDetail = "管理者よりお知らせ<br />まだリリース前です<br />アカウント、チーム、メンバー登録は作成済"
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
                     , UpdateDatetime = DateTime.Now

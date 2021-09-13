@@ -73,16 +73,23 @@ namespace Bmcs.Pages.Order
 
             if(!OrderList.Any())
             {
+                //前回試合ID
+                var lastGameID = await Context.Orders
+                                        .Where(m => m.GameID < gameID
+                                            && m.GameSceneID == null
+                                            && m.TeamID == Game.TeamID
+                                            )
+                                        .DefaultIfEmpty()
+                                        .MaxAsync(r => r.GameID);
+
                 //前回の試合より
                 OrderList = await Context.Orders
                     .Include(o => o.Game)
-                    .Include(o => o.GameScene)
                     .Include(o => o.Member)
                     .Include(o => o.Team)
-                    .Where(m => m.GameID <= gameID
-                        && m.GameSceneID == null
-                        && m.TeamID == Game.TeamID
-                        )
+                    .Where(m => m.GameID == lastGameID
+                            && m.GameSceneID == null
+                            && m.TeamID == Game.TeamID)
                 .OrderBy(r => r.BattingOrder)
                 .ToListAsync();
 
