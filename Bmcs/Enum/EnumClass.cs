@@ -265,6 +265,19 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
+    /// オーダーデータ区分
+    /// </summary>
+    public enum OrderDataClass
+    {
+        [Display(Name = "通常")]
+        Normal = 1,
+        [Display(Name = "一時")]
+        Temp = 2,
+        [Display(Name = "変更")]
+        Change = 3,
+    }
+
+    /// <summary>
     /// 打球方向区分
     /// </summary>
     public enum HittingDirectionClass

@@ -31,6 +31,26 @@ namespace Bmcs.Function
         }
 
         /// <summary>
+        /// 0をNULLに変換する
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static T? ZeroToNull<T>(this T value) where T : struct
+        {
+            decimal decimalValue;
+
+            if(decimal.TryParse(value.ToString(), out decimalValue))
+            {
+                if(decimalValue == 0)
+                {
+                    return null;
+                }
+            }
+
+             return value;
+        }
+
+        /// <summary>
         /// 小数値表示
         /// </summary>
         /// <param name="value"></param>

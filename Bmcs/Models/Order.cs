@@ -41,6 +41,9 @@ namespace Bmcs.Models
         [Display(Name = "出場")]
         public ParticipationClass? ParticipationClass { get; set; }
 
+        [Display(Name = "オーダーデータ区分")]
+        public OrderDataClass? OrderDataClass { get; set; }
+
         [NotMapped]
         [Display(Name = "打順")]
         public string DisplayBattingOrder

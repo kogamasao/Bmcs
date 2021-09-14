@@ -12,6 +12,8 @@
             <span asp-validation-for="Game.GameID" class="text-danger"></span>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Game.GameID" />
+            <input type="hidden" asp-for="GameSceneID" />
+            <input type="hidden" asp-for="IsDuringGame" />
             <div class="table-responsive">
                 <table class="table table-hover table-sm table-bordered" id="order">
                     <thead class="thead-light">
@@ -51,6 +53,7 @@
                                     <input class="js-rename" type="hidden" asp-for="@Model.OrderList[i].GameSceneID" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.OrderList[i].ParticipationIndex" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.OrderList[i].ParticipationClass" />
+                                    <input class="js-rename" type="hidden" asp-for="@Model.OrderList[i].OrderDataClass" />
                                 </td>
                             </tr>
                         }
@@ -98,6 +101,7 @@
                                     <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].GameSceneID" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].ParticipationIndex" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].ParticipationClass" />
+                                    <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].OrderDataClass" />
                                 </td>
                             </tr>
                         }
@@ -115,13 +119,13 @@
 </div>
 
 <div>
-    @if (Model.OrderList.FirstOrDefault().GameSceneID == null)
+    @if (!Model.IsDuringGame)
     {
         <a asp-page="/Game/Edit" asp-route-id="@Model.Game.GameID">試合情報へ戻る</a>
     }
     else
     {
-        <a asp-page="/GameScene/Edit"  asp-route-id="@Model.Game.GameID">試合へ戻る</a>
+        <a asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameSceneID" asp-route-isOrderChange="@true">試合へ戻る</a>
     }
 </div>
 

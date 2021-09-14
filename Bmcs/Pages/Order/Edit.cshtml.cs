@@ -32,9 +32,13 @@ namespace Bmcs.Pages.Order
         [BindProperty]
         public Models.Game Game { get; set; }
 
+        [BindProperty]
         public int? GameSceneID { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? gameID, int? gameSceneID)
+        [BindProperty]
+        public bool IsDuringGame { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(int? gameID, int? gameSceneID = null, int? dispGameSceneID = null, bool isDuringGame = false)
         {
             if (!base.IsLogin())
             {
@@ -53,12 +57,17 @@ namespace Bmcs.Pages.Order
             if (Game == null
                 || (Game.TeamID != HttpContext.Session.GetString(SessionConstant.TeamID)
                     && !base.IsAdmin())
-                || (gameSceneID == null
+                || (!isDuringGame
                     && Game.StatusClass != Enum.StatusClass.BeforeGame)
                 )
             {
                 return NotFound();
             }
+
+            var maxOrderDataClass = await Context.Orders
+                                        .Where(m => m.GameID == gameID)
+                                        .DefaultIfEmpty()
+                                        .MaxAsync(r => r.OrderDataClass);
 
             //既存データ取得
             OrderList = await Context.Orders
@@ -67,7 +76,8 @@ namespace Bmcs.Pages.Order
                 .Include(o => o.Member)
                 .Include(o => o.Team)
                 .Where(m => m.GameID == gameID
-                    && m.GameSceneID == gameSceneID)
+                    && ((isDuringGame && m.OrderDataClass == maxOrderDataClass) || (!isDuringGame && m.GameSceneID == null && m.OrderDataClass == OrderDataClass.Normal))
+                    )
                 .OrderBy(r => r.BattingOrder)
                 .ToListAsync();
 
@@ -77,6 +87,7 @@ namespace Bmcs.Pages.Order
                 var lastGameID = await Context.Orders
                                         .Where(m => m.GameID < gameID
                                             && m.GameSceneID == null
+                                            && m.OrderDataClass == OrderDataClass.Normal
                                             && m.TeamID == Game.TeamID
                                             )
                                         .DefaultIfEmpty()
@@ -89,6 +100,7 @@ namespace Bmcs.Pages.Order
                     .Include(o => o.Team)
                     .Where(m => m.GameID == lastGameID
                             && m.GameSceneID == null
+                            && m.OrderDataClass == OrderDataClass.Normal
                             && m.TeamID == Game.TeamID)
                 .OrderBy(r => r.BattingOrder)
                 .ToListAsync();
@@ -108,6 +120,7 @@ namespace Bmcs.Pages.Order
                             ParticipationIndex = 1,
                             PositionClass = (PositionClass)System.Enum.ToObject(typeof(PositionClass), i),
                             ParticipationClass = ParticipationClass.Start,
+                            OrderDataClass = OrderDataClass.Normal,
                         };
 
                         OrderList.Add(order);
@@ -125,11 +138,13 @@ namespace Bmcs.Pages.Order
 
             //試合シーンID
             GameSceneID = gameSceneID;
+            //試合中フラグ
+            IsDuringGame = isDuringGame;
             //チームID
             base.TeamID = Game.TeamID;
 
             //タイトル
-            if(gameSceneID == null)
+            if(!isDuringGame)
             {
                 ViewData[ViewDataConstant.Title] = "スターティングオーダー";
             }
@@ -162,8 +177,6 @@ namespace Bmcs.Pages.Order
                 //再取得
                 Game = await Context.Games
                     .Include(m => m.Team).FirstOrDefaultAsync(m => m.GameID == Game.GameID);
-                //試合シーンID
-                GameSceneID = OrderList.FirstOrDefault().GameSceneID;
                 //チームID
                 base.TeamID = Game.TeamID;
 
@@ -197,7 +210,10 @@ namespace Bmcs.Pages.Order
                 //削除対象
                 var deleteOrderList = await Context.Orders
                                         .Where(m => m.GameID == OrderList.FirstOrDefault().GameID
-                                            && m.GameSceneID == OrderList.FirstOrDefault().GameSceneID).ToListAsync();
+                                            && m.GameSceneID == OrderList.FirstOrDefault().GameSceneID
+                                            && m.OrderDataClass == OrderList.FirstOrDefault().OrderDataClass).ToListAsync();
+
+                //前回データ削除).ToListAsync();
 
                 //前回データ削除
                 Context.Orders.RemoveRange(deleteOrderList);
@@ -217,7 +233,14 @@ namespace Bmcs.Pages.Order
                 throw;
             }
 
-            return RedirectToPage("/GameScene/Edit", new { gameID = Game.GameID, gameSceneID = GameSceneID });
+            if(IsDuringGame)
+            {
+                return RedirectToPage("/GameScene/Edit", new { gameID = Game.GameID, gameSceneID = GameSceneID, isOrderChange = true });
+            }
+            else
+            {
+                return RedirectToPage("/GameScene/Edit", new { gameID = Game.GameID, gameSceneID = GameSceneID });
+            }
         }
 
         /// <summary>
@@ -245,9 +268,19 @@ namespace Bmcs.Pages.Order
                 newOrder.PositionClass = order.PositionClass;
                 newOrder.ParticipationClass = order.ParticipationClass;
 
-                base.SetEntryInfo(order);
+                //試合中
+                if(IsDuringGame)
+                { 
+                    newOrder.OrderDataClass = OrderDataClass.Change;
+                }
+                else
+                {
+                    newOrder.OrderDataClass = order.OrderDataClass;
+                }
 
-                orderList.Add(order);
+                base.SetEntryInfo(newOrder);
+
+                orderList.Add(newOrder);
             }
         }
     }

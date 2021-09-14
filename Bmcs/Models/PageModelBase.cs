@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Bmcs.Constans;
 using Bmcs.Data;
 using Bmcs.Enum;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bmcs.Models
 {
@@ -102,15 +103,12 @@ namespace Bmcs.Models
         {
             get
             {
-                var memberList = new SelectList(Context.Members
-                                                .Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false)
-                                                .OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
+                var memberIDIncludeOpponentMemberList = new SelectList(Context.Members
+                                                .Where(r => (r.TeamID == this.TeamID || r.SystemDataFLG) && r.DeleteFLG == false)
+                                                .OrderBy(r => r.SystemDataFLG)
+                                                .ThenBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
 
-                var opponentMemberList = new SelectList(Context.Members
-                                                .Where(r => r.SystemDataFLG)
-                                                .OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
-
-                return AddFirstItem((SelectList)memberList.Union(opponentMemberList), new SelectListItem(string.Empty, string.Empty));
+                return AddFirstItem(memberIDIncludeOpponentMemberList, new SelectListItem(string.Empty, string.Empty));
             }
         }
 
@@ -526,6 +524,23 @@ namespace Bmcs.Models
             }
 
             return new SelectList(newList, "Value", "Text", selectedItemValue);
+        }
+
+        /// <summary>
+        /// 仮オーダー削除
+        /// </summary>
+        /// <param name="gameID"></param>
+        /// <returns></returns>
+        public async Task DeleteTempOrders(int? gameID, OrderDataClass? orderDataClass)
+        {
+            //オーダー
+            var tempOrders = await Context.Orders
+                                .Where(r => r.GameID == gameID
+                                    && r.OrderDataClass == orderDataClass).ToListAsync();
+
+            Context.Orders.RemoveRange(tempOrders);
+
+            await Context.SaveChangesAsync();
         }
     }
 }

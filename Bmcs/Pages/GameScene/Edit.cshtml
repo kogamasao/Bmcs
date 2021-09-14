@@ -123,7 +123,7 @@
             @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Defense)
             {
                 <div class="form-group">
-                    <a class="btn btn-success" asp-page="/Order/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID">守備変更</a>
+                    <a class="btn btn-success" asp-page="/Order/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isDuringGame="@true">守備変更</a>
                 </div>
             }
             <div class="table-responsive">

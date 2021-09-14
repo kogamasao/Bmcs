@@ -88,17 +88,23 @@
             });
         });
 
-        //打順表示用
-        $("#order tbody td.js-displaybattingorder").each(function (i) {
-            i = i + 1;
-            $(this).text(i);
-        });
+        //試合中フラグ
+        var isDuringGame = $("#IsDuringGame");
 
-        //打順内部用
-        $("#order tbody td .js-battingorder").each(function (i) {
-            i = i + 1;
-            $(this).val(i);
-        });
+        //スタメン時のみ
+        if (isDuringGame.val() == "False") {
+            //打順表示用
+            $("#order tbody td.js-displaybattingorder").each(function (i) {
+                i = i + 1;
+                $(this).text(i);
+            });
+
+            //打順内部用
+            $("#order tbody td .js-battingorder").each(function (i) {
+                i = i + 1;
+                $(this).val(i);
+            });
+        }
     }
 
     //連番振り直し
