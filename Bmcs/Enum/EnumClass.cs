@@ -199,8 +199,8 @@ namespace Bmcs.Enum
     {
         [Display(Name = "試合結果のみ")]
         OnlyGame = 1,
-        [Display(Name = "打者毎")]
-        ByBatter = 2,
+        [Display(Name = "プレー毎")]
+        ByPlay = 2,
     }
 
     /// <summary>
@@ -298,11 +298,11 @@ namespace Bmcs.Enum
         ShortStop = 7,
         [Display(Name = "左")]
         Left = 8,
-        [Display(Name = "左中間")]
+        [Display(Name = "左中")]
         LeftCenter = 9,
         [Display(Name = "中")]
         Center = 10,
-        [Display(Name = "右中間")]
+        [Display(Name = "右中")]
         RightCenter = 11,
         [Display(Name = "右")]
         Right = 12,
@@ -317,9 +317,9 @@ namespace Bmcs.Enum
         NoHit = 1,
         [Display(Name = "ゴロ")]
         Ground = 2,
-        [Display(Name = "ライナー")]
+        [Display(Name = "直")]
         Liner = 3,
-        [Display(Name = "フライ")]
+        [Display(Name = "飛")]
         Fly = 4,
     }
 
@@ -332,36 +332,36 @@ namespace Bmcs.Enum
         Strikeout = 1,
         [Display(Name = "見逃三振")]
         MissedStrikeout = 2,
-        [Display(Name = "振り逃げ")]
-        UncaughtThirdStrike = 3,
         [Display(Name = "アウト")]
-        Out = 4,
+        Out = 3,
         [Display(Name = "併殺")]
-        DoublePlay = 5,
+        DoublePlay = 4,
+        [Display(Name = "振逃")]
+        UncaughtThirdStrike = 11,
         [Display(Name = "エラー")]
-        Error = 6,
+        Error = 12,
         [Display(Name = "野選")]
-        FieldersChoice = 7,
+        FieldersChoice = 13,
         [Display(Name = "四球")]
-        FourBalls = 11,
+        FourBalls = 21,
         [Display(Name = "死球")]
-        DeadBall = 12,
+        DeadBall = 22,
         [Display(Name = "犠打")]
-        Sacrifice = 13,
+        Sacrifice = 23,
         [Display(Name = "犠牲")]
-        SacrificeFly = 14,
+        SacrificeFly = 24,
         [Display(Name = "打撃妨害")]
-        BatterInterference = 15,
+        BatterInterference = 25,
         [Display(Name = "安打")]
-        SingleHit = 21,
+        SingleHit = 31,
         [Display(Name = "二塁打")]
-        DoubleHit = 22,
+        DoubleHit = 32,
         [Display(Name = "三塁打")]
-        TripleHit = 23,
+        TripleHit = 33,
         [Display(Name = "本塁打")]
-        HomeRun = 24,
-        [Display(Name = "継続")]
-        Continue = 25,
+        HomeRun = 34,
+        [Display(Name = "チェンジ")]
+        Change = 91,
     }
 
     /// <summary>
@@ -459,8 +459,6 @@ namespace Bmcs.Enum
         RunExceptEarnedRun = 7,
         [Display(Name = "得点(打点自責無)")]
         RunExceptRBIEarnedRun = 8,
-        [Display(Name = "残塁")]
-        LeftOnBase = 9,
     }
 
     /// <summary>

@@ -2,3 +2,19 @@
 .table td, .table th {
     white-space: nowrap;
 }
+
+.box {
+    border: 2px solid #1b6ec2;
+    margin-bottom:10px;
+}
+
+    .box .box-title {
+        background: #1b6ec2;
+        color: #FFF;
+        text-align: center;
+        margin: 0;
+    }
+
+    .box .box-inner {
+        padding: 10px 10px 0px 10px;
+    }

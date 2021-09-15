@@ -65,7 +65,7 @@ namespace Bmcs.Pages.Game
             //表裏タイプ
             Game.BatFirstBatSecondClass = BatFirstBatSecondClass.First;
             //試合入力タイプ
-            Game.GameInputTypeClass = GameInputTypeClass.ByBatter;
+            Game.GameInputTypeClass = GameInputTypeClass.ByPlay;
 
             return Page();
         }
