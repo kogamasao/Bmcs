@@ -105,9 +105,9 @@ namespace Bmcs.Pages.GameScene
                 if (LastGameSceneID == null)
                 {
                     //イニングスコア
-                    InningScoreList = new List<InningScore>()
+                    InningScoreList = new List<Models.InningScore>()
                     {
-                        new InningScore()
+                        new Models.InningScore()
                         {
                             GameID = Game.GameID,
                             TeamID = Game.TeamID,
@@ -179,9 +179,11 @@ namespace Bmcs.Pages.GameScene
                     InningScoreList = await Context.InningScores
                                 .Where(r => r.GameID == Game.GameID
                                         && ((lastGameScene.TopButtomClass == TopButtomClass.Buttom && r.Inning <= lastGameScene.Inning)
-                                            || 
+                                            ||
                                             (lastGameScene.TopButtomClass == TopButtomClass.Top && (r.Inning < lastGameScene.Inning || (r.Inning == lastGameScene.Inning && r.TopButtomClass == TopButtomClass.Top))))
                                        )
+                                .OrderBy(r => r.Inning)
+                                .ThenBy(r => r.TopButtomClass)
                                 .ToListAsync();
 
                     //試合シーン
@@ -464,8 +466,8 @@ namespace Bmcs.Pages.GameScene
                 var lastGameScene = await Context.GameScenes
                             .FindAsync(LastGameSceneID);
 
-                if(lastGameScene != null)
-                { 
+                if (lastGameScene != null)
+                {
                     //イニングスコア
                     InningScoreList = await Context.InningScores
                                 .Where(r => r.GameID == Game.GameID
@@ -473,14 +475,16 @@ namespace Bmcs.Pages.GameScene
                                             ||
                                             (lastGameScene.TopButtomClass == TopButtomClass.Top && (r.Inning < lastGameScene.Inning || (r.Inning == lastGameScene.Inning && r.TopButtomClass == TopButtomClass.Top))))
                                         )
+                                .OrderBy(r => r.Inning)
+                                .ThenBy(r => r.TopButtomClass)
                                 .ToListAsync();
                 }
                 else
                 {
                     //イニングスコア
-                    InningScoreList = new List<InningScore>()
+                    InningScoreList = new List<Models.InningScore>()
                     {
-                        new InningScore()
+                        new Models.InningScore()
                         {
                             GameID = Game.GameID,
                             TeamID = Game.TeamID,
@@ -500,6 +504,20 @@ namespace Bmcs.Pages.GameScene
                                                 .Where(r => r.GameSceneID == gameSceneID && r.SceneResultClass == SceneResultClass.SceneChange)
                                                 .ToListAsync();
 
+                if (BeforeGameSceneDetailList == null || !BeforeGameSceneDetailList.Any())
+                {
+                    //シーン詳細
+                    BeforeGameSceneDetailList = new List<Models.GameSceneDetail>()
+                    {
+                        new GameSceneDetail()
+                        {
+                            GameID = Game.GameID,
+                            TeamID = Game.TeamID,
+                            SceneResultClass = SceneResultClass.SceneChange,
+                        }
+                    };
+                }
+
                 //シーンランナー
                 BeforeGameSceneRunnerList = await Context.GameSceneRunners
                                                 .Where(r => r.GameSceneID == gameSceneID && r.SceneResultClass == SceneResultClass.SceneChange)
@@ -509,6 +527,20 @@ namespace Bmcs.Pages.GameScene
                 AfterGameSceneDetailList = await Context.GameSceneDetails
                                                 .Where(r => r.GameSceneID == gameSceneID && r.SceneResultClass == SceneResultClass.Result)
                                                 .ToListAsync();
+
+                if (AfterGameSceneDetailList == null || !AfterGameSceneDetailList.Any())
+                {
+                    //結果詳細
+                    AfterGameSceneDetailList = new List<Models.GameSceneDetail>()
+                {
+                    new GameSceneDetail()
+                    {
+                        GameID = Game.GameID,
+                        TeamID = Game.TeamID,
+                        SceneResultClass = SceneResultClass.Result,
+                    }
+                };
+                }
 
                 //結果ランナー
                 AfterGameSceneRunnerList = await Context.GameSceneRunners
@@ -685,7 +717,7 @@ namespace Bmcs.Pages.GameScene
                     }
                     else
                     {
-                        inningScore = new InningScore();
+                        inningScore = new Models.InningScore();
 
                         inningScore.GameID = Game.GameID;
                         inningScore.TeamID = Game.TeamID;
@@ -1073,9 +1105,9 @@ namespace Bmcs.Pages.GameScene
             }
 
             //表⇒裏
-            if(selectGameScene.TopButtomClass == TopButtomClass.Top)
-            { 
-                gameScene = gameScenes.Where(r => r.Inning == selectGameScene.Inning && r.TopButtomClass == TopButtomClass.Buttom && r.InningIndex == 1).FirstOrDefault();        
+            if (selectGameScene.TopButtomClass == TopButtomClass.Top)
+            {
+                gameScene = gameScenes.Where(r => r.Inning == selectGameScene.Inning && r.TopButtomClass == TopButtomClass.Buttom && r.InningIndex == 1).FirstOrDefault();
             }
             else
             {
@@ -1104,19 +1136,19 @@ namespace Bmcs.Pages.GameScene
             bool isOnThirdBase = false;
 
             //一塁
-            if (!gameSceneRunner.Any(r => r.RunnerResultClass == RunnerResultClass.OnFirstBase))
+            if (gameSceneRunner.Any(r => r.RunnerResultClass == RunnerResultClass.OnFirstBase))
             {
                 isOnFirstBase = true;
             }
 
             //二塁
-            if (!gameSceneRunner.Any(r => r.RunnerResultClass == RunnerResultClass.OnSecondBase))
+            if (gameSceneRunner.Any(r => r.RunnerResultClass == RunnerResultClass.OnSecondBase))
             {
                 isOnSecondBase = true;
             }
 
             //三塁
-            if (!gameSceneRunner.Any(r => r.RunnerResultClass == RunnerResultClass.OnThirdBase))
+            if (gameSceneRunner.Any(r => r.RunnerResultClass == RunnerResultClass.OnThirdBase))
             {
                 isOnThirdBase = true;
             }

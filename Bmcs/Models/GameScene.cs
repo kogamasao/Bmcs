@@ -90,6 +90,26 @@ namespace Bmcs.Models
         [Display(Name = "チェンジフラグ")]
         public bool ChangeFLG { get; set; }
 
+        [NotMapped]
+        [Display(Name = "OUT")]
+        public string InningScoreListOutCount { get; set; }
+
+        [NotMapped]
+        [Display(Name = "ランナー")]
+        public string InningScoreListRunner { get; set; }
+
+        [NotMapped]
+        [Display(Name = "打順")]
+        public string InningScoreListBattingOrder { get; set; }
+
+        [NotMapped]
+        [Display(Name = "結果")]
+        public string InningScoreListDetail { get; set; }
+
+        [NotMapped]
+        [Display(Name = "スコア")]
+        public string InningScoreListGameScore { get; set; }
+
         public Game Game { get; set; }
 
         public InningScore InningScore { get; set; }

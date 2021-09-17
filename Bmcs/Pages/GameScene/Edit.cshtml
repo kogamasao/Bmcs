@@ -87,7 +87,7 @@
                                 @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top))
                                 {
                                     <td class="text-center">
-                                        @inning.Score
+                                        <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
                                     </td>
                                 }
                                 @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count(); i < 9; i++)
@@ -112,9 +112,9 @@
                                 </td>
                                 @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom))
                                 {
-                                    <td class="text-center">
-                                        @inning.Score
-                                    </td>
+                            <td class="text-center">
+                                <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
+                            </td>
                                 }
 
                                 @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count(); i < 9; i++)
@@ -282,12 +282,40 @@
                             <table class="table table-sm table-bordered">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>
+                                        <th style="width: 10%;">
                                             打順
                                         </th>
-                                        <th>
+                                        <th style="width: 90%;">
                                             打者
                                         </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center align-middle">
+                                            @Model.GameScene.BattingOrder.DisplayDecimal()
+                                        </td>
+                                        @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
+                                        {
+                                        <td>
+                                            <select asp-for="@Model.GameScene.BatterMemberID" class="form-control js-batter-member" asp-items="@Model.MemberIDNoEmptyList"></select>
+                                        </td>
+                                        }
+                                        else
+                                        {
+                                        <td>
+                                            <select asp-for="@Model.GameScene.BatterMemberID" class="form-control js-batter-member" asp-items="@Model.OpponentFielderMemberIDList"></select>
+                                        </td>
+                                        }
+                                    </tr>
+                                </tbody>   
+                            </table>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
                                         <th>
                                             方向
                                         </th>
@@ -301,21 +329,6 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="text-center align-middle">
-                                            @Model.GameScene.BattingOrder.DisplayDecimal()
-                                        </td>
-                                        @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
-                                        {
-                                            <td>
-                                                <select asp-for="@Model.GameScene.BatterMemberID" class="form-control js-batter-member" asp-items="@Model.MemberIDNoEmptyList"></select>
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                <select asp-for="@Model.GameScene.BatterMemberID" class="form-control js-batter-member" asp-items="@Model.OpponentFielderMemberIDList"></select>
-                                            </td>
-                                        }
                                         <td>
                                             <select asp-for="@Model.GameScene.HittingDirectionClass" class="form-control" asp-items="@Model.HittingDirectionClassList"></select>
                                         </td>
