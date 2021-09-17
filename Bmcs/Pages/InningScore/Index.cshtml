@@ -10,11 +10,13 @@
 <h4>@Model.Game.Team.TeamName</h4>
 
 @if (Model.Game.StatusClass == StatusClass.DuringGame)
-{ 
-    <a class="btn btn-primary mb-3" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID">試合に戻る</a>
+{
+    <div class="form-group">
+        <a class="btn btn-primary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID">試合に戻る</a>
+    </div>
 }
 <div class="table-responsive">
-    <table class="table table-sm table-bordered" id="inning-score">
+    <table class="table table-sm table-bordered">
         <thead class="thead-light">
             <tr>
                 <th>
@@ -89,7 +91,7 @@
                 }
 
                 @if (Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() > 9
-      && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
+                    && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
                 {
                     <td class="text-center">
                     </td>
@@ -104,7 +106,7 @@
 
 
 @foreach (var inningScore in Model.InningScoreList.Where(r => ((r.Inning == Model.SelectInning) || (Model.SelectInning == null))
-                                                       && ((r.TopButtomClass == Model.SelectTopButtomClass) || (Model.SelectTopButtomClass == null))))
+                                                     && ((r.TopButtomClass == Model.SelectTopButtomClass) || (Model.SelectTopButtomClass == null))))
 {
 
     <div class="box">
@@ -113,7 +115,7 @@
         </div>
         <div class="box-inner">
             @if (inningScore.TopButtomClass == TopButtomClass.Top
-          && Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
+            && Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
             {
                 <p>@(Model.Game.Team.TeamName + "の攻撃")</p>
             }

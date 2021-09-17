@@ -419,8 +419,8 @@ namespace Bmcs.Enum
         Error = 11,
         [Display(Name = "補殺(野手)")]
         AssistOut = 12,
-        [Display(Name = "その他")]
-        Other = 99,
+        //[Display(Name = "その他")]
+        //Other = 99,
     }
 
     /// <summary>
