@@ -26,7 +26,7 @@ namespace Bmcs.Data
                 new SystemAdmin
                 {
                       MessageTitle = "トップ画面お知らせ"
-                    , MessageDetail = "管理者よりお知らせ<br />まだリリース前です<br />アカウント、チーム、メンバー登録は作成済"
+                    , MessageDetail = "管理者よりお知らせ<br />まだリリース前です<br />試合中の入力画面を作成中"
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
                     , UpdateDatetime = DateTime.Now
@@ -576,8 +576,8 @@ namespace Bmcs.Data
                 new Member
                 {
                       TeamID = "JB"
-                    , UniformNumber = "6"
-                    , MemberName = "古賀　正雄"
+                    , UniformNumber = ""
+                    , MemberName = "古賀"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = ThrowClass.Right
                     , BatClass = BatClass.Left
@@ -593,8 +593,8 @@ namespace Bmcs.Data
                 new Member
                 {
                       TeamID = "JB"
-                    , UniformNumber = "30"
-                    , MemberName = "鈴木　雄三"
+                    , UniformNumber = ""
+                    , MemberName = "鈴木"
                     , MemberClass = Enum.MemberClass.PlayingManager
                     , ThrowClass = ThrowClass.Right
                     , BatClass = BatClass.Right
@@ -610,8 +610,8 @@ namespace Bmcs.Data
                 new Member
                 {
                       TeamID = "JB"
-                    , UniformNumber = "7"
-                    , MemberName = "治下　竜麻"
+                    , UniformNumber = ""
+                    , MemberName = "治下"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = ThrowClass.Right
                     , BatClass = BatClass.Right
@@ -627,7 +627,7 @@ namespace Bmcs.Data
                 new Member
                 {
                       TeamID = "JB"
-                    , UniformNumber = "2"
+                    , UniformNumber = ""
                     , MemberName = "永田"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = ThrowClass.Right
@@ -644,7 +644,7 @@ namespace Bmcs.Data
                 new Member
                 {
                       TeamID = "JB"
-                    , UniformNumber = "1"
+                    , UniformNumber = ""
                     , MemberName = "中塚"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = ThrowClass.Right
@@ -661,7 +661,7 @@ namespace Bmcs.Data
                 new Member
                 {
                       TeamID = "JB"
-                    , UniformNumber = "3"
+                    , UniformNumber = ""
                     , MemberName = "山崎"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = ThrowClass.Right
@@ -678,7 +678,7 @@ namespace Bmcs.Data
                 new Member
                 {
                       TeamID = "JB"
-                    , UniformNumber = "8"
+                    , UniformNumber = ""
                     , MemberName = "髙橋"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = ThrowClass.Right
@@ -695,7 +695,7 @@ namespace Bmcs.Data
                 new Member
                 {
                       TeamID = "JB"
-                    , UniformNumber = "11"
+                    , UniformNumber = ""
                     , MemberName = "小越"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = ThrowClass.Right
@@ -712,7 +712,7 @@ namespace Bmcs.Data
                 new Member
                 {
                       TeamID = "JB"
-                    , UniformNumber = "5"
+                    , UniformNumber = ""
                     , MemberName = "杉田"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = ThrowClass.Right
@@ -746,7 +746,7 @@ namespace Bmcs.Data
                 new Member
                 {
                       TeamID = "JB"
-                    , UniformNumber = "4"
+                    , UniformNumber = ""
                     , MemberName = "榎本"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = ThrowClass.Right

@@ -9,12 +9,20 @@
 <div class="row">
     <div class="col-md-6">
         <form method="post">
-            @if (Model.LastGameSceneID != null)
-            {
-                <div class="form-group">
-                    <a class="btn btn-primary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.LastGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">前に戻る</a>
-                </div>
-            }
+          
+            <div class="form-group">
+                @if (Model.LastGameSceneID != null)
+                {
+                    <a class="btn btn-primary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.LastGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">戻る</a>
+                }
+
+                @if (Model.NextGameSceneID != null || Model.GameScene.GameSceneID.ZeroToNull() != null)
+                {
+                    <a class="btn btn-primary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.NextGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">次へ</a>
+                    <a class="btn btn-primary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">最新へ</a>
+                }
+            </div>
+            
 
                 <div class="form-group">
                     <a class="btn btn-danger" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isOrderChange="@false" asp-route-isInitialize="@true">元に戻す</a>

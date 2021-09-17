@@ -51,6 +51,21 @@ namespace Bmcs.Function
         }
 
         /// <summary>
+        /// NULLを0に変換する
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static T NullToZero<T>(this T? value) where T : struct
+        {
+            if (value == null)
+            {
+                return (T)(dynamic)(0);
+            }
+
+            return (T)(dynamic)value;
+        }
+
+        /// <summary>
         /// 小数値表示
         /// </summary>
         /// <param name="value"></param>

@@ -53,6 +53,10 @@ namespace Bmcs.Pages.GameScene
         [BindProperty]
         public int? LastGameSceneID { get; set; }
 
+        [BindProperty]
+
+        public int? NextGameSceneID { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? gameID, int? gameSceneID, bool isOrderChange = false, bool isInitialize = false)
         {
             if (!base.IsLogin())
@@ -82,6 +86,8 @@ namespace Bmcs.Pages.GameScene
 
             //前回試合シーンID
             LastGameSceneID = GetLastGameSceneID(Game.GameID, gameSceneID);
+            //次回試合シーンID(修正時のみ)
+            NextGameSceneID = GetNextGameSceneID(Game.GameID, gameSceneID);
 
             //仮オーダー削除
             await DeleteTempOrders(Game.GameID, OrderDataClass.Temp);
@@ -114,6 +120,7 @@ namespace Bmcs.Pages.GameScene
                     //試合シーン
                     GameScene = new Models.GameScene()
                     {
+                        GameSceneID = gameSceneID.NullToZero(),
                         GameID = Game.GameID,
                         TeamID = Game.TeamID,
                         Inning = 1,
@@ -180,6 +187,7 @@ namespace Bmcs.Pages.GameScene
                     //試合シーン
                     GameScene = new Models.GameScene()
                     {
+                        GameSceneID = gameSceneID.NullToZero(),
                         GameID = lastGameScene.GameID,
                         TeamID = lastGameScene.TeamID,
                     };
@@ -992,30 +1000,27 @@ namespace Bmcs.Pages.GameScene
                     return gameSceneID;
                 }
 
-                //ココ
+                //同イニング
                 if (selectGameScene.InningIndex > 1)
                 {
                     inning = selectGameScene.Inning;
                     topButtomClass = selectGameScene.TopButtomClass;
                     inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass && r.InningIndex < selectGameScene.InningIndex).DefaultIfEmpty().Max(r => r.InningIndex);
                 }
+                //裏⇒表
                 else if (selectGameScene.TopButtomClass == TopButtomClass.Buttom)
                 {
                     inning = selectGameScene.Inning;
                     topButtomClass = TopButtomClass.Top;
                     inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).DefaultIfEmpty().Max(r => r.InningIndex);
                 }
+                //表⇒前回の裏
                 else
                 {
                     inning = selectGameScene.Inning - 1;
                     topButtomClass = TopButtomClass.Buttom;
                     inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).DefaultIfEmpty().Max(r => r.InningIndex);
                 }
-
-                //    inning = gameScenes.Where(r => r.Inning <= selectGameScene.Inning && r.GameSceneID != selectGameScene.GameSceneID).DefaultIfEmpty().Max(r => r.Inning);
-                //    topButtomClass = gameScenes.Where(r => r.Inning == inning && r.GameSceneID != selectGameScene.GameSceneID).DefaultIfEmpty().Max(r => r.TopButtomClass);
-                //    inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass && r.GameSceneID != selectGameScene.GameSceneID).DefaultIfEmpty().Max(r => r.InningIndex);
-                //}
             }
 
             var gameScene = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass && r.InningIndex == inningIndex).FirstOrDefault();
@@ -1023,6 +1028,65 @@ namespace Bmcs.Pages.GameScene
             if (gameScene != null)
             {
                 gameSceneID = gameScene.GameSceneID;
+            }
+
+            return gameSceneID;
+        }
+
+        /// <summary>
+        /// 次GameSceneID取得
+        /// </summary>
+        /// <param name="gameID"></param>
+        /// <param name="selectGameSceneID"></param>
+        /// <returns></returns>
+        private int? GetNextGameSceneID(int gameID, int? selectGameSceneID = null)
+        {
+            int? gameSceneID = null;
+
+            var gameScenes = Context.GameScenes.Where(r => r.GameID == gameID);
+
+            if (!gameScenes.Any())
+            {
+                return gameSceneID;
+            }
+
+            if (selectGameSceneID == null)
+            {
+                return gameSceneID;
+            }
+
+            var selectGameScene = Context.GameScenes.Find(selectGameSceneID);
+
+            if (selectGameScene == null)
+            {
+                return gameSceneID;
+            }
+
+            //同イニング
+            var gameScene = gameScenes.Where(r => r.Inning == selectGameScene.Inning && r.TopButtomClass == selectGameScene.TopButtomClass && r.InningIndex == selectGameScene.InningIndex + 1).FirstOrDefault();
+
+            if (gameScene != null)
+            {
+                gameSceneID = gameScene.GameSceneID;
+
+                return gameSceneID;
+            }
+
+            //表⇒裏
+            if(selectGameScene.TopButtomClass == TopButtomClass.Top)
+            { 
+                gameScene = gameScenes.Where(r => r.Inning == selectGameScene.Inning && r.TopButtomClass == TopButtomClass.Buttom && r.InningIndex == 1).FirstOrDefault();        
+            }
+            else
+            {
+                gameScene = gameScenes.Where(r => r.Inning == selectGameScene.Inning + 1 && r.TopButtomClass == TopButtomClass.Top && r.InningIndex == 1).FirstOrDefault();
+            }
+
+            if (gameScene != null)
+            {
+                gameSceneID = gameScene.GameSceneID;
+
+                return gameSceneID;
             }
 
             return gameSceneID;
