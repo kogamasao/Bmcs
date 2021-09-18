@@ -171,9 +171,22 @@ namespace Bmcs.Pages.InningScore
                 }
 
                 //スコア
-                gameScene.InningScoreListGameScore = allGameSceneList.Where(r => r.Inning <= gameScene.Inning && r.TopButtomClass == myTeamOffenceTopButtomClass && r.InningIndex <= gameScene.InningIndex).DefaultIfEmpty().Sum(r => r.Run).NullToEmpty()
-                                                    + "-" +
-                                                    allGameSceneList.Where(r => r.Inning <= gameScene.Inning && r.TopButtomClass != myTeamOffenceTopButtomClass && r.InningIndex <= gameScene.InningIndex).DefaultIfEmpty().Sum(r => r.Run).NullToEmpty();
+                var myScoreList = allGameSceneList.Where(r => r.Inning <= gameScene.Inning && r.TopButtomClass == myTeamOffenceTopButtomClass && r.InningIndex <= gameScene.InningIndex);
+                var opponentScoreList = allGameSceneList.Where(r => r.Inning <= gameScene.Inning && r.TopButtomClass != myTeamOffenceTopButtomClass && r.InningIndex <= gameScene.InningIndex);
+                var myScore = 0;
+                var opponentScore = 0;
+
+                if(myScoreList != null && myScoreList.Any())
+                {
+                    myScore = myScoreList.DefaultIfEmpty().Sum(r => r.Run).NullToZero();
+                }
+
+                if (opponentScoreList != null && opponentScoreList.Any())
+                {
+                    opponentScore = opponentScoreList.DefaultIfEmpty().Sum(r => r.Run).NullToZero();
+                }
+
+                gameScene.InningScoreListGameScore = myScore.ToString() + "-" +  opponentScore.ToString();
             
                 //チェンジ
                 if(gameScene.ChangeFLG)
