@@ -242,7 +242,7 @@
                                         {
                                             <tr>
                                                 <td class="align-middle">
-                                                    @Model.BeforeGameSceneRunnerList[i].RunnerClass.GetEnumName()
+                                                    <span>@Model.BeforeGameSceneRunnerList[i].RunnerClass.GetEnumName()</span>
                                                     <input class="js-rename" type="hidden" asp-for="@Model.BeforeGameSceneRunnerList[i].BattingOrder" />
                                                     <input class="js-rename" type="hidden" asp-for="@Model.BeforeGameSceneRunnerList[i].RunnerClass" />
                                                     <input class="js-rename" type="hidden" asp-for="@Model.BeforeGameSceneRunnerList[i].SceneResultClass" />
@@ -293,7 +293,7 @@
                                 <tbody>
                                     <tr>
                                         <td class="text-center align-middle">
-                                            @Model.GameScene.BattingOrder.DisplayDecimal()
+                                            <span>@Model.GameScene.BattingOrder.DisplayDecimal()</span>
                                         </td>
                                         @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
                                         {
@@ -337,6 +337,7 @@
                                         </td>
                                         <td>
                                             <select asp-for="@Model.GameScene.ResultClass" class="form-control js-batter-result" asp-items="@Model.ResultClassList"></select>
+                                            @*<input id="before-batter-runner-result" type="hidden" />*@
                                         </td>
                                     </tr>
                                 </tbody>
@@ -414,11 +415,11 @@
                                 <tbody>
                                     @for (int i = 0; i < Model.AfterGameSceneRunnerList.Count; i++)
                                     {
-                                        <tr>
+                                        <tr class="js-after-runner">
                                             <td class="align-middle">
-                                                @Model.AfterGameSceneRunnerList[i].RunnerClass.GetEnumName()
+                                                <span  class="js-after-runner-class-name" data-runnerclass="@Model.AfterGameSceneRunnerList[i].RunnerClass" >@Model.AfterGameSceneRunnerList[i].RunnerClass.GetEnumName()</span>
                                                 <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].BattingOrder" />
-                                                <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].RunnerClass" />
+                                                <input class="js-after-runner-class js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].RunnerClass" data-runnerclass="@Model.AfterGameSceneRunnerList[i].RunnerClass" />
                                                 <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].SceneResultClass" />
                                             </td>
 

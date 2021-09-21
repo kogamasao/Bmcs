@@ -12,6 +12,39 @@
         window.alert('試合中にブラウザバックは使用できません。');
     });
 
+    //数値⇒クラス値に変換
+    function ConvertValueToRunnerClass(value) {
+
+        if (value == 2) {
+            return 'OnFirstBase'
+        }
+        else if (value == 3) {
+            return 'OnSecondBase'
+        }
+        else if (value == 4) {
+            return 'OnThirdBase'
+        }
+        else {
+            return ''
+        }
+    }
+
+    //クラス値⇒数値に変換
+    function ConvertRunnerClassToValue(runnerClass) {
+        if (runnerClass == 'OnFirstBase') {
+            return 2
+        }
+        else if (runnerClass == 'OnSecondBase') {
+            return 3
+        }
+        else if (runnerClass == 'OnThirdBase') {
+            return 4
+        }
+        else {
+            return 1
+        }
+    }
+
     //submitボタン
     $("body").on("click", ".js-submit", function () {
         //区分取得
@@ -38,10 +71,15 @@
 
     //打席中ランナー結果
     $(".js-before-runner-result").change(function () {
-        var result = $(this).val();
+        var select = $(this);
+        var result = select.val();
+        var resultName = select.find('option:selected');
+        
         var runnerclass = $(this).data("runnerclass");
 
         var afterRunnerResult = $(".js-after-runner-result[data-runnerclass='" + runnerclass + "']")
+        var afterRunnerClass = $(".js-after-runner-class[data-runnerclass='" + runnerclass + "']")
+        var afterRunnerClassName = $(".js-after-runner-class-name[data-runnerclass='" + runnerclass + "']")
 
         if (afterRunnerResult) {
             afterRunnerResult.val(result);
@@ -55,6 +93,14 @@
             else {
                 afterRunnerResult.parent().parent().show();
             }
+        }
+
+        if (afterRunnerClass) {
+            afterRunnerClass.val(ConvertValueToRunnerClass(result));
+        }
+
+        if (afterRunnerClassName) {
+            afterRunnerClassName[0].innerHTML = resultName[0].innerHTML;
         }
     });
 
@@ -74,6 +120,11 @@
         var result = $(this).val();
 
         var batterRunnerResult = $(".js-after-runner-result[data-runnerclass='Batter']")
+        //var beforeBatterRunnerResult = $("#before-batter-runner-result")
+
+        //if (!beforeBatterRunnerResult.val()) {
+        //    beforeBatterRunnerResult.val(1);
+        //}
 
         if (batterRunnerResult) {
 
@@ -81,10 +132,12 @@
             nextBatter.prop("disabled", false);
             $("#after-detail-runner").show();
 
-            if (result >= 1 && result <= 10) {
+            if ((result >= 1 && result <= 10)
+                || (result == 23 || result == 24)) {
                 batterRunnerResult.val(1);
             }
-            else if (result >= 11 && result <= 31) {
+            else if ((result >= 11 && result <= 31)
+                && (result != 23 && result != 24)) {
                 batterRunnerResult.val(2);
             }
             else if (result == 32) {
@@ -101,6 +154,77 @@
                 nextBatter.prop("disabled", true);
                 $("#after-detail-runner").hide();
             }
+
+            var backFirstRunnerFLG = false;
+            var backSecondRunnerFLG = false;
+
+            //他ランナー
+            $('.js-after-runner').each(function () {
+                var afterRunnerClass = $(this).find('.js-after-runner-class');
+                var afterRunnerResult = $(this).find('.js-after-runner-result');
+
+                if (afterRunnerClass.val() == 'Batter') {
+                    return true;
+                }
+
+                var afterRunnerClassValue = ConvertRunnerClassToValue(afterRunnerClass.val());
+
+                var runnerResult = Number(batterRunnerResult.val()) + Number(afterRunnerClassValue) - 1;
+
+                //得点は打点、自責あり
+                if (runnerResult > 5) {
+                    runnerResult = 5;
+                }
+
+                if (afterRunnerResult) {
+                    //エラー、野選、犠打、犠牲、安打系
+                    if ((result == 12 || result == 13)
+                        || (result >= 31 && result <= 34)) {
+                        afterRunnerResult.val(runnerResult);
+                    }
+                    //犠打、犠牲
+                    else if (result == 23 || result == 24) {
+                        afterRunnerResult.val(runnerResult + 1);
+                    }
+                    //振逃、四球、死球、打撃妨害
+                    else if ((result == 11)
+                        || (result == 21 || result == 22 || result == 25)) {
+
+                        //一塁ランナーあり
+                        if (afterRunnerClass.val() == 'OnFirstBase') {
+                            afterRunnerResult.val(runnerResult);
+                            backFirstRunnerFLG = true;
+                        }
+                        //二塁ランナーあり
+                        else if (afterRunnerClass.val() == 'OnSecondBase' && backFirstRunnerFLG) {
+                            afterRunnerResult.val(runnerResult);
+                            backSecondRunnerFLG = true;
+                        }
+                        //三塁ランナーあり
+                        else if (afterRunnerClass.val() == 'OnThirdBase' && backSecondRunnerFLG) {
+                            afterRunnerResult.val(runnerResult);
+                        }
+                        else {
+                            afterRunnerResult.val(afterRunnerClassValue);
+                        }
+                    }
+                    //併殺
+                    else if (result == 4) {
+                        //一塁ランナーあり
+                        if (afterRunnerClass.val() == 'OnFirstBase') {
+                            afterRunnerResult.val(1);
+                        }
+                        else {
+                            afterRunnerResult.val(afterRunnerClassValue);
+                        }
+                    }
+                    //その他
+                    else {
+                        afterRunnerResult.val(runnerResult);
+                    }
+                }
+
+            });
         }
     });
 
