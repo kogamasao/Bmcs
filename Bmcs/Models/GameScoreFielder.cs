@@ -31,7 +31,7 @@ namespace Bmcs.Models
         public string Detail { get; set; }
 
         [Display(Name = "打席")]
-        public int? Plateappearance { get; set; }
+        public int? PlateAppearance { get; set; }
 
         [Display(Name = "打数")]
         public int? AtBat { get; set; }
@@ -79,7 +79,7 @@ namespace Bmcs.Models
         public int? LeftOnBase { get; set; }
 
         [Display(Name = "得点圏打席")]
-        public int? ScoringPositionPlateappearance { get; set; }
+        public int? ScoringPositionPlateAppearance { get; set; }
 
         [Display(Name = "得点圏打数")]
         public int? ScoringPositionAtBat { get; set; }
@@ -91,7 +91,7 @@ namespace Bmcs.Models
         public int? StrikeOut { get; set; }
 
         [Display(Name = "併殺打")]
-        public int? DobblePlay { get; set; }
+        public int? DoublePlay { get; set; }
 
         [Display(Name = "敵失策")]
         public int? Error { get; set; }
@@ -107,6 +107,9 @@ namespace Bmcs.Models
 
         [Display(Name = "失策")]
         public int? OwnError { get; set; }
+
+        [Display(Name = "PB")]
+        public int? PassBall { get; set; }
 
         public Game Game { get; set; }
 

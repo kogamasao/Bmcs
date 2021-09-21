@@ -29,11 +29,11 @@
 
                     @if (Model.GameScene.InningIndex != 1)
                     {
-                        <input type="button" value="前回打者でチェンジ" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.BeforeBatterChange" />
+                        @*<input type="button" value="前回打者でチェンジ" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.BeforeBatterChange" />*@
                     }
                     @if (Model.GameScene.Inning != 1 || Model.GameScene.TopButtomClass != TopButtomClass.Top || Model.GameScene.InningIndex != 1)
                     {
-                        <input type="button" value="前回打者で試合終了" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.BeforeBatterGameSet" />
+                        @*<input type="button" value="前回打者で試合終了" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.BeforeBatterGameSet" />*@
                     }
                 </div>
 

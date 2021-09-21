@@ -53,7 +53,7 @@ namespace Bmcs.Models
         public decimal? Inning { get; set; }
 
         [Display(Name = "打席")]
-        public int? Plateappearance { get; set; }
+        public int? PlateAppearance { get; set; }
 
         [Display(Name = "打数")]
         public int? AtBat { get; set; }
@@ -77,7 +77,7 @@ namespace Bmcs.Models
         public int? DeadBall { get; set; }
 
         [Display(Name = "得点圏打席")]
-        public int? ScoringPositionPlateappearance { get; set; }
+        public int? ScoringPositionPlateAppearance { get; set; }
 
         [Display(Name = "得点圏打数")]
         public int? ScoringPositionAtBat { get; set; }
@@ -88,8 +88,14 @@ namespace Bmcs.Models
         [Display(Name = "奪三振")]
         public int? StrikeOut { get; set; }
 
+        [Display(Name = "牽制死")]
+        public int? PickOffBallOut { get; set; }
+
         [Display(Name = "WP")]
         public int? WildPitch { get; set; }
+
+        [Display(Name = "ボーク")]
+        public int? Balk { get; set; }
 
         public Game Game { get; set; }
 
