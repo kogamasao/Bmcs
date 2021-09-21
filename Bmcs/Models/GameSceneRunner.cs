@@ -32,6 +32,9 @@ namespace Bmcs.Models
         [Display(Name = "打順")]
         public decimal? BattingOrder { get; set; }
 
+        [Display(Name = "打席中ランナー")]
+        public RunnerClass? BeforeRunnerClass { get; set; }
+
         [Display(Name = "ランナー")]
         public RunnerClass? RunnerClass { get; set; }
 

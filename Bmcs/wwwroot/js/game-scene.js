@@ -88,10 +88,10 @@
             if (result == 1
                 || (result >= 5
                     && result <= 8)) {
-                afterRunnerResult.parent().parent().hide();
+                afterRunnerResult.parent().parent().addClass('d-none');
             }
             else {
-                afterRunnerResult.parent().parent().show();
+                afterRunnerResult.parent().parent().removeClass('d-none');
             }
         }
 
@@ -163,7 +163,8 @@
                 var afterRunnerClass = $(this).find('.js-after-runner-class');
                 var afterRunnerResult = $(this).find('.js-after-runner-result');
 
-                if (afterRunnerClass.val() == 'Batter') {
+                if (afterRunnerClass.val() == ''
+                    || afterRunnerClass.val() == 'Batter') {
                     return true;
                 }
 

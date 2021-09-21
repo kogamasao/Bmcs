@@ -163,6 +163,7 @@ namespace Bmcs.Pages.GameScene
                             TeamID = Game.TeamID,
                             MemberID = GameScene.BatterMemberID,
                             BattingOrder = GameScene.BattingOrder,
+                            BeforeRunnerClass = RunnerClass.Batter,
                             RunnerClass = RunnerClass.Batter,
                             SceneResultClass = SceneResultClass.Result,
                             RunnerResultClass = RunnerResultClass.Out,
@@ -367,6 +368,7 @@ namespace Bmcs.Pages.GameScene
                             TeamID = Game.TeamID,
                             MemberID = GameScene.BatterMemberID,
                             BattingOrder = GameScene.BattingOrder,
+                            BeforeRunnerClass = RunnerClass.Batter,
                             RunnerClass = RunnerClass.Batter,
                             SceneResultClass = SceneResultClass.Result,
                             RunnerResultClass = RunnerResultClass.Out,
@@ -408,6 +410,7 @@ namespace Bmcs.Pages.GameScene
                                 TeamID = Game.TeamID,
                                 MemberID = lastGameSceneRunner.MemberID,
                                 BattingOrder = lastGameSceneRunner.BattingOrder,
+                                BeforeRunnerClass = runnerClass,
                                 RunnerClass = runnerClass,
                                 SceneResultClass = SceneResultClass.Result,
                                 RunnerResultClass = lastGameSceneRunner.RunnerResultClass,
@@ -425,6 +428,7 @@ namespace Bmcs.Pages.GameScene
                                 TeamID = Game.TeamID,
                                 MemberID = afterGameSceneRunner.MemberID,
                                 BattingOrder = afterGameSceneRunner.BattingOrder,
+                                BeforeRunnerClass = afterGameSceneRunner.RunnerClass,
                                 RunnerClass = afterGameSceneRunner.RunnerClass,
                                 SceneResultClass = SceneResultClass.SceneChange,
                                 RunnerResultClass = afterGameSceneRunner.RunnerResultClass,
@@ -624,8 +628,8 @@ namespace Bmcs.Pages.GameScene
 
                     await Context.SaveChangesAsync();
 
-                    //データ作成
-                    var gameScene = new Models.GameScene();
+                        //データ作成
+                        var gameScene = new Models.GameScene();
                     gameScene.GameSceneDetails = new List<Models.GameSceneDetail>();
                     gameScene.GameSceneRunners = new List<Models.GameSceneRunner>();
                     gameScene.Orders = new List<Models.Order>();
@@ -633,13 +637,20 @@ namespace Bmcs.Pages.GameScene
                     //POST値セット
                     TryUpdateModel(gameScene);
 
-                    //データ追加
-                    Context.GameScenes.Add(gameScene);
+                    //今回データ更新対象
+                    if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.NextBatter
+                        || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterChange
+                        || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterGameSet)
+                    {
 
-                    //試合中
-                    Game.StatusClass = StatusClass.DuringGame;
+                        //データ追加
+                        Context.GameScenes.Add(gameScene);
 
-                    await Context.SaveChangesAsync();
+                        //試合中
+                        Game.StatusClass = StatusClass.DuringGame;
+
+                        await Context.SaveChangesAsync();
+                    }
 
                     //チェンジ、試合終了時は未来データを削除
                     if (GameSceneSubmitClass != Enum.GameSceneSubmitClass.NextBatter)
@@ -753,7 +764,14 @@ namespace Bmcs.Pages.GameScene
                     if (GameScene.GameSceneID.ZeroToNull() != null)
                     {
                         //次回試合シーンID
-                        NextGameSceneID = GetNextGameSceneID(Game.GameID, gameScene.GameSceneID);
+                        if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.BeforeBatterChange
+                            || GameSceneSubmitClass == Enum.GameSceneSubmitClass.BeforeBatterGameSet)
+                        {
+                            NextGameSceneID = GetNextGameSceneID(Game.GameID, GameScene.GameSceneID);
+                        }
+                        else
+                        { 
+                            NextGameSceneID = GetNextGameSceneID(Game.GameID, gameScene.GameSceneID);
 
                         var nextGameScene = await Context.GameScenes
                                                         .FindAsync(NextGameSceneID);
@@ -781,6 +799,7 @@ namespace Bmcs.Pages.GameScene
                                 //仮データIDをセット
                                 NextGameSceneID = tempChangeGameScene.GameSceneID;
                             }
+                        }
                         }
                     }
 
@@ -861,6 +880,7 @@ namespace Bmcs.Pages.GameScene
                 newGameSceneRunner.MemberID = gameSceneRunner.MemberID;
                 newGameSceneRunner.BattingOrder = gameSceneRunner.BattingOrder;
                 newGameSceneRunner.SceneResultClass = SceneResultClass.SceneChange;
+                newGameSceneRunner.BeforeRunnerClass = gameSceneRunner.BeforeRunnerClass;
                 newGameSceneRunner.RunnerClass = gameSceneRunner.RunnerClass;
                 newGameSceneRunner.RunnerResultClass = gameSceneRunner.RunnerResultClass;
 
@@ -899,6 +919,7 @@ namespace Bmcs.Pages.GameScene
                 newGameSceneRunner.MemberID = gameSceneRunner.MemberID;
                 newGameSceneRunner.BattingOrder = gameSceneRunner.BattingOrder;
                 newGameSceneRunner.SceneResultClass = SceneResultClass.Result;
+                newGameSceneRunner.BeforeRunnerClass = gameSceneRunner.BeforeRunnerClass;
                 newGameSceneRunner.RunnerClass = gameSceneRunner.RunnerClass;
                 newGameSceneRunner.RunnerResultClass = gameSceneRunner.RunnerResultClass;
 
@@ -911,17 +932,40 @@ namespace Bmcs.Pages.GameScene
             gameScene.ResultOutCount = GameScene.OutCount + gameScene.GameSceneRunners.Where(r => r.SceneResultClass == SceneResultClass.Result && r.RunnerResultClass == RunnerResultClass.Out).Count();
             gameScene.ResultRunnerSceneClass = GetRunnerSceneClass(gameScene.GameSceneRunners.Where(r => r.SceneResultClass == SceneResultClass.Result));
 
-            //得点
-            gameScene.Run = gameScene.GameSceneRunners.Where(r => r.RunnerResultClass == RunnerResultClass.Run
-                                                        || r.RunnerResultClass == RunnerResultClass.RunExceptRBI
-                                                        || r.RunnerResultClass == RunnerResultClass.RunExceptEarnedRun
-                                                        || r.RunnerResultClass == RunnerResultClass.RunExceptRBIEarnedRun).Count();
-            //打点
-            gameScene.RBI = gameScene.GameSceneRunners.Where(r => r.RunnerResultClass == RunnerResultClass.Run
-                                                         || r.RunnerResultClass == RunnerResultClass.RunExceptEarnedRun).Count();
-            //自責点
-            gameScene.EarnedRun = gameScene.GameSceneRunners.Where(r => r.RunnerResultClass == RunnerResultClass.Run
-                                                         || r.RunnerResultClass == RunnerResultClass.RunExceptRBI).Count();
+            if(gameScene.ResultClass == ResultClass.Change)
+            { 
+                //得点
+                gameScene.Run = gameScene.GameSceneRunners.Where(r => r.SceneResultClass == SceneResultClass.SceneChange
+                                                                && (r.RunnerResultClass == RunnerResultClass.Run
+                                                                    || r.RunnerResultClass == RunnerResultClass.RunExceptRBI
+                                                                    || r.RunnerResultClass == RunnerResultClass.RunExceptEarnedRun
+                                                                    || r.RunnerResultClass == RunnerResultClass.RunExceptRBIEarnedRun)).Count();
+                //打点
+                gameScene.RBI = gameScene.GameSceneRunners.Where(r => r.SceneResultClass == SceneResultClass.SceneChange
+                                                            && (r.RunnerResultClass == RunnerResultClass.Run
+                                                             || r.RunnerResultClass == RunnerResultClass.RunExceptEarnedRun)).Count();
+                //自責点
+                gameScene.EarnedRun = gameScene.GameSceneRunners.Where(r => r.SceneResultClass == SceneResultClass.SceneChange
+                                                                && (r.RunnerResultClass == RunnerResultClass.Run
+                                                                || r.RunnerResultClass == RunnerResultClass.RunExceptRBI)).Count();
+            }
+            else
+            {
+                //得点
+                gameScene.Run = gameScene.GameSceneRunners.Where(r => r.SceneResultClass == SceneResultClass.Result
+                                                                && (r.RunnerResultClass == RunnerResultClass.Run
+                                                                    || r.RunnerResultClass == RunnerResultClass.RunExceptRBI
+                                                                    || r.RunnerResultClass == RunnerResultClass.RunExceptEarnedRun
+                                                                    || r.RunnerResultClass == RunnerResultClass.RunExceptRBIEarnedRun)).Count();
+                //打点
+                gameScene.RBI = gameScene.GameSceneRunners.Where(r => r.SceneResultClass == SceneResultClass.Result
+                                                            && (r.RunnerResultClass == RunnerResultClass.Run
+                                                             || r.RunnerResultClass == RunnerResultClass.RunExceptEarnedRun)).Count();
+                //自責点
+                gameScene.EarnedRun = gameScene.GameSceneRunners.Where(r => r.SceneResultClass == SceneResultClass.Result
+                                                                && (r.RunnerResultClass == RunnerResultClass.Run
+                                                                || r.RunnerResultClass == RunnerResultClass.RunExceptRBI)).Count();
+            }
 
             //チェンジ
             if (GameSceneSubmitClass != Enum.GameSceneSubmitClass.NextBatter)
@@ -1113,6 +1157,7 @@ namespace Bmcs.Pages.GameScene
                     TeamID = beforeGameScene.TeamID,
                     MemberID = gameScene.BatterMemberID,
                     BattingOrder = gameScene.BattingOrder,
+                    BeforeRunnerClass = RunnerClass.Batter,
                     RunnerClass = RunnerClass.Batter,
                     SceneResultClass = SceneResultClass.Result,
                     RunnerResultClass = RunnerResultClass.Out,
@@ -1151,6 +1196,7 @@ namespace Bmcs.Pages.GameScene
                     TeamID = beforeGameScene.TeamID,
                     MemberID = beforeGameSceneRunner.MemberID,
                     BattingOrder = beforeGameSceneRunner.BattingOrder,
+                    BeforeRunnerClass = runnerClass,
                     RunnerClass = runnerClass,
                     SceneResultClass = SceneResultClass.SceneChange,
                     RunnerResultClass = beforeGameSceneRunner.RunnerResultClass,
@@ -1162,6 +1208,7 @@ namespace Bmcs.Pages.GameScene
                     TeamID = beforeGameScene.TeamID,
                     MemberID = beforeGameSceneRunner.MemberID,
                     BattingOrder = beforeGameSceneRunner.BattingOrder,
+                    BeforeRunnerClass = runnerClass,
                     RunnerClass = runnerClass,
                     SceneResultClass = SceneResultClass.Result,
                     RunnerResultClass = beforeGameSceneRunner.RunnerResultClass,
@@ -1498,7 +1545,74 @@ namespace Bmcs.Pages.GameScene
 
             await Context.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 試合終了
+        /// </summary>
+        /// <param name="gameID"></param>
+        /// <returns></returns>
+        private async Task GameSet(int? gameID)
+        {
+            //試合
+            var game = await Context.Games.FirstOrDefaultAsync(r => r.GameID == gameID);
+
+            //イニングスコア
+            var inningScores = await Context.InningScores.Where(r => r.GameID == gameID).ToListAsync();
+
+            //表裏
+            var topButtomClass = Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First ? TopButtomClass.Top : TopButtomClass.Buttom;
+
+            //得点
+            game.Score = inningScores.Where(r => r.TopButtomClass == topButtomClass).DefaultIfEmpty().Sum(r => r.Score);
+            game.OpponentTeamScore = inningScores.Where(r => r.TopButtomClass != topButtomClass).DefaultIfEmpty().Sum(r => r.Score);
+
+            //勝敗
+            if(game.Score > game.OpponentTeamScore)
+            {
+                game.WinLoseClass = WinLoseClass.Win;
+            }
+            else if (game.Score < game.OpponentTeamScore)
+            {
+                game.WinLoseClass = WinLoseClass.Lose;
+            }
+            else
+            {
+                game.WinLoseClass = WinLoseClass.Draw;
+            }
+
+            base.SetUpdateInfo(game);
+
+
+
+
+            ////オーダー
+            //var beforeOrders = await Context.Orders
+            //                        .Where(r => r.GameID == gameID
+            //                        && r.GameSceneID == gameSceneID
+            //                        && r.OrderDataClass == OrderDataClass.Normal).ToListAsync();
+
+            ////オーダー作成
+            //foreach (var order in beforeOrders)
+            //{
+            //    var newOrder = new Models.Order();
+
+            //    newOrder.GameID = order.GameID;
+            //    newOrder.GameSceneID = null;
+            //    newOrder.TeamID = order.TeamID;
+            //    newOrder.MemberID = order.MemberID;
+            //    newOrder.BattingOrder = order.BattingOrder;
+            //    newOrder.ParticipationIndex = order.ParticipationIndex;
+            //    newOrder.PositionClass = order.PositionClass;
+            //    newOrder.ParticipationClass = order.ParticipationClass;
+            //    newOrder.OrderDataClass = OrderDataClass.Temp;
+
+            //    base.SetEntryInfo(newOrder);
+
+            //    Context.Orders.Add(newOrder);
+            //}
+
+            await Context.SaveChangesAsync();
+        }
     }
 
-    //public class LastGameSceneInfo
 }

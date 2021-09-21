@@ -244,6 +244,7 @@
                                                 <td class="align-middle">
                                                     <span>@Model.BeforeGameSceneRunnerList[i].RunnerClass.GetEnumName()</span>
                                                     <input class="js-rename" type="hidden" asp-for="@Model.BeforeGameSceneRunnerList[i].BattingOrder" />
+                                                    <input class="js-rename" type="hidden" asp-for="@Model.BeforeGameSceneRunnerList[i].BeforeRunnerClass" />
                                                     <input class="js-rename" type="hidden" asp-for="@Model.BeforeGameSceneRunnerList[i].RunnerClass" />
                                                     <input class="js-rename" type="hidden" asp-for="@Model.BeforeGameSceneRunnerList[i].SceneResultClass" />
                                                 </td>
@@ -337,7 +338,6 @@
                                         </td>
                                         <td>
                                             <select asp-for="@Model.GameScene.ResultClass" class="form-control js-batter-result" asp-items="@Model.ResultClassList"></select>
-                                            @*<input id="before-batter-runner-result" type="hidden" />*@
                                         </td>
                                     </tr>
                                 </tbody>
@@ -415,28 +415,37 @@
                                 <tbody>
                                     @for (int i = 0; i < Model.AfterGameSceneRunnerList.Count; i++)
                                     {
-                                        <tr class="js-after-runner">
+                                        var addHiddenClass = string.Empty;
+
+                                        if(Model.AfterGameSceneRunnerList[i].RunnerClass == null)
+                                        {
+                                            addHiddenClass = "d-none";
+                                        }
+
+                                        <tr class="@addHiddenClass js-after-runner">
                                             <td class="align-middle">
-                                                <span  class="js-after-runner-class-name" data-runnerclass="@Model.AfterGameSceneRunnerList[i].RunnerClass" >@Model.AfterGameSceneRunnerList[i].RunnerClass.GetEnumName()</span>
+                                                <span class="js-after-runner-class-name" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass">@Model.AfterGameSceneRunnerList[i].RunnerClass.GetEnumName()</span>
                                                 <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].BattingOrder" />
-                                                <input class="js-after-runner-class js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].RunnerClass" data-runnerclass="@Model.AfterGameSceneRunnerList[i].RunnerClass" />
+                                                <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" />
+
+                                                <input class="js-after-runner-class js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].RunnerClass" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" />
                                                 <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].SceneResultClass" />
                                             </td>
 
                                             @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
                                             {
                                                 <td>
-                                                    <select asp-for="@Model.AfterGameSceneRunnerList[i].MemberID" class="form-control js-after-runner-member" data-runnerclass="@Model.AfterGameSceneRunnerList[i].RunnerClass" asp-items="@Model.MemberIDNoEmptyList"></select>
+                                                    <select asp-for="@Model.AfterGameSceneRunnerList[i].MemberID" class="form-control js-after-runner-member" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" asp-items="@Model.MemberIDNoEmptyList"></select>
                                                 </td>
                                             }
                                             else
                                             {
                                                 <td>
-                                                    <select asp-for="@Model.AfterGameSceneRunnerList[i].MemberID" class="form-control js-after-runner-member" data-runnerclass="@Model.AfterGameSceneRunnerList[i].RunnerClass" asp-items="@Model.OpponentFielderMemberIDList"></select>
+                                                    <select asp-for="@Model.AfterGameSceneRunnerList[i].MemberID" class="form-control js-after-runner-member" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" asp-items="@Model.OpponentFielderMemberIDList"></select>
                                                 </td>
                                             }
                                             <td>
-                                                <select asp-for="@Model.AfterGameSceneRunnerList[i].RunnerResultClass" class="form-control js-after-runner-result" data-runnerclass="@Model.AfterGameSceneRunnerList[i].RunnerClass" asp-items="@Model.RunnerResultClassList"></select>
+                                                <select asp-for="@Model.AfterGameSceneRunnerList[i].RunnerResultClass" class="form-control js-after-runner-result" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" asp-items="@Model.RunnerResultClassList"></select>
                                             </td>
                                         </tr>
                                     }
