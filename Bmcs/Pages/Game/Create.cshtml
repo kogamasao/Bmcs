@@ -29,6 +29,11 @@
                 <span asp-validation-for="Game.OpponentTeamName" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Game.OpponentTeamAbbreviation" class="control-label"></label>
+                <input asp-for="Game.OpponentTeamAbbreviation" class="form-control" />
+                <span asp-validation-for="Game.OpponentTeamAbbreviation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Game.StadiumName" class="control-label"></label>
                 <input asp-for="Game.StadiumName" class="form-control" />
                 <span asp-validation-for="Game.StadiumName" class="text-danger"></span>

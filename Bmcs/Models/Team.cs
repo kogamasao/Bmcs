@@ -23,6 +23,11 @@ namespace Bmcs.Models
         [StringLength(50)]
         public string TeamName { get; set; }
 
+        [Required(ErrorMessage = "{0}は必須です。")]
+        [Display(Name = "チーム略名")]
+        [StringLength(10)]
+        public string TeamAbbreviation { get; set; }
+
         [Display(Name = "代表者名")]
         public string RepresentativeName { get; set; }
 

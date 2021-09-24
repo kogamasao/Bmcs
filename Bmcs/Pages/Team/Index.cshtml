@@ -28,6 +28,9 @@ else
                     @Html.DisplayNameFor(model => model.Team[0].TeamName)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.Team[0].TeamAbbreviation)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Team[0].RepresentativeName)
                 </th>
                 <th>
@@ -78,75 +81,78 @@ else
         <tbody>
             @foreach (var item in Model.Team)
             {
-                <tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeamID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeamName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeamAbbreviation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RepresentativeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeamCategoryClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UseBallClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ActivityBase)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeamNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeamEmailAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MessageDetail)
+                </td>
+                @if (Model.IsAdmin())
+                {
                     <td>
-                        @Html.DisplayFor(modelItem => item.TeamID)
+                        @Html.DisplayFor(modelItem => item.TeamPassword)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TeamName)
+                        @Html.DisplayFor(modelItem => item.PublicFLG)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.RepresentativeName)
+                        @Html.DisplayFor(modelItem => item.DeleteFLG)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TeamCategoryClassName)
+                        @Html.DisplayFor(modelItem => item.EntryUserID)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.UseBallClassName)
+                        @Html.DisplayFor(modelItem => item.EntryDatetime)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ActivityBase)
+                        @Html.DisplayFor(modelItem => item.UpdateUserID)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TeamNumber)
+                        @Html.DisplayFor(modelItem => item.UpdateDatetime)
                     </td>
+                }
+                @if (Model.IsAdmin())
+                {
                     <td>
-                        @Html.DisplayFor(modelItem => item.TeamEmailAddress)
+                        <a asp-page="./Details" asp-route-id="@item.TeamID">詳細</a> |
+                        <a asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a> |
+                        <a asp-page="./Edit" asp-route-id="@item.TeamID">編集</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.TeamID">削除</a>
                     </td>
+                }
+                else
+                {
                     <td>
-                        @Html.DisplayFor(modelItem => item.MessageDetail)
+                        <a asp-page="./Details" asp-route-id="@item.TeamID">詳細</a>
+                        <a asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a>
                     </td>
-                    @if (Model.IsAdmin())
-                    {
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TeamPassword)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PublicFLG)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DeleteFLG)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EntryUserID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EntryDatetime)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UpdateUserID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UpdateDatetime)
-                        </td>
-                    }
-                    @if (Model.IsAdmin())
-                    {
-                        <td>
-                            <a asp-page="./Details" asp-route-id="@item.TeamID">詳細</a> |
-                            <a asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a> |
-                            <a asp-page="./Edit" asp-route-id="@item.TeamID">編集</a> |
-                            <a asp-page="./Delete" asp-route-id="@item.TeamID">削除</a>
-                        </td>
-                    }
-                    else
-                    {
-                        <td>
-                            <a asp-page="./Details" asp-route-id="@item.TeamID">詳細</a>
-                            <a asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a>
-                        </td>
-                    }
-                </tr>
+                }
+            </tr>
             }
         </tbody>
     </table>

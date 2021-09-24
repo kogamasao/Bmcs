@@ -101,6 +101,7 @@ namespace Bmcs.Pages.Team
             team.TeamID = Team.TeamID;
             team.TeamName = Team.TeamName;
             team.TeamPassword = Team.TeamPassword;
+            team.TeamAbbreviation = Team.TeamAbbreviation;
             team.RepresentativeName = Team.RepresentativeName;
             team.TeamCategoryClass = Team.TeamCategoryClass;
             team.UseBallClass = Team.UseBallClass;

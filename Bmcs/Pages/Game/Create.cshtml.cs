@@ -114,6 +114,7 @@ namespace Bmcs.Pages.Game
             game.GameDate = Game.GameDate;
             game.GameClass = Game.GameClass;
             game.OpponentTeamName = Game.OpponentTeamName;
+            game.OpponentTeamAbbreviation = Game.OpponentTeamAbbreviation;
             game.StadiumName = Game.StadiumName;
             game.WeatherClass = Game.WeatherClass;
             game.BatFirstBatSecondClass = Game.BatFirstBatSecondClass;

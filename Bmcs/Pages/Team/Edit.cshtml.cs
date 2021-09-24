@@ -99,6 +99,7 @@ namespace Bmcs.Pages.Team
         private void TryUpdateModel(Models.Team team)
         {
             team.TeamName = Team.TeamName;
+            team.TeamAbbreviation = Team.TeamAbbreviation;
             team.TeamPassword = Team.TeamPassword;
             team.RepresentativeName = Team.RepresentativeName;
             team.TeamCategoryClass = Team.TeamCategoryClass;

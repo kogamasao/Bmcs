@@ -44,11 +44,11 @@
                 <td>
                     @if (Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
                     {
-                        @Model.Game.Team.TeamName
+                        @Model.Game.Team.TeamAbbreviation
                     }
                     else
                     {
-                        @Model.Game.OpponentTeamName
+                        @Model.Game.OpponentTeamAbbreviation
                     }
                 </td>
                 @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top))
@@ -70,11 +70,11 @@
                 <td>
                     @if (Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
                     {
-                        @Model.Game.OpponentTeamName
+                        @Model.Game.OpponentTeamAbbreviation
                     }
                     else
                     {
-                        @Model.Game.Team.TeamName
+                        @Model.Game.Team.TeamAbbreviation
                     }
                 </td>
                 @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom))

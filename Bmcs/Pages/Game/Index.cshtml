@@ -28,6 +28,9 @@
                     @Html.DisplayNameFor(model => model.Game[0].OpponentTeamName)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.Game[0].OpponentTeamAbbreviation)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Game[0].StadiumName)
                 </th>
                 <th>
@@ -80,6 +83,9 @@
                     @Html.DisplayFor(modelItem => item.OpponentTeamName)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.OpponentTeamAbbreviation)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.StadiumName)
                 </td>
                 <td>
@@ -117,16 +123,18 @@
                 }
                 @if (Model.IsMyTeam || Model.IsAdmin())
                 {
-            <td>
-                @if (item.StatusClass == StatusClass.DuringGame)
-                {
-                    <a asp-page="/GameScene/Edit" asp-route-gameID="@item.GameID">試合へ</a>
-                    <span> |</span>
-                }
-                <a asp-page="./Edit" asp-route-id="@item.GameID">編集</a> |
-                <a asp-page="./Details" asp-route-id="@item.GameID">詳細</a> |
-                <a asp-page="./Delete" asp-route-id="@item.GameID">削除</a>
-            </td>
+                    <td>
+                        @if (item.StatusClass == StatusClass.DuringGame)
+                        {
+                            <a asp-page="/GameScene/Edit" asp-route-gameID="@item.GameID">試合へ</a>
+                            <span> |</span>
+                            <a asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果へ</a>
+                            <span> |</span>
+                        }
+                        <a asp-page="./Edit" asp-route-id="@item.GameID">編集</a> |
+                        <a asp-page="./Details" asp-route-id="@item.GameID">詳細</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.GameID">削除</a>
+                    </td>
                 }
                 else
                 {

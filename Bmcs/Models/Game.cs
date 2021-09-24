@@ -42,6 +42,10 @@ namespace Bmcs.Models
         [StringLength(50)]
         public string OpponentTeamName { get; set; }
 
+        [Display(Name = "相手チーム略名")]
+        [StringLength(10)]
+        public string OpponentTeamAbbreviation { get; set; }
+
         [Display(Name = "球場")]
         [StringLength(50)]
         public string StadiumName { get; set; }

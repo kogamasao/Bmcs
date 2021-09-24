@@ -100,6 +100,7 @@ namespace Bmcs.Data
                 {
                       TeamID = "SYSTEM"
                     , TeamName = "システムチーム"
+                    , TeamAbbreviation = "ST"
                     , RepresentativeName = "システム"
                     , TeamCategoryClass = TeamCategoryClass.Other
                     , UseBallClass = UseBallClass.Other
@@ -120,6 +121,7 @@ namespace Bmcs.Data
                 {
                       TeamID = "YG"
                     , TeamName = "読売ジャイアンツ"
+                    , TeamAbbreviation = "YG"
                     , RepresentativeName = "原　辰徳"
                     , TeamCategoryClass = TeamCategoryClass.Proffessional
                     , UseBallClass = UseBallClass.Hard
@@ -140,6 +142,7 @@ namespace Bmcs.Data
                 {
                       TeamID = "HT"
                     , TeamName = "阪神タイガース"
+                    , TeamAbbreviation = "HT"
                     , RepresentativeName = "矢野　燿大"
                     , TeamCategoryClass = TeamCategoryClass.Proffessional
                     , UseBallClass = UseBallClass.Hard
@@ -160,6 +163,7 @@ namespace Bmcs.Data
                 {
                       TeamID = "JB"
                     , TeamName = "JAPAN BRIDGE"
+                    , TeamAbbreviation = "JB"
                     , RepresentativeName = "鈴木　雄三"
                     , TeamCategoryClass = TeamCategoryClass.Adult
                     , UseBallClass = UseBallClass.Rubber
