@@ -97,6 +97,10 @@ namespace Bmcs.Models
         [Display(Name = "ボーク")]
         public int? Balk { get; set; }
 
+        [NotMapped]
+        [Display(Name = "勝敗HS")]
+        public GameScorePicherClass? GameScorePicherClass { get; set; }
+
         public Game Game { get; set; }
 
         public Team Team { get; set; }

@@ -125,8 +125,71 @@ namespace Bmcs.Pages.GameScore
                 });
             }
 
-                //タイトル
-                ViewData[ViewDataConstant.Title] = "試合結果";
+            //投手オーダー
+            var tempPitcherOrderList = await Context.Orders
+                       .Include(r => r.GameScene)
+                       .Where(r => r.GameID == Game.GameID && r.PositionClass == PositionClass.Pitcher && r.GameSceneID != null)
+                       .Select(r => new { MemberID = r.MemberID, Inning = r.GameScene.Inning, InningIndex = r.GameScene.InningIndex })
+                       .ToListAsync();
+
+            var pitcherOrderList = tempPitcherOrderList
+                        .GroupBy(r => r.MemberID)
+                        .Select(r => new { MemberID = r.Key, Inning = r.Min(s => s.Inning), InningIndex = r.Min(s => s.InningIndex) })
+                        .ToList();
+
+            //投手スコア
+            GameScorePitcherList = new List<Models.GameScorePitcher>();
+
+            var tempGameScorePitcherList = await Context.GameScorePitchers
+                      .Where(r => r.GameID == Game.GameID)
+                      .ToListAsync();
+
+            //先発
+            var starterPitcher = tempGameScorePitcherList.Where(r => r.Starter > 0).FirstOrDefault();
+
+            if(starterPitcher != null)
+            {
+                GameScorePitcherList.Add(starterPitcher);
+            }
+
+            //リリーフ登板順
+            foreach (var order in pitcherOrderList.OrderBy(r => r.Inning).ThenBy(r => r.InningIndex))
+            {
+                var gameScorePitcher = tempGameScorePitcherList.Where(r => r.MemberID == order.MemberID && r.Starter == 0).FirstOrDefault();
+
+                if (gameScorePitcher != null)
+                {
+                    GameScorePitcherList.Add(gameScorePitcher);
+                }
+            }
+
+            //野手オーダー
+            var fielderOrderList = await Context.Orders
+                      .Where(r => r.GameID == Game.GameID && r.BattingOrder != null)
+                        .GroupBy(r => r.MemberID)
+                        .Select(r => new { MemberID = r.Key, BattingOrder = r.Min(s => s.BattingOrder), ParticipationIndex = r.Min(s => s.ParticipationIndex) })
+                      .ToListAsync();
+
+            //野手スコア
+            GameScoreFielderList = new List<Models.GameScoreFielder>();
+
+            var tempGameScoreFielderList = await Context.GameScoreFielders
+                      .Where(r => r.GameID == Game.GameID)
+                      .ToListAsync();
+
+            //打順順
+            foreach (var order in fielderOrderList.OrderBy(r => r.BattingOrder).ThenBy(r => r.ParticipationIndex))
+            {
+                var gameScoreFielder = tempGameScoreFielderList.Where(r => r.MemberID == order.MemberID).FirstOrDefault();
+
+                if(gameScoreFielder != null)
+                {
+                    GameScoreFielderList.Add(gameScoreFielder);
+                }
+            }
+
+            //タイトル
+            ViewData[ViewDataConstant.Title] = "試合結果";
 
             return Page();
         }

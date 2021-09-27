@@ -428,6 +428,17 @@ namespace Bmcs.Models
         }
 
         /// <summary>
+        /// 試合スコア投手区分リスト
+        /// </summary>
+        public SelectList GameScorePicherClassList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<GameScorePicherClass>();
+            }
+        }
+
+        /// <summary>
         /// メッセージ区分リスト
         /// </summary>
         public SelectList MessageClassList

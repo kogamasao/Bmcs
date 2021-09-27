@@ -503,6 +503,21 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
+    /// 試合スコア投手区分
+    /// </summary>
+    public enum GameScorePicherClass
+    {
+        [Display(Name = "勝")]
+        Win = 1,
+        [Display(Name = "負")]
+        Lose = 2,
+        [Display(Name = "H")]
+        Hold = 3,
+        [Display(Name = "S")]
+        Save = 4,
+    }
+
+    /// <summary>
     /// Enum関連処理
     /// </summary>
     public static class EnumClass
