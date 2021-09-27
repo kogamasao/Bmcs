@@ -20,8 +20,15 @@
     }
 
 
-.text-truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+
+.column-fix-left {
+    position: sticky;
+    left: 0;
+    background-color: white;
+}
+
+.column-fix-right {
+    position: sticky;
+    right: 0;
+    background-color: white;
 }

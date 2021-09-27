@@ -120,7 +120,7 @@ namespace Bmcs.Data
                 new Team
                 {
                       TeamID = "YG"
-                    , TeamName = "読売ジャイアンツ"
+                    , TeamName = "読売ジャイアンツ(サンプル)"
                     , TeamAbbreviation = "YG"
                     , RepresentativeName = "原　辰徳"
                     , TeamCategoryClass = TeamCategoryClass.Proffessional
@@ -141,7 +141,7 @@ namespace Bmcs.Data
                 new Team
                 {
                       TeamID = "HT"
-                    , TeamName = "阪神タイガース"
+                    , TeamName = "阪神タイガース(サンプル)"
                     , TeamAbbreviation = "HT"
                     , RepresentativeName = "矢野　燿大"
                     , TeamCategoryClass = TeamCategoryClass.Proffessional
@@ -786,6 +786,23 @@ namespace Bmcs.Data
                       TeamID = "JB"
                     , UniformNumber = ""
                     , MemberName = "安西"
+                    , MemberClass = Enum.MemberClass.Player
+                    , ThrowClass = ThrowClass.Right
+                    , BatClass = BatClass.Right
+                    , PositionGroupClass = PositionGroupClass.Outfielder
+                    , MessageDetail = ""
+                    , SystemDataFLG = false
+                    , DeleteFLG = false
+                    , EntryDatetime = DateTime.Now
+                    , EntryUserID = "ADMIN"
+                    , UpdateDatetime = DateTime.Now
+                    , UpdateUserID = "ADMIN"
+                },
+                 new Member
+                {
+                      TeamID = "JB"
+                    , UniformNumber = ""
+                    , MemberName = "川西"
                     , MemberClass = Enum.MemberClass.Player
                     , ThrowClass = ThrowClass.Right
                     , BatClass = BatClass.Right

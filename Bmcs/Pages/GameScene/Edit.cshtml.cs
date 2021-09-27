@@ -1687,6 +1687,29 @@ namespace Bmcs.Pages.GameScene
                     MemberID = fielderMemberID,
                 };
 
+
+                var batterGameScenes = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass != ResultClass.Change);
+
+                gameScoreFielder.Detail = string.Empty;
+
+                //打撃詳細
+                foreach(var batterGameScene in batterGameScenes.OrderBy(r => r.Inning).ThenBy(r => r.TopButtomClass).ThenBy(r => r.InningIndex))
+                {
+                    if (batterGameScene.HittingDirectionClass != HittingDirectionClass.None)
+                    {
+                        gameScoreFielder.Detail += batterGameScene.HittingDirectionClass.GetEnumName();
+                    }
+
+                    if (batterGameScene.HitBallClass != HitBallClass.NoHit)
+                    {
+                        gameScoreFielder.Detail += batterGameScene.HitBallClass.GetEnumName();
+                    }
+
+                    gameScoreFielder.Detail += batterGameScene.ResultClass.GetEnumName();
+
+                    gameScoreFielder.Detail += "　";
+                }
+
                 //打席
                 gameScoreFielder.PlateAppearance = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass != ResultClass.Change).Count();
                 //打数

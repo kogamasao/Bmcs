@@ -212,6 +212,8 @@ namespace Bmcs.Enum
         BeforeGame = 1,
         [Display(Name = "試合中")]
         DuringGame = 2,
+        [Display(Name = "確定前")]
+        BeforeFix = 3,
         [Display(Name = "試合終了")]
         EndGame = 9,
     }
@@ -487,6 +489,17 @@ namespace Bmcs.Enum
         ThisBatterGameSet = 4,
         [Display(Name = "前回打者で試合終了")]
         BeforeBatterGameSet = 5,
+    }
+
+    /// <summary>
+    /// 試合スコアSubmit区分
+    /// </summary>
+    public enum GameScoreSubmitClass
+    {
+        [Display(Name = "確定")]
+        Fix = 1,
+        [Display(Name = "再集計")]
+        ReCount = 2,
     }
 
     /// <summary>
