@@ -332,7 +332,7 @@ namespace Bmcs.Enum
     {
         [Display(Name = "空三振")]
         Strikeout = 1,
-        [Display(Name = "見逃三振")]
+        [Display(Name = "見三振")]
         MissedStrikeout = 2,
         [Display(Name = "アウト")]
         Out = 3,
@@ -352,7 +352,7 @@ namespace Bmcs.Enum
         Sacrifice = 23,
         [Display(Name = "犠牲")]
         SacrificeFly = 24,
-        [Display(Name = "打撃妨害")]
+        [Display(Name = "打妨")]
         BatterInterference = 25,
         [Display(Name = "安打")]
         SingleHit = 31,
@@ -362,7 +362,7 @@ namespace Bmcs.Enum
         TripleHit = 33,
         [Display(Name = "本塁打")]
         HomeRun = 34,
-        [Display(Name = "チェンジ")]
+        [Display(Name = "ﾁｪﾝｼﾞ")]
         Change = 91,
     }
 
@@ -405,21 +405,21 @@ namespace Bmcs.Enum
     /// </summary>
     public enum DetailResultClass
     {
-        [Display(Name = "牽制死(投手)")]
+        [Display(Name = "牽制死(投)")]
         PickOffBallOut = 1,
-        [Display(Name = "ボーク(投手)")]
+        [Display(Name = "ボーク(投)")]
         Balk = 2,
-        [Display(Name = "WP(投手)")]
+        [Display(Name = "WP(投)")]
         WildPitch = 3,
-        [Display(Name = "PB(捕手)")]
+        [Display(Name = "PB(捕)")]
         PassBall = 4,
-        [Display(Name = "盗塁(走者)")]
+        [Display(Name = "盗塁(走)")]
         StolenBaseSccess = 5,
-        [Display(Name = "盗塁死(走者)")]
+        [Display(Name = "盗塁死(走)")]
         StolenBaseOut = 6,
-        [Display(Name = "エラー(野手)")]
+        [Display(Name = "エラー(野)")]
         Error = 11,
-        [Display(Name = "補殺(野手)")]
+        [Display(Name = "補殺(野)")]
         AssistOut = 12,
         //[Display(Name = "その他")]
         //Other = 99,
@@ -455,11 +455,11 @@ namespace Bmcs.Enum
         OnThirdBase = 4,
         [Display(Name = "得点")]
         Run = 5,
-        [Display(Name = "得点(打点無)")]
+        [Display(Name = "得点(打無)")]
         RunExceptRBI = 6,
-        [Display(Name = "得点(自責無)")]
+        [Display(Name = "得点(自無)")]
         RunExceptEarnedRun = 7,
-        [Display(Name = "得点(打点自責無)")]
+        [Display(Name = "得点(打自無)")]
         RunExceptRBIEarnedRun = 8,
     }
 
@@ -505,7 +505,7 @@ namespace Bmcs.Enum
     /// <summary>
     /// 試合スコア投手区分
     /// </summary>
-    public enum GameScorePicherClass
+    public enum GameScorePitcherClass
     {
         [Display(Name = "勝")]
         Win = 1,

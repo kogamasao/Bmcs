@@ -99,7 +99,7 @@ namespace Bmcs.Models
 
         [NotMapped]
         [Display(Name = "勝敗HS")]
-        public GameScorePicherClass? GameScorePicherClass { get; set; }
+        public GameScorePitcherClass? GameScorePitcherClass { get; set; }
 
         public Game Game { get; set; }
 

@@ -434,7 +434,7 @@ namespace Bmcs.Models
         {
             get
             {
-                return EnumClass.GetSelectList<GameScorePicherClass>();
+                return EnumClass.GetSelectList<GameScorePitcherClass>();
             }
         }
 
