@@ -25,7 +25,7 @@ namespace Bmcs.Models
         [Display(Name = "スコア表示順")]
         public int? ScoreIndex { get; set; }
 
-        [Display(Name = "メンバーID")]
+        [Display(Name = "投手名")]
         public int? MemberID { get; set; }
 
         [StringLength(200)]
@@ -102,6 +102,16 @@ namespace Bmcs.Models
         [NotMapped]
         [Display(Name = "勝敗HS")]
         public GameScorePitcherClass? GameScorePitcherClass { get; set; }
+
+        [NotMapped]
+        [Display(Name = "勝敗HS")]
+        public string GameScorePitcherClassName
+        {
+            get
+            {
+                return GameScorePitcherClass.GetEnumName();
+            }
+        }
 
         public Game Game { get; set; }
 

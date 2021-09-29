@@ -130,9 +130,14 @@
                     <span> |</span>
                 }
                 @if (item.StatusClass == StatusClass.BeforeFix
-                    || item.StatusClass == StatusClass.EndGame)
+                   || item.StatusClass == StatusClass.EndGame)
                 {
                     <a asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果編集</a>
+                    <span> |</span>
+                }
+                @if (item.StatusClass == StatusClass.EndGame)
+                {
+                    <a asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果詳細</a>
                     <span> |</span>
                 }
                 <a asp-page="./Edit" asp-route-id="@item.GameID">編集</a> |

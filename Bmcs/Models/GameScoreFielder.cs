@@ -25,7 +25,7 @@ namespace Bmcs.Models
         [Display(Name = "スコア表示順")]
         public int? ScoreIndex { get; set; }
 
-        [Display(Name = "メンバーID")]
+        [Display(Name = "野手名")]
         public int? MemberID { get; set; }
 
         [StringLength(200)]
