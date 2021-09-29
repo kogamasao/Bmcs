@@ -37,11 +37,6 @@ namespace Bmcs.Pages.GameScore
 
         public async Task<IActionResult> OnGetAsync(int? gameID)
         {
-            if (!base.IsLogin())
-            {
-                return NotFound();
-            }
-
             if (gameID == null)
             {
                 return NotFound();
@@ -49,6 +44,12 @@ namespace Bmcs.Pages.GameScore
 
             Game = await Context.Games
                 .Include(m => m.Team).FirstOrDefaultAsync(m => m.GameID == gameID);
+
+            if (Game == null)
+            {
+                return NotFound();
+            }
+
             //管理者以外で、削除されている、非公開チーム
             if (!base.IsAdmin()
                && (Game.Team.DeleteFLG == true
