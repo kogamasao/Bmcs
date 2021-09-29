@@ -12,6 +12,18 @@
         window.alert('試合中にブラウザバックは使用できません。');
     });
 
+    //submitボタン
+    $("body").on("click", ".js-submit", function () {
+        //区分取得
+        let submitclass = $(this).data("submitclass");
+
+        //区分セット
+        $('#game-score-submit-class').val(submitclass);
+
+        //submit
+        $('form').submit();
+    });
+
     //表スコア変更
     $("body").on("change", ".js-top-score", function () {
         //スコア計算

@@ -22,9 +22,6 @@ namespace Bmcs.Models
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
 
-        [Display(Name = "イニングスコアID")]
-        public int? InningScoreID { get; set; }
-
         [Display(Name = "イニング")]
         public int Inning { get; set; }
 
@@ -111,8 +108,6 @@ namespace Bmcs.Models
         public string InningScoreListGameScore { get; set; }
 
         public Game Game { get; set; }
-
-        public InningScore InningScore { get; set; }
 
         public Team Team { get; set; }
 

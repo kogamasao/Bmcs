@@ -100,8 +100,14 @@ namespace Bmcs.Pages.Game
                 throw;
             }
 
-            return RedirectToPage("/Order/Edit", new { gameID = gameID });
-
+            if(Game.GameInputTypeClass == GameInputTypeClass.ByPlay)
+            { 
+                return RedirectToPage("/Order/Edit", new { gameID = gameID });
+            }
+            else
+            {
+                return RedirectToPage("/GameScore/Edit", new { gameID = gameID });
+            }
         }
 
         /// <summary>

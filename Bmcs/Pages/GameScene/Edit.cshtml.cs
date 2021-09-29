@@ -619,7 +619,10 @@ namespace Bmcs.Pages.GameScene
                         Context.GameScenes.Add(gameScene);
 
                         //試合中
-                        Game.StatusClass = StatusClass.DuringGame;
+                        if(Game.StatusClass == StatusClass.BeforeGame)
+                        { 
+                            Game.StatusClass = StatusClass.DuringGame;
+                        }
 
                         await Context.SaveChangesAsync();
                     }
@@ -724,8 +727,6 @@ namespace Bmcs.Pages.GameScene
                         Context.InningScores.Add(inningScore);
                     }
 
-                    inningScore.GameScenes = gameScenes.ToList();
-
                     await Context.SaveChangesAsync();
 
                     //仮オーダー削除
@@ -742,36 +743,36 @@ namespace Bmcs.Pages.GameScene
                             NextGameSceneID = GetNextGameSceneID(Game.GameID, GameScene.GameSceneID);
                         }
                         else
-                        { 
+                        {
                             NextGameSceneID = GetNextGameSceneID(Game.GameID, gameScene.GameSceneID);
 
-                        var nextGameScene = await Context.GameScenes
-                                                        .FindAsync(NextGameSceneID);
+                            var nextGameScene = await Context.GameScenes
+                                                            .FindAsync(NextGameSceneID);
 
-                        if(nextGameScene != null)
-                        {
-                            //同イニングでない次データあり
-                            if((nextGameScene.Inning != gameScene.Inning
-                                || nextGameScene.TopButtomClass != gameScene.TopButtomClass)
-                                && !gameScene.ChangeFLG)
+                            if (nextGameScene != null)
                             {
-                                //仮データ作成
-                                var tempChangeGameScene = new Models.GameScene();
-                                tempChangeGameScene.GameSceneDetails = new List<Models.GameSceneDetail>();
-                                tempChangeGameScene.GameSceneRunners = new List<Models.GameSceneRunner>();
-                                tempChangeGameScene.Orders = new List<Models.Order>();
+                                //同イニングでない次データあり
+                                if ((nextGameScene.Inning != gameScene.Inning
+                                    || nextGameScene.TopButtomClass != gameScene.TopButtomClass)
+                                    && !gameScene.ChangeFLG)
+                                {
+                                    //仮データ作成
+                                    var tempChangeGameScene = new Models.GameScene();
+                                    tempChangeGameScene.GameSceneDetails = new List<Models.GameSceneDetail>();
+                                    tempChangeGameScene.GameSceneRunners = new List<Models.GameSceneRunner>();
+                                    tempChangeGameScene.Orders = new List<Models.Order>();
 
-                                CreateTempChangeData(tempChangeGameScene, gameScene);
+                                    CreateTempChangeData(tempChangeGameScene, gameScene);
 
-                                //データ追加
-                                Context.GameScenes.Add(tempChangeGameScene);
+                                    //データ追加
+                                    Context.GameScenes.Add(tempChangeGameScene);
 
-                                await Context.SaveChangesAsync();
+                                    await Context.SaveChangesAsync();
 
-                                //仮データIDをセット
-                                NextGameSceneID = tempChangeGameScene.GameSceneID;
+                                    //仮データIDをセット
+                                    NextGameSceneID = tempChangeGameScene.GameSceneID;
+                                }
                             }
-                        }
                         }
                     }
 
@@ -800,7 +801,7 @@ namespace Bmcs.Pages.GameScene
             else
             {
                 //試合終了処理
-                await GameSet(Game.GameID);
+                await base.GameSet(Game.GameID);
 
                 //試合結果へ
                 return RedirectToPage("/GameScore/Edit", new { gameID = Game.GameID });
@@ -907,8 +908,8 @@ namespace Bmcs.Pages.GameScene
             gameScene.ResultOutCount = GameScene.OutCount + gameScene.GameSceneRunners.Where(r => r.SceneResultClass == SceneResultClass.Result && r.RunnerResultClass == RunnerResultClass.Out).Count();
             gameScene.ResultRunnerSceneClass = GetRunnerSceneClass(gameScene.GameSceneRunners.Where(r => r.SceneResultClass == SceneResultClass.Result));
 
-            if(gameScene.ResultClass == ResultClass.Change)
-            { 
+            if (gameScene.ResultClass == ResultClass.Change)
+            {
                 //得点
                 gameScene.Run = gameScene.GameSceneRunners.Where(r => r.SceneResultClass == SceneResultClass.SceneChange
                                                                 && (r.RunnerResultClass == RunnerResultClass.Run
@@ -1058,7 +1059,6 @@ namespace Bmcs.Pages.GameScene
             //試合シーン
             gameScene.GameID = beforeGameScene.GameID;
             gameScene.TeamID = beforeGameScene.TeamID;
-            gameScene.InningScoreID = beforeGameScene.InningScoreID;
             gameScene.Inning = beforeGameScene.Inning;
             gameScene.TopButtomClass = beforeGameScene.TopButtomClass;
             gameScene.InningIndex = beforeGameScene.InningIndex + 1;
@@ -1204,7 +1204,7 @@ namespace Bmcs.Pages.GameScene
             gameScene.ResultRunnerSceneClass = beforeGameScene.ResultRunnerSceneClass;
 
             //得点
-            gameScene.Run =0;
+            gameScene.Run = 0;
             //打点
             gameScene.RBI = 0;
             //自責点
@@ -1521,278 +1521,6 @@ namespace Bmcs.Pages.GameScene
             await Context.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// 試合終了
-        /// </summary>
-        /// <param name="gameID"></param>
-        /// <returns></returns>
-        private async Task GameSet(int? gameID)
-        {
-            //削除対象試合投手スコア
-            var deleteGameScorePitchers = await Context.GameScorePitchers
-                                            .Where(r => r.GameID == gameID).ToListAsync();
-
-            Context.GameScorePitchers.RemoveRange(deleteGameScorePitchers);
-
-            //削除対象試合野手スコア
-            var deleteGameScoreFielders = await Context.GameScoreFielders
-                                            .Where(r => r.GameID == gameID).ToListAsync();
-
-            Context.GameScoreFielders.RemoveRange(deleteGameScoreFielders);
-
-            //試合
-            var game = await Context.Games.FirstOrDefaultAsync(r => r.GameID == gameID);
-
-            //イニングスコア
-            var inningScores = await Context.InningScores.Where(r => r.GameID == gameID).ToListAsync();
-
-            //表裏
-            var myTeamOffenceTopButtomClass = Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First ? TopButtomClass.Top : TopButtomClass.Buttom;
-
-            //得点
-            game.Score = inningScores.Where(r => r.TopButtomClass == myTeamOffenceTopButtomClass).DefaultIfEmpty().Sum(r => r.Score);
-            game.OpponentTeamScore = inningScores.Where(r => r.TopButtomClass != myTeamOffenceTopButtomClass).DefaultIfEmpty().Sum(r => r.Score);
-
-            //勝敗
-            if(game.Score > game.OpponentTeamScore)
-            {
-                game.WinLoseClass = WinLoseClass.Win;
-            }
-            else if (game.Score < game.OpponentTeamScore)
-            {
-                game.WinLoseClass = WinLoseClass.Lose;
-            }
-            else
-            {
-                game.WinLoseClass = WinLoseClass.Draw;
-            }
-
-            //編集中
-            game.StatusClass = StatusClass.DuringGame;
-
-            base.SetUpdateInfo(game);
-
-            //全試合シーン
-            var orders = await Context.Orders.Include(r => r.Member)
-                                            .Include(r => r.GameScene)
-                                            .Where(r => r.GameID == gameID).ToListAsync();
-
-            //全試合シーン
-            var gameScenes = await Context.GameScenes.Include(r => r.BatterMember)
-                                                    .Include(r => r.PitcherMember)
-                                                    .Where(r => r.GameID == gameID).ToListAsync();
-
-            //全試合シーン詳細
-            var gameSceneDetails = await Context.GameSceneDetails.Include(r => r.GameScene)
-                                                   .Include(r => r.Member)
-                                                   .Where(r => r.GameID == gameID).ToListAsync();
-
-            //全試合シーンランナー
-            var gameSceneRunners = await Context.GameSceneRunners.Include(r => r.GameScene)
-                                                   .Include(r => r.Member)
-                                                   .Where(r => r.GameID == gameID).ToListAsync();
-
-            //投手成績集計
-            foreach (var pitcherMemberID in gameScenes.Select(r => r.PitcherMemberID).Distinct())
-            {
-                //相手投手
-                if(gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID).FirstOrDefault().PitcherMember.SystemDataFLG)
-                {
-                    continue;
-                }
-
-                var gameScorePitcher = new GameScorePitcher()
-                {
-                    GameID = gameID,
-                    TeamID = game.TeamID,
-                    MemberID = pitcherMemberID,
-                    Win = 0,
-                    Lose = 0,
-                    Hold = 0,
-                    Save = 0,
-                    Starter = 0,
-                    CompleteGame = 0,
-                };
-
-                //先発(初回の先頭で自分が投げている)
-                if(gameScenes.Any(r => r.Inning == 1 && r.InningIndex == 1 && r.PitcherMemberID == pitcherMemberID))
-                { 
-                    gameScorePitcher.Starter = 1;
-                }
-
-                //完投(自分以外の投手が投げていない)
-                if (!gameScenes.Any(r => r.TopButtomClass != myTeamOffenceTopButtomClass && r.PitcherMemberID != pitcherMemberID))
-                {
-                    gameScorePitcher.Starter = 1;
-                }
-
-                //OUT
-                var outCount = gameSceneRunners.Where(r => r.GameScene.PitcherMemberID == pitcherMemberID && r.SceneResultClass == SceneResultClass.Result && r.RunnerResultClass == RunnerResultClass.Out).Count();
-                //イニング(3OUTで1イニング)
-                gameScorePitcher.Inning = (Math.Floor(System.Convert.ToDecimal(outCount / 3) * 10)) / 10;
-                //打席
-                gameScorePitcher.PlateAppearance = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass != ResultClass.Change).Count();
-                //打数
-                gameScorePitcher.AtBat = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass != ResultClass.Change && (r.ResultClass <= ResultClass.FieldersChoice || r.ResultClass >= ResultClass.SingleHit)).Count();
-                //被安打
-                gameScorePitcher.Hit = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass != ResultClass.Change && (r.ResultClass >= ResultClass.SingleHit && r.ResultClass <= ResultClass.HomeRun)).Count();
-                //被本塁打
-                gameScorePitcher.HomeRun = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass == ResultClass.HomeRun).Count();
-                //失点
-                gameScorePitcher.Run = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID).DefaultIfEmpty().Sum(r => r.Run);
-                //自責点
-                gameScorePitcher.EarnedRun = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID).DefaultIfEmpty().Sum(r => r.EarnedRun);
-                //与四球
-                gameScorePitcher.FourBall = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass == ResultClass.FourBalls).Count();
-                //与死球
-                gameScorePitcher.DeadBall = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass == ResultClass.DeadBall).Count();
-                //得点圏打席
-                gameScorePitcher.ScoringPositionPlateAppearance = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass != ResultClass.Change && r.RunnerSceneClass >= RunnerSceneClass.Second).Count();
-                //得点圏打数
-                gameScorePitcher.ScoringPositionAtBat = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass != ResultClass.Change && (r.ResultClass <= ResultClass.FieldersChoice || r.ResultClass >= ResultClass.SingleHit) && r.RunnerSceneClass >= RunnerSceneClass.Second).Count();
-                //得点圏被安打
-                gameScorePitcher.ScoringPositionHit = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass != ResultClass.Change && (r.ResultClass >= ResultClass.SingleHit && r.ResultClass <= ResultClass.HomeRun) && r.RunnerSceneClass >= RunnerSceneClass.Second).Count();
-                //奪三振
-                gameScorePitcher.StrikeOut = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && (r.ResultClass == ResultClass.Strikeout || r.ResultClass == ResultClass.MissedStrikeout || r.ResultClass == ResultClass.UncaughtThirdStrike)).Count();
-                //牽制死
-                gameScorePitcher.PickOffBallOut = gameSceneDetails.Where(r => r.GameScene.PitcherMemberID == pitcherMemberID && r.MemberID == pitcherMemberID && r.DetailResultClass == DetailResultClass.PickOffBallOut).Count();
-                //WP
-                gameScorePitcher.WildPitch = gameSceneDetails.Where(r => r.GameScene.PitcherMemberID == pitcherMemberID && r.MemberID == pitcherMemberID && r.DetailResultClass == DetailResultClass.WildPitch).Count();
-                //ボーク
-                gameScorePitcher.Balk = gameSceneDetails.Where(r => r.GameScene.PitcherMemberID == pitcherMemberID && r.MemberID == pitcherMemberID && r.DetailResultClass == DetailResultClass.Balk).Count();
-
-                base.SetEntryInfo(gameScorePitcher);
-
-                Context.GameScorePitchers.Add(gameScorePitcher);
-            }
-
-            //野手成績集計
-            var orderMemberID = orders.Select(r => r.MemberID).Distinct();
-            var batterMemberID = gameScenes.Select(r => r.BatterMemberID).Distinct();
-            var detailMemberID = gameSceneDetails.Select(r => r.MemberID).Distinct();
-            var runnerMemberID = gameSceneRunners.Select(r => r.MemberID).Distinct();
-
-            foreach (var fielderMemberID in orderMemberID.Union(batterMemberID.Union(detailMemberID.Union(runnerMemberID))))
-            {
-                //相手野手
-                if (Context.Members.Find(fielderMemberID).SystemDataFLG)
-                {
-                    continue;
-                }
-
-                var gameScoreFielder = new GameScoreFielder()
-                {
-                    GameID = gameID,
-                    TeamID = game.TeamID,
-                    MemberID = fielderMemberID,
-                };
-
-
-                var batterGameScenes = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass != ResultClass.Change);
-
-                gameScoreFielder.Detail = string.Empty;
-
-                //打撃詳細
-                foreach(var batterGameScene in batterGameScenes.OrderBy(r => r.Inning).ThenBy(r => r.TopButtomClass).ThenBy(r => r.InningIndex))
-                {
-                    if (batterGameScene.HittingDirectionClass != HittingDirectionClass.None)
-                    {
-                        gameScoreFielder.Detail += batterGameScene.HittingDirectionClass.GetEnumName();
-                    }
-
-                    if (batterGameScene.HitBallClass != HitBallClass.NoHit)
-                    {
-                        gameScoreFielder.Detail += batterGameScene.HitBallClass.GetEnumName();
-                    }
-
-                    gameScoreFielder.Detail += batterGameScene.ResultClass.GetEnumName();
-
-                    gameScoreFielder.Detail += "　";
-                }
-
-                //打席
-                gameScoreFielder.PlateAppearance = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass != ResultClass.Change).Count();
-                //打数
-                gameScoreFielder.AtBat = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass != ResultClass.Change && (r.ResultClass <= ResultClass.FieldersChoice || r.ResultClass >= ResultClass.SingleHit)).Count();
-                //安打
-                gameScoreFielder.Hit = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass != ResultClass.Change && (r.ResultClass >= ResultClass.SingleHit && r.ResultClass <= ResultClass.HomeRun)).Count();
-                //二塁打
-                gameScoreFielder.DoubleHit = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass == ResultClass.DoubleHit).Count();
-                //三塁打
-                gameScoreFielder.TripleHit = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass == ResultClass.TripleHit).Count();
-                //本塁打
-                gameScoreFielder.HomeRun = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass == ResultClass.HomeRun).Count();
-                //塁打
-                gameScoreFielder.TotalBase = (gameScoreFielder.HomeRun * 4) + (gameScoreFielder.TripleHit * 3) + (gameScoreFielder.DoubleHit * 2) + (gameScoreFielder.Hit - gameScoreFielder.DoubleHit - gameScoreFielder.TripleHit - gameScoreFielder.HomeRun);
-                //打点
-                if(gameScenes.Any(r => r.BatterMemberID == fielderMemberID))
-                { 
-                    gameScoreFielder.RBI = gameScenes.Where(r => r.BatterMemberID == fielderMemberID).DefaultIfEmpty().Sum(r => r.RBI);
-                }
-                else
-                {
-                    gameScoreFielder.RBI = 0;
-                }
-                //得点
-                gameScoreFielder.Run = gameSceneRunners.Where(r => r.MemberID == fielderMemberID && r.SceneResultClass == SceneResultClass.Result && r.RunnerResultClass >= RunnerResultClass.Run).Count();
-                //盗塁企画数
-                gameScoreFielder.StolenBasePlan = gameSceneDetails.Where(r => r.MemberID == fielderMemberID && (r.DetailResultClass == DetailResultClass.StolenBaseSccess || r.DetailResultClass == DetailResultClass.StolenBaseOut)).Count();
-                //盗塁
-                gameScoreFielder.StolenBase = gameSceneDetails.Where(r => r.MemberID == fielderMemberID && r.DetailResultClass == DetailResultClass.StolenBaseSccess).Count();
-                //四球
-                gameScoreFielder.FourBall = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass == ResultClass.FourBalls).Count();
-                //死球
-                gameScoreFielder.DeadBall = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass == ResultClass.DeadBall).Count();
-                //犠打
-                gameScoreFielder.Sacrifice = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass == ResultClass.Sacrifice).Count();
-                //犠牲
-                gameScoreFielder.SacrificeFly = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass == ResultClass.SacrificeFly).Count();
-                //残塁
-                gameScoreFielder.LeftOnBase = gameSceneRunners.Where(r => r.MemberID == fielderMemberID && r.GameScene.ChangeFLG &&  r.SceneResultClass == SceneResultClass.Result && (r.RunnerResultClass >= RunnerResultClass.OnFirstBase && r.RunnerResultClass <= RunnerResultClass.OnThirdBase)).Count();
-                //得点圏打席
-                gameScoreFielder.ScoringPositionPlateAppearance = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass != ResultClass.Change && r.RunnerSceneClass >= RunnerSceneClass.Second).Count();
-                //得点圏打数
-                gameScoreFielder.ScoringPositionAtBat = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass != ResultClass.Change && (r.ResultClass <= ResultClass.FieldersChoice || r.ResultClass >= ResultClass.SingleHit) && r.RunnerSceneClass >= RunnerSceneClass.Second).Count();
-                //得点圏安打
-                gameScoreFielder.ScoringPositionHit = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass != ResultClass.Change && (r.ResultClass >= ResultClass.SingleHit && r.ResultClass <= ResultClass.HomeRun) && r.RunnerSceneClass >= RunnerSceneClass.Second).Count();
-                //三振
-                gameScoreFielder.StrikeOut = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && (r.ResultClass == ResultClass.Strikeout || r.ResultClass == ResultClass.MissedStrikeout || r.ResultClass == ResultClass.UncaughtThirdStrike)).Count();
-                //併殺
-                gameScoreFielder.DoublePlay = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass == ResultClass.DoublePlay).Count();
-                //敵失策
-                gameScoreFielder.Error = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass == ResultClass.Error).Count();
-
-                //捕手
-                var catcherGameSceneIDs = orders.Where(r => r.MemberID == fielderMemberID && r.PositionClass == PositionClass.Catcher).Select(r => r.GameSceneID).Distinct();
-
-                //被盗塁企画数
-                gameScoreFielder.StolenBasePlaned = 0;
-                //盗塁阻止数
-                gameScoreFielder.StopStolenBase = 0;
-
-                foreach (var catcherGameSceneID in catcherGameSceneIDs)
-                {
-                    var stolenBaseSccessCount = gameSceneDetails.Where(r => r.GameSceneID == catcherGameSceneID && r.GameScene.TopButtomClass != myTeamOffenceTopButtomClass && r.DetailResultClass == DetailResultClass.StolenBaseSccess).Count();
-                    var stolenBaseOutCount = gameSceneDetails.Where(r => r.GameSceneID == catcherGameSceneID && r.GameScene.TopButtomClass != myTeamOffenceTopButtomClass && r.DetailResultClass == DetailResultClass.StolenBaseOut).Count();
-
-                    gameScoreFielder.StolenBasePlaned += stolenBaseSccessCount + stolenBaseOutCount;
-                    gameScoreFielder.StopStolenBase += stolenBaseOutCount;
-                }
-
-                //補殺
-                gameScoreFielder.Assist = gameSceneDetails.Where(r => r.MemberID == fielderMemberID && r.DetailResultClass == DetailResultClass.AssistOut).Count();
-                //失策
-                gameScoreFielder.OwnError = gameSceneDetails.Where(r => r.MemberID == fielderMemberID && r.DetailResultClass == DetailResultClass.Error).Count();
-                //PB
-                gameScoreFielder.PassBall = gameSceneDetails.Where(r => r.MemberID == fielderMemberID && r.DetailResultClass == DetailResultClass.PassBall).Count();
-
-                base.SetEntryInfo(gameScoreFielder);
-
-                Context.GameScoreFielders.Add(gameScoreFielder);
-            }
-
-            await Context.SaveChangesAsync();
-        }
     }
 
 }

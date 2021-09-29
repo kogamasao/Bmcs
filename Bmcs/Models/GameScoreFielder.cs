@@ -22,7 +22,9 @@ namespace Bmcs.Models
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
 
-        [Required]
+        [Display(Name = "スコア表示順")]
+        public int? ScoreIndex { get; set; }
+
         [Display(Name = "メンバーID")]
         public int? MemberID { get; set; }
 

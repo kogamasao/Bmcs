@@ -11,6 +11,7 @@ using Bmcs.Models;
 using Microsoft.Extensions.Logging;
 using Bmcs.Constans;
 using Microsoft.AspNetCore.Http;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.Game
 {
@@ -52,6 +53,8 @@ namespace Bmcs.Pages.Game
 
         public async Task<IActionResult> OnPostAsync()
         {
+
+
             try
             {
                 if (!ModelState.IsValid)
@@ -79,8 +82,22 @@ namespace Bmcs.Pages.Game
                 throw;
             }
 
-            return RedirectToPage("/Order/Edit", new { gameID = Game.GameID });
-
+            if (Game.StatusClass == StatusClass.BeforeFix
+                || Game.StatusClass == StatusClass.EndGame)
+            {
+                return RedirectToPage("/Game/Index");
+            }
+            else
+            { 
+                if (Game.GameInputTypeClass == GameInputTypeClass.ByPlay)
+                {
+                    return RedirectToPage("/Order/Edit", new { gameID = Game.GameID });
+                }
+                else
+                {
+                    return RedirectToPage("/GameScore/Edit", new { gameID = Game.GameID });
+                }
+            }
         }
 
         /// <summary>
