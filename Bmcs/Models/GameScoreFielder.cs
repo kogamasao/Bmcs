@@ -113,6 +113,39 @@ namespace Bmcs.Models
         [Display(Name = "PB")]
         public int? PassBall { get; set; }
 
+        [NotMapped]
+        [Display(Name = "年")]
+
+        public string Year { get; set; }
+
+        [NotMapped]
+        [Display(Name = "打率")]
+        public decimal? BattingAverage { get; set; }
+
+        [NotMapped]
+        [Display(Name = "得点圏打率")]
+        public decimal? ScoringPositionBattingAverage { get; set; }
+
+        [NotMapped]
+        [Display(Name = "出塁率")]
+        public decimal? OnBasePercentage { get; set; }
+
+        [NotMapped]
+        [Display(Name = "長打率")]
+        public decimal? SluggingPercentage { get; set; }
+
+        [NotMapped]
+        [Display(Name = "OPS")]
+        public decimal? Ops { get; set; }
+
+        [NotMapped]
+        [Display(Name = "盗塁成功率")]
+        public decimal? StolenBaseSuccessRate { get; set; }
+
+        [NotMapped]
+        [Display(Name = "盗塁阻止率")]
+        public decimal? StopStolenBaseRate { get; set; }
+
         public Game Game { get; set; }
 
         public Team Team { get; set; }

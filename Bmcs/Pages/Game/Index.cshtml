@@ -123,33 +123,38 @@
                 }
                 @if (Model.IsMyTeam || Model.IsAdmin())
                 {
-            <td>
-                @if (item.StatusClass == StatusClass.DuringGame)
-                {
-                    <a asp-page="/GameScene/Edit" asp-route-gameID="@item.GameID">試合入力</a>
-                    <span> |</span>
-                }
-                @if (item.StatusClass == StatusClass.BeforeFix
-                   || item.StatusClass == StatusClass.EndGame)
-                {
-                    <a asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果編集</a>
-                    <span> |</span>
-                }
-                @if (item.StatusClass == StatusClass.EndGame)
-                {
-                    <a asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果詳細</a>
-                    <span> |</span>
-                }
-                <a asp-page="./Edit" asp-route-id="@item.GameID">編集</a> |
-                <a asp-page="./Details" asp-route-id="@item.GameID">詳細</a> |
-                <a asp-page="./Delete" asp-route-id="@item.GameID">削除</a>
-            </td>
+                    <td>
+                        @if (item.StatusClass == StatusClass.DuringGame)
+                        {
+                            <a asp-page="/GameScene/Edit" asp-route-gameID="@item.GameID">試合入力</a>
+                            <span> |</span>
+                        }
+                        @if (item.StatusClass == StatusClass.BeforeFix
+                           || item.StatusClass == StatusClass.EndGame)
+                        {
+                            <a asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果編集</a>
+                            <span> |</span>
+                        }
+                        @if (item.StatusClass == StatusClass.EndGame)
+                        {
+                            <a asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果詳細</a>
+                            <span> |</span>
+                        }
+                        <a asp-page="./Edit" asp-route-id="@item.GameID">編集</a> |
+                        <a asp-page="./Details" asp-route-id="@item.GameID">詳細</a> |
+                        <a asp-page="./Delete" asp-route-id="@item.GameID">削除</a>
+                    </td>
                 }
                 else
                 {
-                    <td>
-                        <a asp-page="./Details" asp-route-id="@item.GameID">詳細</a>
-                    </td>
+            <td>
+                @if (item.StatusClass == StatusClass.EndGame)
+                        {
+                <a asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果詳細</a>
+                <span> |</span>
+                        }
+                <a asp-page="./Details" asp-route-id="@item.GameID">詳細</a>
+            </td>
                 }
             </tr>
             }

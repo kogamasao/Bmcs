@@ -138,19 +138,21 @@ else
                 }
                 @if (Model.IsAdmin())
                 {
-                    <td>
-                        <a asp-page="./Details" asp-route-id="@item.TeamID">詳細</a> |
-                        <a asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a> |
-                        <a asp-page="./Edit" asp-route-id="@item.TeamID">編集</a> |
-                        <a asp-page="./Delete" asp-route-id="@item.TeamID">削除</a>
-                    </td>
+            <td>
+                <a asp-page="/Game/Index" asp-route-teamID="@item.TeamID">試合</a> |
+                <a asp-page="./Details" asp-route-id="@item.TeamID">詳細</a> |
+                <a asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a> |
+                <a asp-page="./Edit" asp-route-id="@item.TeamID">編集</a> |
+                <a asp-page="./Delete" asp-route-id="@item.TeamID">削除</a>
+            </td>
                 }
                 else
                 {
-                    <td>
-                        <a asp-page="./Details" asp-route-id="@item.TeamID">詳細</a>
-                        <a asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a>
-                    </td>
+            <td>
+                <a asp-page="/Game/Index" asp-route-teamID="@item.TeamID">試合</a> |
+                <a asp-page="./Details" asp-route-id="@item.TeamID">詳細</a> |
+                <a asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a>
+            </td>
                 }
             </tr>
             }

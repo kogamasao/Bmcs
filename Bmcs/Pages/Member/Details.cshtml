@@ -81,6 +81,346 @@
             </dd>
         }
     </dl>
+
+    @if (Model.GameScorePitcherList.Any())
+    {
+        <div class="box">
+            <div class="box-title">
+                投手成績
+            </div>
+            <div class="box-inner">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="column-fix-left">
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].GameScorePitcherClassName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Starter)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].CompleteGame)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Inning)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].PlateAppearance)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].AtBat)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Hit)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].HomeRun)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Run)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].EarnedRun)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].FourBall)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].DeadBall)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].ScoringPositionPlateAppearance)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].ScoringPositionAtBat)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].ScoringPositionHit)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].StrikeOut)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].PickOffBallOut)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].WildPitch)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Balk)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.GameScorePitcherList)
+                            {
+                                <tr>
+                                    <td class="column-fix-left">
+                                        @Html.DisplayFor(modelItem => item.Member.MemberName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.GameScorePitcherClassName)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Starter)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.CompleteGame)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Inning)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.PlateAppearance)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.AtBat)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Hit)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.HomeRun)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Run)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.EarnedRun)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.FourBall)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.DeadBall)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.ScoringPositionPlateAppearance)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.ScoringPositionAtBat)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.ScoringPositionHit)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.StrikeOut)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.PickOffBallOut)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.WildPitch)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Balk)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.GameScoreFielderList.Any())
+    {
+        <div class="box">
+            <div class="box-title">
+                野手成績
+            </div>
+            <div class="box-inner">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="column-fix-left">
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Detail)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].PlateAppearance)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].AtBat)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Hit)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].DoubleHit)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].TripleHit)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].HomeRun)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].RBI)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Run)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].StolenBasePlan)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].StolenBase)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].FourBall)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].DeadBall)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Sacrifice)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].SacrificeFly)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].LeftOnBase)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].ScoringPositionPlateAppearance)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].ScoringPositionAtBat)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].ScoringPositionHit)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].StrikeOut)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].DoublePlay)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Error)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].StolenBasePlaned)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].StopStolenBase)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Assist)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].OwnError)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreFielderList[0].PassBall)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.GameScoreFielderList)
+                            {
+                                <tr>
+                                    <td class="column-fix-left">
+                                        @Html.DisplayFor(modelItem => item.Member.MemberName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Detail)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.PlateAppearance)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.AtBat)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Hit)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.DoubleHit)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.TripleHit)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.HomeRun)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.RBI)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Run)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.StolenBasePlan)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.StolenBase)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.FourBall)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.DeadBall)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Sacrifice)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.SacrificeFly)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.LeftOnBase)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.ScoringPositionPlateAppearance)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.ScoringPositionAtBat)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.ScoringPositionHit)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.StrikeOut)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.DoublePlay)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Error)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.StolenBasePlaned)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.StopStolenBase)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Assist)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.OwnError)
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.PassBall)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 <div>
     <a asp-page="./Index" asp-route-teamID="@Model.Member.Team.TeamID">メンバー一覧</a>

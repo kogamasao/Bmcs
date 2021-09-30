@@ -113,6 +113,34 @@ namespace Bmcs.Models
             }
         }
 
+        [NotMapped]
+        [Display(Name = "年")]
+        public string Year { get; set; }
+
+        [NotMapped]
+        [Display(Name = "防御率")]
+        public decimal? EarnedRunAverage { get; set; }
+
+        [NotMapped]
+        [Display(Name = "勝率")]
+        public decimal? WinRate { get; set; }
+
+        [NotMapped]
+        [Display(Name = "被打率")]
+        public decimal? BattingAverage { get; set; }
+
+        [NotMapped]
+        [Display(Name = "得点圏被打率")]
+        public decimal? ScoringPositionBattingAverage { get; set; }
+
+        [NotMapped]
+        [Display(Name = "奪三振率")]
+        public decimal? StrikeOutRate { get; set; }
+
+        [NotMapped]
+        [Display(Name = "WHIP")]
+        public decimal? Whip { get; set; }
+
         public Game Game { get; set; }
 
         public Team Team { get; set; }

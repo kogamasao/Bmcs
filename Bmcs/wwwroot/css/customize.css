@@ -1,4 +1,28 @@
 ﻿
+h1 {
+    font-size: 1.8rem;
+}
+
+h2 {
+    font-size: 1.7rem;
+}
+
+h3 {
+    font-size: 1.6rem;
+}
+
+h4 {
+    font-size: 1.5rem;
+}
+
+h5 {
+    font-size: 1.4rem;
+}
+
+h6 {
+    font-size: 1.3rem;
+}
+
 .table td, .table th {
     white-space: nowrap;
 }

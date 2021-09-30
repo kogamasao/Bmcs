@@ -23,16 +23,12 @@ namespace Bmcs.Pages.GameScore
 
         }
 
-        [BindProperty]
         public IList<Models.InningScore> InningScoreList { get; set; }
 
-        [BindProperty]
         public IList<Models.GameScorePitcher> GameScorePitcherList { get; set; }
 
-        [BindProperty]
         public IList<Models.GameScoreFielder> GameScoreFielderList { get; set; }
 
-        [BindProperty]
         public Models.Game Game { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? gameID)

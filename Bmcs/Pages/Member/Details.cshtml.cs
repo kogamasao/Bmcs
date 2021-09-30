@@ -22,6 +22,10 @@ namespace Bmcs.Pages.Member
 
         public Models.Member Member { get; set; }
 
+        public List<Models.GameScorePitcher> GameScorePitcherList { get; set; }
+
+        public List<Models.GameScoreFielder> GameScoreFielderList { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -45,8 +49,38 @@ namespace Bmcs.Pages.Member
                 )
             {
                 return NotFound();
-
             }
+
+            //集計項目
+            var totalingItem = new TotalingItem();
+
+            //投手スコア
+            GameScorePitcherList = new List<GameScorePitcher>();
+
+            //投手スコアデータ
+            var gameScorePitcherList = await Context.GameScorePitchers
+                      .Include(r => r.Member)
+                      .Include(r => r.Team)
+                      .Where(r => r.MemberID == id)
+                      .ToListAsync();
+
+            if(gameScorePitcherList != null && gameScorePitcherList.Any())
+            { 
+                //集計処理
+                GameScorePitcherList.AddRange(base.TotalingGameScorePitcher(gameScorePitcherList, totalingItem));
+            }
+
+            //野手スコア
+            GameScoreFielderList = new List<GameScoreFielder>();
+
+            //野手スコアデータ
+            var gameScoreFielderList = await Context.GameScoreFielders
+                      .Include(r => r.Member)
+                      .Include(r => r.Team)
+                      .Where(r => r.MemberID == id)
+                      .ToListAsync();
+
+            GameScoreFielderList.AddRange(gameScoreFielderList);
 
             return Page();
         }

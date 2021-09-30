@@ -883,5 +883,23 @@ namespace Bmcs.Models
 
             await Context.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 投手成績集計
+        /// </summary>
+        /// <param name="gameScorePitcherList"></param>
+        /// <param name="totalingItem"></param>
+        /// <returns></returns>
+        public List<GameScorePitcher> TotalingGameScorePitcher(List<GameScorePitcher> gameScorePitcherList, TotalingItem totalingItem)
+        {
+            var result = new List<GameScorePitcher>();
+
+            foreach(var gameScorePitcher in gameScorePitcherList)
+            {
+                result.Add(gameScorePitcher);
+            }
+
+            return result;
+        }
     }
 }
