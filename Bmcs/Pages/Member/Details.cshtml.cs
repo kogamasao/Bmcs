@@ -10,6 +10,7 @@ using Bmcs.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.Member
 {
@@ -62,7 +63,7 @@ namespace Bmcs.Pages.Member
                       .Include(r => r.Game)
                       .Include(r => r.Member)
                       .Include(r => r.Team)
-                      .Where(r => r.MemberID == id)
+                      .Where(r => r.MemberID == id && r.Game.StatusClass == StatusClass.EndGame)
                       .ToListAsync();
 
             if(gameScorePitcherList != null && gameScorePitcherList.Any())
@@ -79,6 +80,9 @@ namespace Bmcs.Pages.Member
                 }
             }
 
+            //集計項目
+            totalingItem = new TotalingItem();
+
             //野手スコア
             GameScoreFielderList = new List<GameScoreFielder>();
 
@@ -87,7 +91,7 @@ namespace Bmcs.Pages.Member
                       .Include(r => r.Game)
                       .Include(r => r.Member)
                       .Include(r => r.Team)
-                      .Where(r => r.MemberID == id)
+                      .Where(r => r.MemberID == id && r.Game.StatusClass == StatusClass.EndGame)
                       .ToListAsync();
 
             if (gameScoreFielderList != null && gameScoreFielderList.Any())

@@ -886,6 +886,118 @@ namespace Bmcs.Models
         }
 
         /// <summary>
+        /// チーム成績集計
+        /// </summary>
+        /// <param name="gameList"></param>
+        /// <param name="gameScorePitcherList"></param>
+        /// <param name="gameScoreFielderList"></param>
+        /// <param name="totalingItem"></param>
+        /// <returns></returns>
+        public List<GameScoreTeam> TotalingGameScoreTeam(List<Game> gameList, List<GameScorePitcher> gameScorePitcherList, List<GameScoreFielder> gameScoreFielderList, TotalingItem totalingItem)
+        {
+            var result = new List<GameScoreTeam>();
+
+            //投手集計
+            var teamGameScorePitcherList = TotalingGameScorePitcher(gameScorePitcherList, totalingItem, true);
+            //野手集計
+            var teamGameScoreFielderList = TotalingGameScoreFielder(gameScoreFielderList, totalingItem, true);
+            //試合集計
+            var groupGameList = gameList
+                       .Where(r => ((r.GameDate.Year == totalingItem.Year && totalingItem.Year != null) || (totalingItem.Year == null))
+                                   && ((r.GameClass == totalingItem.GameClass && totalingItem.GameClass != null) || (totalingItem.GameClass == null))
+                               )
+                       .GroupBy(r => r.TeamID)
+                       .Select(r =>
+                               new
+                               {
+                                   TeamID = r.Key,
+                                   Year = totalingItem.Year == null ? "通算" : r.Max(s => s.GameDate.Year.ToString()),
+                                   GameCount = r.Count(),
+                                   Win = r.Sum(s => s.WinLoseClass == WinLoseClass.Win ? 1 : 0),
+                                   Lose = r.Sum(s => s.WinLoseClass == WinLoseClass.Lose ? 1 : 0),
+                                   Draw = r.Sum(s => s.WinLoseClass == WinLoseClass.Draw ? 1 : 0),
+                                   Score = r.Sum(s => s.Score),
+                                   OpponentTeamScore = r.Sum(s => s.OpponentTeamScore),
+                               })
+                       .ToList();
+
+            foreach (var groupGame in groupGameList)
+            {
+                //対象チーム、年
+                var teamGameScorePitcher = teamGameScorePitcherList.Where(r => r.TeamID == groupGame.TeamID && r.Year == groupGame.Year).FirstOrDefault();
+                var teamGameScoreFielder = teamGameScoreFielderList.Where(r => r.TeamID == groupGame.TeamID && r.Year == groupGame.Year).FirstOrDefault();
+
+                var gameScoreTeam = new GameScoreTeam()
+                {
+                    TeamID = groupGame.TeamID,
+                    Year = groupGame.Year,
+                    GameCount = groupGame.GameCount,
+                    Win = groupGame.Win,
+                    Lose = groupGame.Lose,
+                    Draw = groupGame.Draw,
+                    Run = groupGame.Score,
+                    PitcherRun = groupGame.OpponentTeamScore,
+                };
+
+                //勝率
+                if (gameScoreTeam.Win.NullToZero() + gameScoreTeam.Lose.NullToZero() == 0)
+                {
+                    gameScoreTeam.WinRate = null;
+                }
+                else
+                {
+                    gameScoreTeam.WinRate = System.Convert.ToDecimal(gameScoreTeam.Win) / System.Convert.ToDecimal(gameScoreTeam.Win.NullToZero() + gameScoreTeam.Lose.NullToZero());
+                }
+
+                //投手スコア
+                if (teamGameScorePitcher != null)
+                {
+                    gameScoreTeam.EarnedRunAverage = teamGameScorePitcher.EarnedRunAverage;
+                    gameScoreTeam.PitcherEarnedRun = teamGameScorePitcher.EarnedRun;
+                    gameScoreTeam.PitcherFourBall = teamGameScorePitcher.FourBall;
+                    gameScoreTeam.PitcherDeadBall = teamGameScorePitcher.DeadBall;
+                    gameScoreTeam.PitcherHit = teamGameScorePitcher.Hit;
+                    gameScoreTeam.PitcherHomeRun = teamGameScorePitcher.HomeRun;
+                    gameScoreTeam.PitcherBattingAverage = teamGameScorePitcher.BattingAverage;
+                    gameScoreTeam.PitcherScoringPositionBattingAverage = teamGameScorePitcher.ScoringPositionBattingAverage;
+                    gameScoreTeam.PitcherStrikeOutRate = teamGameScorePitcher.StrikeOutRate;
+                    gameScoreTeam.PitcherStrikeOut = teamGameScorePitcher.StrikeOut;
+                    gameScoreTeam.Whip = teamGameScorePitcher.Whip;
+                }
+
+                //野手スコア
+                if (teamGameScoreFielder != null)
+                {
+                    gameScoreTeam.BattingAverage = teamGameScoreFielder.BattingAverage;
+                    gameScoreTeam.Hit = teamGameScoreFielder.Hit;
+                    gameScoreTeam.DoubleHit = teamGameScoreFielder.DoubleHit;
+                    gameScoreTeam.TripleHit = teamGameScoreFielder.TripleHit;
+                    gameScoreTeam.HomeRun = teamGameScoreFielder.HomeRun;
+                    gameScoreTeam.RBI = teamGameScoreFielder.RBI;
+                    gameScoreTeam.StolenBaseSuccessRate = teamGameScoreFielder.StolenBaseSuccessRate;
+                    gameScoreTeam.StolenBase = teamGameScoreFielder.StolenBase;
+                    gameScoreTeam.FourBall = teamGameScoreFielder.FourBall;
+                    gameScoreTeam.DeadBall = teamGameScoreFielder.DeadBall;
+                    gameScoreTeam.Sacrifice = teamGameScoreFielder.Sacrifice;
+                    gameScoreTeam.SacrificeFly = teamGameScoreFielder.SacrificeFly;
+                    gameScoreTeam.LeftOnBase = teamGameScoreFielder.LeftOnBase;
+                    gameScoreTeam.OnBasePercentage = teamGameScoreFielder.OnBasePercentage;
+                    gameScoreTeam.SluggingPercentage = teamGameScoreFielder.SluggingPercentage;
+                    gameScoreTeam.Ops = teamGameScoreFielder.Ops;
+                    gameScoreTeam.ScoringPositionBattingAverage = teamGameScoreFielder.ScoringPositionBattingAverage;
+                    gameScoreTeam.StrikeOut = teamGameScoreFielder.StrikeOut;
+                    gameScoreTeam.StopStolenBaseRate = teamGameScoreFielder.StopStolenBaseRate;
+                    gameScoreTeam.StopStolenBase = teamGameScoreFielder.StopStolenBase;
+                    gameScoreTeam.OwnError = teamGameScoreFielder.OwnError;
+                }
+              
+                result.Add(gameScoreTeam);
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// 投手成績集計
         /// </summary>
         /// <param name="gameScorePitcherList"></param>
@@ -1026,7 +1138,7 @@ namespace Bmcs.Models
                 }
                 else
                 { 
-                    gameScorePitcher.EarnedRunAverage = (gameScorePitcher.EarnedRun.NullToZero() * 9) / (gameScorePitcher.Inning);
+                    gameScorePitcher.EarnedRunAverage = System.Convert.ToDecimal(gameScorePitcher.EarnedRun.NullToZero() * 9) / System.Convert.ToDecimal(gameScorePitcher.Inning);
                 }
 
                 //勝率
@@ -1036,7 +1148,7 @@ namespace Bmcs.Models
                 }
                 else
                 { 
-                    gameScorePitcher.WinRate = (gameScorePitcher.Win) / (gameScorePitcher.Win.NullToZero() + gameScorePitcher.Lose.NullToZero());
+                    gameScorePitcher.WinRate = System.Convert.ToDecimal(gameScorePitcher.Win) / System.Convert.ToDecimal(gameScorePitcher.Win.NullToZero() + gameScorePitcher.Lose.NullToZero());
                 }
 
                 //被打率
@@ -1046,7 +1158,7 @@ namespace Bmcs.Models
                 }
                 else
                 {
-                    gameScorePitcher.BattingAverage = (gameScorePitcher.Hit) / (gameScorePitcher.AtBat);
+                    gameScorePitcher.BattingAverage = System.Convert.ToDecimal(gameScorePitcher.Hit) / System.Convert.ToDecimal(gameScorePitcher.AtBat);
                 }
 
                 //得点圏被打率
@@ -1056,7 +1168,7 @@ namespace Bmcs.Models
                 }
                 else
                 {
-                    gameScorePitcher.ScoringPositionBattingAverage = (gameScorePitcher.ScoringPositionHit) / (gameScorePitcher.ScoringPositionAtBat);
+                    gameScorePitcher.ScoringPositionBattingAverage = System.Convert.ToDecimal(gameScorePitcher.ScoringPositionHit) / System.Convert.ToDecimal(gameScorePitcher.ScoringPositionAtBat);
                 }
 
                 //奪三振率
@@ -1066,7 +1178,7 @@ namespace Bmcs.Models
                 }
                 else
                 {
-                    gameScorePitcher.StrikeOutRate = (gameScorePitcher.StrikeOut.NullToZero() * 9) / (gameScorePitcher.Inning);
+                    gameScorePitcher.StrikeOutRate = System.Convert.ToDecimal(gameScorePitcher.StrikeOut.NullToZero() * 9) / System.Convert.ToDecimal(gameScorePitcher.Inning);
                 }
 
                 //WHIP
@@ -1076,7 +1188,7 @@ namespace Bmcs.Models
                 }
                 else
                 {
-                    gameScorePitcher.Whip = (gameScorePitcher.Hit.NullToZero() + gameScorePitcher.FourBall.NullToZero() + gameScorePitcher.DeadBall.NullToZero()) / (gameScorePitcher.Inning);
+                    gameScorePitcher.Whip = System.Convert.ToDecimal(gameScorePitcher.Hit.NullToZero() + gameScorePitcher.FourBall.NullToZero() + gameScorePitcher.DeadBall.NullToZero()) / System.Convert.ToDecimal(gameScorePitcher.Inning);
                 }
 
                 result.Add(gameScorePitcher);
@@ -1219,7 +1331,7 @@ namespace Bmcs.Models
                 }
                 else
                 {
-                    gameScoreFielder.BattingAverage = (gameScoreFielder.Hit.NullToZero()) / (gameScoreFielder.AtBat);
+                    gameScoreFielder.BattingAverage = System.Convert.ToDecimal(gameScoreFielder.Hit.NullToZero()) / System.Convert.ToDecimal(gameScoreFielder.AtBat);
                 }
 
                 //出塁率
@@ -1231,8 +1343,8 @@ namespace Bmcs.Models
                 }
                 else
                 {
-                    gameScoreFielder.OnBasePercentage = (gameScoreFielder.Hit.NullToZero() + gameScoreFielder.FourBall.NullToZero() + gameScoreFielder.DeadBall.NullToZero())
-                                                        / (gameScoreFielder.Hit.NullToZero() + gameScoreFielder.FourBall.NullToZero() + gameScoreFielder.DeadBall.NullToZero() + gameScoreFielder.SacrificeFly.NullToZero());
+                    gameScoreFielder.OnBasePercentage = System.Convert.ToDecimal(gameScoreFielder.Hit.NullToZero() + gameScoreFielder.FourBall.NullToZero() + gameScoreFielder.DeadBall.NullToZero())
+                                                        / System.Convert.ToDecimal(gameScoreFielder.Hit.NullToZero() + gameScoreFielder.FourBall.NullToZero() + gameScoreFielder.DeadBall.NullToZero() + gameScoreFielder.SacrificeFly.NullToZero());
                 }
 
                 //得点圏打率
@@ -1242,7 +1354,7 @@ namespace Bmcs.Models
                 }
                 else
                 {
-                    gameScoreFielder.ScoringPositionBattingAverage = (gameScoreFielder.ScoringPositionHit.NullToZero()) / (gameScoreFielder.ScoringPositionAtBat);
+                    gameScoreFielder.ScoringPositionBattingAverage = System.Convert.ToDecimal(gameScoreFielder.ScoringPositionHit.NullToZero()) / System.Convert.ToDecimal(gameScoreFielder.ScoringPositionAtBat);
                 }
 
                 //長打率
@@ -1252,7 +1364,7 @@ namespace Bmcs.Models
                 }
                 else
                 {
-                    gameScoreFielder.SluggingPercentage = (gameScoreFielder.TotalBase) / (gameScoreFielder.AtBat);
+                    gameScoreFielder.SluggingPercentage = System.Convert.ToDecimal(gameScoreFielder.TotalBase) / System.Convert.ToDecimal(gameScoreFielder.AtBat);
                 }
 
                 //OPS
@@ -1272,7 +1384,7 @@ namespace Bmcs.Models
                 }
                 else
                 {
-                    gameScoreFielder.StolenBaseSuccessRate = (gameScoreFielder.StolenBase) / (gameScoreFielder.StolenBasePlan);
+                    gameScoreFielder.StolenBaseSuccessRate = System.Convert.ToDecimal(gameScoreFielder.StolenBase) / System.Convert.ToDecimal(gameScoreFielder.StolenBasePlan);
                 }
 
                 //盗塁阻止率
@@ -1282,7 +1394,7 @@ namespace Bmcs.Models
                 }
                 else
                 {
-                    gameScoreFielder.StopStolenBaseRate = (gameScoreFielder.StopStolenBase) / (gameScoreFielder.StolenBasePlaned);
+                    gameScoreFielder.StopStolenBaseRate = System.Convert.ToDecimal(gameScoreFielder.StopStolenBase) / System.Convert.ToDecimal(gameScoreFielder.StolenBasePlaned);
                 }
 
                 result.Add(gameScoreFielder);
