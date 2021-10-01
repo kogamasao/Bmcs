@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Bmcs.Enum;
+using Bmcs.Function;
 
 namespace Bmcs.Models
 {
@@ -118,28 +119,92 @@ namespace Bmcs.Models
         public string Year { get; set; }
 
         [NotMapped]
+        [Display(Name = "試合数")]
+        public int? GameCount { get; set; }
+
+        [NotMapped]
         [Display(Name = "防御率")]
         public decimal? EarnedRunAverage { get; set; }
+
+        [NotMapped]
+        [Display(Name = "防御率")]
+        public string EarnedRunAverageFormat
+        {
+            get
+            {
+                return EarnedRunAverage == null ? "-" : EarnedRunAverage.NullToZero().ToString("#0.00");
+            }
+        }
 
         [NotMapped]
         [Display(Name = "勝率")]
         public decimal? WinRate { get; set; }
 
         [NotMapped]
+        [Display(Name = "勝率")]
+        public string WinRateFormat
+        {
+            get
+            {
+                return WinRate == null ? "-" : WinRate.NullToZero().ToString("#.000");
+            }
+        }
+
+        [NotMapped]
         [Display(Name = "被打率")]
         public decimal? BattingAverage { get; set; }
+
+        [NotMapped]
+        [Display(Name = "被打率")]
+        public string BattingAverageFormat
+        {
+            get
+            {
+                return BattingAverage == null ? "-" : BattingAverage.NullToZero().ToString("#.000");
+            }
+        }
 
         [NotMapped]
         [Display(Name = "得点圏被打率")]
         public decimal? ScoringPositionBattingAverage { get; set; }
 
         [NotMapped]
+        [Display(Name = "得点圏被打率")]
+        public string ScoringPositionBattingAverageFormat
+        {
+            get
+            {
+                return ScoringPositionBattingAverage == null ? "-" : ScoringPositionBattingAverage.NullToZero().ToString("#.000");
+            }
+        }
+
+        [NotMapped]
         [Display(Name = "奪三振率")]
         public decimal? StrikeOutRate { get; set; }
 
         [NotMapped]
+        [Display(Name = "奪三振率")]
+        public string StrikeOutRateFormat
+        {
+            get
+            {
+                return StrikeOutRate == null ? "-" : StrikeOutRate.NullToZero().ToString("#0.00");
+            }
+        }
+
+        [NotMapped]
         [Display(Name = "WHIP")]
         public decimal? Whip { get; set; }
+
+        [NotMapped]
+        [Display(Name = "WHIP")]
+        public string WhipFormat
+        {
+            get
+            {
+                return Whip == null ? "-" : Whip.NullToZero().ToString("#0.00");
+            }
+        }
 
         public Game Game { get; set; }
 

@@ -59,6 +59,7 @@ namespace Bmcs.Pages.Member
 
             //投手スコアデータ
             var gameScorePitcherList = await Context.GameScorePitchers
+                      .Include(r => r.Game)
                       .Include(r => r.Member)
                       .Include(r => r.Team)
                       .Where(r => r.MemberID == id)
@@ -66,8 +67,16 @@ namespace Bmcs.Pages.Member
 
             if(gameScorePitcherList != null && gameScorePitcherList.Any())
             { 
-                //集計処理
+                //通算集計処理
                 GameScorePitcherList.AddRange(base.TotalingGameScorePitcher(gameScorePitcherList, totalingItem));
+
+                foreach(var year in gameScorePitcherList.GroupBy(r => r.Game.GameDate.Year).Select(r => r.Key))
+                {
+                    //対象年
+                    totalingItem.Year = year;
+                    //対象年集計
+                    GameScorePitcherList.AddRange(base.TotalingGameScorePitcher(gameScorePitcherList, totalingItem));
+                }
             }
 
             //野手スコア
@@ -75,12 +84,26 @@ namespace Bmcs.Pages.Member
 
             //野手スコアデータ
             var gameScoreFielderList = await Context.GameScoreFielders
+                      .Include(r => r.Game)
                       .Include(r => r.Member)
                       .Include(r => r.Team)
                       .Where(r => r.MemberID == id)
                       .ToListAsync();
 
-            GameScoreFielderList.AddRange(gameScoreFielderList);
+            if (gameScoreFielderList != null && gameScoreFielderList.Any())
+            {
+                //通算集計処理
+                GameScoreFielderList.AddRange(base.TotalingGameScoreFielder(gameScoreFielderList, totalingItem));
+
+                foreach (var year in gameScoreFielderList.GroupBy(r => r.Game.GameDate.Year).Select(r => r.Key))
+                {
+                    //対象年
+                    totalingItem.Year = year;
+                    //対象年集計
+                    GameScoreFielderList.AddRange(base.TotalingGameScoreFielder(gameScoreFielderList, totalingItem));
+                }
+            }
+
 
             return Page();
         }

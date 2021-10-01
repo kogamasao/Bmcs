@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Bmcs.Enum;
+using Bmcs.Function;
 
 namespace Bmcs.Models
 {
@@ -119,32 +120,106 @@ namespace Bmcs.Models
         public string Year { get; set; }
 
         [NotMapped]
+        [Display(Name = "試合数")]
+        public int? GameCount { get; set; }
+
+        [NotMapped]
         [Display(Name = "打率")]
         public decimal? BattingAverage { get; set; }
+
+        [NotMapped]
+        [Display(Name = "打率")]
+        public string BattingAverageFormat
+        {
+            get
+            {
+                return BattingAverage == null ? "-" : BattingAverage.NullToZero().ToString("#.000");
+            }
+        }
 
         [NotMapped]
         [Display(Name = "得点圏打率")]
         public decimal? ScoringPositionBattingAverage { get; set; }
 
         [NotMapped]
+        [Display(Name = "得点圏打率")]
+        public string ScoringPositionBattingAverageFormat
+        {
+            get
+            {
+                return ScoringPositionBattingAverage == null ? "-" : ScoringPositionBattingAverage.NullToZero().ToString("#.000");
+            }
+        }
+
+        [NotMapped]
         [Display(Name = "出塁率")]
         public decimal? OnBasePercentage { get; set; }
+
+        [NotMapped]
+        [Display(Name = "出塁率")]
+        public string OnBasePercentageFormat
+        {
+            get
+            {
+                return OnBasePercentage == null ? "-" : OnBasePercentage.NullToZero().ToString("#.000");
+            }
+        }
 
         [NotMapped]
         [Display(Name = "長打率")]
         public decimal? SluggingPercentage { get; set; }
 
         [NotMapped]
+        [Display(Name = "長打率")]
+        public string SluggingPercentageFormat
+        {
+            get
+            {
+                return SluggingPercentage == null ? "-" : SluggingPercentage.NullToZero().ToString("#.000");
+            }
+        }
+
+        [NotMapped]
         [Display(Name = "OPS")]
         public decimal? Ops { get; set; }
+
+        [NotMapped]
+        [Display(Name = "OPS")]
+        public string OpsFormat
+        {
+            get
+            {
+                return Ops == null ? "-" : Ops.NullToZero().ToString("#.000");
+            }
+        }
 
         [NotMapped]
         [Display(Name = "盗塁成功率")]
         public decimal? StolenBaseSuccessRate { get; set; }
 
         [NotMapped]
+        [Display(Name = "盗塁成功率")]
+        public string StolenBaseSuccessRateFormat
+        {
+            get
+            {
+                return StolenBaseSuccessRate == null ? "-" : StolenBaseSuccessRate.NullToZero().ToString("#.000");
+            }
+        }
+
+        [NotMapped]
         [Display(Name = "盗塁阻止率")]
         public decimal? StopStolenBaseRate { get; set; }
+
+        [NotMapped]
+        [Display(Name = "盗塁阻止率")]
+        public string StopStolenBaseRateFormat
+        {
+            get
+            {
+                return StopStolenBaseRate == null ? "-" : StopStolenBaseRate.NullToZero().ToString("#.000");
+            }
+        }
 
         public Game Game { get; set; }
 

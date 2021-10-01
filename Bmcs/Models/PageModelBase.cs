@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Bmcs.Constans;
 using Bmcs.Data;
 using Bmcs.Enum;
+using Bmcs.Function;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bmcs.Models
@@ -68,7 +69,7 @@ namespace Bmcs.Models
         { 
             get
             {
-                return AddFirstItem(new SelectList(Context.Teams.Where(r => r.DeleteFLG == false), nameof(Team.TeamID), nameof(Team.TeamIDName), string.Empty)
+                return AddFirstItem(new SelectList(Context.Teams.Where(r => r.DeleteFLG == false && r.SystemDataFLG == false), nameof(Team.TeamID), nameof(Team.TeamIDName), string.Empty)
                     , new SelectListItem(string.Empty, string.Empty));
             }
         }
@@ -889,14 +890,402 @@ namespace Bmcs.Models
         /// </summary>
         /// <param name="gameScorePitcherList"></param>
         /// <param name="totalingItem"></param>
+        /// <param name="isTeamTotal"></param>
         /// <returns></returns>
-        public List<GameScorePitcher> TotalingGameScorePitcher(List<GameScorePitcher> gameScorePitcherList, TotalingItem totalingItem)
+        public List<GameScorePitcher> TotalingGameScorePitcher(List<GameScorePitcher> gameScorePitcherList, TotalingItem totalingItem, bool isTeamTotal = false)
         {
             var result = new List<GameScorePitcher>();
 
-            foreach(var gameScorePitcher in gameScorePitcherList)
+            var groupGameScorePitcherList = gameScorePitcherList
+                        .Where(r => ((r.Game.GameDate.Year == totalingItem.Year && totalingItem.Year != null) || (totalingItem.Year == null))
+                                    && ((r.Game.GameClass == totalingItem.GameClass && totalingItem.GameClass != null) || (totalingItem.GameClass == null))
+                                )
+                        .Select(r =>
+                                new
+                                {
+                                    GroupKey = isTeamTotal ? r.TeamID : r.MemberID.ToString(),
+                                    TeamID = r.TeamID,
+                                    MemberID = r.MemberID,
+                                    Year = totalingItem.Year == null ? "通算" : r.Game.GameDate.Year.ToString(),
+                                    Win = r.Win,
+                                    Lose = r.Lose,
+                                    Hold = r.Hold,
+                                    Save = r.Save,
+                                    Starter = r.Starter,
+                                    CompleteGame = r.CompleteGame,
+                                    Inning = r.Inning,
+                                    PlateAppearance = r.PlateAppearance,
+                                    AtBat = r.AtBat,
+                                    Hit = r.Hit,
+                                    HomeRun = r.HomeRun,
+                                    Run = r.Run,
+                                    EarnedRun = r.EarnedRun,
+                                    FourBall = r.FourBall,
+                                    DeadBall = r.DeadBall,
+                                    ScoringPositionPlateAppearance = r.ScoringPositionPlateAppearance,
+                                    ScoringPositionAtBat = r.ScoringPositionAtBat,
+                                    ScoringPositionHit = r.ScoringPositionHit,
+                                    StrikeOut = r.StrikeOut,
+                                    PickOffBallOut = r.PickOffBallOut,
+                                    WildPitch = r.WildPitch,
+                                    Balk = r.Balk,
+                                })
+                        .GroupBy(r => r.GroupKey)
+                        .Select(r =>
+                                new
+                                {
+                                    GroupKey = r.Key,
+                                    MemberID = isTeamTotal ? null : r.Max(s => s.MemberID),
+                                    TeamID = r.Max(s => s.TeamID),
+                                    Year = r.Max(s => s.Year),
+                                    GameCount = r.Count(),
+                                    Win = r.Sum(s => s.Win),
+                                    Lose = r.Sum(s => s.Lose),
+                                    Hold = r.Sum(s => s.Hold),
+                                    Save = r.Sum(s => s.Save),
+                                    Starter = r.Sum(s => s.Starter),
+                                    CompleteGame = r.Sum(s => s.CompleteGame),
+                                    Inning = r.Sum(s => s.Inning),
+                                    PlateAppearance = r.Sum(s => s.PlateAppearance),
+                                    AtBat = r.Sum(s => s.AtBat),
+                                    Hit = r.Sum(s => s.Hit),
+                                    HomeRun = r.Sum(s => s.HomeRun),
+                                    Run = r.Sum(s => s.Run),
+                                    EarnedRun = r.Sum(s => s.EarnedRun),
+                                    FourBall = r.Sum(s => s.FourBall),
+                                    DeadBall = r.Sum(s => s.DeadBall),
+                                    ScoringPositionPlateAppearance = r.Sum(s => s.ScoringPositionPlateAppearance),
+                                    ScoringPositionAtBat = r.Sum(s => s.ScoringPositionAtBat),
+                                    ScoringPositionHit = r.Sum(s => s.ScoringPositionHit),
+                                    StrikeOut = r.Sum(s => s.StrikeOut),
+                                    PickOffBallOut = r.Sum(s => s.PickOffBallOut),
+                                    WildPitch = r.Sum(s => s.WildPitch),
+                                    Balk = r.Sum(s => s.Balk),
+                                })
+                        .ToList();
+
+
+            foreach (var groupGameScorePitcher in groupGameScorePitcherList)
             {
+                var gameScorePitcher = new GameScorePitcher()
+                {
+                    TeamID = groupGameScorePitcher.TeamID,
+                    MemberID = groupGameScorePitcher.MemberID,
+                    Year = groupGameScorePitcher.Year,
+                    GameCount = groupGameScorePitcher.GameCount,
+                    Win = groupGameScorePitcher.Win,
+                    Lose = groupGameScorePitcher.Lose,
+                    Hold = groupGameScorePitcher.Hold,
+                    Save = groupGameScorePitcher.Save,
+                    Starter = groupGameScorePitcher.Starter,
+                    CompleteGame = groupGameScorePitcher.CompleteGame,
+                    Inning = groupGameScorePitcher.Inning,
+                    PlateAppearance = groupGameScorePitcher.PlateAppearance,
+                    AtBat = groupGameScorePitcher.AtBat,
+                    Hit = groupGameScorePitcher.Hit,
+                    HomeRun = groupGameScorePitcher.HomeRun,
+                    Run = groupGameScorePitcher.Run,
+                    EarnedRun = groupGameScorePitcher.EarnedRun,
+                    FourBall = groupGameScorePitcher.FourBall,
+                    DeadBall = groupGameScorePitcher.DeadBall,
+                    ScoringPositionPlateAppearance = groupGameScorePitcher.ScoringPositionPlateAppearance,
+                    ScoringPositionAtBat = groupGameScorePitcher.ScoringPositionAtBat,
+                    ScoringPositionHit = groupGameScorePitcher.ScoringPositionHit,
+                    StrikeOut = groupGameScorePitcher.StrikeOut,
+                    PickOffBallOut = groupGameScorePitcher.PickOffBallOut,
+                    WildPitch = groupGameScorePitcher.WildPitch,
+                    Balk = groupGameScorePitcher.Balk,
+                };
+
+                //イニング端数処理
+                var fractionInning = gameScorePitcher.Inning % 1;
+
+                if (fractionInning > 0 && fractionInning <= FractionConstant.OneThird)
+                {
+                    fractionInning = FractionConstant.OneThird;
+                }
+                else if (fractionInning > FractionConstant.OneThird && fractionInning <= FractionConstant.TwoThird)
+                {
+                    fractionInning = FractionConstant.TwoThird;
+                }
+                else if (fractionInning > FractionConstant.TwoThird && fractionInning <= FractionConstant.ThreeThird)
+                {
+                    fractionInning = 1;
+                }
+                else
+                {
+                    fractionInning = 0;
+                }
+
+                //端数処理
+                gameScorePitcher.Inning = Math.Floor(gameScorePitcher.Inning.NullToZero()) + fractionInning;
+                //防御率
+                if(gameScorePitcher.Inning.NullToZero() == 0)
+                {
+                    gameScorePitcher.EarnedRunAverage = null;
+                }
+                else
+                { 
+                    gameScorePitcher.EarnedRunAverage = (gameScorePitcher.EarnedRun.NullToZero() * 9) / (gameScorePitcher.Inning);
+                }
+
+                //勝率
+                if (gameScorePitcher.Win.NullToZero() + gameScorePitcher.Lose.NullToZero() == 0)
+                {
+                    gameScorePitcher.WinRate = null;
+                }
+                else
+                { 
+                    gameScorePitcher.WinRate = (gameScorePitcher.Win) / (gameScorePitcher.Win.NullToZero() + gameScorePitcher.Lose.NullToZero());
+                }
+
+                //被打率
+                if (gameScorePitcher.AtBat.NullToZero() == 0)
+                {
+                    gameScorePitcher.BattingAverage = null;
+                }
+                else
+                {
+                    gameScorePitcher.BattingAverage = (gameScorePitcher.Hit) / (gameScorePitcher.AtBat);
+                }
+
+                //得点圏被打率
+                if (gameScorePitcher.ScoringPositionAtBat.NullToZero() == 0)
+                {
+                    gameScorePitcher.ScoringPositionBattingAverage = null;
+                }
+                else
+                {
+                    gameScorePitcher.ScoringPositionBattingAverage = (gameScorePitcher.ScoringPositionHit) / (gameScorePitcher.ScoringPositionAtBat);
+                }
+
+                //奪三振率
+                if (gameScorePitcher.Inning.NullToZero() == 0)
+                {
+                    gameScorePitcher.StrikeOutRate = null;
+                }
+                else
+                {
+                    gameScorePitcher.StrikeOutRate = (gameScorePitcher.StrikeOut.NullToZero() * 9) / (gameScorePitcher.Inning);
+                }
+
+                //WHIP
+                if (gameScorePitcher.Inning.NullToZero() == 0)
+                {
+                    gameScorePitcher.Whip = null;
+                }
+                else
+                {
+                    gameScorePitcher.Whip = (gameScorePitcher.Hit.NullToZero() + gameScorePitcher.FourBall.NullToZero() + gameScorePitcher.DeadBall.NullToZero()) / (gameScorePitcher.Inning);
+                }
+
                 result.Add(gameScorePitcher);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 野手成績集計
+        /// </summary>
+        /// <param name="gameScorePitcherList"></param>
+        /// <param name="totalingItem"></param>
+        /// <param name="isTeamTotal"></param>
+        /// <returns></returns>
+        public List<GameScoreFielder> TotalingGameScoreFielder(List<GameScoreFielder> gameScoreFielderList, TotalingItem totalingItem, bool isTeamTotal = false)
+        {
+            var result = new List<GameScoreFielder>();
+
+            var groupGameScoreFielderList = gameScoreFielderList
+                        .Where(r => ((r.Game.GameDate.Year == totalingItem.Year && totalingItem.Year != null) || (totalingItem.Year == null))
+                                    && ((r.Game.GameClass == totalingItem.GameClass && totalingItem.GameClass != null) || (totalingItem.GameClass == null))
+                                )
+                        .Select(r =>
+                                new
+                                {
+                                    GroupKey = isTeamTotal ? r.TeamID : r.MemberID.ToString(),
+                                    TeamID = r.TeamID,
+                                    MemberID = r.MemberID,
+                                    Year = totalingItem.Year == null ? "通算" : r.Game.GameDate.Year.ToString(),
+                                    PlateAppearance = r.PlateAppearance,
+                                    AtBat = r.AtBat,
+                                    Hit = r.Hit,
+                                    DoubleHit = r.DoubleHit,
+                                    TripleHit = r.TripleHit,
+                                    HomeRun = r.HomeRun,
+                                    TotalBase = r.TotalBase,
+                                    RBI = r.RBI,
+                                    Run = r.Run,
+                                    StolenBasePlan = r.StolenBasePlan,
+                                    StolenBase = r.StolenBase,
+                                    FourBall = r.FourBall,
+                                    DeadBall = r.DeadBall,
+                                    Sacrifice = r.Sacrifice,
+                                    SacrificeFly = r.SacrificeFly,
+                                    LeftOnBase = r.LeftOnBase,
+                                    ScoringPositionPlateAppearance = r.ScoringPositionPlateAppearance,
+                                    ScoringPositionAtBat = r.ScoringPositionAtBat,
+                                    ScoringPositionHit = r.ScoringPositionHit,
+                                    StrikeOut = r.StrikeOut,
+                                    DoublePlay = r.DoublePlay,
+                                    Error = r.Error,
+                                    StolenBasePlaned = r.StolenBasePlaned,
+                                    StopStolenBase = r.StopStolenBase,
+                                    Assist = r.Assist,
+                                    OwnError = r.OwnError,
+                                    PassBall = r.PassBall,
+                                })
+                        .GroupBy(r => r.GroupKey)
+                        .Select(r =>
+                                new
+                                {
+                                    GroupKey = r.Key,
+                                    MemberID = isTeamTotal ? null : r.Max(s => s.MemberID),
+                                    TeamID = r.Max(s => s.TeamID),
+                                    Year = r.Max(s => s.Year),
+                                    GameCount = r.Count(),
+                                    PlateAppearance = r.Sum(s => s.PlateAppearance),
+                                    AtBat = r.Sum(s => s.AtBat),
+                                    Hit = r.Sum(s => s.Hit),
+                                    DoubleHit = r.Sum(s => s.DoubleHit),
+                                    TripleHit = r.Sum(s => s.TripleHit),
+                                    HomeRun = r.Sum(s => s.HomeRun),
+                                    TotalBase = r.Sum(s => s.TotalBase),
+                                    RBI = r.Sum(s => s.RBI),
+                                    Run = r.Sum(s => s.Run),
+                                    StolenBasePlan = r.Sum(s => s.StolenBasePlan),
+                                    StolenBase = r.Sum(s => s.StolenBase),
+                                    FourBall = r.Sum(s => s.FourBall),
+                                    DeadBall = r.Sum(s => s.DeadBall),
+                                    Sacrifice = r.Sum(s => s.Sacrifice),
+                                    SacrificeFly = r.Sum(s => s.SacrificeFly),
+                                    LeftOnBase = r.Sum(s => s.LeftOnBase),
+                                    ScoringPositionPlateAppearance = r.Sum(s => s.ScoringPositionPlateAppearance),
+                                    ScoringPositionAtBat = r.Sum(s => s.ScoringPositionAtBat),
+                                    ScoringPositionHit = r.Sum(s => s.ScoringPositionHit),
+                                    StrikeOut = r.Sum(s => s.StrikeOut),
+                                    DoublePlay = r.Sum(s => s.DoublePlay),
+                                    Error = r.Sum(s => s.Error),
+                                    StolenBasePlaned = r.Sum(s => s.StolenBasePlaned),
+                                    StopStolenBase = r.Sum(s => s.StopStolenBase),
+                                    Assist = r.Sum(s => s.Assist),
+                                    OwnError = r.Sum(s => s.OwnError),
+                                    PassBall = r.Sum(s => s.PassBall),
+                                })
+                        .ToList();
+
+
+            foreach (var groupGameScoreFielder in groupGameScoreFielderList)
+            {
+                var gameScoreFielder = new GameScoreFielder()
+                {
+                    TeamID = groupGameScoreFielder.TeamID,
+                    MemberID = groupGameScoreFielder.MemberID,
+                    Year = groupGameScoreFielder.Year,
+                    GameCount = groupGameScoreFielder.GameCount,
+                    PlateAppearance = groupGameScoreFielder.PlateAppearance,
+                    AtBat = groupGameScoreFielder.AtBat,
+                    Hit = groupGameScoreFielder.Hit,
+                    DoubleHit = groupGameScoreFielder.DoubleHit,
+                    TripleHit = groupGameScoreFielder.TripleHit,
+                    HomeRun = groupGameScoreFielder.HomeRun,
+                    TotalBase = groupGameScoreFielder.TotalBase,
+                    RBI = groupGameScoreFielder.RBI,
+                    Run = groupGameScoreFielder.Run,
+                    StolenBasePlan = groupGameScoreFielder.StolenBasePlan,
+                    StolenBase = groupGameScoreFielder.StolenBase,
+                    FourBall = groupGameScoreFielder.FourBall,
+                    DeadBall = groupGameScoreFielder.DeadBall,
+                    Sacrifice = groupGameScoreFielder.Sacrifice,
+                    SacrificeFly = groupGameScoreFielder.SacrificeFly,
+                    LeftOnBase = groupGameScoreFielder.LeftOnBase,
+                    ScoringPositionPlateAppearance = groupGameScoreFielder.ScoringPositionPlateAppearance,
+                    ScoringPositionAtBat = groupGameScoreFielder.ScoringPositionAtBat,
+                    ScoringPositionHit = groupGameScoreFielder.ScoringPositionHit,
+                    StrikeOut = groupGameScoreFielder.StrikeOut,
+                    DoublePlay = groupGameScoreFielder.DoublePlay,
+                    Error = groupGameScoreFielder.Error,
+                    StolenBasePlaned = groupGameScoreFielder.StolenBasePlaned,
+                    StopStolenBase = groupGameScoreFielder.StopStolenBase,
+                    Assist = groupGameScoreFielder.Assist,
+                    OwnError = groupGameScoreFielder.OwnError,
+                    PassBall = groupGameScoreFielder.PassBall,
+                };
+
+                //打率
+                if (gameScoreFielder.AtBat.NullToZero() == 0)
+                {
+                    gameScoreFielder.BattingAverage = null;
+                }
+                else
+                {
+                    gameScoreFielder.BattingAverage = (gameScoreFielder.Hit.NullToZero()) / (gameScoreFielder.AtBat);
+                }
+
+                //出塁率
+                if (gameScoreFielder.Hit.NullToZero()
+                    + gameScoreFielder.FourBall.NullToZero()
+                    + gameScoreFielder.DeadBall.NullToZero() == 0)
+                {
+                    gameScoreFielder.OnBasePercentage = null;
+                }
+                else
+                {
+                    gameScoreFielder.OnBasePercentage = (gameScoreFielder.Hit.NullToZero() + gameScoreFielder.FourBall.NullToZero() + gameScoreFielder.DeadBall.NullToZero())
+                                                        / (gameScoreFielder.Hit.NullToZero() + gameScoreFielder.FourBall.NullToZero() + gameScoreFielder.DeadBall.NullToZero() + gameScoreFielder.SacrificeFly.NullToZero());
+                }
+
+                //得点圏打率
+                if (gameScoreFielder.ScoringPositionAtBat.NullToZero() == 0)
+                {
+                    gameScoreFielder.ScoringPositionBattingAverage = null;
+                }
+                else
+                {
+                    gameScoreFielder.ScoringPositionBattingAverage = (gameScoreFielder.ScoringPositionHit.NullToZero()) / (gameScoreFielder.ScoringPositionAtBat);
+                }
+
+                //長打率
+                if (gameScoreFielder.AtBat.NullToZero() == 0)
+                {
+                    gameScoreFielder.SluggingPercentage = null;
+                }
+                else
+                {
+                    gameScoreFielder.SluggingPercentage = (gameScoreFielder.TotalBase) / (gameScoreFielder.AtBat);
+                }
+
+                //OPS
+                if(gameScoreFielder.OnBasePercentage == null && gameScoreFielder.SluggingPercentage == null)
+                {
+                    gameScoreFielder.Ops = null;
+                }
+                else
+                {
+                    gameScoreFielder.Ops = gameScoreFielder.OnBasePercentage.NullToZero() + gameScoreFielder.SluggingPercentage.NullToZero();
+                }
+
+                //盗塁成功率
+                if (gameScoreFielder.StolenBasePlan.NullToZero() == 0)
+                {
+                    gameScoreFielder.StolenBaseSuccessRate = null;
+                }
+                else
+                {
+                    gameScoreFielder.StolenBaseSuccessRate = (gameScoreFielder.StolenBase) / (gameScoreFielder.StolenBasePlan);
+                }
+
+                //盗塁阻止率
+                if (gameScoreFielder.StolenBasePlaned.NullToZero() == 0)
+                {
+                    gameScoreFielder.StopStolenBaseRate = null;
+                }
+                else
+                {
+                    gameScoreFielder.StopStolenBaseRate = (gameScoreFielder.StopStolenBase) / (gameScoreFielder.StolenBasePlaned);
+                }
+
+                result.Add(gameScoreFielder);
             }
 
             return result;

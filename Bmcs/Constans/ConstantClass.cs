@@ -23,16 +23,6 @@ namespace Bmcs.Constans
     public static class ViewDataConstant
     {
         public static readonly string Title = "Title";
-
-        public static readonly string TeamID = "TeamID";
-
-        public static readonly string AdminFLG = "AdminFLG";
-
-        public static readonly string OrderIndex = "OrderIndex";
-
-        public static readonly string MemberIDList = "MemberIDList";
-
-        public static readonly string PositionClassList = "PositionClassList";
     }
 
     /// <summary>
@@ -41,10 +31,18 @@ namespace Bmcs.Constans
     public static class SystemConstant
     {
         public static readonly string AdminUserAccountID = "ADMIN";
+    }
 
-        public static readonly string PageModePublic = "PageModePublic";
+    /// <summary>
+    /// イニング端数
+    /// </summary>
+    public static class FractionConstant
+    {
+        public static readonly decimal OneThird = (decimal)0.33;
 
-        public static readonly string PageModePrivate = "PageModePrivate";
+        public static readonly decimal TwoThird = (decimal)0.66;
+
+        public static readonly decimal ThreeThird = (decimal)0.99;
 
     }
 }
