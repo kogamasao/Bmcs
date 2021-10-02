@@ -242,6 +242,8 @@ namespace Bmcs.Pages.GameScene
                                 .Where(r => r.GameID == Game.GameID && r.GameSceneID == LastGameSceneID && r.BattingOrder != null && r.OrderDataClass == OrderDataClass.Normal)
                                 .ToListAsync();
 
+                        var lastPitcherMemberID = lastGameScene.PitcherMemberID;
+
                         //チェンジ後
                         if (lastGameScene.ChangeFLG)
                         {
@@ -256,6 +258,7 @@ namespace Bmcs.Pages.GameScene
                             {
                                 lastBattingOrder = lastOffenceGameScene.BattingOrder;
                                 lastResultClass = lastOffenceGameScene.ResultClass;
+                                lastPitcherMemberID = lastOffenceGameScene.PitcherMemberID;
                             }
                             //初回
                             else
@@ -291,7 +294,7 @@ namespace Bmcs.Pages.GameScene
                         }
 
                         GameScene.BattingOrder = Order.BattingOrder;
-                        GameScene.PitcherMemberID = lastGameScene.PitcherMemberID;
+                        GameScene.PitcherMemberID = lastPitcherMemberID;
                         GameScene.BatterMemberID = Order.MemberID;
                     }
                     //守備
@@ -308,6 +311,8 @@ namespace Bmcs.Pages.GameScene
                                     .FirstOrDefaultAsync();
                         }
 
+                        var lastBatterMemberID = lastGameScene.BatterMemberID;
+
                         //チェンジ後
                         if (lastGameScene.ChangeFLG)
                         {
@@ -322,6 +327,7 @@ namespace Bmcs.Pages.GameScene
                             {
                                 lastBattingOrder = lastOffenceGameScene.BattingOrder;
                                 lastResultClass = lastOffenceGameScene.ResultClass;
+                                lastBatterMemberID = lastOffenceGameScene.BatterMemberID;
                             }
                             //初回
                             else
@@ -356,7 +362,7 @@ namespace Bmcs.Pages.GameScene
                         }
 
                         GameScene.PitcherMemberID = Order.MemberID;
-                        GameScene.BatterMemberID = lastGameScene.BatterMemberID;
+                        GameScene.BatterMemberID = lastBatterMemberID;
                     }
 
                     //結果ランナー(打者を初期表示)
@@ -957,11 +963,9 @@ namespace Bmcs.Pages.GameScene
             //変更オーダーなし
             if (!beforeOrders.Any())
             {
-                var lastGameSceneID = GetLastGameSceneID(gameScene.GameID, GameScene.GameSceneID.ZeroToNull());
-
                 beforeOrders = Context.Orders
                                 .Where(r => r.GameID == gameScene.GameID
-                                    && r.GameSceneID == lastGameSceneID
+                                    && r.GameSceneID == LastGameSceneID
                                     && r.OrderDataClass == OrderDataClass.Normal).ToList();
             }
 

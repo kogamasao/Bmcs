@@ -272,6 +272,7 @@ namespace Bmcs.Pages.Order
                 if(IsDuringGame)
                 { 
                     newOrder.OrderDataClass = OrderDataClass.Change;
+                    newOrder.ParticipationClass = ParticipationClass.Defense;
                 }
                 else
                 {

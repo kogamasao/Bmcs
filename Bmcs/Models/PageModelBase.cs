@@ -562,6 +562,12 @@ namespace Bmcs.Models
         /// <returns></returns>
         public async Task GameSet(int? gameID)
         {
+            //仮オーダー削除
+            await DeleteTempOrders(gameID, OrderDataClass.Temp);
+
+            //変更オーダー削除
+            await DeleteTempOrders(gameID, OrderDataClass.Change);
+
             //削除対象試合投手スコア
             var deleteGameScorePitchers = await Context.GameScorePitchers
                                             .Where(r => r.GameID == gameID).ToListAsync();
