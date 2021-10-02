@@ -51,7 +51,7 @@ namespace Bmcs.Models
         [Display(Name = "完投")]
         public int? CompleteGame { get; set; }
 
-        [Column(TypeName = "decimal(10, 1)")]
+        [Column(TypeName = "decimal(10, 2)")]
         [Display(Name = "イニング")]
         public decimal? Inning { get; set; }
 

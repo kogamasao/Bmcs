@@ -129,8 +129,11 @@
         @(inningScore.Inning.ToString() + "回" + inningScore.TopButtomClass.GetEnumName())
     </div>
     <div class="box-inner">
-        @if (inningScore.TopButtomClass == TopButtomClass.Top
+        @if ((inningScore.TopButtomClass == TopButtomClass.Top
           && Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
+          ||
+          (inningScore.TopButtomClass == TopButtomClass.Buttom
+          && Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.Second))
             {
         <p>@(Model.Game.Team.TeamName + "の攻撃")</p>
             }

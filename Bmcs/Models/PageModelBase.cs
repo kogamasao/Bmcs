@@ -647,7 +647,7 @@ namespace Bmcs.Models
             foreach (var pitcherMemberID in gameScenes.Select(r => r.PitcherMemberID).Distinct())
             {
                 //相手投手
-                if (gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID).FirstOrDefault().PitcherMember.SystemDataFLG)
+                if (pitcherMemberID == null || gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID).FirstOrDefault().PitcherMember.SystemDataFLG)
                 {
                     continue;
                 }
@@ -675,13 +675,13 @@ namespace Bmcs.Models
                 //完投(自分以外の投手が投げていない)
                 if (!gameScenes.Any(r => r.TopButtomClass != myTeamOffenceTopButtomClass && r.PitcherMemberID != pitcherMemberID))
                 {
-                    gameScorePitcher.Starter = 1;
+                    gameScorePitcher.CompleteGame = 1;
                 }
 
                 //OUT
                 var outCount = gameSceneRunners.Where(r => r.GameScene.PitcherMemberID == pitcherMemberID && r.SceneResultClass == SceneResultClass.Result && r.RunnerResultClass == RunnerResultClass.Out).Count();
                 //イニング(3OUTで1イニング)
-                gameScorePitcher.Inning = (Math.Floor(System.Convert.ToDecimal(outCount / 3) * 10)) / 10;
+                gameScorePitcher.Inning = (Math.Floor(System.Convert.ToDecimal((decimal)outCount / (decimal)3) * (decimal)100)) / (decimal)100;
                 //打席
                 gameScorePitcher.PlateAppearance = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass != ResultClass.Change).Count();
                 //打数
@@ -750,7 +750,7 @@ namespace Bmcs.Models
             foreach (var fielderMemberID in orderMemberID.Union(batterMemberID.Union(detailMemberID.Union(runnerMemberID))))
             {
                 //相手野手
-                if (Context.Members.Find(fielderMemberID).SystemDataFLG)
+                if (fielderMemberID == null || Context.Members.Find(fielderMemberID).SystemDataFLG)
                 {
                     continue;
                 }
