@@ -171,8 +171,20 @@ namespace Bmcs.Pages.InningScore
                 }
 
                 //スコア
-                var myScoreList = allGameSceneList.Where(r => r.Inning <= gameScene.Inning && r.TopButtomClass == myTeamOffenceTopButtomClass && r.InningIndex <= gameScene.InningIndex);
-                var opponentScoreList = allGameSceneList.Where(r => r.Inning <= gameScene.Inning && r.TopButtomClass != myTeamOffenceTopButtomClass && r.InningIndex <= gameScene.InningIndex);
+                var myScoreList = allGameSceneList.Where(r => (r.Inning < gameScene.Inning && r.TopButtomClass == myTeamOffenceTopButtomClass)
+                                                        || (r.Inning == gameScene.Inning && r.TopButtomClass == myTeamOffenceTopButtomClass
+                                                            && ((myTeamOffenceTopButtomClass == TopButtomClass.Top && ((gameScene.TopButtomClass == TopButtomClass.Top && r.InningIndex <= gameScene.InningIndex) || (gameScene.TopButtomClass == TopButtomClass.Buttom)))
+                                                                || (myTeamOffenceTopButtomClass == TopButtomClass.Buttom && ((gameScene.TopButtomClass == TopButtomClass.Top && r.InningIndex == 0) || (gameScene.TopButtomClass == TopButtomClass.Buttom && r.InningIndex <= gameScene.InningIndex)))
+                                                                )
+                                                            )
+                                                        );
+                var opponentScoreList = allGameSceneList.Where(r => (r.Inning < gameScene.Inning && r.TopButtomClass != myTeamOffenceTopButtomClass)
+                                                        || (r.Inning == gameScene.Inning && r.TopButtomClass != myTeamOffenceTopButtomClass
+                                                            && ((myTeamOffenceTopButtomClass == TopButtomClass.Top && ((gameScene.TopButtomClass == TopButtomClass.Top && r.InningIndex == 0) || (gameScene.TopButtomClass == TopButtomClass.Buttom && r.InningIndex <= gameScene.InningIndex)))
+                                                                || (myTeamOffenceTopButtomClass == TopButtomClass.Buttom && ((gameScene.TopButtomClass == TopButtomClass.Top && r.InningIndex <= gameScene.InningIndex) || (gameScene.TopButtomClass == TopButtomClass.Buttom)))
+                                                                )
+                                                            )
+                                                        );
                 var myScore = 0;
                 var opponentScore = 0;
 

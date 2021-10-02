@@ -1335,16 +1335,17 @@ namespace Bmcs.Models
                 }
 
                 //出塁率
-                if (gameScoreFielder.Hit.NullToZero()
+                if (gameScoreFielder.AtBat.NullToZero()
                     + gameScoreFielder.FourBall.NullToZero()
-                    + gameScoreFielder.DeadBall.NullToZero() == 0)
+                    + gameScoreFielder.DeadBall.NullToZero()
+                    + gameScoreFielder.SacrificeFly.NullToZero() == 0)
                 {
                     gameScoreFielder.OnBasePercentage = null;
                 }
                 else
                 {
                     gameScoreFielder.OnBasePercentage = System.Convert.ToDecimal(gameScoreFielder.Hit.NullToZero() + gameScoreFielder.FourBall.NullToZero() + gameScoreFielder.DeadBall.NullToZero())
-                                                        / System.Convert.ToDecimal(gameScoreFielder.Hit.NullToZero() + gameScoreFielder.FourBall.NullToZero() + gameScoreFielder.DeadBall.NullToZero() + gameScoreFielder.SacrificeFly.NullToZero());
+                                                        / System.Convert.ToDecimal(gameScoreFielder.AtBat.NullToZero() + gameScoreFielder.FourBall.NullToZero() + gameScoreFielder.DeadBall.NullToZero() + gameScoreFielder.SacrificeFly.NullToZero());
                 }
 
                 //得点圏打率
