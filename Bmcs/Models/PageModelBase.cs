@@ -777,17 +777,7 @@ namespace Bmcs.Models
                 //打撃詳細
                 foreach (var batterGameScene in batterGameScenes.OrderBy(r => r.Inning).ThenBy(r => r.TopButtomClass).ThenBy(r => r.InningIndex))
                 {
-                    if (batterGameScene.HittingDirectionClass != HittingDirectionClass.None)
-                    {
-                        gameScoreFielder.Detail += batterGameScene.HittingDirectionClass.GetEnumName();
-                    }
-
-                    if (batterGameScene.HitBallClass != HitBallClass.NoHit)
-                    {
-                        gameScoreFielder.Detail += batterGameScene.HitBallClass.GetEnumName();
-                    }
-
-                    gameScoreFielder.Detail += batterGameScene.ResultClass.GetEnumName();
+                    gameScoreFielder.Detail += GetBatterResultDetail(batterGameScene);
 
                     gameScoreFielder.Detail += "　";
                 }
@@ -1405,6 +1395,40 @@ namespace Bmcs.Models
                 }
 
                 result.Add(gameScoreFielder);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 打撃結果取得
+        /// </summary>
+        /// <param name="gameScene"></param>
+        /// <returns></returns>
+        public string GetBatterResultDetail(GameScene gameScene)
+        {
+            var result = string.Empty;
+
+            if (gameScene.HittingDirectionClass != HittingDirectionClass.None)
+            {
+                result += gameScene.HittingDirectionClass.GetEnumName();
+            }
+
+            if (gameScene.HitBallClass != HitBallClass.NoHit
+                && gameScene.ResultClass != ResultClass.Error
+                && gameScene.ResultClass != ResultClass.Sacrifice
+                && gameScene.ResultClass != ResultClass.SingleHit
+                && gameScene.ResultClass != ResultClass.DoubleHit
+                && gameScene.ResultClass != ResultClass.TripleHit
+                && gameScene.ResultClass != ResultClass.HomeRun
+                )
+            {
+                result += gameScene.HitBallClass.GetEnumName();
+            }
+
+            if (gameScene.ResultClass != ResultClass.Out)
+            {
+                result += gameScene.ResultClass.GetEnumName();
             }
 
             return result;

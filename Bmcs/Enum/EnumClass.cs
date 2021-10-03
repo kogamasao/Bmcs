@@ -340,7 +340,7 @@ namespace Bmcs.Enum
         DoublePlay = 4,
         [Display(Name = "振逃")]
         UncaughtThirdStrike = 11,
-        [Display(Name = "エラー")]
+        [Display(Name = "失策")]
         Error = 12,
         [Display(Name = "野選")]
         FieldersChoice = 13,
@@ -417,7 +417,7 @@ namespace Bmcs.Enum
         StolenBaseSccess = 5,
         [Display(Name = "盗塁死(走)")]
         StolenBaseOut = 6,
-        [Display(Name = "エラー(野)")]
+        [Display(Name = "失策(野)")]
         Error = 11,
         [Display(Name = "補殺(野)")]
         AssistOut = 12,

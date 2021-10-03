@@ -11,21 +11,21 @@
 
 @if (Model.Game.StatusClass == StatusClass.DuringGame)
 {
-<div class="form-group">
-    <a class="btn btn-primary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID">試合に戻る</a>
-</div>
+    <div class="form-group">
+        <a class="btn btn-primary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID">試合に戻る</a>
+    </div>
 }
 <div class="form-group">
     <a class="btn btn-primary" asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID">全イニング詳細</a>
     @if ((Model.Game.StatusClass == StatusClass.BeforeFix
-        || Model.Game.StatusClass == StatusClass.EndGame)
-        &&  (Model.IsMyTeam || Model.IsAdmin()))
+       || Model.Game.StatusClass == StatusClass.EndGame)
+       && (Model.IsMyTeam || Model.IsAdmin()))
     {
-    <a class="btn btn-primary" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果編集</a>
+        <a class="btn btn-primary" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果編集</a>
     }
-    @if ( Model.Game.StatusClass == StatusClass.EndGame)
+    @if (Model.Game.StatusClass == StatusClass.EndGame)
     {
-    <a class="btn btn-primary" asp-page="/GameScore/Details" asp-route-gameID="@Model.Game.GameID">試合結果</a>
+        <a class="btn btn-primary" asp-page="/GameScore/Details" asp-route-gameID="@Model.Game.GameID">試合結果</a>
     }
 </div>
 
@@ -39,15 +39,15 @@
                 </th>
                 @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top))
                 {
-                <th class="text-center">
-                    @inning.Inning
-                </th>
+                    <th class="text-center">
+                        @inning.Inning
+                    </th>
                 }
                 @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count(); i < 9; i++)
                 {
-                <th class="text-center">
-                    @(i + 1)
-                </th>
+                    <th class="text-center">
+                        @(i + 1)
+                    </th>
                 }
                 <th class="text-center">
                     計
@@ -59,23 +59,23 @@
                 <td>
                     @if (Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
                     {
-                    @Model.Game.Team.TeamAbbreviation
+                        @Model.Game.Team.TeamAbbreviation
                     }
                     else
                     {
-                    @Model.Game.OpponentTeamAbbreviation
+                        @Model.Game.OpponentTeamAbbreviation
                     }
                 </td>
                 @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top))
                 {
-                <td class="text-center">
-                    <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
-                </td>
+                    <td class="text-center">
+                        <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
+                    </td>
                 }
                 @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count(); i < 9; i++)
                 {
-                <td class="text-center">
-                </td>
+                    <td class="text-center">
+                    </td>
                 }
                 <td class="text-center">
                     @Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Select(r => r.Score).Sum()
@@ -85,31 +85,31 @@
                 <td>
                     @if (Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
                     {
-                    @Model.Game.OpponentTeamAbbreviation
+                        @Model.Game.OpponentTeamAbbreviation
                     }
                     else
                     {
-                    @Model.Game.Team.TeamAbbreviation
+                        @Model.Game.Team.TeamAbbreviation
                     }
                 </td>
                 @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom))
                 {
-                <td class="text-center">
-                    <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
-                </td>
+                    <td class="text-center">
+                        <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
+                    </td>
                 }
 
                 @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count(); i < 9; i++)
                 {
-                <td class="text-center">
-                </td>
+                    <td class="text-center">
+                    </td>
                 }
 
                 @if (Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() > 9
-                  && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
+                 && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
                 {
-                <td class="text-center">
-                </td>
+                    <td class="text-center">
+                    </td>
                 }
                 <td class="text-center">
                     @Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Select(r => r.Score).Sum()
@@ -121,82 +121,86 @@
 
 
 @foreach (var inningScore in Model.InningScoreList.Where(r => ((r.Inning == Model.SelectInning) || (Model.SelectInning == null))
-                                                   && ((r.TopButtomClass == Model.SelectTopButtomClass) || (Model.SelectTopButtomClass == null))))
+                                                  && ((r.TopButtomClass == Model.SelectTopButtomClass) || (Model.SelectTopButtomClass == null))))
 {
+    @if (!Model.GameSceneList.Any(r => r.Inning == inningScore.Inning && r.TopButtomClass == inningScore.TopButtomClass))
+    {
+        continue;
+    }
 
-<div class="box">
-    <div class="box-title">
-        @(inningScore.Inning.ToString() + "回" + inningScore.TopButtomClass.GetEnumName())
-    </div>
-    <div class="box-inner">
-        @if ((inningScore.TopButtomClass == TopButtomClass.Top
-          && Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
-          ||
-          (inningScore.TopButtomClass == TopButtomClass.Buttom
-          && Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.Second))
+    <div class="box">
+        <div class="box-title">
+            @(inningScore.Inning.ToString() + "回" + inningScore.TopButtomClass.GetEnumName())
+        </div>
+        <div class="box-inner">
+            @if ((inningScore.TopButtomClass == TopButtomClass.Top
+             && Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
+             ||
+             (inningScore.TopButtomClass == TopButtomClass.Buttom
+             && Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.Second))
             {
-        <p>@(Model.Game.Team.TeamName + "の攻撃")</p>
+                <p>@(Model.Game.Team.TeamName + "の攻撃")</p>
             }
             else
             {
-        <p>@(Model.Game.OpponentTeamName + "の攻撃")</p>
+                <p>@(Model.Game.OpponentTeamName + "の攻撃")</p>
             }
 
-        <div class="table-responsive">
-            <table class="table table-hover table-sm table-bordered">
-                <thead class="thead-light">
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListOutCount)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListRunner)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListBattingOrder)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListDetail)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListGameScore)
-                        </th>
-                        @if (Model.IsMyTeam || Model.IsAdmin())
+            <div class="table-responsive">
+                <table class="table table-hover table-sm table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListOutCount)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListRunner)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListBattingOrder)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListDetail)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListGameScore)
+                            </th>
+                            @if (Model.IsMyTeam || Model.IsAdmin())
                             {
-                        <th></th>
+                                <th></th>
                             }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.GameSceneList.Where(r => r.Inning == inningScore.Inning && r.TopButtomClass == inningScore.TopButtomClass))
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.GameSceneList.Where(r => r.Inning == inningScore.Inning && r.TopButtomClass == inningScore.TopButtomClass))
                         {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.InningScoreListOutCount)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.InningScoreListRunner)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.InningScoreListBattingOrder)
-                        </td>
-                        <td>
-                            @Html.Raw(item.InningScoreListDetail)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.InningScoreListGameScore)
-                        </td>
-                        @if (Model.IsMyTeam || Model.IsAdmin())
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.InningScoreListOutCount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.InningScoreListRunner)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.InningScoreListBattingOrder)
+                                </td>
+                                <td>
+                                    @Html.Raw(item.InningScoreListDetail)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.InningScoreListGameScore)
+                                </td>
+                                @if (Model.IsMyTeam || Model.IsAdmin())
                                 {
-                        <td>
-                            <a asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@item.GameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">修正</a>
-                        </td>
+                                    <td>
+                                        <a asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@item.GameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">修正</a>
+                                    </td>
                                 }
-                    </tr>
+                            </tr>
                         }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 }

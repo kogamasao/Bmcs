@@ -144,17 +144,7 @@ namespace Bmcs.Pages.InningScore
 
                 gameScene.InningScoreListDetail += "投手：" + gameScene.PitcherMember.MemberName + " 打者：" + gameScene.BatterMember.MemberName + " ";
 
-                if(gameScene.HittingDirectionClass != HittingDirectionClass.None)
-                {
-                    gameScene.InningScoreListDetail += gameScene.HittingDirectionClass.GetEnumName();
-                }
-
-                if (gameScene.HitBallClass != HitBallClass.NoHit)
-                {
-                    gameScene.InningScoreListDetail += gameScene.HitBallClass.GetEnumName();
-                }
-
-                gameScene.InningScoreListDetail += gameScene.ResultClass.GetEnumName();
+                gameScene.InningScoreListDetail += GetBatterResultDetail(gameScene);
 
                 foreach (var afterGameSceneDetail in gameSceneDetails.Where(r => r.GameSceneID == gameScene.GameSceneID && r.SceneResultClass == SceneResultClass.Result))
                 {
