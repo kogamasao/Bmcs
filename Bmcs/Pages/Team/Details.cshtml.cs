@@ -25,10 +25,6 @@ namespace Bmcs.Pages.Team
 
         public List<Models.GameScoreTeam> GameScoreTeamList { get; set; }
 
-        public List<Models.GameScorePitcher> GameScorePitcherList { get; set; }
-
-        public List<Models.GameScoreFielder> GameScoreFielderList { get; set; }
-
         public async Task<IActionResult> OnGetAsync(string id)
         {
             if (id == null)

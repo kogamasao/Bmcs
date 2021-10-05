@@ -11,7 +11,10 @@ using Bmcs.Function;
 namespace Bmcs.Models
 {
     public class GameScoreTeam
-    {        
+    {
+        [Display(Name = "順位")]
+        public int? Rank { get; set; }
+
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
 
@@ -253,6 +256,8 @@ namespace Bmcs.Models
                 return Whip == null ? "-" : Whip.NullToZero().ToString("#0.00");
             }
         }
+
+        public string OrderValue { get; set; }
 
         public Team Team { get; set; }
     }

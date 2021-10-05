@@ -986,7 +986,9 @@ namespace Bmcs.Models
                     gameScoreTeam.StopStolenBase = teamGameScoreFielder.StopStolenBase;
                     gameScoreTeam.OwnError = teamGameScoreFielder.OwnError;
                 }
-              
+
+                gameScoreTeam.Team = Context.Teams.Find(gameScoreTeam.TeamID);
+
                 result.Add(gameScoreTeam);
             }
 
@@ -1186,6 +1188,8 @@ namespace Bmcs.Models
                 {
                     gameScorePitcher.Whip = System.Convert.ToDecimal(gameScorePitcher.Hit.NullToZero() + gameScorePitcher.FourBall.NullToZero() + gameScorePitcher.DeadBall.NullToZero()) / System.Convert.ToDecimal(gameScorePitcher.Inning);
                 }
+
+                gameScorePitcher.Member = Context.Members.Include(r => r.Team).FirstOrDefault(r => r.MemberID == gameScorePitcher.MemberID);
 
                 result.Add(gameScorePitcher);
             }
@@ -1393,6 +1397,8 @@ namespace Bmcs.Models
                 {
                     gameScoreFielder.StopStolenBaseRate = System.Convert.ToDecimal(gameScoreFielder.StopStolenBase) / System.Convert.ToDecimal(gameScoreFielder.StolenBasePlaned);
                 }
+
+                gameScoreFielder.Member = Context.Members.Include(r => r.Team).FirstOrDefault(r => r.MemberID == gameScoreFielder.MemberID);
 
                 result.Add(gameScoreFielder);
             }

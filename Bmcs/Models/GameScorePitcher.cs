@@ -115,6 +115,13 @@ namespace Bmcs.Models
         }
 
         [NotMapped]
+        [Display(Name = "順位")]
+        public int? Rank { get; set; }
+
+        [NotMapped]
+        public string OrderValue { get; set; }
+
+        [NotMapped]
         [Display(Name = "年")]
         public string Year { get; set; }
 

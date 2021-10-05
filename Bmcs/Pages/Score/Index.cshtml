@@ -1,0 +1,145 @@
+﻿@page
+@model Bmcs.Pages.Score.IndexModel
+
+<h1>@ViewData[ViewDataConstant.Title]</h1>
+
+@if (!Model.IsPublic)
+{
+    <h4>@Model.Team.TeamName</h4>
+}
+
+
+@if (Model.GameScoreTeamList.Any())
+{
+    <div class="box">
+        <div class="box-title">
+            チーム成績
+        </div>
+        <div class="box-inner">
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            @if (!string.IsNullOrEmpty(Model.SelectTeamID))
+                            {
+                                <th class="column-fix-left">
+                                    @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Team.TeamName)
+                                </th>
+                            }
+                            else
+                            {
+                                <th class="column-fix-left">
+                                    @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Rank)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Team.TeamName)
+                                </th>
+                            }
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].GameCount)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Win)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Lose)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Draw)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].WinRate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Run)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].PitcherRun)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].HomeRun)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].StolenBase)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].BattingAverage)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].EarnedRunAverage)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var rank = 0;
+                            var rankValue = -1;
+                        }
+
+                        @foreach (var item in Model.GameScoreTeamList.OrderByDescending(r => r.Win))
+                        {
+                            <tr>
+                                @if (!string.IsNullOrEmpty(Model.SelectTeamID))
+                                {
+                                <td class="column-fix-left">
+                                    <a asp-page="/Score/Index" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass">@item.Team.TeamName</a>
+                                </td>
+                                }
+                                else
+                                {
+                                    <td class="text-center align-middle column-fix-left">
+                                        @if (rankValue != item.Win)
+                                        {
+                                            rank += 1;
+                                            @rank
+                                        }
+                                        else
+                                        {
+                                            rankValue = item.Win.NullToZero();
+                                        }
+                                    </td>
+                                    <td class="align-middle">
+                                        <a asp-page="/Score/Index" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass">@item.Team.TeamName</a>
+                                    </td>
+                                }
+                                <td class="text-center align-middle">
+                                    @Html.DisplayFor(modelItem => item.GameCount)
+                                </td>
+                                <td class="text-center align-middle">
+                                    @Html.DisplayFor(modelItem => item.Win)
+                                </td>
+                                <td class="text-center align-middle">
+                                    @Html.DisplayFor(modelItem => item.Lose)
+                                </td>
+                                <td class="text-center align-middle">
+                                    @Html.DisplayFor(modelItem => item.Draw)
+                                </td>
+                                <td class="text-center align-middle">
+                                    @Html.DisplayFor(modelItem => item.WinRateFormat)
+                                </td>
+                                <td class="text-center align-middle">
+                                    @Html.DisplayFor(modelItem => item.Run)
+                                </td>
+                                <td class="text-center align-middle">
+                                    @Html.DisplayFor(modelItem => item.PitcherRun)
+                                </td>
+                                <td class="text-center align-middle">
+                                    @Html.DisplayFor(modelItem => item.HomeRun)
+                                </td>
+                                <td class="text-center align-middle">
+                                    @Html.DisplayFor(modelItem => item.StolenBase)
+                                </td>
+                                <td class="text-center align-middle">
+                                    @Html.DisplayFor(modelItem => item.BattingAverageFormat)
+                                </td>
+                                <td class="text-center align-middle">
+                                    @Html.DisplayFor(modelItem => item.EarnedRunAverageFormat)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
