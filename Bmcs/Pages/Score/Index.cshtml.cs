@@ -38,6 +38,12 @@ namespace Bmcs.Pages.Score
         [BindProperty]
         public GameClass? GameClass { get; set; }
 
+        [BindProperty]
+        public int? RegulationInnings { get; set; }
+
+        [BindProperty]
+        public int? RegulationAtBatting { get; set; }
+
         public List<Models.GameScoreTeam> GameScoreTeamList { get; set; }
 
         public List<Models.GameScorePitcher> GameScorePitcherList { get; set; }
@@ -136,6 +142,11 @@ namespace Bmcs.Pages.Score
             {
                 GameScoreFielderList.AddRange(base.TotalingGameScoreFielder(gameScoreFielderList.Where(r => !r.Member.DeleteFLG).ToList(), totalingItem));
             }
+
+            //規定値
+            var regulationValue = GetRegulationValue(gameList, totalingItem);
+            RegulationInnings = regulationValue.RegulationInnings;
+            RegulationAtBatting = regulationValue.RegulationAtBatting;
 
             //タイトル
             if (isPublic)

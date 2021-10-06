@@ -45,4 +45,14 @@ namespace Bmcs.Constans
         public static readonly decimal ThreeThird = (decimal)0.99;
 
     }
+
+    /// <summary>
+    /// 規定計算用定数
+    /// </summary>
+    public static class CalculateRegulationConstant
+    {
+        public static readonly decimal BaseInning = 9;
+
+        public static readonly decimal BaseRegulationAtBatting = (decimal)3.1;
+    }
 }

@@ -1435,6 +1435,56 @@ namespace Bmcs.Models
         }
 
         /// <summary>
+        /// 規定投球回規定打席取得
+        /// </summary>
+        /// <param name="gameList"></param>
+        /// <param name="totalingItem"></param>
+        /// <returns></returns>
+        public RegulationValue GetRegulationValue(List<Game> gameList, TotalingItem totalingItem)
+        {
+            var result = new RegulationValue();
+
+            var sumRegulationInnings = (decimal)0;
+            var sumRegulationAtBatting = (decimal)0;
+
+            //試合集計
+            var targetGameList = gameList
+                       .Where(r => ((r.GameDate.Year == totalingItem.Year && totalingItem.Year != null) || (totalingItem.Year == null))
+                                   && ((r.GameClass == totalingItem.GameClass && totalingItem.GameClass != null) || (totalingItem.GameClass == null))
+                               ).ToList();
+
+            //試合ID
+            var gameIDList = targetGameList.Select(r => r.GameID);
+
+            //イニングスコア
+            var inningScoreList = Context.InningScores.Where(r => gameIDList.Contains(r.GameID));
+
+            foreach (var game in targetGameList)
+            {
+                decimal maxInning = inningScoreList.Where(r => r.GameID == game.GameID).DefaultIfEmpty().Max(r => r.Inning);
+
+                //最大でも9
+                if(maxInning > CalculateRegulationConstant.BaseInning)
+                {
+                    maxInning = CalculateRegulationConstant.BaseInning;
+                }
+
+                sumRegulationInnings += (maxInning / CalculateRegulationConstant.BaseInning);
+                sumRegulationAtBatting += ((CalculateRegulationConstant.BaseRegulationAtBatting * maxInning) / CalculateRegulationConstant.BaseInning);
+            }
+
+            //チーム数
+            var teamCount = targetGameList.GroupBy(r => r.TeamID).Count();
+
+            //規定投球回
+            result.RegulationInnings = System.Convert.ToInt32(Math.Floor(sumRegulationInnings / teamCount));
+            //規定打席
+            result.RegulationAtBatting = System.Convert.ToInt32(Math.Floor(sumRegulationAtBatting / teamCount));
+
+            return result;
+        }
+
+        /// <summary>
         /// 打撃結果取得
         /// </summary>
         /// <param name="gameScene"></param>
