@@ -165,6 +165,17 @@ namespace Bmcs.Models
         }
 
         /// <summary>
+        /// 試合区分リスト
+        /// </summary>
+        public SelectList GameClassIncludeAllList
+        {
+            get
+            {
+                return AddFirstItem(EnumClass.GetSelectList<GameClass>(false), new SelectListItem("全て", string.Empty));
+            }
+        }
+
+        /// <summary>
         /// チーム分類区分リスト
         /// </summary>
         public SelectList TeamCategoryClassList
@@ -436,6 +447,23 @@ namespace Bmcs.Models
             get
             {
                 return EnumClass.GetSelectList<GameScorePitcherClass>();
+            }
+        }
+
+        /// <summary>
+        /// 年リスト
+        /// </summary>
+        public SelectList YearList
+        {
+            get
+            {
+                return AddFirstItem(new SelectList(Context.Games.Where(r => ((r.TeamID == this.TeamID && !string.IsNullOrEmpty(this.TeamID))
+                                                                                || (string.IsNullOrEmpty(this.TeamID)))
+                                                                            && r.StatusClass == StatusClass.EndGame && r.DeleteFLG == false )
+                                                                .GroupBy(r => r.GameDate.Year)
+                                                                .Select(r => new  { Year = r.Key })
+                                                                , nameof(TotalingItem.Year), nameof(TotalingItem.Year), string.Empty)
+                    , new SelectListItem("通算", "0"));
             }
         }
 

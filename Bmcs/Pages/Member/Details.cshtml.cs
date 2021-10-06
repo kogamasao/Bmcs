@@ -63,7 +63,7 @@ namespace Bmcs.Pages.Member
                       .Include(r => r.Game)
                       .Include(r => r.Member)
                       .Include(r => r.Team)
-                      .Where(r => r.MemberID == id && r.Game.StatusClass == StatusClass.EndGame)
+                      .Where(r => r.MemberID == id && r.Game.StatusClass == StatusClass.EndGame && r.Game.DeleteFLG == false)
                       .ToListAsync();
 
             if(gameScorePitcherList != null && gameScorePitcherList.Any())
@@ -91,7 +91,7 @@ namespace Bmcs.Pages.Member
                       .Include(r => r.Game)
                       .Include(r => r.Member)
                       .Include(r => r.Team)
-                      .Where(r => r.MemberID == id && r.Game.StatusClass == StatusClass.EndGame)
+                      .Where(r => r.MemberID == id && r.Game.StatusClass == StatusClass.EndGame && r.Game.DeleteFLG == false)
                       .ToListAsync();
 
             if (gameScoreFielderList != null && gameScoreFielderList.Any())

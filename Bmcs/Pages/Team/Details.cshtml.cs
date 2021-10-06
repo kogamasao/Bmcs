@@ -57,21 +57,21 @@ namespace Bmcs.Pages.Team
             //試合データ
             var gameList = await Context.Games
                       .Include(r => r.Team)
-                      .Where(r => r.TeamID == id && r.StatusClass == StatusClass.EndGame)
+                      .Where(r => r.TeamID == id && r.StatusClass == StatusClass.EndGame && r.DeleteFLG == false)
                       .ToListAsync();
 
             //投手スコアデータ
             var gameScorePitcherList = await Context.GameScorePitchers
                       .Include(r => r.Game)
                       .Include(r => r.Team)
-                      .Where(r => r.TeamID == id && r.Game.StatusClass == StatusClass.EndGame)
+                      .Where(r => r.TeamID == id && r.Game.StatusClass == StatusClass.EndGame && r.Game.DeleteFLG == false)
                       .ToListAsync();
 
             //野手スコアデータ
             var gameScoreFielderList = await Context.GameScoreFielders
                       .Include(r => r.Game)
                       .Include(r => r.Team)
-                      .Where(r => r.TeamID == id && r.Game.StatusClass == StatusClass.EndGame)
+                      .Where(r => r.TeamID == id && r.Game.StatusClass == StatusClass.EndGame && r.Game.DeleteFLG == false)
                       .ToListAsync();
 
             if (gameList != null)

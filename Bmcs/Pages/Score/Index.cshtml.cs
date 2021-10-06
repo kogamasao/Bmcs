@@ -72,13 +72,6 @@ namespace Bmcs.Pages.Score
                 }
             }
 
-            //集計項目
-            var totalingItem = new TotalingItem()
-            {
-                Year = year,
-                GameClass = gameClass,
-            };
-
             //チームスコア
             GameScoreTeamList = new List<GameScoreTeam>();
             //投手スコア
@@ -89,7 +82,7 @@ namespace Bmcs.Pages.Score
             //試合データ
             var gameList = await Context.Games
                       .Include(r => r.Team)
-                      .Where(r => ((r.TeamID == teamID && teamID != string.Empty) || (teamID == string.Empty)) && r.StatusClass == StatusClass.EndGame)
+                      .Where(r => ((r.TeamID == teamID && teamID != string.Empty) || (teamID == string.Empty && r.Team.PublicFLG == isPublic)) && r.StatusClass == StatusClass.EndGame && r.DeleteFLG == false)
                       .ToListAsync();
 
             //投手スコアデータ
@@ -97,7 +90,7 @@ namespace Bmcs.Pages.Score
                       .Include(r => r.Game)
                       .Include(r => r.Team)
                       .Include(r => r.Member)
-                      .Where(r => ((r.TeamID == teamID && teamID != string.Empty) || (teamID == string.Empty)) && r.Game.StatusClass == StatusClass.EndGame)
+                      .Where(r => ((r.TeamID == teamID && teamID != string.Empty) || (teamID == string.Empty && r.Team.PublicFLG == isPublic)) && r.Game.StatusClass == StatusClass.EndGame && r.Game.DeleteFLG == false)
                       .ToListAsync();
 
             //野手スコアデータ
@@ -105,8 +98,26 @@ namespace Bmcs.Pages.Score
                       .Include(r => r.Game)
                       .Include(r => r.Team)
                       .Include(r => r.Member)
-                      .Where(r => ((r.TeamID == teamID && teamID != string.Empty) || (teamID == string.Empty)) && r.Game.StatusClass == StatusClass.EndGame)
+                      .Where(r => ((r.TeamID == teamID && teamID != string.Empty) || (teamID == string.Empty && r.Team.PublicFLG == isPublic)) && r.Game.StatusClass == StatusClass.EndGame && r.Game.DeleteFLG == false)
                       .ToListAsync();
+
+            //年初期値
+            if(year == null)
+            {
+                year = gameList.GroupBy(r => r.GameDate.Year).Select(r => new { Year = r.Key }).Max(r => r.Year);
+            }
+            //通算
+            else if (year == 0)
+            {
+                year = null;
+            }
+
+            //集計項目
+            var totalingItem = new TotalingItem()
+            {
+                Year = year,
+                GameClass = gameClass,
+            };
 
             //チームスコア集計処理
             if (gameList != null)
