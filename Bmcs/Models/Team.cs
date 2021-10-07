@@ -31,11 +31,11 @@ namespace Bmcs.Models
         [Display(Name = "代表者名")]
         public string RepresentativeName { get; set; }
 
-        [Display(Name = "チーム分類")]
+        [Display(Name = "カテゴリ")]
         public TeamCategoryClass? TeamCategoryClass { get; set; }
 
         [NotMapped]
-        [Display(Name = "チーム分類")]
+        [Display(Name = "カテゴリ")]
         public string TeamCategoryClassName 
         {
             get

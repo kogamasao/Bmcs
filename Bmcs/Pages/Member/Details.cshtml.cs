@@ -53,7 +53,13 @@ namespace Bmcs.Pages.Member
             }
 
             //集計項目
-            var totalingItem = new TotalingItem();
+            var totalingItem = new TotalingItem()
+            {
+                Year = 0,
+                GameClass = GameClass.All,
+                TeamCategoryClass = TeamCategoryClass.All,
+                UseBallClass = UseBallClass.All,
+            };
 
             //投手スコア
             GameScorePitcherList = new List<GameScorePitcher>();
@@ -81,7 +87,13 @@ namespace Bmcs.Pages.Member
             }
 
             //集計項目
-            totalingItem = new TotalingItem();
+            totalingItem = new TotalingItem()
+            {
+                Year = 0,
+                GameClass = GameClass.All,
+                TeamCategoryClass = TeamCategoryClass.All,
+                UseBallClass = UseBallClass.All,
+            };
 
             //野手スコア
             GameScoreFielderList = new List<GameScoreFielder>();

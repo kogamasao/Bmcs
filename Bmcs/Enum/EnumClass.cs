@@ -14,6 +14,8 @@ namespace Bmcs.Enum
     /// </summary>
     public enum GameClass
     {
+        [Display(Name = "全て")]
+        All = 0,
         [Display(Name = "公式戦")]
         Official = 1,
         [Display(Name = "練習試合")]
@@ -27,6 +29,8 @@ namespace Bmcs.Enum
     /// </summary>
     public enum TeamCategoryClass
     {
+        [Display(Name = "全て")]
+        All = 0,
         [Display(Name = "小学生")]
         ElementarySchool = 1,
         [Display(Name = "中学生")]
@@ -50,6 +54,8 @@ namespace Bmcs.Enum
     /// </summary>
     public enum UseBallClass
     {
+        [Display(Name = "全て")]
+        All = 0,
         [Display(Name = "硬式")]
         Hard = 1,
         [Display(Name = "準硬式")]

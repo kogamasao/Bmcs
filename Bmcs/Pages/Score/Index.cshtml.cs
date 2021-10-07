@@ -39,10 +39,22 @@ namespace Bmcs.Pages.Score
         public GameClass? GameClass { get; set; }
 
         [BindProperty]
+        public TeamCategoryClass? TeamCategoryClass { get; set; }
+
+        [BindProperty]
+        public UseBallClass? UseBallClass { get; set; }
+
+        [BindProperty]
         public int? RegulationInnings { get; set; }
 
         [BindProperty]
         public int? RegulationAtBatting { get; set; }
+
+        [BindProperty]
+        public bool IsIgnoreRegulationInnings { get; set; }
+
+        [BindProperty]
+        public bool IsIgnoreRegulationAtBatting { get; set; }
 
         public List<Models.GameScoreTeam> GameScoreTeamList { get; set; }
 
@@ -50,9 +62,7 @@ namespace Bmcs.Pages.Score
 
         public List<Models.GameScoreFielder> GameScoreFielderList { get; set; }
 
-
-
-        public async Task<IActionResult> OnGetAsync(string teamID = "", bool isPublic = false, int? year = null, GameClass? gameClass = null)
+        public async Task<IActionResult> OnGetAsync(string teamID, bool isPublic, int? year, GameClass? gameClass, TeamCategoryClass? teamCategoryClass, UseBallClass? useBallClass, bool isIgnoreRegulationInnings, bool isIgnoreRegulationAtBatting)
         {
             if (string.IsNullOrEmpty(teamID) && !isPublic)
             {
@@ -78,6 +88,9 @@ namespace Bmcs.Pages.Score
                 }
             }
 
+            //マイチーム
+            MyTeam = await Context.Teams.FindAsync(HttpContext.Session.GetString(SessionConstant.TeamID));
+
             //チームスコア
             GameScoreTeamList = new List<GameScoreTeam>();
             //投手スコア
@@ -88,7 +101,7 @@ namespace Bmcs.Pages.Score
             //試合データ
             var gameList = await Context.Games
                       .Include(r => r.Team)
-                      .Where(r => ((r.TeamID == teamID && teamID != string.Empty) || (teamID == string.Empty && r.Team.PublicFLG == isPublic)) && r.StatusClass == StatusClass.EndGame && r.DeleteFLG == false)
+                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic)) && r.StatusClass == StatusClass.EndGame && r.DeleteFLG == false)
                       .ToListAsync();
 
             //投手スコアデータ
@@ -96,7 +109,7 @@ namespace Bmcs.Pages.Score
                       .Include(r => r.Game)
                       .Include(r => r.Team)
                       .Include(r => r.Member)
-                      .Where(r => ((r.TeamID == teamID && teamID != string.Empty) || (teamID == string.Empty && r.Team.PublicFLG == isPublic)) && r.Game.StatusClass == StatusClass.EndGame && r.Game.DeleteFLG == false)
+                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic)) && r.Game.StatusClass == StatusClass.EndGame && r.Game.DeleteFLG == false)
                       .ToListAsync();
 
             //野手スコアデータ
@@ -104,18 +117,41 @@ namespace Bmcs.Pages.Score
                       .Include(r => r.Game)
                       .Include(r => r.Team)
                       .Include(r => r.Member)
-                      .Where(r => ((r.TeamID == teamID && teamID != string.Empty) || (teamID == string.Empty && r.Team.PublicFLG == isPublic)) && r.Game.StatusClass == StatusClass.EndGame && r.Game.DeleteFLG == false)
+                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic)) && r.Game.StatusClass == StatusClass.EndGame && r.Game.DeleteFLG == false)
                       .ToListAsync();
 
             //年初期値
-            if(year == null)
+            if(year == null && gameList.Any())
             {
                 year = gameList.GroupBy(r => r.GameDate.Year).Select(r => new { Year = r.Key }).Max(r => r.Year);
             }
-            //通算
-            else if (year == 0)
+
+            //試合種別初期値
+            if (gameClass == null)
             {
-                year = null;
+                gameClass = Enum.GameClass.All;
+            }
+
+            //カテゴリ初期値
+            if (teamCategoryClass == null && MyTeam != null)
+            {
+                teamCategoryClass = MyTeam.TeamCategoryClass;
+            }
+            //全て
+            else if (teamCategoryClass == null)
+            {
+                teamCategoryClass = Enum.TeamCategoryClass.All;
+            }
+
+            //使用球初期値
+            if (useBallClass == null && MyTeam != null)
+            {
+                useBallClass = MyTeam.UseBallClass;
+            }
+            //全て
+            else if (useBallClass == null)
+            {
+                useBallClass = Enum.UseBallClass.All;
             }
 
             //集計項目
@@ -123,10 +159,12 @@ namespace Bmcs.Pages.Score
             {
                 Year = year,
                 GameClass = gameClass,
+                TeamCategoryClass = teamCategoryClass,
+                UseBallClass = useBallClass,
             };
 
             //チームスコア集計処理
-            if (gameList != null)
+            if (gameList != null && gameList.Any())
             {
                 GameScoreTeamList.AddRange(base.TotalingGameScoreTeam(gameList, gameScorePitcherList, gameScoreFielderList, totalingItem));
             }
@@ -143,10 +181,12 @@ namespace Bmcs.Pages.Score
                 GameScoreFielderList.AddRange(base.TotalingGameScoreFielder(gameScoreFielderList.Where(r => !r.Member.DeleteFLG).ToList(), totalingItem));
             }
 
-            //規定値
-            var regulationValue = GetRegulationValue(gameList, totalingItem);
-            RegulationInnings = regulationValue.RegulationInnings;
-            RegulationAtBatting = regulationValue.RegulationAtBatting;
+            //規定
+            var regulation = GetRegulation(gameList, totalingItem);
+            RegulationInnings = regulation.RegulationInnings;
+            RegulationAtBatting = regulation.RegulationAtBatting;
+            IsIgnoreRegulationInnings = isIgnoreRegulationInnings;
+            IsIgnoreRegulationAtBatting = isIgnoreRegulationAtBatting;
 
             //タイトル
             if (isPublic)
@@ -163,6 +203,8 @@ namespace Bmcs.Pages.Score
             IsPublic = isPublic;
             Year = year;
             GameClass = gameClass;
+            TeamCategoryClass = teamCategoryClass;
+            UseBallClass = useBallClass;
 
             return Page();
 

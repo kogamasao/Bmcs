@@ -88,11 +88,18 @@
             <td class="text-center">
                 @if (Model.Game.GameInputTypeClass == GameInputTypeClass.ByPlay)
                 {
-                    <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
+                    @if (inning.LastInningFLG && inning.Score == null)
+                    {
+                        @("X")
+                    }
+                    else
+                    {
+                        <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
+                    }
                 }
                 else
                 {
-                    @if(inning.LastInningFLG && inning.Score == null)
+                    @if (inning.LastInningFLG && inning.Score == null)
                     {
                         @("X")
                     }

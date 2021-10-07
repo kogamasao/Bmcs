@@ -58,6 +58,11 @@ namespace Bmcs.Models
         public string TeamID { get; set; }
 
         /// <summary>
+        /// マイチーム
+        /// </summary>
+        public Team MyTeam { get; set; }
+
+        /// <summary>
         /// メンバーID空必要フラグ
         /// </summary>
         public bool IsMemberIDNeedEmpty { get; set; }
@@ -160,7 +165,7 @@ namespace Bmcs.Models
         {
             get
             {
-                return EnumClass.GetSelectList<GameClass>();
+                return EnumClass.GetSelectList<GameClass>(true, (int)GameClass.Official);
             }
         }
 
@@ -171,7 +176,7 @@ namespace Bmcs.Models
         {
             get
             {
-                return AddFirstItem(EnumClass.GetSelectList<GameClass>(false), new SelectListItem("全て", string.Empty));
+                return EnumClass.GetSelectList<GameClass>(false);
             }
         }
 
@@ -182,7 +187,18 @@ namespace Bmcs.Models
         {
             get
             {
-                return EnumClass.GetSelectList<TeamCategoryClass>();
+                return EnumClass.GetSelectList<TeamCategoryClass>(true, (int)TeamCategoryClass.ElementarySchool);
+            }
+        }
+
+        /// <summary>
+        /// チーム分類区分リスト
+        /// </summary>
+        public SelectList TeamCategoryClassIncludeAllList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<TeamCategoryClass>(false);
             }
         }
 
@@ -193,7 +209,18 @@ namespace Bmcs.Models
         {
             get
             {
-                return EnumClass.GetSelectList<UseBallClass>();
+                return EnumClass.GetSelectList<UseBallClass>(true, (int)UseBallClass.Hard);
+            }
+        }
+
+        /// <summary>
+        /// 使用球リスト
+        /// </summary>
+        public SelectList UseBallClassIncludeAllList
+        {
+            get
+            {
+                return EnumClass.GetSelectList<UseBallClass>(false);
             }
         }
 
@@ -464,6 +491,22 @@ namespace Bmcs.Models
                                                                 .Select(r => new  { Year = r.Key })
                                                                 , nameof(TotalingItem.Year), nameof(TotalingItem.Year), string.Empty)
                     , new SelectListItem("通算", "0"));
+            }
+        }
+
+        /// <summary>
+        /// 規定選択リスト
+        /// </summary>
+        public SelectList IgnoreRegulationList
+        {
+            get
+            {
+                var selectList = new List<SelectListItem>();
+
+                selectList.Add(new SelectListItem("規定除外", "True"));
+                selectList.Add(new SelectListItem("規定適用", "False"));
+
+                return new SelectList(selectList, "Value", "Text");
             }
         }
 
@@ -927,15 +970,17 @@ namespace Bmcs.Models
             var teamGameScoreFielderList = TotalingGameScoreFielder(gameScoreFielderList, totalingItem, true);
             //試合集計
             var groupGameList = gameList
-                       .Where(r => ((r.GameDate.Year == totalingItem.Year && totalingItem.Year != null) || (totalingItem.Year == null))
-                                   && ((r.GameClass == totalingItem.GameClass && totalingItem.GameClass != null) || (totalingItem.GameClass == null))
+                       .Where(r => ((r.GameDate.Year == totalingItem.Year && totalingItem.Year != 0) || (totalingItem.Year == 0))
+                                   && ((r.GameClass == totalingItem.GameClass && totalingItem.GameClass != GameClass.All) || (totalingItem.GameClass == GameClass.All))
+                                   && ((r.Team.TeamCategoryClass == totalingItem.TeamCategoryClass && totalingItem.TeamCategoryClass != TeamCategoryClass.All) || (totalingItem.TeamCategoryClass == TeamCategoryClass.All))
+                                   && ((r.Team.UseBallClass == totalingItem.UseBallClass && totalingItem.UseBallClass != UseBallClass.All) || (totalingItem.UseBallClass == UseBallClass.All))
                                )
                        .GroupBy(r => r.TeamID)
                        .Select(r =>
                                new
                                {
                                    TeamID = r.Key,
-                                   Year = totalingItem.Year == null ? "通算" : r.Max(s => s.GameDate.Year.ToString()),
+                                   Year = totalingItem.Year == 0 ? "通算" : r.Max(s => s.GameDate.Year.ToString()),
                                    GameCount = r.Count(),
                                    Win = r.Sum(s => s.WinLoseClass == WinLoseClass.Win ? 1 : 0),
                                    Lose = r.Sum(s => s.WinLoseClass == WinLoseClass.Lose ? 1 : 0),
@@ -1035,8 +1080,10 @@ namespace Bmcs.Models
             var result = new List<GameScorePitcher>();
 
             var groupGameScorePitcherList = gameScorePitcherList
-                        .Where(r => ((r.Game.GameDate.Year == totalingItem.Year && totalingItem.Year != null) || (totalingItem.Year == null))
-                                    && ((r.Game.GameClass == totalingItem.GameClass && totalingItem.GameClass != null) || (totalingItem.GameClass == null))
+                        .Where(r => ((r.Game.GameDate.Year == totalingItem.Year && totalingItem.Year != 0) || (totalingItem.Year == 0))
+                                   && ((r.Game.GameClass == totalingItem.GameClass && totalingItem.GameClass != GameClass.All) || (totalingItem.GameClass == GameClass.All))
+                                   && ((r.Team.TeamCategoryClass == totalingItem.TeamCategoryClass && totalingItem.TeamCategoryClass != TeamCategoryClass.All) || (totalingItem.TeamCategoryClass == TeamCategoryClass.All))
+                                   && ((r.Team.UseBallClass == totalingItem.UseBallClass && totalingItem.UseBallClass != UseBallClass.All) || (totalingItem.UseBallClass == UseBallClass.All))
                                 )
                         .Select(r =>
                                 new
@@ -1044,7 +1091,7 @@ namespace Bmcs.Models
                                     GroupKey = isTeamTotal ? r.TeamID : r.MemberID.ToString(),
                                     TeamID = r.TeamID,
                                     MemberID = r.MemberID,
-                                    Year = totalingItem.Year == null ? "通算" : r.Game.GameDate.Year.ToString(),
+                                    Year = totalingItem.Year == 0 ? "通算" : r.Game.GameDate.Year.ToString(),
                                     Win = r.Win,
                                     Lose = r.Lose,
                                     Hold = r.Hold,
@@ -1237,8 +1284,10 @@ namespace Bmcs.Models
             var result = new List<GameScoreFielder>();
 
             var groupGameScoreFielderList = gameScoreFielderList
-                        .Where(r => ((r.Game.GameDate.Year == totalingItem.Year && totalingItem.Year != null) || (totalingItem.Year == null))
-                                    && ((r.Game.GameClass == totalingItem.GameClass && totalingItem.GameClass != null) || (totalingItem.GameClass == null))
+                        .Where(r => ((r.Game.GameDate.Year == totalingItem.Year && totalingItem.Year != 0) || (totalingItem.Year == 0))
+                                   && ((r.Game.GameClass == totalingItem.GameClass && totalingItem.GameClass != GameClass.All) || (totalingItem.GameClass == GameClass.All))
+                                   && ((r.Team.TeamCategoryClass == totalingItem.TeamCategoryClass && totalingItem.TeamCategoryClass != TeamCategoryClass.All) || (totalingItem.TeamCategoryClass == TeamCategoryClass.All))
+                                   && ((r.Team.UseBallClass == totalingItem.UseBallClass && totalingItem.UseBallClass != UseBallClass.All) || (totalingItem.UseBallClass == UseBallClass.All))
                                 )
                         .Select(r =>
                                 new
@@ -1246,7 +1295,7 @@ namespace Bmcs.Models
                                     GroupKey = isTeamTotal ? r.TeamID : r.MemberID.ToString(),
                                     TeamID = r.TeamID,
                                     MemberID = r.MemberID,
-                                    Year = totalingItem.Year == null ? "通算" : r.Game.GameDate.Year.ToString(),
+                                    Year = totalingItem.Year == 0 ? "通算" : r.Game.GameDate.Year.ToString(),
                                     PlateAppearance = r.PlateAppearance,
                                     AtBat = r.AtBat,
                                     Hit = r.Hit,
@@ -1440,17 +1489,19 @@ namespace Bmcs.Models
         /// <param name="gameList"></param>
         /// <param name="totalingItem"></param>
         /// <returns></returns>
-        public RegulationValue GetRegulationValue(List<Game> gameList, TotalingItem totalingItem)
+        public Regulation GetRegulation(List<Game> gameList, TotalingItem totalingItem)
         {
-            var result = new RegulationValue();
+            var result = new Regulation();
 
             var sumRegulationInnings = (decimal)0;
             var sumRegulationAtBatting = (decimal)0;
 
             //試合集計
             var targetGameList = gameList
-                       .Where(r => ((r.GameDate.Year == totalingItem.Year && totalingItem.Year != null) || (totalingItem.Year == null))
-                                   && ((r.GameClass == totalingItem.GameClass && totalingItem.GameClass != null) || (totalingItem.GameClass == null))
+                       .Where(r => ((r.GameDate.Year == totalingItem.Year && totalingItem.Year != 0) || (totalingItem.Year == 0))
+                                   && ((r.GameClass == totalingItem.GameClass && totalingItem.GameClass != GameClass.All) || (totalingItem.GameClass == GameClass.All))
+                                   && ((r.Team.TeamCategoryClass == totalingItem.TeamCategoryClass && totalingItem.TeamCategoryClass != TeamCategoryClass.All) || (totalingItem.TeamCategoryClass == TeamCategoryClass.All))
+                                   && ((r.Team.UseBallClass == totalingItem.UseBallClass && totalingItem.UseBallClass != UseBallClass.All) || (totalingItem.UseBallClass == UseBallClass.All))
                                ).ToList();
 
             //試合ID
@@ -1476,10 +1527,20 @@ namespace Bmcs.Models
             //チーム数
             var teamCount = targetGameList.GroupBy(r => r.TeamID).Count();
 
-            //規定投球回
-            result.RegulationInnings = System.Convert.ToInt32(Math.Floor(sumRegulationInnings / teamCount));
-            //規定打席
-            result.RegulationAtBatting = System.Convert.ToInt32(Math.Floor(sumRegulationAtBatting / teamCount));
+            if(teamCount == 0)
+            {
+                //規定投球回
+                result.RegulationInnings = 0;
+                //規定打席
+                result.RegulationAtBatting = 0;
+            }
+            else
+            { 
+                //規定投球回
+                result.RegulationInnings = System.Convert.ToInt32(Math.Floor(sumRegulationInnings / teamCount));
+                //規定打席
+                result.RegulationAtBatting = System.Convert.ToInt32(Math.Floor(sumRegulationAtBatting / teamCount));
+            }
 
             return result;
         }

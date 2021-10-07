@@ -49,7 +49,13 @@ namespace Bmcs.Pages.Team
             }
 
             //集計項目
-            var totalingItem = new TotalingItem();
+            var totalingItem = new TotalingItem()
+            {
+                Year = 0,
+                GameClass = GameClass.All,
+                TeamCategoryClass = TeamCategoryClass.All,
+                UseBallClass = UseBallClass.All,
+            };
 
             //チームスコア
             GameScoreTeamList = new List<GameScoreTeam>();

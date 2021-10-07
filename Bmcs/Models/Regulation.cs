@@ -9,7 +9,7 @@ using Bmcs.Enum;
 
 namespace Bmcs.Models
 {
-    public class RegulationValue
+    public class Regulation
     {
         [Display(Name = "規定投球回")]
         public int RegulationInnings { get; set; }

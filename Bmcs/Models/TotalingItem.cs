@@ -16,5 +16,11 @@ namespace Bmcs.Models
 
         [Display(Name = "試合種別")]
         public GameClass? GameClass { get; set; }
+
+        [Display(Name = "カテゴリ")]
+        public TeamCategoryClass? TeamCategoryClass { get; set; }
+
+        [Display(Name = "使用球")]
+        public UseBallClass? UseBallClass { get; set; }
     }
 }
