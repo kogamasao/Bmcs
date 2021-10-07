@@ -239,7 +239,7 @@
         </div>
         <div class="box-inner">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <h6>勝利</h6>
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered">
@@ -251,9 +251,9 @@
 
                                     @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                                        <th>
-                                            チーム
-                                        </th>
+                                    <th>
+                                        チーム
+                                    </th>
                                     }
                                     <th>
                                         @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
@@ -271,34 +271,34 @@
 
                                 @foreach (var item in Model.GameScorePitcherList.OrderByDescending(r => r.Win).Take(10))
                                 {
-                                    <tr>
-                                        <td class="text-center align-middle column-fix-left">
-                                            @if (winRankValue != item.Win.NullToZero())
+                                <tr>
+                                    <td class="text-center align-middle column-fix-left">
+                                        @if (winRankValue != item.Win.NullToZero())
                                             {
                                                 winRank += 1;
-                                                @winRank
+                                        @winRank
                                             }
-                                            @{winRankValue = item.Win.NullToZero();}
-                                        </td>
-                                        @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                        @{winRankValue = item.Win.NullToZero();}
+                                    </td>
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                         {
-                                            <td class="align-middle">
-                                                <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                            </td>
+                                    <td class="align-middle">
+                                        <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
+                                    </td>
                                         }
-                                        <td class="align-middle">
-                                            <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            @Html.DisplayFor(modelItem => item.Win)
-                                        </td>
-                                    </tr>
+                                    <td class="align-middle">
+                                        <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Win)
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <h6>防御率</h6>
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered">
@@ -310,9 +310,9 @@
 
                                     @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                                        <th>
-                                            チーム
-                                        </th>
+                                    <th>
+                                        チーム
+                                    </th>
                                     }
                                     <th>
                                         @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
@@ -330,34 +330,34 @@
 
                                 @foreach (var item in Model.GameScorePitcherList.Where(r => ((r.Inning >= Model.RegulationInnings && !Model.IsIgnoreRegulationInnings) || (Model.IsIgnoreRegulationInnings))).OrderBy(r => r.EarnedRunAverage).Take(10))
                                 {
-                                    <tr>
-                                        <td class="text-center align-middle column-fix-left">
-                                            @if (earnedRunAverageRankValue != item.EarnedRunAverage.NullToZero())
+                                <tr>
+                                    <td class="text-center align-middle column-fix-left">
+                                        @if (earnedRunAverageRankValue != item.EarnedRunAverage.NullToZero())
                                             {
                                                 earnedRunAverageRank += 1;
-                                                @earnedRunAverageRank
+                                        @earnedRunAverageRank
                                             }
-                                            @{earnedRunAverageRankValue = item.EarnedRunAverage.NullToZero();}
-                                        </td>
-                                        @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                        @{earnedRunAverageRankValue = item.EarnedRunAverage.NullToZero();}
+                                    </td>
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                         {
-                                            <td class="align-middle">
-                                                <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                            </td>
+                                    <td class="align-middle">
+                                        <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
+                                    </td>
                                         }
-                                        <td class="align-middle">
-                                            <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            @Html.DisplayFor(modelItem => item.EarnedRunAverageFormat)
-                                        </td>
-                                    </tr>
+                                    <td class="align-middle">
+                                        <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.EarnedRunAverageFormat)
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <h6>奪三振</h6>
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered">
@@ -369,9 +369,9 @@
 
                                     @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                                        <th>
-                                            チーム
-                                        </th>
+                                    <th>
+                                        チーム
+                                    </th>
                                     }
                                     <th>
                                         @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
@@ -389,34 +389,34 @@
 
                                 @foreach (var item in Model.GameScorePitcherList.OrderByDescending(r => r.StrikeOut).Take(10))
                                 {
-                                    <tr>
-                                        <td class="text-center align-middle column-fix-left">
-                                            @if (strikeOutRankValue != item.StrikeOut.NullToZero())
+                                <tr>
+                                    <td class="text-center align-middle column-fix-left">
+                                        @if (strikeOutRankValue != item.StrikeOut.NullToZero())
                                             {
                                                 strikeOutRank += 1;
-                                                @strikeOutRank
+                                        @strikeOutRank
                                             }
-                                            @{strikeOutRankValue = item.StrikeOut.NullToZero();}
-                                        </td>
-                                        @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                        @{strikeOutRankValue = item.StrikeOut.NullToZero();}
+                                    </td>
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                         {
-                                            <td class="align-middle">
-                                                <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                            </td>
+                                    <td class="align-middle">
+                                        <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
+                                    </td>
                                         }
-                                        <td class="align-middle">
-                                            <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            @Html.DisplayFor(modelItem => item.StrikeOut)
-                                        </td>
-                                    </tr>
+                                    <td class="align-middle">
+                                        <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.StrikeOut)
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <h6>勝率</h6>
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered">
@@ -428,9 +428,9 @@
 
                                     @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                                        <th>
-                                            チーム
-                                        </th>
+                                    <th>
+                                        チーム
+                                    </th>
                                     }
                                     <th>
                                         @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
@@ -448,28 +448,146 @@
 
                                 @foreach (var item in Model.GameScorePitcherList.Where(r => ((r.Inning >= Model.RegulationInnings && !Model.IsIgnoreRegulationInnings) || (Model.IsIgnoreRegulationInnings))).OrderByDescending(r => r.WinRate).Take(10))
                                 {
-                                    <tr>
-                                        <td class="text-center align-middle column-fix-left">
-                                            @if (winRateRankValue != item.WinRate.NullToZero())
+                                <tr>
+                                    <td class="text-center align-middle column-fix-left">
+                                        @if (winRateRankValue != item.WinRate.NullToZero())
                                             {
                                                 winRateRank += 1;
-                                                @winRateRank
+                                        @winRateRank
                                             }
-                                            @{winRateRankValue = item.WinRate.NullToZero();}
-                                        </td>
-                                        @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                        @{winRateRankValue = item.WinRate.NullToZero();}
+                                    </td>
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                         {
-                                            <td class="align-middle">
-                                                <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                            </td>
+                                    <td class="align-middle">
+                                        <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
+                                    </td>
                                         }
-                                        <td class="align-middle">
-                                            <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            @Html.DisplayFor(modelItem => item.WinRateFormat)
-                                        </td>
-                                    </tr>
+                                    <td class="align-middle">
+                                        <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.WinRateFormat)
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h6>ホールド</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center column-fix-left">
+                                        @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Rank)
+                                    </th>
+
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                    {
+                                    <th>
+                                        チーム
+                                    </th>
+                                    }
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
+                                    </th>
+                                    <th class="text-center">
+                                        @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Hold)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var holdRank = 0;
+                                    var holdRankValue = -1;
+                                }
+
+                                @foreach (var item in Model.GameScorePitcherList.OrderByDescending(r => r.Hold).Take(10))
+                                {
+                                <tr>
+                                    <td class="text-center align-middle column-fix-left">
+                                        @if (holdRankValue != item.Hold.NullToZero())
+                                            {
+                                                holdRank += 1;
+                                        @holdRank
+                                            }
+                                        @{holdRankValue = item.Hold.NullToZero();}
+                                    </td>
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                        {
+                                    <td class="align-middle">
+                                        <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
+                                    </td>
+                                        }
+                                    <td class="align-middle">
+                                        <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Hold)
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h6>セーブ</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center column-fix-left">
+                                        @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Rank)
+                                    </th>
+
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                    {
+                                    <th>
+                                        チーム
+                                    </th>
+                                    }
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
+                                    </th>
+                                    <th class="text-center">
+                                        @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Save)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var saveRank = 0;
+                                    var saveRankValue = -1;
+                                }
+
+                                @foreach (var item in Model.GameScorePitcherList.OrderByDescending(r => r.Save).Take(10))
+                                {
+                                <tr>
+                                    <td class="text-center align-middle column-fix-left">
+                                        @if (saveRankValue != item.Save.NullToZero())
+                                            {
+                                                saveRank += 1;
+                                        @saveRank
+                                            }
+                                        @{saveRankValue = item.Save.NullToZero();}
+                                    </td>
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                        {
+                                    <td class="align-middle">
+                                        <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
+                                    </td>
+                                        }
+                                    <td class="align-middle">
+                                        <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Save)
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
@@ -488,7 +606,7 @@
         </div>
         <div class="box-inner">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <h6>打率</h6>
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered">
@@ -500,9 +618,9 @@
 
                                     @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                                        <th>
-                                            チーム
-                                        </th>
+                                    <th>
+                                        チーム
+                                    </th>
                                     }
                                     <th>
                                         @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
@@ -520,35 +638,35 @@
 
                                 @foreach (var item in Model.GameScoreFielderList.Where(r => ((r.PlateAppearance >= Model.RegulationAtBatting && !Model.IsIgnoreRegulationAtBatting) || (Model.IsIgnoreRegulationAtBatting))).OrderByDescending(r => r.BattingAverage).Take(10))
                                 {
-                                    <tr>
-                                        <td class="text-center align-middle column-fix-left">
-                                            @if (battingAverageRankValue != item.BattingAverage.NullToZero())
+                                <tr>
+                                    <td class="text-center align-middle column-fix-left">
+                                        @if (battingAverageRankValue != item.BattingAverage.NullToZero())
                                             {
                                                 battingAverageRank += 1;
-                                                @battingAverageRank
+                                        @battingAverageRank
                                             }
 
-                                            @{battingAverageRankValue = item.BattingAverage.NullToZero();}
-                                        </td>
-                                        @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                        @{battingAverageRankValue = item.BattingAverage.NullToZero();}
+                                    </td>
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                         {
-                                            <td class="align-middle">
-                                                <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                            </td>
+                                    <td class="align-middle">
+                                        <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
+                                    </td>
                                         }
-                                        <td class="align-middle">
-                                            <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            @Html.DisplayFor(modelItem => item.BattingAverageFormat)
-                                        </td>
-                                    </tr>
+                                    <td class="align-middle">
+                                        <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.BattingAverageFormat)
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <h6>本塁打</h6>
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered">
@@ -560,9 +678,9 @@
 
                                     @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                                        <th>
-                                            チーム
-                                        </th>
+                                    <th>
+                                        チーム
+                                    </th>
                                     }
                                     <th>
                                         @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
@@ -580,34 +698,34 @@
 
                                 @foreach (var item in Model.GameScoreFielderList.OrderByDescending(r => r.HomeRun).Take(10))
                                 {
-                                    <tr>
-                                        <td class="text-center align-middle column-fix-left">
-                                            @if (homeRunValue != item.HomeRun.NullToZero())
+                                <tr>
+                                    <td class="text-center align-middle column-fix-left">
+                                        @if (homeRunValue != item.HomeRun.NullToZero())
                                             {
                                                 homeRunRank += 1;
-                                                @homeRunRank
+                                        @homeRunRank
                                             }
-                                            @{homeRunValue = item.HomeRun.NullToZero();}
-                                        </td>
-                                        @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                        @{homeRunValue = item.HomeRun.NullToZero();}
+                                    </td>
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                         {
-                                            <td class="align-middle">
-                                                <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                            </td>
+                                    <td class="align-middle">
+                                        <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
+                                    </td>
                                         }
-                                        <td class="align-middle">
-                                            <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            @Html.DisplayFor(modelItem => item.HomeRun)
-                                        </td>
-                                    </tr>
+                                    <td class="align-middle">
+                                        <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.HomeRun)
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <h6>打点</h6>
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered">
@@ -619,9 +737,9 @@
 
                                     @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                                        <th>
-                                            チーム
-                                        </th>
+                                    <th>
+                                        チーム
+                                    </th>
                                     }
                                     <th>
                                         @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
@@ -639,34 +757,153 @@
 
                                 @foreach (var item in Model.GameScoreFielderList.OrderByDescending(r => r.RBI).Take(10))
                                 {
-                                    <tr>
-                                        <td class="text-center align-middle column-fix-left">
-                                            @if (rbiRankValue != item.RBI.NullToZero())
+                                <tr>
+                                    <td class="text-center align-middle column-fix-left">
+                                        @if (rbiRankValue != item.RBI.NullToZero())
                                             {
                                                 rbiRank += 1;
-                                                @rbiRank
+                                        @rbiRank
                                             }
-                                            @{rbiRankValue = item.RBI.NullToZero();}
-                                        </td>
-                                        @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                        @{rbiRankValue = item.RBI.NullToZero();}
+                                    </td>
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                         {
-                                            <td class="align-middle">
-                                                <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                            </td>
+                                    <td class="align-middle">
+                                        <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
+                                    </td>
                                         }
-                                        <td class="align-middle">
-                                            <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            @Html.DisplayFor(modelItem => item.RBI)
-                                        </td>
-                                    </tr>
+                                    <td class="align-middle">
+                                        <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.RBI)
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
+                    <h6>出塁率</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center column-fix-left">
+                                        @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Rank)
+                                    </th>
+
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                    {
+                                    <th>
+                                        チーム
+                                    </th>
+                                    }
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
+                                    </th>
+                                    <th class="text-center">
+                                        @Html.DisplayNameFor(model => model.GameScoreFielderList[0].OnBasePercentage)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var onBasePercentageRank = 0;
+                                    var onBasePercentageRankValue = (decimal)-1;
+                                }
+
+                                @foreach (var item in Model.GameScoreFielderList.Where(r => ((r.PlateAppearance >= Model.RegulationAtBatting && !Model.IsIgnoreRegulationAtBatting) || (Model.IsIgnoreRegulationAtBatting))).OrderByDescending(r => r.OnBasePercentage).Take(10))
+                                {
+                                <tr>
+                                    <td class="text-center align-middle column-fix-left">
+                                        @if (onBasePercentageRankValue != item.OnBasePercentage.NullToZero())
+                                            {
+                                                onBasePercentageRank += 1;
+                                        @onBasePercentageRank
+                                            }
+
+                                        @{onBasePercentageRankValue = item.OnBasePercentage.NullToZero();}
+                                    </td>
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                        {
+                                    <td class="align-middle">
+                                        <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
+                                    </td>
+                                        }
+                                    <td class="align-middle">
+                                        <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.OnBasePercentageFormat)
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h6>安打</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center column-fix-left">
+                                        @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Rank)
+                                    </th>
+
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                    {
+                                    <th>
+                                        チーム
+                                    </th>
+                                    }
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
+                                    </th>
+                                    <th class="text-center">
+                                        @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Hit)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var hitRank = 0;
+                                    var hitRankValue = -1;
+                                }
+
+                                @foreach (var item in Model.GameScoreFielderList.OrderByDescending(r => r.Hit).Take(10))
+                                {
+                                <tr>
+                                    <td class="text-center align-middle column-fix-left">
+                                        @if (hitRankValue != item.Hit.NullToZero())
+                                            {
+                                                hitRank += 1;
+                                        @hitRank
+                                            }
+                                        @{hitRankValue = item.Hit.NullToZero();}
+                                    </td>
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                        {
+                                    <td class="align-middle">
+                                        <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
+                                    </td>
+                                        }
+                                    <td class="align-middle">
+                                        <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.Hit)
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-4">
                     <h6>盗塁</h6>
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered">
@@ -678,9 +915,9 @@
 
                                     @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                                        <th>
-                                            チーム
-                                        </th>
+                                    <th>
+                                        チーム
+                                    </th>
                                     }
                                     <th>
                                         @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
@@ -698,28 +935,28 @@
 
                                 @foreach (var item in Model.GameScoreFielderList.OrderByDescending(r => r.StolenBase).Take(10))
                                 {
-                                    <tr>
-                                        <td class="text-center align-middle column-fix-left">
-                                            @if (stolenBaseRankValue != item.StolenBase.NullToZero())
+                                <tr>
+                                    <td class="text-center align-middle column-fix-left">
+                                        @if (stolenBaseRankValue != item.StolenBase.NullToZero())
                                             {
                                                 stolenBaseRank += 1;
-                                                @stolenBaseRank
+                                        @stolenBaseRank
                                             }
-                                            @{stolenBaseRankValue = item.StolenBase.NullToZero();}
-                                        </td>
-                                        @if (string.IsNullOrEmpty(Model.SelectTeamID))
+                                        @{stolenBaseRankValue = item.StolenBase.NullToZero();}
+                                    </td>
+                                    @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                         {
-                                            <td class="align-middle">
-                                                <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                            </td>
+                                    <td class="align-middle">
+                                        <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
+                                    </td>
                                         }
-                                        <td class="align-middle">
-                                            <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            @Html.DisplayFor(modelItem => item.StolenBase)
-                                        </td>
-                                    </tr>
+                                    <td class="align-middle">
+                                        <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @Html.DisplayFor(modelItem => item.StolenBase)
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
