@@ -47,7 +47,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Team/Index">公開チーム一覧</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Score/Index" asp-route-isPublic="@true">公開チーム成績一覧</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@true">公開チーム成績一覧</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Message/Index">メッセージ</a>
@@ -88,6 +88,8 @@
             &copy; 2021 - Bmcs - <a asp-area="" asp-page="/Privacy">Privacy</a>
             <span> - </span>
             <a href="https://alivetodayblog.com/contact">お問い合わせ</a>
+            <span> - </span>
+            <span>Ver.α</span>
         </div>
     </footer>
 

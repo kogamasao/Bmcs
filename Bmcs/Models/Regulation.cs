@@ -11,6 +11,9 @@ namespace Bmcs.Models
 {
     public class Regulation
     {
+        [Display(Name = "規定試合数")]
+        public int RegulationGames { get; set; }
+
         [Display(Name = "規定投球回")]
         public int RegulationInnings { get; set; }
 

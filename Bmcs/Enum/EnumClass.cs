@@ -524,6 +524,21 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
+    /// スコアページ区分
+    /// </summary>
+    public enum ScorePageClass
+    {
+        [Display(Name = "TOP")]
+        Index = 1,
+        [Display(Name = "チーム")]
+        Team = 2,
+        [Display(Name = "投手")]
+        Pitcher = 3,
+        [Display(Name = "野手")]
+        Fielder = 4,
+    }
+
+    /// <summary>
     /// Enum関連処理
     /// </summary>
     public static class EnumClass

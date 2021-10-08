@@ -140,6 +140,7 @@ else
                 {
             <td>
                 <a asp-page="/Game/Index" asp-route-teamID="@item.TeamID">試合</a> |
+                <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID"  asp-route-isPublic="@true">成績</a> |
                 <a asp-page="./Details" asp-route-id="@item.TeamID">詳細</a> |
                 <a asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a> |
                 <a asp-page="./Edit" asp-route-id="@item.TeamID">編集</a> |
@@ -150,6 +151,7 @@ else
                 {
             <td>
                 <a asp-page="/Game/Index" asp-route-teamID="@item.TeamID">試合</a> |
+                <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@true">成績</a> |
                 <a asp-page="./Details" asp-route-id="@item.TeamID">詳細</a> |
                 <a asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a>
             </td>

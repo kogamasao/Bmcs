@@ -521,12 +521,6 @@ namespace Bmcs.Models
             }
         }
 
-
-        public override void OnPageHandlerExecuted(PageHandlerExecutedContext context)
-        {
-            base.OnPageHandlerExecuted(context);
-        }
-
         public override void OnPageHandlerSelected(PageHandlerSelectedContext context)
         {
             base.OnPageHandlerSelected(context);
@@ -535,6 +529,11 @@ namespace Bmcs.Models
         public override void OnPageHandlerExecuting(PageHandlerExecutingContext context)
         {
             base.OnPageHandlerExecuting(context);
+        }
+
+        public override void OnPageHandlerExecuted(PageHandlerExecutedContext context)
+        {
+            base.OnPageHandlerExecuted(context);
         }
 
         /// <summary>
@@ -1529,13 +1528,17 @@ namespace Bmcs.Models
 
             if(teamCount == 0)
             {
+                //規定試合数
+                result.RegulationGames = 0;
                 //規定投球回
                 result.RegulationInnings = 0;
                 //規定打席
                 result.RegulationAtBatting = 0;
             }
             else
-            { 
+            {
+                //規定試合数
+                result.RegulationGames = System.Convert.ToInt32(Math.Floor((decimal)targetGameList.Count() / teamCount));
                 //規定投球回
                 result.RegulationInnings = System.Convert.ToInt32(Math.Floor(sumRegulationInnings / teamCount));
                 //規定打席

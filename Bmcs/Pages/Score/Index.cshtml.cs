@@ -22,9 +22,11 @@ namespace Bmcs.Pages.Score
 
         }
 
-
         [BindProperty]
         public Models.Team Team { get; set; }
+
+        [BindProperty]
+        public ScorePageClass ScorePageClass { get; set; }
 
         [BindProperty]
         public string SelectTeamID { get; set; }
@@ -45,10 +47,16 @@ namespace Bmcs.Pages.Score
         public UseBallClass? UseBallClass { get; set; }
 
         [BindProperty]
+        public int? RegulationGames { get; set; }
+
+        [BindProperty]
         public int? RegulationInnings { get; set; }
 
         [BindProperty]
         public int? RegulationAtBatting { get; set; }
+
+        [BindProperty]
+        public bool IsIgnoreRegulationGames { get; set; }
 
         [BindProperty]
         public bool IsIgnoreRegulationInnings { get; set; }
@@ -56,13 +64,16 @@ namespace Bmcs.Pages.Score
         [BindProperty]
         public bool IsIgnoreRegulationAtBatting { get; set; }
 
+        [BindProperty]
+        public string SortItem { get; set; }
+
         public List<Models.GameScoreTeam> GameScoreTeamList { get; set; }
 
         public List<Models.GameScorePitcher> GameScorePitcherList { get; set; }
 
         public List<Models.GameScoreFielder> GameScoreFielderList { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string teamID, bool isPublic, int? year, GameClass? gameClass, TeamCategoryClass? teamCategoryClass, UseBallClass? useBallClass, bool isIgnoreRegulationInnings, bool isIgnoreRegulationAtBatting)
+        public async Task<IActionResult> OnGetAsync(ScorePageClass scorePageClass, string teamID, bool isPublic, int? year, GameClass? gameClass, TeamCategoryClass? teamCategoryClass, UseBallClass? useBallClass, bool isIgnoreRegulationGames, bool isIgnoreRegulationInnings, bool isIgnoreRegulationAtBatting, string sortItem)
         {
             if (string.IsNullOrEmpty(teamID) && !isPublic)
             {
@@ -121,7 +132,7 @@ namespace Bmcs.Pages.Score
                       .ToListAsync();
 
             //年初期値
-            if(year == null && gameList.Any())
+            if (year == null && gameList.Any())
             {
                 year = gameList.GroupBy(r => r.GameDate.Year).Select(r => new { Year = r.Key }).Max(r => r.Year);
             }
@@ -163,28 +174,42 @@ namespace Bmcs.Pages.Score
                 UseBallClass = useBallClass,
             };
 
-            //チームスコア集計処理
-            if (gameList != null && gameList.Any())
-            {
-                GameScoreTeamList.AddRange(base.TotalingGameScoreTeam(gameList, gameScorePitcherList, gameScoreFielderList, totalingItem));
+            if(scorePageClass == ScorePageClass.Index
+                || scorePageClass == ScorePageClass.Team)
+            { 
+                //チームスコア集計処理
+                if (gameList != null && gameList.Any())
+                {
+                    GameScoreTeamList.AddRange(base.TotalingGameScoreTeam(gameList, gameScorePitcherList, gameScoreFielderList, totalingItem));
+                }
             }
 
-            //投手スコア集計処理
-            if (gameScorePitcherList.Any(r => !r.Member.DeleteFLG))
+            if (scorePageClass == ScorePageClass.Index
+              || scorePageClass == ScorePageClass.Pitcher)
             {
-                GameScorePitcherList.AddRange(base.TotalingGameScorePitcher(gameScorePitcherList.Where(r => !r.Member.DeleteFLG).ToList(), totalingItem));
+                //投手スコア集計処理
+                if (gameScorePitcherList.Any(r => !r.Member.DeleteFLG))
+                {
+                    GameScorePitcherList.AddRange(base.TotalingGameScorePitcher(gameScorePitcherList.Where(r => !r.Member.DeleteFLG).ToList(), totalingItem));
+                }
             }
 
-            //野手スコア集計処理
-            if (gameScoreFielderList.Any(r => !r.Member.DeleteFLG))
+            if (scorePageClass == ScorePageClass.Index
+              || scorePageClass == ScorePageClass.Fielder)
             {
-                GameScoreFielderList.AddRange(base.TotalingGameScoreFielder(gameScoreFielderList.Where(r => !r.Member.DeleteFLG).ToList(), totalingItem));
+                //野手スコア集計処理
+                if (gameScoreFielderList.Any(r => !r.Member.DeleteFLG))
+                {
+                    GameScoreFielderList.AddRange(base.TotalingGameScoreFielder(gameScoreFielderList.Where(r => !r.Member.DeleteFLG).ToList(), totalingItem));
+                }
             }
 
             //規定
             var regulation = GetRegulation(gameList, totalingItem);
+            RegulationGames = regulation.RegulationGames;
             RegulationInnings = regulation.RegulationInnings;
             RegulationAtBatting = regulation.RegulationAtBatting;
+            IsIgnoreRegulationGames = isIgnoreRegulationGames;
             IsIgnoreRegulationInnings = isIgnoreRegulationInnings;
             IsIgnoreRegulationAtBatting = isIgnoreRegulationAtBatting;
 
@@ -198,13 +223,28 @@ namespace Bmcs.Pages.Score
                 ViewData[ViewDataConstant.Title] = "チーム成績";
             }
 
+            if (scorePageClass == ScorePageClass.Team)
+            {
+                ViewData[ViewDataConstant.Title] += "(チーム)";
+            }
+            else if (scorePageClass == ScorePageClass.Pitcher)
+            {
+                ViewData[ViewDataConstant.Title] += "(投手)";
+            }
+            else if (scorePageClass == ScorePageClass.Fielder)
+            {
+                ViewData[ViewDataConstant.Title] += "(野手)";
+            }
+
             //引数セット
+            ScorePageClass = scorePageClass;
             SelectTeamID = teamID;
             IsPublic = isPublic;
             Year = year;
             GameClass = gameClass;
             TeamCategoryClass = teamCategoryClass;
             UseBallClass = useBallClass;
+            SortItem = sortItem;
 
             return Page();
 
