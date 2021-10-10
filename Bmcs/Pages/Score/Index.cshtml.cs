@@ -12,6 +12,7 @@ using Bmcs.Function;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
+using System.Reflection;
 
 namespace Bmcs.Pages.Score
 {
@@ -182,6 +183,9 @@ namespace Bmcs.Pages.Score
                 {
                     GameScoreTeamList.AddRange(base.TotalingGameScoreTeam(gameList, gameScorePitcherList, gameScoreFielderList, totalingItem));
                 }
+
+                //ソート項目セット
+                SetOrderValue(GameScoreTeamList, sortItem);
             }
 
             if (scorePageClass == ScorePageClass.Index
@@ -192,6 +196,9 @@ namespace Bmcs.Pages.Score
                 {
                     GameScorePitcherList.AddRange(base.TotalingGameScorePitcher(gameScorePitcherList.Where(r => !r.Member.DeleteFLG).ToList(), totalingItem));
                 }
+
+                //ソート項目セット
+                SetOrderValue(GameScorePitcherList, sortItem);
             }
 
             if (scorePageClass == ScorePageClass.Index
@@ -202,6 +209,9 @@ namespace Bmcs.Pages.Score
                 {
                     GameScoreFielderList.AddRange(base.TotalingGameScoreFielder(gameScoreFielderList.Where(r => !r.Member.DeleteFLG).ToList(), totalingItem));
                 }
+
+                //ソート項目セット
+                SetOrderValue(GameScoreFielderList, sortItem);
             }
 
             //規定
@@ -250,5 +260,22 @@ namespace Bmcs.Pages.Score
 
         }
 
+        private void SetOrderValue<T>(List<T> scoreList, string sortItem)
+        {
+            if (!string.IsNullOrEmpty(sortItem))
+            {
+                var propertyInfos = typeof(T).GetProperties();
+                var sortItemPropertyInfo = propertyInfos.FirstOrDefault(r => r.Name == sortItem);
+                var orderValuePropertyInfo = propertyInfos.FirstOrDefault(r => r.Name == "OrderValue");
+
+                if (sortItemPropertyInfo != null && orderValuePropertyInfo != null)
+                {
+                    foreach (var score in scoreList)
+                    {
+                        orderValuePropertyInfo.SetValue(score, System.Convert.ToDecimal(sortItemPropertyInfo.GetValue(score)));
+                    }
+                }
+            }
+        }
     }
 }

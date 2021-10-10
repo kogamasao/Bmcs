@@ -119,7 +119,7 @@ namespace Bmcs.Models
         public int? Rank { get; set; }
 
         [NotMapped]
-        public string OrderValue { get; set; }
+        public decimal OrderValue { get; set; }
 
         [NotMapped]
         [Display(Name = "年")]

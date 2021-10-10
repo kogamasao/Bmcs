@@ -257,7 +257,7 @@ namespace Bmcs.Models
             }
         }
 
-        public string OrderValue { get; set; }
+        public decimal OrderValue { get; set; }
 
         public Team Team { get; set; }
     }
