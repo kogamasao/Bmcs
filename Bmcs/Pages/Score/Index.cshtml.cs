@@ -266,13 +266,31 @@ namespace Bmcs.Pages.Score
             {
                 var propertyInfos = typeof(T).GetProperties();
                 var sortItemPropertyInfo = propertyInfos.FirstOrDefault(r => r.Name == sortItem);
-                var orderValuePropertyInfo = propertyInfos.FirstOrDefault(r => r.Name == "OrderValue");
+                var orderValuePropertyInfo = propertyInfos.FirstOrDefault(r => r.Name == nameof(GameScoreTeam.OrderValue));
 
                 if (sortItemPropertyInfo != null && orderValuePropertyInfo != null)
                 {
                     foreach (var score in scoreList)
                     {
-                        orderValuePropertyInfo.SetValue(score, System.Convert.ToDecimal(sortItemPropertyInfo.GetValue(score)));
+                        if(((typeof(T) == typeof(GameScoreTeam))
+                            && (sortItem == nameof(GameScoreTeam.EarnedRunAverage)
+                                || sortItem == nameof(GameScoreTeam.PitcherBattingAverage)
+                                || sortItem == nameof(GameScoreTeam.PitcherScoringPositionBattingAverage)
+                                || sortItem == nameof(GameScoreTeam.Whip)))
+                            ||
+                            ((typeof(T) == typeof(GameScorePitcher))
+                            && (sortItem == nameof(GameScorePitcher.EarnedRunAverage)
+                                || sortItem == nameof(GameScorePitcher.BattingAverage)
+                                || sortItem == nameof(GameScorePitcher.ScoringPositionBattingAverage)
+                                || sortItem == nameof(GameScorePitcher.Whip)))
+                        )
+                        {
+                            orderValuePropertyInfo.SetValue(score, (-1) * System.Convert.ToDecimal(sortItemPropertyInfo.GetValue(score)));
+                        }
+                        else
+                        {
+                            orderValuePropertyInfo.SetValue(score, System.Convert.ToDecimal(sortItemPropertyInfo.GetValue(score)));
+                        }
                     }
                 }
             }
