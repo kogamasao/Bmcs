@@ -12,7 +12,9 @@
             var sortItem = $("." + sortValue);
 
             if (sortItem) {
-                sortItem.addClass("text-danger");
+                sortItem.children().addClass("text-body");
+                sortItem.addClass("font-weight-bold");
+                sortItem.addClass("bg-light");
             }
         }
     }
