@@ -47,6 +47,9 @@
 
     //submitボタン
     $("body").on("click", ".js-submit", function () {
+        //非表示
+        $('body').addClass('d-none');
+
         //区分取得
         let submitclass = $(this).data("submitclass");
 

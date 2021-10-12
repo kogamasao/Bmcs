@@ -100,9 +100,6 @@ namespace Bmcs.Pages.Score
                 }
             }
 
-            //マイチーム
-            MyTeam = await Context.Teams.FindAsync(HttpContext.Session.GetString(SessionConstant.TeamID));
-
             //チームスコア
             GameScoreTeamList = new List<GameScoreTeam>();
             //投手スコア
