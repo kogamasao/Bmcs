@@ -1,0 +1,44 @@
+﻿@page
+@model Bmcs.Pages.Message.IndexModel
+
+<h1>@ViewData[ViewDataConstant.Title]</h1>
+
+@if (!string.IsNullOrEmpty(Model.SelectTeamID))
+{
+    <h4>@Model.Team.TeamName</h4>
+}
+
+<form method="get" asp-page="/Score/Index">
+    <input type="hidden" asp-for="MessagePageClass" name="messagePageClass" />
+    <input type="hidden" asp-for="SelectTeamID" name="teamID" />
+    <input type="hidden" asp-for="MessageID" name="messageID" />
+    <div class="row">
+
+
+
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="表示" class="btn btn-primary" />
+    </div>
+</form>
+
+@foreach (var item in Model.MessageList)
+{
+    <p>@item.MessageDetail</p>
+}
+
+<div class="form-group">
+    @if (Model.MessageID == null)
+    {
+        <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
+    }
+    else
+    {
+        <a class="btn btn-secondary" asp-page="/Message/Index" asp-route-messagePageClass="@Model.MessagePageClass" asp-route-teamID="@Model.SelectTeamID">戻る</a>
+    }
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

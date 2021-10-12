@@ -819,6 +819,42 @@ namespace Bmcs.Data
 
             context.Members.AddRange(members);
 
+            var messages = new Message[]
+        {
+                new Message
+                {
+                      UserAccountID = "JBUser"
+                    , TeamID = "JB"
+                    , PrivateTeamID = null
+                    , ParentMessageID = null
+                    , DeleteFLG = false
+                    , PublicFLG = true
+                    , MessageClass = MessageClass.Post
+                    , MessageDetail = "一般の投稿です。対戦相手募集"
+                    , EntryDatetime = DateTime.Now
+                    , EntryUserID = "ADMIN"
+                    , UpdateDatetime = DateTime.Now
+                    , UpdateUserID = "ADMIN"
+                },
+                new Message
+                {
+                      UserAccountID = "JBUser"
+                    , TeamID = "JB"
+                    , PrivateTeamID = "JB"
+                    , ParentMessageID = null
+                    , DeleteFLG = false
+                    , PublicFLG = false
+                    , MessageClass = MessageClass.Post
+                    , MessageDetail = "チーム内連絡です。"
+                    , EntryDatetime = DateTime.Now
+                    , EntryUserID = "ADMIN"
+                    , UpdateDatetime = DateTime.Now
+                    , UpdateUserID = "ADMIN"
+                },
+        };
+
+            context.Messages.AddRange(messages);
+
             context.SaveChanges();
 
         }

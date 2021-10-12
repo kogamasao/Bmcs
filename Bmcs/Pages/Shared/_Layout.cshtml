@@ -50,7 +50,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@true">公開チーム成績</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Message/Index">メッセージ</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public">メッセージ</a>
                         </li>
 
                         @if (Model.IsAdmin())

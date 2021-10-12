@@ -15,12 +15,15 @@ namespace Bmcs.Models
         [Display(Name = "メッセージID")]
         public int MessageID { get; set; }
 
-        [ForeignKey(nameof(Teams)), Column(Order = 0)]
+        [Display(Name = "ユーザID")]
+        public string UserAccountID { get; set; }
+        
+        [ForeignKey(nameof(Team)), Column(Order = 0)]
         [StringLength(50)]
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
 
-        [ForeignKey(nameof(PrivateTeams)), Column(Order = 1)]
+        [ForeignKey(nameof(PrivateTeam)), Column(Order = 1)]
         [StringLength(50)]
         [Display(Name = "送信先チームID")]
         public string PrivateTeamID { get; set; }
@@ -44,9 +47,11 @@ namespace Bmcs.Models
         public bool DeleteFLG { get; set; }
 
         [ForeignKey("TeamID")]
-        public virtual Team Teams { get; set; }
+        public virtual Team Team { get; set; }
 
         [ForeignKey("PrivateTeamID")]
-        public virtual Team PrivateTeams { get; set; }
+        public virtual Team PrivateTeam { get; set; }
+
+        public UserAccount UserAccount { get; set; }
     }
 }

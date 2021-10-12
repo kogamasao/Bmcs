@@ -539,6 +539,21 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
+    /// メッセージページ区分
+    /// </summary>
+    public enum MessagePageClass
+    {
+        [Display(Name = "公開メッセージ")]
+        Public = 1,
+        [Display(Name = "投稿メッセージ")]
+        PublicTeam = 2,
+        [Display(Name = "関連メッセージ")]
+        RelatedTeam = 3,
+        [Display(Name = "非公開メッセージ")]
+        Private = 4,
+    }
+
+    /// <summary>
     /// Enum関連処理
     /// </summary>
     public static class EnumClass

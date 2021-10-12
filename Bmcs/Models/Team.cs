@@ -122,10 +122,10 @@ namespace Bmcs.Models
 
         public ICollection<GameScorePitcher> GameScorePitchers { get; set; }
 
-        [InverseProperty(nameof(Message.Teams))]
+        [InverseProperty(nameof(Message.Team))]
         public ICollection<Message> Messages { get; set; }
 
-        [InverseProperty(nameof(Message.PrivateTeams))]
+        [InverseProperty(nameof(Message.PrivateTeam))]
         public ICollection<Message> ReplyMessages { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

@@ -54,6 +54,8 @@ namespace Bmcs.Models
 
         public Team Team { get; set; }
 
+        public ICollection<Message> Messages { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Password != ConfirmPassword)

@@ -65,12 +65,12 @@ namespace Bmcs.Data
 
             modelBuilder.Entity<Team>()
                 .HasMany(m => m.Messages)
-                .WithOne(t => t.Teams)
+                .WithOne(t => t.Team)
                 .HasForeignKey(m => m.TeamID);
 
             modelBuilder.Entity<Team>()
                 .HasMany(m => m.ReplyMessages)
-                .WithOne(t => t.PrivateTeams)
+                .WithOne(t => t.PrivateTeam)
                 .HasForeignKey(m => m.PrivateTeamID);
         }
     }
