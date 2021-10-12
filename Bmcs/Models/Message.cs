@@ -20,13 +20,16 @@ namespace Bmcs.Models
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
 
+        [ForeignKey(nameof(PrivateTeams)), Column(Order = 1)]
+        [StringLength(50)]
+        [Display(Name = "送信先チームID")]
+        public string PrivateTeamID { get; set; }
+
+        [Display(Name = "親メッセージID")]
+        public int? ParentMessageID { get; set; }
+
         [Display(Name = "メッセージ区分")]
         public MessageClass? MessageClass { get; set; }
-
-        [ForeignKey(nameof(ReplyTeams)), Column(Order = 1)]
-        [StringLength(50)]
-        [Display(Name = "返信チームID")]
-        public string ReplyTeamID { get; set; }
 
         [DataType(DataType.MultilineText)]
         [Display(Name = "メッセージ")]
@@ -43,7 +46,7 @@ namespace Bmcs.Models
         [ForeignKey("TeamID")]
         public virtual Team Teams { get; set; }
 
-        [ForeignKey("ReplyTeamID")]
-        public virtual Team ReplyTeams { get; set; }
+        [ForeignKey("PrivateTeamID")]
+        public virtual Team PrivateTeams { get; set; }
     }
 }

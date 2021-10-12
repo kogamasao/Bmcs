@@ -70,8 +70,8 @@ namespace Bmcs.Data
 
             modelBuilder.Entity<Team>()
                 .HasMany(m => m.ReplyMessages)
-                .WithOne(t => t.ReplyTeams)
-                .HasForeignKey(m => m.ReplyTeamID);
+                .WithOne(t => t.PrivateTeams)
+                .HasForeignKey(m => m.PrivateTeamID);
         }
     }
 }

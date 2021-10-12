@@ -125,7 +125,7 @@ namespace Bmcs.Models
         [InverseProperty(nameof(Message.Teams))]
         public ICollection<Message> Messages { get; set; }
 
-        [InverseProperty(nameof(Message.ReplyTeams))]
+        [InverseProperty(nameof(Message.PrivateTeams))]
         public ICollection<Message> ReplyMessages { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
