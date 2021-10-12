@@ -523,6 +523,9 @@ namespace Bmcs.Models
 
         public override void OnPageHandlerSelected(PageHandlerSelectedContext context)
         {
+            //マイチーム
+            MyTeam = Context.Teams.Find(HttpContext.Session.GetString(SessionConstant.TeamID));
+
             base.OnPageHandlerSelected(context);
         }
 

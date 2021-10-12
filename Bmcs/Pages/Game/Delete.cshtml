@@ -7,7 +7,7 @@
 
 <h1>試合削除</h1>
 
-<h3>試合情報を削除します。よろしいですか？</h3>
+<h6 class="text-danger">試合情報を削除します。よろしいですか？</h6>
 <div>
     <h4>@Model.Game.Team.TeamName</h4>
     <hr />
@@ -110,7 +110,9 @@
     <form method="post">
         <input type="hidden" asp-for="Game.TeamID" />
         <input type="hidden" asp-for="Game.GameID" />
-        <input type="submit" value="削除" class="btn btn-danger" /> |
-        <a asp-page="./Index" asp-route-teamID="@Model.Game.Team.TeamID">試合一覧</a>
+        <div class="form-group">
+            <input type="submit" value="削除" class="btn btn-danger" />
+            <a class="btn btn-secondary" asp-page="./Index" asp-route-teamID="@Model.Game.Team.TeamID">戻る</a>
+        </div>
     </form>
 </div>

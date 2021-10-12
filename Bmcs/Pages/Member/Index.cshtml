@@ -5,14 +5,17 @@
     ViewData[ViewDataConstant.Title] = "メンバー一覧";
 }
 
-<h1>メンバー一覧</h1>
+<h1>@ViewData[ViewDataConstant.Title]</h1>
 <h4>@Model.Team.TeamName</h4>
-@if(Model.IsMyTeam)
-{ 
-<p>
-    <a asp-page="Create">メンバー追加</a>
-</p>
-}
+
+<div class="form-group">
+    @if (Model.IsMyTeam)
+    {
+    <a class="btn btn-primary" asp-page="Create">メンバー追加</a>
+    }
+    <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
+</div>
+
 <div class="table-responsive">
     <table class="table table-hover table-sm table-bordered">
         <thead class="thead-light">
@@ -103,16 +106,18 @@
                 }
                 @if (Model.IsMyTeam || Model.IsAdmin())
                 {
-                    <td>
-                        <a asp-page="./Edit" asp-route-id="@item.MemberID">編集</a> |
-                        <a asp-page="./Details" asp-route-id="@item.MemberID">詳細</a> |
-                        <a asp-page="./Delete" asp-route-id="@item.MemberID">削除</a>
-                    </td>
+            <td>
+                <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.MemberID">編集</a>
+                <span>&nbsp;</span>
+                <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
+                <span>&nbsp;</span>
+                <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.MemberID">削除</a>
+            </td>
                 }
                 else
                 {
                     <td>
-                        <a asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
+                        <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
                     </td>
                 }
             </tr>

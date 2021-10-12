@@ -5,7 +5,7 @@
     ViewData[ViewDataConstant.Title] = "ユーザ情報(管理者)";
 }
 
-<h1>ユーザ情報(管理者)</h1>
+<h1>@ViewData[ViewDataConstant.Title]</h1>
 
 <div>
     <h4></h4>
@@ -79,7 +79,7 @@
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.UserAccount.UserAccountID">編集</a> |
-    <a asp-page="./Index">ユーザ一覧</a>
+<div class="form-group">
+    <a class="btn btn-primary" asp-page="./Edit" asp-route-id="@Model.UserAccount.UserAccountID">編集</a>
+    <a class="btn btn-secondary" asp-page="./Index">戻る</a>
 </div>

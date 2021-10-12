@@ -5,7 +5,7 @@
     ViewData[ViewDataConstant.Title] = "チーム情報変更";
 }
 
-<h1>チーム情報変更</h1>
+<h1>@ViewData[ViewDataConstant.Title]</h1>
 
 <h4></h4>
 <hr />
@@ -75,17 +75,20 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="登録" class="btn btn-primary" />
+                @if (Model.IsAdmin())
+                {
+                    <a class="btn btn-secondary" asp-page="./Index">戻る</a>
+                }
+                else
+                {
+                    <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
+                }
             </div>
         </form>
     </div>
 </div>
 
-@if(Model.IsAdmin())
-{ 
-<div>
-    <a asp-page="./Index">チーム一覧</a>
-</div>
-}
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

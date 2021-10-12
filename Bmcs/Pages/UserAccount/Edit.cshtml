@@ -2,10 +2,10 @@
 @model Bmcs.Pages.UserAccount.EditModel
 
 @{
-    ViewData[ViewDataConstant.Title] = "ユーザ情報変更";
+    ViewData[ViewDataConstant.Title] = "ユーザ情報";
 }
 
-<h1>ユーザ情報変更</h1>
+<h1>@ViewData[ViewDataConstant.Title]</h1>
 
 <h4></h4>
 <hr />
@@ -46,13 +46,17 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="登録" class="btn btn-primary" />
+                @if (Model.IsAdmin())
+                {
+                    <a class="btn btn-secondary" asp-page="./Index">戻る</a>
+                }
+                else
+                {
+                    <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
+                }
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-page="./Index">ユーザ一覧</a>
 </div>
 
 @section Scripts {

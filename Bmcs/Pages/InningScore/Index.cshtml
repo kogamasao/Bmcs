@@ -200,7 +200,7 @@
                                 @if (Model.IsMyTeam || Model.IsAdmin())
                                 {
                                     <td>
-                                        <a asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@item.GameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">修正</a>
+                                        <a class="btn btn-primary btn-sm" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@item.GameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">修正</a>
                                     </td>
                                 }
                             </tr>

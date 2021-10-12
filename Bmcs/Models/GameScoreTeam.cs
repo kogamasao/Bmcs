@@ -15,7 +15,7 @@ namespace Bmcs.Models
         [Display(Name = "順位")]
         public int? Rank { get; set; }
 
-        [Display(Name = "チームID")]
+        [Display(Name = "チーム")]
         public string TeamID { get; set; }
 
         [Display(Name = "年")]

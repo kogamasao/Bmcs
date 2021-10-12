@@ -5,18 +5,20 @@
     ViewData[ViewDataConstant.Title] = "チーム一覧";
 }
 
-<h1>チーム一覧</h1>
-@if (Model.IsAdmin())
-{
-    <p>
-        <a asp-page="Create">チーム作成</a>
-    </p>
-    <p>※すべてのチームが表示対象です</p>
-}
-else
-{
-    <p>※公開チームのみ表示対象です</p>
-}
+<h1>@ViewData[ViewDataConstant.Title]</h1>
+<div class="form-group">
+    @if (Model.IsAdmin())
+    {
+        <a class="btn btn-primary" asp-page="Create">チーム作成</a>
+        <p>※すべてのチームが表示対象です</p>
+    }
+    else
+    {
+        <p>※公開チームのみ表示対象です</p>
+    }
+    <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
+</div>
+
 <div class="table-responsive">
     <table class="table table-hover table-sm table-bordered">
         <thead class="thead-light">
@@ -81,82 +83,79 @@ else
         <tbody>
             @foreach (var item in Model.Team)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeamID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeamName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeamAbbreviation)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RepresentativeName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeamCategoryClassName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UseBallClassName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ActivityBase)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeamNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeamEmailAddress)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MessageDetail)
-                </td>
-                @if (Model.IsAdmin())
-                {
+                <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TeamPassword)
+                        @Html.DisplayFor(modelItem => item.TeamID)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.PublicFLG)
+                        @Html.DisplayFor(modelItem => item.TeamName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.DeleteFLG)
+                        @Html.DisplayFor(modelItem => item.TeamAbbreviation)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.EntryUserID)
+                        @Html.DisplayFor(modelItem => item.RepresentativeName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.EntryDatetime)
+                        @Html.DisplayFor(modelItem => item.TeamCategoryClassName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.UpdateUserID)
+                        @Html.DisplayFor(modelItem => item.UseBallClassName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.UpdateDatetime)
+                        @Html.DisplayFor(modelItem => item.ActivityBase)
                     </td>
-                }
-                @if (Model.IsAdmin())
-                {
-            <td>
-                <a asp-page="/Game/Index" asp-route-teamID="@item.TeamID">試合</a> |
-                <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID"  asp-route-isPublic="@true">成績</a> |
-                <a asp-page="./Details" asp-route-id="@item.TeamID">詳細</a> |
-                <a asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a> |
-                <a asp-page="./Edit" asp-route-id="@item.TeamID">編集</a> |
-                <a asp-page="./Delete" asp-route-id="@item.TeamID">削除</a>
-            </td>
-                }
-                else
-                {
-            <td>
-                <a asp-page="/Game/Index" asp-route-teamID="@item.TeamID">試合</a> |
-                <a asp-page="/Score/Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@true">成績</a> |
-                <a asp-page="./Details" asp-route-id="@item.TeamID">詳細</a> |
-                <a asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a>
-            </td>
-                }
-            </tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TeamNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TeamEmailAddress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MessageDetail)
+                    </td>
+                    @if (Model.IsAdmin())
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TeamPassword)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PublicFLG)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DeleteFLG)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EntryUserID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EntryDatetime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdateUserID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdateDatetime)
+                        </td>
+                    }
+
+                    <td>
+                        <a class="btn btn-primary btn-sm" asp-page="/Game/Index" asp-route-teamID="@item.TeamID">試合</a>
+                        <span>&nbsp;</span>
+                        <a class="btn btn-primary btn-sm" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@true">成績</a>
+                        <span>&nbsp;</span>
+                        <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.TeamID">詳細</a>
+                        <span>&nbsp;</span>
+                        <a class="btn btn-primary btn-sm" asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a>
+                        @if (Model.IsAdmin())
+                        {
+                            <span>&nbsp;</span>
+                            <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.TeamID">編集</a>
+                            <span>&nbsp;</span>
+                            <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.TeamID">削除</a>
+                        }
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

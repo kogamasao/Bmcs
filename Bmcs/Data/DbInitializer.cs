@@ -26,7 +26,7 @@ namespace Bmcs.Data
                 new SystemAdmin
                 {
                       MessageTitle = "トップ画面お知らせ"
-                    , MessageDetail = "管理者よりお知らせ<br />まだリリース前です<br />試合関連完了。成績画面、メッセージ画面を作成中"
+                    , MessageDetail = "管理者よりお知らせ<br />α版リリース中<br />メッセージ機能以外使用可能です。"
                     , EntryDatetime = DateTime.Now
                     , EntryUserID = "ADMIN"
                     , UpdateDatetime = DateTime.Now

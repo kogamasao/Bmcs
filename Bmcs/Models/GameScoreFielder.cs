@@ -20,7 +20,7 @@ namespace Bmcs.Models
         public int? GameID { get; set; }
 
         [StringLength(50)]
-        [Display(Name = "チームID")]
+        [Display(Name = "チーム")]
         public string TeamID { get; set; }
 
         [Display(Name = "スコア表示順")]

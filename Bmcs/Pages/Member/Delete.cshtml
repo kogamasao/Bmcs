@@ -5,9 +5,9 @@
     ViewData[ViewDataConstant.Title] = "メンバー削除";
 }
 
-<h1>メンバー削除</h1>
+<h1>@ViewData[ViewDataConstant.Title]</h1>
 
-<h3>メンバーを削除します。よろしいですか？</h3>
+<h6 class="text-danger">メンバーを削除します。よろしいですか？</h6>
 <div>
     <h4>@Model.Member.Team.TeamName</h4>
     <hr />
@@ -86,7 +86,8 @@
     <form method="post">
         <input type="hidden" asp-for="Member.TeamID" />
         <input type="hidden" asp-for="Member.MemberID" />
-        <input type="submit" value="削除" class="btn btn-danger" /> |
-        <a asp-page="./Index" asp-route-teamID="@Model.Member.Team.TeamID">メンバー一覧</a>
+        <input type="submit" value="削除" class="btn btn-danger" />
+        <a class="btn btn-secondary" asp-page="./Index" asp-route-teamID="@Model.Member.Team.TeamID">戻る</a>
     </form>
+
 </div>

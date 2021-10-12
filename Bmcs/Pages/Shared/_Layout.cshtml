@@ -20,20 +20,20 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                        @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Top/Index">Top</a>
-                        </li>
+                        </li>*@
 
                         @if (Model.IsLogin())
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Game/Index">試合一覧</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Game/Index">試合</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Score/Index">成績一覧</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@false">成績</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Member/Index">メンバー一覧</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Member/Index">メンバー</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Team/Edit">チーム情報</a>
@@ -44,10 +44,10 @@
                         }
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Team/Index">公開チーム一覧</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Team/Index">公開チーム</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@true">公開チーム成績一覧</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@true">公開チーム成績</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Message/Index">メッセージ</a>

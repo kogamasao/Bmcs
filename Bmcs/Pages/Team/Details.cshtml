@@ -5,7 +5,7 @@
     ViewData[ViewDataConstant.Title] = "チーム情報";
 }
 
-<h1>チーム情報</h1>
+<h1>@ViewData[ViewDataConstant.Title]</h1>
 
 <div>
     <h4></h4>
@@ -334,6 +334,6 @@
     }
 
 </div>
-<div>
-    <a asp-page="./Index">チーム一覧</a>
+<div class="form-group">
+    <a class="btn btn-secondary" asp-page="./Index">戻る</a>
 </div>

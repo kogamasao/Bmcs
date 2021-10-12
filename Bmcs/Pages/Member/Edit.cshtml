@@ -5,7 +5,7 @@
     ViewData[ViewDataConstant.Title] = "メンバー情報変更";
 }
 
-<h1>メンバー情報変更</h1>
+<h1>@ViewData[ViewDataConstant.Title]</h1>
 
 <h4>@Model.Member.Team.TeamName</h4>
 <hr />
@@ -48,13 +48,11 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="登録" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-page="Index" asp-route-teamID="@Model.Member.Team.TeamID">戻る</a>
+
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-page="Index" asp-route-teamID="@Model.Member.Team.TeamID">メンバー一覧</a>
 </div>
 
 @section Scripts {

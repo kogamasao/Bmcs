@@ -14,7 +14,7 @@
             if (sortItem) {
                 sortItem.children().addClass("text-body");
                 sortItem.addClass("font-weight-bold");
-                sortItem.addClass("bg-light");
+                sortItem.addClass("column-sort-select");
             }
         }
     }
