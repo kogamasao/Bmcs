@@ -75,7 +75,10 @@ namespace Bmcs.Pages.Message
             //メッセージ
             MessageList = new List<Models.Message>();
 
-            MessageList = await Context.Messages.ToListAsync();
+            MessageList = await Context.Messages
+                                    .Include(r => r.UserAccount)
+                                    .Include(r => r.Team)
+                                    .ToListAsync();
 
             //タイトル
             ViewData[ViewDataConstant.Title] = "メッセージ";

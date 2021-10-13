@@ -46,6 +46,10 @@ namespace Bmcs.Models
         [Display(Name = "削除フラグ")]
         public bool DeleteFLG { get; set; }
 
+        [NotMapped]
+        [Display(Name = "返信件数")]
+        public int? ReplyCount { get; set; }
+
         [ForeignKey("TeamID")]
         public virtual Team Team { get; set; }
 

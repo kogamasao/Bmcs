@@ -54,7 +54,7 @@ namespace Bmcs.Data
                 new UserAccount
                 {
                       UserAccountID = "YGUser"
-                    , UserAccountName = "ジャイアンツユーザ"
+                    , UserAccountName = "ジャイアンツ管理者"
                     , Password = "1"
                     , TeamID = "YG"
                     , EmailAddress = ""
@@ -67,7 +67,7 @@ namespace Bmcs.Data
                 new UserAccount
                 {
                       UserAccountID = "HTUser"
-                    , UserAccountName = "タイガースユーザ"
+                    , UserAccountName = "タイガース管理者"
                     , Password = "1"
                     , TeamID = "HT"
                     , EmailAddress = "proud.of.y.d@gmail.com"
@@ -80,7 +80,7 @@ namespace Bmcs.Data
                 new UserAccount
                 {
                       UserAccountID = "JBUser"
-                    , UserAccountName = "JAPANBRIDGEユーザ"
+                    , UserAccountName = "JAPAN BRIDGE 管理者"
                     , Password = "1"
                     , TeamID = "JB"
                     , EmailAddress = "proud.of.y.d@gmail.com"
