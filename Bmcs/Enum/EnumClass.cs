@@ -543,13 +543,13 @@ namespace Bmcs.Enum
     /// </summary>
     public enum MessagePageClass
     {
-        [Display(Name = "公開メッセージ")]
+        [Display(Name = "公開")]
         Public = 1,
-        [Display(Name = "投稿メッセージ")]
+        [Display(Name = "投稿")]
         PublicTeam = 2,
-        [Display(Name = "関連メッセージ")]
+        [Display(Name = "関連")]
         RelatedTeam = 3,
-        [Display(Name = "非公開メッセージ")]
+        [Display(Name = "非公開")]
         Private = 4,
     }
 

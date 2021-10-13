@@ -8,25 +8,62 @@
     <h4>@Model.Team.TeamName</h4>
 }
 
-<form method="get" asp-page="/Score/Index">
+<form method="post" asp-page="/Message/Index">
     <input type="hidden" asp-for="MessagePageClass" name="messagePageClass" />
     <input type="hidden" asp-for="SelectTeamID" name="teamID" />
     <input type="hidden" asp-for="MessageID" name="messageID" />
     <div class="row">
+        @if (Model.IsLogin())
+        {
+            <div class="col-md-6">
 
+                <div class="form-group">
+                    <p>@Model.UserAccount.UserAccountName</p>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Message.MessageDetail" class="control-label"></label>
+                    <textarea asp-for="Message.MessageDetail" class="form-control"></textarea>
+                    <span asp-validation-for="Message.MessageDetail" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <p class="text-danger">送信先を指定すると非公開メッセージになります。</p>
+                    <p class="text-danger">全チームに対する公開メッセージにしたい場合は指定不要です。</p>
+                    <label asp-for="Message.PrivateTeamID" class="control-label"></label>
+                    <select asp-for="Message.PrivateTeamID" class="form-control" asp-items="Model.TeamIDList"></select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="投稿" class="btn btn-primary btn-block" />
+                </div>
+            </div>
+        }
 
+        <div class="col-md-6">
+            <table class="table table-sm table-borderless">
+                <tbody>
+                    <tr>
+                        <td style="width:25%">
+                            <a class="btn btn-outline-primary btn-block" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.Public.GetEnumName()</a>
+                        </td>
+                        <td style="width:25%">
+                            <a class="btn btn-outline-primary btn-block" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.PublicTeam" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.PublicTeam.GetEnumName()</a>
+                        </td>
+                        <td style="width:25%">
+                            <a class="btn btn-outline-primary btn-block" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.RelatedTeam" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.RelatedTeam.GetEnumName()</a>
+                        </td>
+                        <td style="width:25%">
+                            <a class="btn btn-outline-primary btn-block" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Private" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.Private.GetEnumName()</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-    </div>
-
-    <div class="form-group">
-        <input type="submit" value="表示" class="btn btn-primary" />
+            @foreach (var item in Model.MessageList.OrderByDescending(r => r.EntryDatetime))
+            {
+                <p>@item.MessageDetail</p>
+            }
+        </div>
     </div>
 </form>
-
-@foreach (var item in Model.MessageList)
-{
-    <p>@item.MessageDetail</p>
-}
 
 <div class="form-group">
     @if (Model.MessageID == null)

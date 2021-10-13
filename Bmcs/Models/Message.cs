@@ -25,7 +25,7 @@ namespace Bmcs.Models
 
         [ForeignKey(nameof(PrivateTeam)), Column(Order = 1)]
         [StringLength(50)]
-        [Display(Name = "送信先チームID")]
+        [Display(Name = "送信先チーム")]
         public string PrivateTeamID { get; set; }
 
         [Display(Name = "親メッセージID")]

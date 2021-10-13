@@ -24,7 +24,13 @@ namespace Bmcs.Pages.Message
         }
 
         [BindProperty]
+        public Models.UserAccount UserAccount { get; set; }
+
+        [BindProperty]
         public Models.Team Team { get; set; }
+
+        [BindProperty]
+        public Models.Message Message { get; set; }
 
         [BindProperty]
         public MessagePageClass MessagePageClass { get; set; }
@@ -62,6 +68,9 @@ namespace Bmcs.Pages.Message
                     return NotFound();
                 }
             }
+
+            //ユーザアカウント
+            UserAccount = await Context.UserAccounts.FindAsync(HttpContext.Session.GetString(SessionConstant.UserAccountID));
 
             //メッセージ
             MessageList = new List<Models.Message>();

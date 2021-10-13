@@ -64,3 +64,7 @@ h6 {
 .column-sort-select {
     background-color: rgba(0,0,0,.075);
 }
+
+textarea.form-control {
+    height: 200px;
+}
