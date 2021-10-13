@@ -10,8 +10,9 @@
 
 <form method="post" asp-page="/Message/Index">
     <input type="hidden" asp-for="MessagePageClass" name="messagePageClass" />
-    <input type="hidden" asp-for="SelectTeamID" name="teamID" />
     <input type="hidden" asp-for="MessageID" name="messageID" />
+    <input type="hidden" asp-for="Message.TeamID" />
+    <input type="hidden" asp-for="Message.UserAccountID" />
     <div class="row">
         @if (Model.IsLogin())
         {
@@ -21,7 +22,6 @@
                     投稿
                 </div>
                 <div class="box-inner">
-
                     <div class="form-group">
                         <p>@Model.UserAccount.UserAccountName</p>
                     </div>
@@ -54,16 +54,16 @@
                         <tbody>
                             <tr>
                                 <td style="width:25%">
-                                    <a class="btn btn-outline-primary btn-block" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.Public.GetEnumName()</a>
+                                    <a class="btn btn-outline-primary btn-block Public" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.Public.GetEnumName()</a>
                                 </td>
                                 <td style="width:25%">
-                                    <a class="btn btn-outline-primary btn-block" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.PublicTeam" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.PublicTeam.GetEnumName()</a>
+                                    <a class="btn btn-outline-primary btn-block PublicTeam" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.PublicTeam" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.PublicTeam.GetEnumName()</a>
                                 </td>
                                 <td style="width:25%">
-                                    <a class="btn btn-outline-primary btn-block" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.RelatedTeam" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.RelatedTeam.GetEnumName()</a>
+                                    <a class="btn btn-outline-primary btn-block RelatedTeam" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.RelatedTeam" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.RelatedTeam.GetEnumName()</a>
                                 </td>
                                 <td style="width:25%">
-                                    <a class="btn btn-outline-primary btn-block" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Private" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.Private.GetEnumName()</a>
+                                    <a class="btn btn-outline-primary btn-block Private" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Private" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.Private.GetEnumName()</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -82,7 +82,7 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                @item.MessageDetail
+                                @Html.Raw(item.MessageDetail.Replace("\n", "<br />"))
                             </div>
                             <div class="card-footer">
                                 <span>投稿日時：@item.EntryDatetime</span>
@@ -117,4 +117,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/message.js"></script>
 }

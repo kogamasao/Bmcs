@@ -68,3 +68,9 @@ h6 {
 textarea.form-control {
     height: 200px;
 }
+
+.select-message {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}

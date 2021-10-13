@@ -23,7 +23,8 @@ namespace Bmcs.Models
         [Display(Name = "背番号")]
         public string UniformNumber { get; set; }
 
-        [StringLength(50)]
+        [Required(ErrorMessage = "{0}は必須です。")]
+        [StringLength(50, ErrorMessage = "{0}は50桁以内で入力してください。")]
         [Display(Name = "名前")]
         public string MemberName { get; set; }
 

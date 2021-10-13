@@ -23,10 +23,8 @@ namespace Bmcs.Pages.Message
 
         }
 
-        [BindProperty]
         public Models.UserAccount UserAccount { get; set; }
 
-        [BindProperty]
         public Models.Team Team { get; set; }
 
         [BindProperty]
@@ -35,7 +33,6 @@ namespace Bmcs.Pages.Message
         [BindProperty]
         public MessagePageClass MessagePageClass { get; set; }
 
-        [BindProperty]
         public string SelectTeamID { get; set; }
 
         [BindProperty]
@@ -69,16 +66,57 @@ namespace Bmcs.Pages.Message
                 }
             }
 
-            //ユーザアカウント
-            UserAccount = await Context.UserAccounts.FindAsync(HttpContext.Session.GetString(SessionConstant.UserAccountID));
-
-            //メッセージ
+            //メッセージリスト
             MessageList = new List<Models.Message>();
 
-            MessageList = await Context.Messages
+            if(messageID == null)
+            { 
+                var tempMessageList = await Context.Messages
+                                        .Include(r => r.UserAccount)
+                                        .Include(r => r.Team)
+                                        .Where(r => ((messagePageClass == MessagePageClass.Public) && (r.PublicFLG))
+                                                || ((messagePageClass == MessagePageClass.PublicTeam) && (r.PublicFLG) && (r.TeamID == HttpContext.Session.GetString(SessionConstant.TeamID)) && (r.MessageClass == MessageClass.Post))
+                                                || ((messagePageClass == MessagePageClass.RelatedTeam) && (r.TeamID == HttpContext.Session.GetString(SessionConstant.TeamID) || r.PrivateTeamID == HttpContext.Session.GetString(SessionConstant.TeamID)))
+                                                || ((messagePageClass == MessagePageClass.Private) && (!r.PublicFLG) && (r.TeamID == HttpContext.Session.GetString(SessionConstant.TeamID) || r.PrivateTeamID == HttpContext.Session.GetString(SessionConstant.TeamID)))
+                                        )
+                                        .ToListAsync();
+
+                if(messagePageClass == MessagePageClass.PublicTeam)
+                {
+                    MessageList = tempMessageList;
+                }
+                else
+                {
+                    var messageIDList = tempMessageList.Select(r => new { MessageID = r.ParentMessageID == null ? r.MessageID : r.ParentMessageID.NullToZero() }).GroupBy(r => r.MessageID).Select(r => MessageID = r.Key);
+
+                    MessageList = await Context.Messages
+                                            .Include(r => r.UserAccount)
+                                            .Include(r => r.Team)
+                                            .Where(r => messageIDList.Contains(r.MessageID)).ToListAsync();
+                }
+            }
+            else
+            {
+                MessageList = await Context.Messages
                                     .Include(r => r.UserAccount)
                                     .Include(r => r.Team)
+                                    .Where(r => r.MessageID == messageID || r.ParentMessageID == messageID)
                                     .ToListAsync();
+
+            }
+
+            if (base.IsLogin())
+            { 
+                //ユーザアカウント
+                UserAccount = await Context.UserAccounts.FindAsync(HttpContext.Session.GetString(SessionConstant.UserAccountID));
+
+                //メッセージ
+                Message = new Models.Message()
+                {
+                    TeamID = teamID,
+                    UserAccountID = UserAccount.UserAccountID,
+                };
+            }
 
             //タイトル
             ViewData[ViewDataConstant.Title] = "メッセージ";
@@ -109,5 +147,54 @@ namespace Bmcs.Pages.Message
 
         }
 
+        public async Task<IActionResult> OnPostAsync()
+        {
+            try
+            {
+                Team = await Context.Teams.FindAsync(Message.TeamID);
+
+                UserAccount = await Context.UserAccounts.FindAsync(Message.UserAccountID);
+
+                if (!ModelState.IsValid)
+                {
+                    return Page();
+                }
+
+                //データ作成
+                var message = new Models.Message();
+
+                //POST値セット
+                this.TryUpdateModel(message);
+                //エントリ情報セット
+                base.SetEntryInfo(message);
+
+                Context.Messages.Add(message);
+
+                await Context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+
+            return RedirectToPage("/Message/Index", new { messagePageClass = MessagePageClass });
+
+        }
+
+        /// <summary>
+        /// POST値をモデルにセット
+        /// </summary>
+        /// <param name="message"></param>
+        private void TryUpdateModel(Models.Message message)
+        {
+            message.TeamID = Message.TeamID;
+            message.UserAccountID = Message.UserAccountID;
+            message.PrivateTeamID = Message.PrivateTeamID;
+            message.ParentMessageID = MessageID;
+            message.MessageClass = MessageID == null ? MessageClass.Post : MessageClass.Reply;
+            message.MessageDetail = Message.MessageDetail;
+            message.PublicFLG = Message.PrivateTeamID == null ? true : false;
+            message.DeleteFLG = false;
+        }
     }
 }

@@ -20,12 +20,12 @@ namespace Bmcs.Models
 
         [Required(ErrorMessage = "{0}は必須です。")]
         [Display(Name = "チーム名")]
-        [StringLength(50)]
+        [StringLength(50, ErrorMessage = "{0}は50桁以内で入力してください。")]
         public string TeamName { get; set; }
 
         [Required(ErrorMessage = "{0}は必須です。")]
         [Display(Name = "チーム略名")]
-        [StringLength(10)]
+        [StringLength(10, ErrorMessage = "{0}は10桁以内で入力してください。")]
         public string TeamAbbreviation { get; set; }
 
         [Display(Name = "代表者名")]

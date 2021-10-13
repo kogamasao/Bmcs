@@ -34,6 +34,7 @@ namespace Bmcs.Models
         [Display(Name = "メッセージ区分")]
         public MessageClass? MessageClass { get; set; }
 
+        [Required(ErrorMessage = "{0}は必須です。")]
         [DataType(DataType.MultilineText)]
         [Display(Name = "メッセージ")]
         public string MessageDetail { get; set; }
