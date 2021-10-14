@@ -14,12 +14,12 @@
     <input type="hidden" asp-for="Message.TeamID" />
     <input type="hidden" asp-for="Message.UserAccountID" />
     <div class="row">
-        @if (Model.IsLogin())
+        @if (Model.IsEnablePostReply)
         {
             <div class="col-md-6">
                 <div class="box">
                     <div class="box-title">
-                        投稿
+                        @ViewData[ViewDataConstant.MessageMode]
                     </div>
                     <div class="box-inner">
                         <div class="form-group">
@@ -27,36 +27,44 @@
                         </div>
                         @if (Model.MessageID == null)
                         {
-                            <div class="form-group">
-                                <label asp-for="Message.MessageTitle" class="control-label"></label>
-                                <input asp-for="Message.MessageTitle" class="form-control">
-                                <span asp-validation-for="Message.MessageTitle" class="text-danger"></span>
-                            </div>
+                        <div class="form-group">
+                            <label asp-for="Message.MessageTitle" class="control-label"></label>
+                            <input asp-for="Message.MessageTitle" class="form-control">
+                            <span asp-validation-for="Message.MessageTitle" class="text-danger"></span>
+                        </div>
                         }
                         else
                         {
-                            <input type="hidden" asp-for="Message.MessageTitle" />
+                        <input type="hidden" asp-for="Message.MessageTitle" />
                         }
                         <div class="form-group">
                             <label asp-for="Message.MessageDetail" class="control-label"></label>
                             <textarea asp-for="Message.MessageDetail" class="form-control"></textarea>
                             <span asp-validation-for="Message.MessageDetail" class="text-danger"></span>
                         </div>
-                        @if (Model.MessageID == null)
+                        @if (Model.MessageID == null && Model.MyTeam.PublicFLG)
                         {
-                            <div class="form-group">
-                                <label asp-for="Message.PrivateTeamID" class="control-label"></label>
-                                <select asp-for="Message.PrivateTeamID" class="form-control" asp-items="Model.TeamIDList"></select>
-                                <p class="text-danger">送信先を指定すると非公開メッセージになります。</p>
-                                <p class="text-danger">全チームに対する公開メッセージにしたい場合は指定不要です。</p>
-                            </div>
+                        <div class="form-group">
+                            <label asp-for="Message.PrivateTeamID" class="control-label"></label>
+                            <select asp-for="Message.PrivateTeamID" class="form-control" asp-items="Model.TeamIDList"></select>
+                            <p class="text-danger pt-2">
+                                送信先を指定するとダイレクト(非公開)メッセージになります。<br />
+                                全チームに対する公開メッセージにしたい場合は指定不要です。
+                            </p>
+                        </div>
                         }
                         else
                         {
-                            <input type="hidden" asp-for="Message.PrivateTeamID" />
+                        @if(!Model.MyTeam.PublicFLG)
+                            {
+                        <p class="text-danger pt-2">
+                            非公開チームの場合、公開投稿や他チームへのメッセージは送信できません。
+                        </p>
+                            }
+                        <input type="hidden" asp-for="Message.PrivateTeamID" />
                         }
                         <div class="form-group">
-                            <input type="submit" value="投稿" class="btn btn-primary btn-block" />
+                            <input type="submit" value="@ViewData[ViewDataConstant.MessageMode]" class="btn btn-primary btn-block" />
                         </div>
                     </div>
                 </div>
@@ -75,7 +83,7 @@
         }
 
         <div class="col-md-6">
-            @if (!Model.IsLogin())
+            @if (!Model.IsEnablePostReply)
             {
                 <div class="form-group">
                     @if (Model.MessageID == null)
@@ -96,6 +104,8 @@
                         メッセージ
                     </div>
                     <div class="box-inner">
+                        @if (Model.IsLogin())
+                        {
                         <table class="table table-sm table-borderless">
                             <tbody>
                                 <tr>
@@ -114,33 +124,33 @@
                                 </tr>
                             </tbody>
                         </table>
-
-                        @foreach (var item in Model.MessageList.OrderByDescending(r => r.EntryDatetime))
+                        }
+                        @foreach (var item in Model.MessageList.OrderByDescending(r => r.UpdateDatetime))
                         {
-                            <div class="form-group border-bottom">
-                                <div class="card mb-3">
-                                    <div class="card-header">
-                                        <div class="card-title font-weight-bold">
-                                            @item.MessageTitle
-                                        </div>
-                                        <div class="card-subtitle text-muted">
-                                            <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Team.TeamName</a>
-                                            <span>：</span>
-                                            <span>@item.UserAccount.UserAccountName</span>
-                                        </div>
+                        <div class="form-group border-bottom">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <div class="card-title font-weight-bold">
+                                        @item.MessageTitle
                                     </div>
-                                    <div class="card-body">
-                                        @Html.Raw(item.MessageDetail.Replace("\n", "<br />"))
-                                    </div>
-                                    <div class="card-footer">
-                                        <span>投稿日時：@item.EntryDatetime</span>
-                                        <span>&nbsp;</span>
-                                        <span>返信件数：@item.ReplyCount 件</span>
-                                        <span>&nbsp;</span>
-                                        <a class="btn btn-primary btn-sm" asp-page="/Message/Index" asp-route-messagePageClass="@Model.MessagePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-messageID="@item.MessageID">確認＆返信</a>
+                                    <div class="card-subtitle text-muted">
+                                        <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Team.TeamName</a>
+                                        <span>：</span>
+                                        <span>@item.UserAccount.UserAccountName</span>
                                     </div>
                                 </div>
+                                <div class="card-body">
+                                    @Html.Raw(item.MessageDetail.Replace("\n", "<br />"))
+                                </div>
+                                <div class="card-footer">
+                                    <span>更新日時：@item.UpdateDatetime</span>
+                                    <span>&nbsp;</span>
+                                    <span>返信件数：@item.ReplyCount 件</span>
+                                    <span>&nbsp;</span>
+                                    <a class="btn btn-primary btn-sm" asp-page="/Message/Index" asp-route-messagePageClass="@Model.MessagePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-messageID="@item.MessageID">確認＆返信</a>
+                                </div>
                             </div>
+                        </div>
                         }
                     </div>
                 }
@@ -195,8 +205,6 @@
         </div>
     </div>
 </form>
-
-
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

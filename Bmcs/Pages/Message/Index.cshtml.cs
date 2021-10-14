@@ -40,7 +40,9 @@ namespace Bmcs.Pages.Message
 
         public List<Models.Message> MessageList { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(MessagePageClass messagePageClass, string teamID, int? messageID)
+        public bool IsEnablePostReply { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(MessagePageClass messagePageClass, string teamID, int? messageID, string privateTeamID)
         {
             if (string.IsNullOrEmpty(teamID))
             {
@@ -115,7 +117,35 @@ namespace Bmcs.Pages.Message
                 {
                     TeamID = teamID,
                     UserAccountID = UserAccount.UserAccountID,
+                    MessageTitle = messageID == null ? null : "返信",
                 };
+
+                //非公開チーム
+                if(!MyTeam.PublicFLG)
+                {
+                    Message.PrivateTeamID = MyTeam.TeamID;
+                }
+                //チーム指定あり
+                else if(!string.IsNullOrEmpty(privateTeamID))
+                {
+                    Message.PrivateTeamID = privateTeamID;
+                }
+
+                //親データ取得
+                var parentMessage = await Context.Messages.FindAsync(messageID);
+
+                if (parentMessage != null && (parentMessage.PublicFLG || parentMessage.TeamID != MyTeam.TeamID))
+                {
+                    IsEnablePostReply = false;
+                }
+                else
+                {
+                    IsEnablePostReply = true;
+                }
+            }
+            else
+            {
+                IsEnablePostReply = false;
             }
 
             //タイトル
@@ -136,6 +166,15 @@ namespace Bmcs.Pages.Message
             else if (messagePageClass == MessagePageClass.Private)
             {
                 ViewData[ViewDataConstant.Title] += "(非公開)";
+            }
+
+            if (messageID == null)
+            {
+                ViewData[ViewDataConstant.MessageMode] = "投稿";
+            }
+            else
+            {
+                ViewData[ViewDataConstant.MessageMode] = "返信";
             }
 
             //引数セット
@@ -162,24 +201,21 @@ namespace Bmcs.Pages.Message
 
                 //データ作成
                 var message = new Models.Message();
+                //親データ取得
+                var parentMessage = await Context.Messages.FindAsync(MessageID);
 
                 //POST値セット
-                this.TryUpdateModel(message);
+                this.TryUpdateModel(message, parentMessage);
                 //エントリ情報セット
                 base.SetEntryInfo(message);
 
                 Context.Messages.Add(message);
 
                 //返信
-                if(MessageID != null)
+                if(parentMessage != null)
                 {
-                    //データ作成
-                    var parentMessage = await Context.Messages.FindAsync(MessageID);
-
-                    if(parentMessage != null)
-                    {
-                        parentMessage.ReplyCount += 1;
-                    }
+                    parentMessage.ReplyCount += 1;
+                    base.SetUpdateInfo(parentMessage);
                 }
 
                 await Context.SaveChangesAsync();
@@ -197,17 +233,26 @@ namespace Bmcs.Pages.Message
         /// POST値をモデルにセット
         /// </summary>
         /// <param name="message"></param>
-        private void TryUpdateModel(Models.Message message)
+        private void TryUpdateModel(Models.Message message, Models.Message parentMessage)
         {
             message.TeamID = Message.TeamID;
             message.UserAccountID = Message.UserAccountID;
-            message.PrivateTeamID = Message.PrivateTeamID;
+            message.PrivateTeamID = MessageID == null ? Message.PrivateTeamID : null;
             message.ParentMessageID = MessageID;
             message.MessageClass = MessageID == null ? MessageClass.Post : MessageClass.Reply;
             message.MessageTitle = Message.MessageTitle;
             message.MessageDetail = Message.MessageDetail;
             message.ReplyCount = 0;
-            message.PublicFLG = Message.PrivateTeamID == null ? true : false;
+
+            if (parentMessage != null)
+            {
+                message.PublicFLG = parentMessage.PublicFLG;
+            }
+            else
+            {
+                message.PublicFLG = Message.PrivateTeamID == null ? true : false;
+            }
+
             message.DeleteFLG = false;
         }
     }

@@ -855,7 +855,7 @@ namespace Bmcs.Data
                         , DeleteFLG = false
                         , PublicFLG = true
                         , MessageClass = MessageClass.Post
-                        , MessageTitle = "JBからの公開投稿"
+                        , MessageTitle = "JBからの公開投稿　※このメッセージはサンプルです。"
                         , MessageDetail = "一般の投稿です。対戦相手募集"
                         , ReplyCount = 0
                         , EntryDatetime = DateTime.Now
@@ -872,7 +872,7 @@ namespace Bmcs.Data
                         , DeleteFLG = false
                         , PublicFLG = false
                         , MessageClass = MessageClass.Post
-                        , MessageTitle = "チーム内投稿"
+                        , MessageTitle = "チーム内投稿　※このメッセージはサンプルです。"
                         , MessageDetail = "チーム内連絡です。"
                         , ReplyCount = 0
                         , EntryDatetime = DateTime.Now
@@ -889,7 +889,7 @@ namespace Bmcs.Data
                         , DeleteFLG = false
                         , PublicFLG = true
                         , MessageClass = MessageClass.Post
-                        , MessageTitle = "巨人よりお知らせ"
+                        , MessageTitle = "巨人よりお知らせ　※このメッセージはサンプルです。"
                         , MessageDetail = "巨人から公開メッセージ"
                         , ReplyCount = 0
                         , EntryDatetime = DateTime.Now
@@ -906,7 +906,7 @@ namespace Bmcs.Data
                         , DeleteFLG = false
                         , PublicFLG = false
                         , MessageClass = MessageClass.Post
-                        , MessageTitle = "巨人からJB"
+                        , MessageTitle = "巨人からJB　※このメッセージはサンプルです。"
                         , MessageDetail = "巨人からJBへのダイレクトメッセージ"
                         , ReplyCount = 0
                         , EntryDatetime = DateTime.Now
@@ -923,7 +923,7 @@ namespace Bmcs.Data
                         , DeleteFLG = false
                         , PublicFLG = true
                         , MessageClass = MessageClass.Post
-                        , MessageTitle = "阪神からお知らせ"
+                        , MessageTitle = "阪神からお知らせ　※このメッセージはサンプルです。"
                         , MessageDetail = "阪神から公開メッセージ"
                         , ReplyCount = 0
                         , EntryDatetime = DateTime.Now
@@ -940,7 +940,7 @@ namespace Bmcs.Data
                         , DeleteFLG = false
                         , PublicFLG = false
                         , MessageClass = MessageClass.Post
-                        , MessageTitle = "阪神からJB"
+                        , MessageTitle = "阪神からJB　※このメッセージはサンプルです。"
                         , MessageDetail = "阪神からJBへのダイレクトメッセージ"
                         , ReplyCount = 0
                         , EntryDatetime = DateTime.Now

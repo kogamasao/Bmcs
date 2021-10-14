@@ -23,6 +23,7 @@ namespace Bmcs.Constans
     public static class ViewDataConstant
     {
         public static readonly string Title = "Title";
+        public static readonly string MessageMode = "MessageMode";
     }
 
     /// <summary>
