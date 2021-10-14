@@ -134,7 +134,7 @@ namespace Bmcs.Pages.Message
                 //親データ取得
                 var parentMessage = await Context.Messages.FindAsync(messageID);
 
-                if (parentMessage != null && (parentMessage.PublicFLG || parentMessage.TeamID != MyTeam.TeamID))
+                if (!MyTeam.PublicFLG && parentMessage != null && (parentMessage.PublicFLG || parentMessage.TeamID != MyTeam.TeamID))
                 {
                     IsEnablePostReply = false;
                 }

@@ -14,7 +14,14 @@
     <div class="col-md-6 offset-md-3 text-center">
         @if (!string.IsNullOrEmpty(Model.SystemAdmin.MessageDetail))
         {
-            @Html.Raw(Model.SystemAdmin.MessageDetail);
+            <div class="box">
+                <div class="box-title">
+                    お知らせ
+                </div>
+                <div class="box-inner">
+                    @Html.Raw(Model.SystemAdmin.MessageDetail)
+                </div>
+            </div>
         }
         @if (Model.IsLogin())
         {
