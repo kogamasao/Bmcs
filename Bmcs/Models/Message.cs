@@ -35,9 +35,17 @@ namespace Bmcs.Models
         public MessageClass? MessageClass { get; set; }
 
         [Required(ErrorMessage = "{0}は必須です。")]
+        [StringLength(50, ErrorMessage = "{0}は50桁以内で入力してください。")]
+        [Display(Name = "タイトル")]
+        public string MessageTitle { get; set; }
+
+        [Required(ErrorMessage = "{0}は必須です。")]
         [DataType(DataType.MultilineText)]
         [Display(Name = "メッセージ")]
         public string MessageDetail { get; set; }
+
+        [Display(Name = "返信件数")]
+        public int? ReplyCount { get; set; }
 
         [DefaultValue(true)]
         [Display(Name = "公開フラグ")]
@@ -46,10 +54,6 @@ namespace Bmcs.Models
         [DefaultValue(false)]
         [Display(Name = "削除フラグ")]
         public bool DeleteFLG { get; set; }
-
-        [NotMapped]
-        [Display(Name = "返信件数")]
-        public int? ReplyCount { get; set; }
 
         [ForeignKey("TeamID")]
         public virtual Team Team { get; set; }

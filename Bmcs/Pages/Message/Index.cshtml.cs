@@ -170,6 +170,18 @@ namespace Bmcs.Pages.Message
 
                 Context.Messages.Add(message);
 
+                //返信
+                if(MessageID != null)
+                {
+                    //データ作成
+                    var parentMessage = await Context.Messages.FindAsync(MessageID);
+
+                    if(parentMessage != null)
+                    {
+                        parentMessage.ReplyCount += 1;
+                    }
+                }
+
                 await Context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -192,7 +204,9 @@ namespace Bmcs.Pages.Message
             message.PrivateTeamID = Message.PrivateTeamID;
             message.ParentMessageID = MessageID;
             message.MessageClass = MessageID == null ? MessageClass.Post : MessageClass.Reply;
+            message.MessageTitle = Message.MessageTitle;
             message.MessageDetail = Message.MessageDetail;
+            message.ReplyCount = 0;
             message.PublicFLG = Message.PrivateTeamID == null ? true : false;
             message.DeleteFLG = false;
         }
