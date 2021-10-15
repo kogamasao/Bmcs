@@ -11,36 +11,26 @@
 <h1>@ViewData[ViewDataConstant.Title]</h1>
 
 <div class="row">
-    <div class="col-md-6 offset-md-3 text-center">
-        @if (!string.IsNullOrEmpty(Model.SystemAdmin.MessageDetail))
-        {
-            <div class="box">
-                <div class="box-title">
-                    お知らせ
-                </div>
-                <div class="box-inner">
-                    @Html.Raw(Model.SystemAdmin.MessageDetail)
-                </div>
-            </div>
-        }
+    <div class="col-md-6 text-center">
+       
         @if (Model.IsLogin())
         {
-            <h6 class="display-4">Team Management</h6>
-            <p>まずはメンバー登録をしましょう</p>
-            <p>試合一覧から試合の結果を入力し、その結果を成績一覧で確認できます</p>
-            <div class="form-group">
-                <a class="btn btn-primary btn-block" asp-page="/Game/Index">試合</a>
-            </div>
-            <div class="form-group">
-                <a class="btn btn-primary btn-block" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@false">成績</a>
-            </div>
-            <div class="form-group">
-                <a class="btn btn-primary btn-block" asp-page="/Member/Index">メンバー</a>
-            </div>
-            <div class="form-group">
-                <a class="btn btn-primary btn-block" asp-page="/Team/Edit">チーム情報</a>
-            </div>
-            <p></p>
+        <h6 class="display-4">Team Management</h6>
+        <p>まずはメンバー登録をしましょう</p>
+        <p>試合一覧から試合の結果を入力し、その結果を成績一覧で確認できます</p>
+        <div class="form-group">
+            <a class="btn btn-primary btn-block" asp-page="/Game/Index">試合</a>
+        </div>
+        <div class="form-group">
+            <a class="btn btn-primary btn-block" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@false">成績</a>
+        </div>
+        <div class="form-group">
+            <a class="btn btn-primary btn-block" asp-page="/Member/Index">メンバー</a>
+        </div>
+        <div class="form-group">
+            <a class="btn btn-primary btn-block" asp-page="/Team/Edit">チーム情報</a>
+        </div>
+        <p></p>
         }
         <h6 class="display-4">Communication</h6>
         <p>公開されているチームの情報を確認できます</p>
@@ -56,18 +46,98 @@
         </div>
         @if (!Model.IsLogin())
         {
-            <div class="alert alert-danger mt-3" role="alert">
-                未ログイン状態は機能が制限されます。(公開チームの閲覧のみ)
-            </div>
-            <div class="form-group">
-                <a class="btn btn-primary btn-block" asp-page="/Index">ログイン</a>
-            </div>
+        <div class="alert alert-danger mt-3" role="alert">
+            未ログイン状態は機能が制限されます。(公開チームの閲覧のみ)
+        </div>
+        <div class="form-group">
+            <a class="btn btn-primary btn-block" asp-page="/Index">ログイン</a>
+        </div>
         }
     </div>
-</div>
+    <div class="col-md-6">
+        @if (!string.IsNullOrEmpty(Model.SystemAdmin.MessageDetail))
+        {
+        <div class="box">
+            <div class="box-title">
+                お知らせ
+            </div>
+            <div class="box-inner">
+                @Html.Raw(Model.SystemAdmin.MessageDetail)
+            </div>
+        </div>
+        }
+        @if (Model.PublicMessage != null)
+        {
+        <div class="box">
+            <div class="box-title">
+                最新の公開メッセージ
+            </div>
+            <div class="box-inner">
+                <div class="form-group">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <div class="card-title font-weight-bold">
+                                @Model.PublicMessage.MessageTitle
+                            </div>
+                            <div class="card-subtitle text-muted">
+                                <a asp-page="/Team/Details" asp-route-id="@Model.PublicMessage.TeamID">@Model.PublicMessage.Team.TeamName</a>
+                                <span>：</span>
+                                <span>@Model.PublicMessage.UserAccount.UserAccountName</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            @Html.Raw(Model.PublicMessage.MessageDetail.Replace("\n", "<br />"))
+                        </div>
+                        <div class="card-footer">
+                            <span>更新日時：@Model.PublicMessage.UpdateDatetime</span>
+                            <span>&nbsp;</span>
+                            <span>返信件数：@Model.PublicMessage.ReplyCount 件</span>
+                            <span>&nbsp;</span>
+                            <a class="btn btn-primary btn-sm" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-messageID="@Model.PublicMessage.MessageID">確認＆返信</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                }
+        @if (Model.PrivateMessage != null)
+        {
+        <div class="box">
+            <div class="box-title">
+                最新の非公開メッセージ
+            </div>
+            <div class="box-inner">
+                <div class="form-group">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <div class="card-title font-weight-bold">
+                                @Model.PrivateMessage.MessageTitle
+                            </div>
+                            <div class="card-subtitle text-muted">
+                                <a asp-page="/Team/Details" asp-route-id="@Model.PrivateMessage.TeamID">@Model.PrivateMessage.Team.TeamName</a>
+                                <span>：</span>
+                                <span>@Model.PrivateMessage.UserAccount.UserAccountName</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            @Html.Raw(Model.PrivateMessage.MessageDetail.Replace("\n", "<br />"))
+                        </div>
+                        <div class="card-footer">
+                            <span>更新日時：@Model.PrivateMessage.UpdateDatetime</span>
+                            <span>&nbsp;</span>
+                            <span>返信件数：@Model.PrivateMessage.ReplyCount 件</span>
+                            <span>&nbsp;</span>
+                            <a class="btn btn-primary btn-sm" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Private" asp-route-messageID="@Model.PrivateMessage.MessageID">確認＆返信</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                }
+    </div>
+        </div>
 
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+        @section Scripts {
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        }
 
