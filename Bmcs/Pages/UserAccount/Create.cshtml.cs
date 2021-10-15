@@ -43,7 +43,7 @@ namespace Bmcs.Pages.UserAccount
                 //ユーザIDチェック
                 var dbUserAccount = Context.UserAccounts.FirstOrDefault(r => r.UserAccountID == UserAccount.UserAccountID);
 
-                if (dbUserAccount != null)
+                if (dbUserAccount != null || (dbUserAccount != null && dbUserAccount.UserAccountID == UserAccount.UserAccountID))
                 {
                     ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.UserAccountID), "入力したユーザIDは既に使用されています。");
 
@@ -56,7 +56,7 @@ namespace Bmcs.Pages.UserAccount
                     var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID
                                                             && r.TeamPassword == UserAccount.TeamPassword.NullToEmpty());
 
-                    if (dbTeam == null)
+                    if (dbTeam == null || dbTeam.TeamPassword != UserAccount.TeamPassword.NullToEmpty())
                     {
                         ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "パスワードが間違っています。");
 

@@ -3,7 +3,15 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    @if(ViewData[ViewDataConstant.Title] != null && !string.IsNullOrEmpty(ViewData[ViewDataConstant.Title].ToString()))
+    {
     <title>@ViewData[ViewDataConstant.Title] - Bmcs</title>
+    }
+    else
+    {
+    <title>Bmcs</title>
+    }
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/customize.css" />

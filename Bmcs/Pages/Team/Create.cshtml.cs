@@ -42,7 +42,7 @@ namespace Bmcs.Pages.Team
                 //チームIDチェック
                 var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == Team.TeamID);
 
-                if (dbTeam != null)
+                if (dbTeam != null || (dbTeam != null && dbTeam.TeamID == Team.TeamID))
                 {
                     ModelState.AddModelError(nameof(Models.Team) + "." + nameof(Models.Team.TeamID), "入力したチームIDは既に使用されています。");
 

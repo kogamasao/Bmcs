@@ -54,6 +54,15 @@
         <div class="form-group">
             <a class="btn btn-primary btn-block" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public">メッセージ</a>
         </div>
+        @if (!Model.IsLogin())
+        {
+            <div class="alert alert-danger mt-3" role="alert">
+                未ログイン状態は機能が制限されます。(公開チームの閲覧のみ)
+            </div>
+            <div class="form-group">
+                <a class="btn btn-primary btn-block" asp-page="/Index">ログイン</a>
+            </div>
+        }
     </div>
 </div>
 

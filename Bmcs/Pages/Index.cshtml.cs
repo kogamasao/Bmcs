@@ -41,9 +41,11 @@ namespace Bmcs.Pages
                                                                                 && r.Password == UserAccount.Password
                                                                                 && r.DeleteFLG == false);
 
-                if (dbUserAccount == null)
+                if (dbUserAccount == null
+                    || dbUserAccount.UserAccountID != UserAccount.UserAccountID
+                    || dbUserAccount.Password != UserAccount.Password)
                 {
-                    ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.UserAccountID), "入力したユーザID、またはパスワードが間違っています。");
+                    ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.UserAccountID), "入力したユーザID、またはパスワードが間違っています。パスワードをお忘れの場合はお問い合わせをお願いします。");
 
                     return Page();
                 }

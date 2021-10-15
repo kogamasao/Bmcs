@@ -1,15 +1,17 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData[ViewDataConstant.Title] = "Bmcs";
+    ViewData[ViewDataConstant.Title] = "";
 }
 <div class="row">
     <div class="col-md-6 offset-md-3 text-center">
         <h1 class="display-3">
             Bmcs
         </h1>
-        <h6 class="display-4">Baseball Management Communication System</h6>
-        <p>スコア管理</p>
+        <h2 class="display-4">
+            Baseball Management Communication System
+        </h2>
+        <p>野球、ソフトボールのスコア管理＆SNS</p>
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -22,12 +24,19 @@
                 <input asp-for="UserAccount.Password" class="form-control" />
                 <span asp-validation-for="UserAccount.Password" class="text-danger"></span>
             </div>
-            <div class="alert alert-danger" role="alert">
-                ※パスワードをお忘れの場合はお問い合わせをお願いします。
+            <div class="alert alert-primary" role="alert">
+                <span>ユーザID：YGUser</span>
+                <span>&nbsp;&nbsp;</span>
+                <span>パスワード：1</span>
+                <br />
+                <span>でサンプルチームにログインできます。</span>
             </div>
             <div class="form-group">
                 <input type="submit" value="ログイン" class="btn btn-primary" />
                 <a class="btn btn-primary" asp-page="./UserAccount/Create">新しくユーザを作成</a>
+            </div>
+            <div class="form-group">
+                <a class="btn btn-success" asp-page="./Top/Index">ログインせずに体験する</a>
             </div>
         </form>
     </div>

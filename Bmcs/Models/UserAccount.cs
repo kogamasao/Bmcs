@@ -39,7 +39,7 @@ namespace Bmcs.Models
         [Display(Name = "確認用パスワード")]
         public string ConfirmPassword { get; set; }
 
-        [DataType(DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress, ErrorMessage = "メールアドレスの書式で入力してください。")]
         [Display(Name = "メールアドレス")]
         public string EmailAddress { get; set; }
 

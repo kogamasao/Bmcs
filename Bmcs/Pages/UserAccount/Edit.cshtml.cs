@@ -70,7 +70,7 @@ namespace Bmcs.Pages.UserAccount
                     var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID
                                                             && r.TeamPassword == UserAccount.TeamPassword.NullToEmpty());
 
-                    if (dbTeam == null)
+                    if (dbTeam == null || dbTeam.TeamPassword != UserAccount.TeamPassword.NullToEmpty())
                     {
                         ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "パスワードが間違っています。");
 
