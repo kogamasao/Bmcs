@@ -11,13 +11,24 @@
 <h1>@ViewData[ViewDataConstant.Title]</h1>
 
 <div class="row">
-    <div class="col-md-6 text-center">
-       
-        @if (Model.IsLogin())
+    <div class="col-md-6 text-center mb-3">
+        @if (!Model.IsLogin())
+        {
+        <div class="alert alert-danger" role="alert">
+            未ログイン状態は機能が制限されます。 <br />
+            (公開チームの閲覧のみ)
+        </div>
+        <div class="form-group">
+            <a class="btn btn-success btn-block" asp-page="/Index">ログイン画面へ</a>
+        </div>
+        }
+        else
         {
         <h6 class="display-4">Team Management</h6>
-        <p>まずはメンバー登録をしましょう</p>
-        <p>試合一覧から試合の結果を入力し、その結果を成績一覧で確認できます</p>
+        <p>
+            まずはメンバー登録をしましょう <br />
+            試合一覧から試合の結果を入力し、その結果を成績一覧で確認できます
+        </p>
         <div class="form-group">
             <a class="btn btn-primary btn-block" asp-page="/Game/Index">試合</a>
         </div>
@@ -33,8 +44,10 @@
         <p></p>
         }
         <h6 class="display-4">Communication</h6>
-        <p>公開されているチームの情報を確認できます</p>
-        <p>メッセージを送って、他チームと連絡を取り合うことができます</p>
+        <p>
+            公開されているチームの情報を確認できます <br />
+            メッセージを送って、他チームと連絡を取り合うことができます
+        </p>
         <div class="form-group">
             <a class="btn btn-primary btn-block" asp-page="/Team/Index">公開チーム</a>
         </div>
@@ -44,15 +57,6 @@
         <div class="form-group">
             <a class="btn btn-primary btn-block" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public">メッセージ</a>
         </div>
-        @if (!Model.IsLogin())
-        {
-        <div class="alert alert-danger mt-3" role="alert">
-            未ログイン状態は機能が制限されます。(公開チームの閲覧のみ)
-        </div>
-        <div class="form-group">
-            <a class="btn btn-primary btn-block" asp-page="/Index">ログイン</a>
-        </div>
-        }
     </div>
     <div class="col-md-6">
         @if (!string.IsNullOrEmpty(Model.SystemAdmin.MessageDetail))
