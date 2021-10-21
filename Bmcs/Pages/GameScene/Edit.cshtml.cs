@@ -54,10 +54,12 @@ namespace Bmcs.Pages.GameScene
         public int? LastGameSceneID { get; set; }
 
         [BindProperty]
-
         public int? NextGameSceneID { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? gameID, int? gameSceneID, bool isOrderChange = false, bool isInitialize = false)
+        [BindProperty]
+        public int? SkipCount { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(int? gameID, int? gameSceneID, bool isOrderChange = false, bool isInitialize = false, int skipCount = 0)
         {
             if (!base.IsLogin())
             {
@@ -126,7 +128,6 @@ namespace Bmcs.Pages.GameScene
                         Inning = 1,
                         TopButtomClass = TopButtomClass.Top,
                         InningIndex = 1,
-                        BattingOrder = 1,
                         OutCount = 0,
                         RunnerSceneClass = RunnerSceneClass.None,
                     };
@@ -134,17 +135,34 @@ namespace Bmcs.Pages.GameScene
                     //先攻
                     if (Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
                     {
+                        var orderCount = await Context.Orders
+                                .Where(r => r.GameID == Game.GameID && r.GameSceneID == null && r.OrderDataClass == OrderDataClass.Normal)
+                                .CountAsync();
+
+                        if(skipCount >= orderCount)
+                        {
+                            skipCount -= orderCount;
+                        }
+
                         Order = await Context.Orders
-                                .Where(r => r.GameID == Game.GameID && r.GameSceneID == null && r.OrderDataClass == OrderDataClass.Normal && r.BattingOrder == 1)
+                                .Where(r => r.GameID == Game.GameID && r.GameSceneID == null && r.OrderDataClass == OrderDataClass.Normal)
+                                .OrderBy(r => r.BattingOrder)
+                                .Skip(skipCount)
                                 .FirstOrDefaultAsync();
 
                         GameScene.OffenseDefenseClass = OffenseDefenseClass.Offense;
                         GameScene.PitcherMemberID = System.Convert.ToInt32(base.OpponentPitcherMemberIDList.FirstOrDefault().Value);
                         GameScene.BatterMemberID = Order.MemberID;
+                        GameScene.BattingOrder = Order.BattingOrder;
                     }
                     //後攻
                     else
                     {
+                        if (skipCount >= 9)
+                        {
+                            skipCount -= 9;
+                        }
+
                         Order = await Context.Orders
                                 .Where(r => r.GameID == Game.GameID && r.GameSceneID == null && r.OrderDataClass == OrderDataClass.Normal && r.PositionClass == PositionClass.Pitcher)
                                 .FirstOrDefaultAsync();
@@ -152,6 +170,7 @@ namespace Bmcs.Pages.GameScene
                         GameScene.OffenseDefenseClass = OffenseDefenseClass.Defense;
                         GameScene.PitcherMemberID = Order.MemberID;
                         GameScene.BatterMemberID = System.Convert.ToInt32(base.OpponentFielderMemberIDList.FirstOrDefault().Value);
+                        GameScene.BattingOrder = 1 + skipCount;
                     }
 
                     //結果ランナー(打者を初期表示)
@@ -238,6 +257,15 @@ namespace Bmcs.Pages.GameScene
                     //攻撃
                     if (GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
                     {
+                        var orderCount = await Context.Orders
+                                            .Where(r => r.GameID == Game.GameID && r.GameSceneID == LastGameSceneID && r.BattingOrder != null && r.OrderDataClass == OrderDataClass.Normal)
+                                            .CountAsync();
+
+                        if (skipCount >= orderCount)
+                        {
+                            skipCount -= orderCount;
+                        }
+
                         var orderList = await Context.Orders
                                 .Where(r => r.GameID == Game.GameID && r.GameSceneID == LastGameSceneID && r.BattingOrder != null && r.OrderDataClass == OrderDataClass.Normal)
                                 .ToListAsync();
@@ -272,25 +300,43 @@ namespace Bmcs.Pages.GameScene
                             //継続(盗塁死など)の場合、前回打者から
                             if (lastResultClass == ResultClass.Change)
                             {
-                                Order = orderList.Where(r => r.BattingOrder == lastBattingOrder).OrderBy(r => r.BattingOrder).FirstOrDefault();
+                                var followingOrderCount = orderList.Where(r => r.BattingOrder >= lastBattingOrder).Count();
+
+                                if(followingOrderCount > skipCount)
+                                {
+                                    Order = orderList.Where(r => r.BattingOrder >= lastBattingOrder).OrderBy(r => r.BattingOrder).Skip(skipCount).FirstOrDefault();
+                                }
+                                else
+                                {
+                                    Order = orderList.OrderBy(r => r.BattingOrder).Skip(skipCount - followingOrderCount).FirstOrDefault();
+                                }
                             }
                             else
                             {
                                 //前回が最終打者
                                 if (orderList.DefaultIfEmpty().Max(r => r.BattingOrder) == lastBattingOrder)
                                 {
-                                    Order = orderList.OrderBy(r => r.BattingOrder).FirstOrDefault();
+                                    Order = orderList.OrderBy(r => r.BattingOrder).Skip(skipCount).FirstOrDefault();
                                 }
                                 else
                                 {
-                                    Order = orderList.Where(r => r.BattingOrder > lastBattingOrder).OrderBy(r => r.BattingOrder).FirstOrDefault();
+                                    var followingOrderCount = orderList.Where(r => r.BattingOrder > lastBattingOrder).Count();
+
+                                    if (followingOrderCount > skipCount)
+                                    {
+                                        Order = orderList.Where(r => r.BattingOrder > lastBattingOrder).OrderBy(r => r.BattingOrder).Skip(skipCount).FirstOrDefault();
+                                    }
+                                    else
+                                    {
+                                        Order = orderList.OrderBy(r => r.BattingOrder).Skip(skipCount - followingOrderCount).FirstOrDefault();
+                                    }
                                 }
                             }
                         }
                         else
                         {
                             //先頭バッター
-                            Order = orderList.OrderBy(r => r.BattingOrder).FirstOrDefault();
+                            Order = orderList.OrderBy(r => r.BattingOrder).Skip(skipCount).FirstOrDefault();
                         }
 
                         GameScene.BattingOrder = Order.BattingOrder;
@@ -300,6 +346,11 @@ namespace Bmcs.Pages.GameScene
                     //守備
                     else
                     {
+                        if (skipCount >= 9)
+                        {
+                            skipCount -= 9;
+                        }
+
                         Order = await Context.Orders
                               .Where(r => r.GameID == Game.GameID && r.OrderDataClass == OrderDataClass.Change && r.PositionClass == PositionClass.Pitcher)
                               .FirstOrDefaultAsync();
@@ -341,24 +392,42 @@ namespace Bmcs.Pages.GameScene
                             //継続(盗塁死など)の場合、前回打者から
                             if (lastResultClass == ResultClass.Change)
                             {
-                                GameScene.BattingOrder = lastBattingOrder;
+                                var followingOrderCount = 9 - (lastBattingOrder - 1);
+
+                                if (followingOrderCount > skipCount)
+                                {
+                                    GameScene.BattingOrder = lastBattingOrder + skipCount;
+                                }
+                                else
+                                {
+                                    GameScene.BattingOrder = 1 + (skipCount - followingOrderCount);
+                                }
                             }
                             else
                             {
                                 //相手チームは9人想定
                                 if (lastBattingOrder == 9)
                                 {
-                                    GameScene.BattingOrder = 1;
+                                    GameScene.BattingOrder = 1 + skipCount;
                                 }
                                 else
                                 {
-                                    GameScene.BattingOrder = lastBattingOrder + 1;
+                                    var followingOrderCount = 9 - lastBattingOrder;
+
+                                    if (followingOrderCount > skipCount)
+                                    {
+                                        GameScene.BattingOrder = lastBattingOrder + 1 + skipCount;
+                                    }
+                                    else
+                                    {
+                                        GameScene.BattingOrder = 1 + (skipCount - followingOrderCount);
+                                    }
                                 }
                             }
                         }
                         else
                         {
-                            GameScene.BattingOrder = 1;
+                            GameScene.BattingOrder = 1 + skipCount;
                         }
 
                         GameScene.PitcherMemberID = Order.MemberID;
@@ -507,7 +576,7 @@ namespace Bmcs.Pages.GameScene
 
                 //試合シーン
                 GameScene = await Context.GameScenes
-                            .FindAsync(gameSceneID);
+                            .FindAsync(gameSceneID);              
 
                 //シーン詳細
                 BeforeGameSceneDetailList = await Context.GameSceneDetails
@@ -561,6 +630,9 @@ namespace Bmcs.Pages.GameScene
                 await CreateTempOrders(Game.GameID, GameScene.GameSceneID);
 
             }
+
+            //スキップカウント
+            SkipCount = skipCount;
 
             //タイトル
             ViewData[ViewDataConstant.Title] = GameScene.Inning.ToString() + "回"

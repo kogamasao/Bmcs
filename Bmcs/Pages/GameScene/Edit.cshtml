@@ -32,6 +32,7 @@
 
             <div class="form-group">
                 <a class="btn btn-danger" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isOrderChange="@false" asp-route-isInitialize="@true">元に戻す</a>
+                <a class="btn btn-danger" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isOrderChange="@false" asp-route-isInitialize="@true" asp-route-skipCount="@(Model.SkipCount + 1)">スキップ</a>
 
                 @if (Model.GameScene.InningIndex != 1)
                 {
