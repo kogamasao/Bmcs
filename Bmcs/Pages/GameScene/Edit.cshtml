@@ -292,9 +292,12 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th style="width: 10%;">
+                                        割込
+                                    </th>
+                                    <th style="width: 10%;">
                                         打順
                                     </th>
-                                    <th style="width: 90%;">
+                                    <th style="width: 80%;">
                                         打者
                                     </th>
                                 </tr>
@@ -302,7 +305,10 @@
                             <tbody>
                                 <tr>
                                     <td class="text-center align-middle">
-                                        <span>@Model.GameScene.BattingOrder.DisplayDecimal()</span>
+                                        <input class="form-check-input" asp-for="GameScene.InterruptFLG" />
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <span id="display-batting-order">@Model.GameScene.BattingOrder.DisplayDecimal()</span>
                                     </td>
                                     @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
                                     {

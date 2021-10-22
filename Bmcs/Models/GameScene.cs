@@ -87,6 +87,14 @@ namespace Bmcs.Models
         [Display(Name = "チェンジフラグ")]
         public bool ChangeFLG { get; set; }
 
+        [DefaultValue(false)]
+        [Display(Name = "割込フラグ")]
+        public bool InterruptFLG { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "メモ")]
+        public string Note { get; set; }
+
         [NotMapped]
         [Display(Name = "OUT")]
         public string InningScoreListOutCount { get; set; }
