@@ -25,6 +25,93 @@
         $("#order tbody tr:last-child .js-positionclass").first().val(null);
     });
 
+    // 割り込み行追加
+    $("#add-order-modal").on("click", function () {
+
+        $('.interrupt-order-input-error').addClass('d-none');
+        $('.interrupt-order-decimal-error').addClass('d-none');
+        $('.interrupt-order-exist-error').addClass('d-none');
+
+        //指定打順取得
+        var interruptBattingOrder = $("#interrupt-batting-order");
+
+        if (interruptBattingOrder.val() == ""
+            || interruptBattingOrder.val() == null) {
+            $('.interrupt-order-input-error').removeClass('d-none');
+            return false;
+        }
+
+        //小数チェック
+        if (interruptBattingOrder.val().indexOf('.') != -1) {
+            if (interruptBattingOrder.val().split('.')[1].length > 1) {
+                $('.interrupt-order-decimal-error').removeClass('d-none');
+                return false;
+            }
+        }
+
+        //最終行のコピーを取得
+        var lastRow = $("#order tbody tr:last-child").clone(true);
+        //index取得
+        var index = lastRow[0].id.replaceAll('OrderList_', '');
+        //リネーム
+        var newRow = lastRow[0].outerHTML.replaceAll('OrderList_' + index.toString(), 'OrderList_' + (Number(index) + 1).toString())
+            .replaceAll('OrderList[' + index.toString() + ']', 'OrderList[' + (Number(index) + 1).toString() + ']');
+
+        //エラーフラグ
+        var isError = false;
+        //追加フラグ
+        var isAdd = false;
+        //打順行
+        var battingOrder;
+
+        //指定行追加
+        $('.js-displaybattingorder').each(function () {
+            battingOrder = $(this);
+
+            if (battingOrder[0].innerText != ''
+                && battingOrder[0].innerText == interruptBattingOrder.val()) {
+                $('.interrupt-order-exist-error').removeClass('d-none');
+                isError = true;
+                return false;
+            }
+
+            if (battingOrder[0].innerText != ''
+                && Number(battingOrder[0].innerText) > Number(interruptBattingOrder.val())) {
+                battingOrder.parent().before(newRow);
+                battingOrder.parent().prev().find(".js-displaybattingorder")[0].innerHTML = interruptBattingOrder.val();
+                battingOrder.parent().prev().find(".js-battingorder").first().val(interruptBattingOrder.val());
+                battingOrder.parent().prev().find(".js-memberid").first().val(null);
+                battingOrder.parent().prev().find(".js-positionclass").first().val(null);
+                isAdd = true;
+                return false;
+            }
+        });
+
+        if (isError) {
+            return;
+        }
+
+        if (!isAdd) {
+            battingOrder.parent().after(newRow);
+            battingOrder.parent().next().find(".js-displaybattingorder")[0].innerHTML = interruptBattingOrder.val();
+            battingOrder.parent().next().find(".js-battingorder").first().val(interruptBattingOrder.val());
+            battingOrder.parent().next().find(".js-memberid").first().val(null);
+            battingOrder.parent().next().find(".js-positionclass").first().val(null);
+        }
+
+        //連番振り直し
+        ReOrderNumber();
+
+        //削除ボタン使用制御
+        IsUserDeleteButton();
+
+        //入力クリア
+        interruptBattingOrder.val(null);
+
+        //モーダル閉じる
+        $('#interrupt-order').modal('hide');
+    });
+
     // 行追加
     $("#add-only-defense").on("click", function () {
         //守備のみ最終行を取得

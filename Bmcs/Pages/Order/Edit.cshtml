@@ -7,7 +7,7 @@
 <h4>@Model.Game.Team.TeamName</h4>
 <hr />
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <form method="post">
             <span asp-validation-for="Game.GameID" class="text-danger"></span>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -61,7 +61,39 @@
                 </table>
             </div>
             <div class="form-group">
-                <input type="button" value="オーダー追加" class="btn btn-success" id="add-order" />
+                @if (!Model.IsDuringGame)
+                {
+                    <input type="button" value="オーダー追加" class="btn btn-success" id="add-order" />
+                }
+                else
+                {
+                    <input type="button" value="オーダー追加" class="btn btn-success" data-toggle="modal" data-target="#interrupt-order"/>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="interrupt-order" tabindex="-1" role="dialog" aria-labelledby="interrupt-order-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="interrupt-order-title">オーダー追加</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>追加する打順を入力してください。<br />打順間に割り込みたい場合は小数を含めた打順指定が可能です。</p>
+                                    <input id="interrupt-batting-order" class="form-control" type="number" step="0.1" min="0" />
+                                    <p class="text-danger interrupt-order-input-error d-none">打順を入力してください。</p>
+                                    <p class="text-danger interrupt-order-decimal-error d-none">小数は第一位のみ有効です。</p>
+                                    <p class="text-danger interrupt-order-exist-error d-none">既に存在する打順を指定することはできません。</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="add-order-modal" type="button" class="btn btn-success">追加</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">戻る</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
             <div class="table-responsive">
                 <table class="table table-hover table-sm table-bordered" id="only-defense">
@@ -85,7 +117,7 @@
                         @for (int i = 0; i < Model.OnlyDefenseList.Count; i++)
                         {
                             <tr id="@("OnlyDefenseList_" + i.ToString())">
-                                <td class="js-displaybattingorder">
+                                <td>
                                 </td>
                                 <td>
                                     <select asp-for="@Model.OnlyDefenseList[i].MemberID" class="form-control js-memberid js-rename" asp-items="@Model.MemberIDList"></select>
@@ -94,7 +126,7 @@
                                     <select asp-for="@Model.OnlyDefenseList[i].PositionClass" class="form-control js-positionclass js-rename" asp-items="@Model.PositionClassList"></select>
                                 </td>
                                 <td>
-                                    <input type="button" value="削除" class="btn btn-danger js-only-defense-delete js-rename" data-index="@i" />
+                                    <input type="button" value="削除" class="btn btn-danger js-only-defense-delete js-rename"/>
                                     <input class="js-battingorder js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].BattingOrder" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].GameID" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].TeamID" />
@@ -119,7 +151,7 @@
                 }
                 else
                 {
-                    <a class="btn btn-secondary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameSceneID" asp-route-isOrderChange="@false">戻る</a>
+                    <a class="btn btn-secondary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameSceneID" asp-route-isOrderChange="@true">戻る</a>
                 }
             </div>
         </form>

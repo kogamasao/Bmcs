@@ -38,6 +38,9 @@ namespace Bmcs.Pages.Order
         [BindProperty]
         public bool IsDuringGame { get; set; }
 
+        [BindProperty]
+        public decimal InterruptBattingOrder { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? gameID, int? gameSceneID = null, int? dispGameSceneID = null, bool isDuringGame = false)
         {
             if (!base.IsLogin())
@@ -272,6 +275,7 @@ namespace Bmcs.Pages.Order
                 if(IsDuringGame)
                 { 
                     newOrder.OrderDataClass = OrderDataClass.Change;
+                    newOrder.ParticipationIndex += 1;
                     newOrder.ParticipationClass = ParticipationClass.Defense;
                 }
                 else
