@@ -385,4 +385,23 @@
         //削除ボタン使用制御
         IsUseDeleteButton();
     });
+
+    //割り込みフラグ
+    $("#interruptFLG").change(function () {
+        var battingOrder = $("#batting-order");
+        var displayBattingOrder = $("#display-batting-order");
+        var runnerBatterOrder = $(".js-after-runner-batting-order[data-runnerclass='Batter']");
+        var regularBattingOrderValue = Number($("#regular-batting-order").val()).toFixed(1);
+        var interruptBattingOrderValue = Number($("#interrupt-batting-order").val()).toFixed(1);
+
+        if ($(this).prop('checked')) {
+            battingOrder.val(interruptBattingOrderValue);
+            displayBattingOrder.text(interruptBattingOrderValue);
+            runnerBatterOrder.val(interruptBattingOrderValue);
+        } else {
+            battingOrder.val(regularBattingOrderValue);
+            displayBattingOrder.text(regularBattingOrderValue);
+            runnerBatterOrder.val(regularBattingOrderValue);
+        }
+    });
 });

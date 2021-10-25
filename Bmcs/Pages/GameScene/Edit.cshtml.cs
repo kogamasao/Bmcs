@@ -59,6 +59,12 @@ namespace Bmcs.Pages.GameScene
         [BindProperty]
         public int? SkipCount { get; set; }
 
+        [BindProperty]
+        public decimal? RegularBattingOrder { get; set; }
+
+        [BindProperty]
+        public decimal? InterruptBattingOrder { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int? gameID, int? gameSceneID, bool isOrderChange = false, bool isInitialize = false, int skipCount = 0)
         {
             if (!base.IsLogin())
@@ -136,7 +142,7 @@ namespace Bmcs.Pages.GameScene
                     if (Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
                     {
                         var orderCount = await Context.Orders
-                                .Where(r => r.GameID == Game.GameID && r.GameSceneID == null && r.OrderDataClass == OrderDataClass.Normal)
+                                .Where(r => r.GameID == Game.GameID && r.GameSceneID == null && r.OrderDataClass == OrderDataClass.Normal && r.BattingOrder != null)
                                 .CountAsync();
 
                         if(skipCount >= orderCount)
@@ -145,7 +151,7 @@ namespace Bmcs.Pages.GameScene
                         }
 
                         Order = await Context.Orders
-                                .Where(r => r.GameID == Game.GameID && r.GameSceneID == null && r.OrderDataClass == OrderDataClass.Normal)
+                                .Where(r => r.GameID == Game.GameID && r.GameSceneID == null && r.OrderDataClass == OrderDataClass.Normal && r.BattingOrder != null)
                                 .OrderBy(r => r.BattingOrder)
                                 .Skip(skipCount)
                                 .FirstOrDefaultAsync();
@@ -154,6 +160,8 @@ namespace Bmcs.Pages.GameScene
                         GameScene.PitcherMemberID = System.Convert.ToInt32(base.OpponentPitcherMemberIDList.FirstOrDefault().Value);
                         GameScene.BatterMemberID = Order.MemberID;
                         GameScene.BattingOrder = Order.BattingOrder;
+                        RegularBattingOrder = GameScene.BattingOrder;
+                        InterruptBattingOrder = GetInterruptBattingOrder(Game.GameID, null, GameScene.BattingOrder);
                     }
                     //後攻
                     else
@@ -342,6 +350,8 @@ namespace Bmcs.Pages.GameScene
                         GameScene.BattingOrder = Order.BattingOrder;
                         GameScene.PitcherMemberID = lastPitcherMemberID;
                         GameScene.BatterMemberID = Order.MemberID;
+                        RegularBattingOrder = GameScene.BattingOrder;
+                        InterruptBattingOrder = GetInterruptBattingOrder(Game.GameID, LastGameSceneID, GameScene.BattingOrder);
                     }
                     //守備
                     else
@@ -576,7 +586,32 @@ namespace Bmcs.Pages.GameScene
 
                 //試合シーン
                 GameScene = await Context.GameScenes
-                            .FindAsync(gameSceneID);              
+                            .FindAsync(gameSceneID);
+
+                if (GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
+                {
+                    if (GameScene.InterruptFLG)
+                    {
+                        var regularBattingOrder = await Context.Orders
+                                        .Where(r => r.GameID == Game.GameID
+                                                && r.GameSceneID == LastGameSceneID 
+                                                && r.BattingOrder != null 
+                                                && r.BattingOrder > GameScene.BattingOrder
+                                                && r.OrderDataClass == OrderDataClass.Normal)
+                                        .FirstOrDefaultAsync();
+
+                        if(regularBattingOrder != null)
+                        {
+                            RegularBattingOrder = regularBattingOrder.BattingOrder;
+                            InterruptBattingOrder = GameScene.BattingOrder;
+                        }
+                    }
+                    else
+                    {
+                        RegularBattingOrder = GameScene.BattingOrder;
+                        InterruptBattingOrder = GetInterruptBattingOrder(Game.GameID, LastGameSceneID, GameScene.BattingOrder);
+                    }
+                }
 
                 //シーン詳細
                 BeforeGameSceneDetailList = await Context.GameSceneDetails
@@ -611,14 +646,14 @@ namespace Bmcs.Pages.GameScene
                 {
                     //結果詳細
                     AfterGameSceneDetailList = new List<Models.GameSceneDetail>()
-                {
-                    new GameSceneDetail()
                     {
-                        GameID = Game.GameID,
-                        TeamID = Game.TeamID,
-                        SceneResultClass = SceneResultClass.Result,
-                    }
-                };
+                        new GameSceneDetail()
+                        {
+                            GameID = Game.GameID,
+                            TeamID = Game.TeamID,
+                            SceneResultClass = SceneResultClass.Result,
+                        }
+                    };
                 }
 
                 //結果ランナー
@@ -905,6 +940,8 @@ namespace Bmcs.Pages.GameScene
             gameScene.HittingDirectionClass = GameScene.HittingDirectionClass;
             gameScene.HitBallClass = GameScene.HitBallClass;
             gameScene.ResultClass = GameScene.ResultClass;
+            gameScene.InterruptFLG = GameScene.InterruptFLG;
+            gameScene.Note = GameScene.Note;
 
             base.SetEntryInfo(gameScene);
 
@@ -1118,6 +1155,25 @@ namespace Bmcs.Pages.GameScene
                         newOrder.ParticipationClass = ParticipationClass.Defense;
                     }
                 }
+
+                base.SetEntryInfo(newOrder);
+
+                gameScene.Orders.Add(newOrder);
+            }
+
+            if(gameScene.InterruptFLG)
+            {
+                var newOrder = new Models.Order()
+                {
+                    GameID = gameScene.GameID,
+                    TeamID = gameScene.TeamID,
+                    MemberID = gameScene.BatterMemberID,
+                    BattingOrder = gameScene.BattingOrder,
+                    ParticipationIndex = 1,
+                    PositionClass = PositionClass.DH,
+                    ParticipationClass = ParticipationClass.PinchHitter,
+                    OrderDataClass = OrderDataClass.Normal,
+                };
 
                 base.SetEntryInfo(newOrder);
 
@@ -1440,6 +1496,50 @@ namespace Bmcs.Pages.GameScene
             }
 
             return gameSceneID;
+        }
+
+        /// <summary>
+        /// 割込打順取得
+        /// </summary>
+        /// <param name="gameID"></param>
+        /// <param name="gameSceneID"></param>
+        /// <param name="battingOrder"></param>
+        /// <returns></returns>
+        private decimal? GetInterruptBattingOrder(int? gameID, int? gameSceneID, decimal? battingOrder)
+        {
+            decimal? result = null;
+
+            //オーダー
+            var interruptBattingOrder = Context.Orders
+                                    .Where(r => r.GameID == gameID
+                                        && r.GameSceneID == gameSceneID
+                                        && r.BattingOrder != null
+                                        && r.BattingOrder < battingOrder
+                                        && r.OrderDataClass == OrderDataClass.Normal)
+                                    .OrderBy(r => r.BattingOrder)
+                                    .FirstOrDefault();
+
+            //先頭打者
+            if(interruptBattingOrder == null)
+            {
+                //割り込み可能
+                if ((decimal)0.1 != battingOrder)
+                {
+                    //打順間を算出
+                    result = (Math.Floor((battingOrder.NullToZero()) / 2 * 10) / 10);
+                }
+            }
+            else
+            {
+                //割り込み可能
+                if(interruptBattingOrder.BattingOrder + (decimal)0.1 != battingOrder)
+                {
+                    //打順間を算出
+                    result = interruptBattingOrder.BattingOrder + (Math.Floor((battingOrder.NullToZero() - interruptBattingOrder.BattingOrder.NullToZero()) / 2 * 10) / 10);
+                }
+            }   
+
+            return result;
         }
 
         /// <summary>

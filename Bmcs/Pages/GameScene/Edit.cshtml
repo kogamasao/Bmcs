@@ -23,7 +23,7 @@
                 }
 
                 @if (Model.Game.StatusClass == StatusClass.BeforeFix
-               || Model.Game.StatusClass == StatusClass.EndGame)
+             || Model.Game.StatusClass == StatusClass.EndGame)
                 {
                     <a class="btn btn-primary" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果へ</a>
                 }
@@ -51,11 +51,14 @@
             <input type="hidden" asp-for="GameScene.Inning" />
             <input type="hidden" asp-for="GameScene.InningIndex" />
             <input type="hidden" asp-for="GameScene.TopButtomClass" />
-            <input type="hidden" asp-for="GameScene.BattingOrder" />
+            <input type="hidden" asp-for="GameScene.BattingOrder" id="batting-order"/>
             <input type="hidden" asp-for="GameScene.OffenseDefenseClass" />
             <input type="hidden" asp-for="GameScene.OutCount" />
             <input type="hidden" asp-for="GameScene.RunnerSceneClass" />
             <input type="hidden" asp-for="LastGameSceneID" />
+            <input type="hidden" asp-for="RegularBattingOrder" id="regular-batting-order"/>
+            <input type="hidden" asp-for="InterruptBattingOrder" id="interrupt-batting-order"/>
+
             <div class="table-responsive">
                 <table class="table table-sm table-bordered">
                     <thead class="thead-light">
@@ -132,7 +135,7 @@
                             }
 
                             @if (Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() > 9
-                                 && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
+                               && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
                             {
                                 <td class="text-center">
                                 </td>
@@ -281,7 +284,6 @@
                     </div>
                 </div>
             }
-
             <div class="box">
                 <div class="box-title">
                     打者結果
@@ -291,22 +293,31 @@
                         <table class="table table-sm table-bordered">
                             <thead class="thead-light">
                                 <tr>
-                                    <th style="width: 10%;">
-                                        割込
-                                    </th>
+                                    @if (Model.InterruptBattingOrder != null)
+                                    {
+                                        <th style="width: 10%;">
+                                            割込
+                                        </th>
+                                    }
                                     <th style="width: 10%;">
                                         打順
                                     </th>
-                                    <th style="width: 80%;">
+                                    <th>
                                         打者
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="text-center align-middle">
-                                        <input class="form-check-input" asp-for="GameScene.InterruptFLG" />
-                                    </td>
+                                    @if (Model.InterruptBattingOrder != null)
+                                    {
+                                        <td class="text-center align-middle">
+                                            <div class="ml-1 custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="interruptFLG" asp-for="GameScene.InterruptFLG">
+                                                <label class="custom-control-label" for="interruptFLG"></label>
+                                            </div>
+                                        </td>
+                                    }
                                     <td class="text-center align-middle">
                                         <span id="display-batting-order">@Model.GameScene.BattingOrder.DisplayDecimal()</span>
                                     </td>
@@ -439,7 +450,7 @@
                                     <tr class="@addHiddenClass js-after-runner">
                                         <td class="align-middle">
                                             <span class="js-after-runner-class-name" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass">@Model.AfterGameSceneRunnerList[i].RunnerClass.GetEnumName()</span>
-                                            <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].BattingOrder" />
+                                            <input class="js-rename js-after-runner-batting-order" type="hidden" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" asp-for="@Model.AfterGameSceneRunnerList[i].BattingOrder" />
                                             <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" />
 
                                             <input class="js-after-runner-class js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].RunnerClass" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" />
