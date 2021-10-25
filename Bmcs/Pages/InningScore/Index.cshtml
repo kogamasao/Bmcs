@@ -172,6 +172,9 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListGameScore)
                             </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameSceneList[0].Note)
+                            </th>
                             @if (Model.IsMyTeam || Model.IsAdmin())
                             {
                                 <th></th>
@@ -181,29 +184,32 @@
                     <tbody>
                         @foreach (var item in Model.GameSceneList.Where(r => r.Inning == inningScore.Inning && r.TopButtomClass == inningScore.TopButtomClass))
                         {
-                            <tr>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InningScoreListOutCount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InningScoreListRunner)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InningScoreListBattingOrder)
+                            </td>
+                            <td>
+                                @Html.Raw(item.InningScoreListDetail)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InningScoreListGameScore)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Note)
+                            </td>
+                            @if (Model.IsMyTeam || Model.IsAdmin())
+                            {
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.InningScoreListOutCount)
+                                    <a class="btn btn-primary btn-sm" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@item.GameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">修正</a>
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.InningScoreListRunner)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.InningScoreListBattingOrder)
-                                </td>
-                                <td>
-                                    @Html.Raw(item.InningScoreListDetail)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.InningScoreListGameScore)
-                                </td>
-                                @if (Model.IsMyTeam || Model.IsAdmin())
-                                {
-                                    <td>
-                                        <a class="btn btn-primary btn-sm" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@item.GameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">修正</a>
-                                    </td>
-                                }
-                            </tr>
+                            }
+                        </tr>
                         }
                     </tbody>
                 </table>

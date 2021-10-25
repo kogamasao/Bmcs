@@ -23,7 +23,7 @@
                 }
 
                 @if (Model.Game.StatusClass == StatusClass.BeforeFix
-             || Model.Game.StatusClass == StatusClass.EndGame)
+            || Model.Game.StatusClass == StatusClass.EndGame)
                 {
                     <a class="btn btn-primary" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果へ</a>
                 }
@@ -51,13 +51,13 @@
             <input type="hidden" asp-for="GameScene.Inning" />
             <input type="hidden" asp-for="GameScene.InningIndex" />
             <input type="hidden" asp-for="GameScene.TopButtomClass" />
-            <input type="hidden" asp-for="GameScene.BattingOrder" id="batting-order"/>
+            <input type="hidden" asp-for="GameScene.BattingOrder" id="batting-order" />
             <input type="hidden" asp-for="GameScene.OffenseDefenseClass" />
             <input type="hidden" asp-for="GameScene.OutCount" />
             <input type="hidden" asp-for="GameScene.RunnerSceneClass" />
             <input type="hidden" asp-for="LastGameSceneID" />
-            <input type="hidden" asp-for="RegularBattingOrder" id="regular-batting-order"/>
-            <input type="hidden" asp-for="InterruptBattingOrder" id="interrupt-batting-order"/>
+            <input type="hidden" asp-for="RegularBattingOrder" id="regular-batting-order" />
+            <input type="hidden" asp-for="InterruptBattingOrder" id="interrupt-batting-order" />
 
             <div class="table-responsive">
                 <table class="table table-sm table-bordered">
@@ -135,7 +135,7 @@
                             }
 
                             @if (Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() > 9
-                               && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
+                              && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
                             {
                                 <td class="text-center">
                                 </td>
@@ -479,7 +479,11 @@
                     </div>
                 </div>
             </div>
-
+            <div class="form-group">
+                <label asp-for="GameScene.Note" class="control-label"></label>
+                <textarea asp-for="GameScene.Note" class="form-control"></textarea>
+                <span asp-validation-for="GameScene.Note" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <input type="button" value="次の打者へ" class="btn btn-primary js-submit" data-submitclass="@GameSceneSubmitClass.NextBatter" />
             </div>
