@@ -250,7 +250,7 @@ namespace Bmcs.Pages.Message
             }
             else
             {
-                message.PublicFLG = Message.PrivateTeamID == null ? true : false;
+                message.PublicFLG = Message.PrivateTeamID == null;
             }
 
             message.DeleteFLG = false;

@@ -49,8 +49,10 @@ namespace Bmcs.Pages.Member
                 return NotFound();
             }
 
-            Member = new Models.Member();
-            Member.Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID);
+            Member = new Models.Member
+            {
+                Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID)
+            };
 
             if (Member.Team == null)
             {

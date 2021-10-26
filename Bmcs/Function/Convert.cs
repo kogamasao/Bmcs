@@ -37,17 +37,15 @@ namespace Bmcs.Function
         /// <returns></returns>
         public static T? ZeroToNull<T>(this T value) where T : struct
         {
-            decimal decimalValue;
-
-            if(decimal.TryParse(value.ToString(), out decimalValue))
+            if (decimal.TryParse(value.ToString(), out decimal decimalValue))
             {
-                if(decimalValue == 0)
+                if (decimalValue == 0)
                 {
                     return null;
                 }
             }
 
-             return value;
+            return value;
         }
 
         /// <summary>

@@ -50,8 +50,10 @@ namespace Bmcs.Pages.Game
                 return NotFound();
             }
 
-            Game = new Models.Game();
-            Game.Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID);
+            Game = new Models.Game
+            {
+                Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID)
+            };
 
             if (Game.Team == null)
             {
@@ -72,8 +74,7 @@ namespace Bmcs.Pages.Game
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var gameID = 0;
-
+            int gameID;
             try
             {
                 if (!ModelState.IsValid)
@@ -102,11 +103,11 @@ namespace Bmcs.Pages.Game
 
             if(Game.GameInputTypeClass == GameInputTypeClass.ByPlay)
             { 
-                return RedirectToPage("/Order/Edit", new { gameID = gameID });
+                return RedirectToPage("/Order/Edit", new { gameID });
             }
             else
             {
-                return RedirectToPage("/GameScore/Edit", new { gameID = gameID });
+                return RedirectToPage("/GameScore/Edit", new { gameID });
             }
         }
 

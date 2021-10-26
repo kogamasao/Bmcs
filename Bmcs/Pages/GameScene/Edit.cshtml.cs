@@ -806,245 +806,248 @@ namespace Bmcs.Pages.GameScene
         {
             try
             {
-                using (var tran = await Context.Database.BeginTransactionAsync())
+                using var tran = await Context.Database.BeginTransactionAsync();
+                var tieBreakStartBattingOrder = Game.TieBreakStartBattingOrder;
+                var tieBreakStartOutCount = Game.TieBreakStartOutCount;
+                var tieBreakStartRunnerSceneClass = Game.TieBreakStartRunnerSceneClass;
+
+                //再取得
+                Game = await Context.Games
+                    .Include(m => m.Team).FirstOrDefaultAsync(m => m.GameID == Game.GameID);
+
+                //チームID
+                base.TeamID = Game.TeamID;
+
+                if (!ModelState.IsValid)
                 {
-                    var tieBreakStartBattingOrder = Game.TieBreakStartBattingOrder;
-                    var tieBreakStartOutCount = Game.TieBreakStartOutCount;
-                    var tieBreakStartRunnerSceneClass = Game.TieBreakStartRunnerSceneClass;
+                    return Page();
+                }
 
-                    //再取得
-                    Game = await Context.Games
-                        .Include(m => m.Team).FirstOrDefaultAsync(m => m.GameID == Game.GameID);
+                //削除対象試合シーン
+                var deleteGameSceneList = await Context.GameScenes
+                                        .Where(r => r.GameID == Game.GameID
+                                            && r.Inning == GameScene.Inning
+                                            && r.TopButtomClass == GameScene.TopButtomClass
+                                            && r.InningIndex == GameScene.InningIndex).ToListAsync();
 
-                    //チームID
-                    base.TeamID = Game.TeamID;
+                Context.GameScenes.RemoveRange(deleteGameSceneList);
 
-                    if (!ModelState.IsValid)
+                var deleteGameSceneDetailList = new List<Models.GameSceneDetail>();
+                var deleteGameSceneRunnerList = new List<Models.GameSceneRunner>();
+                var deleteOrderList = new List<Models.Order>();
+
+                //試合シーン関連対象データ削除
+                DeleteRelatedGameScenes(deleteGameSceneList, deleteGameSceneDetailList, deleteGameSceneRunnerList, deleteOrderList);
+
+                await Context.SaveChangesAsync();
+
+                //データ作成
+                var gameScene = new Models.GameScene
+                {
+                    GameSceneDetails = new List<Models.GameSceneDetail>(),
+                    GameSceneRunners = new List<Models.GameSceneRunner>(),
+                    Orders = new List<Models.Order>()
+                };
+
+                //POST値セット
+                TryUpdateModel(gameScene);
+
+                //今回データ更新対象
+                if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.NextBatter
+                    || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterChange
+                    || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterGameSet
+                    || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterTieBreak)
+                {
+                    //データ追加
+                    Context.GameScenes.Add(gameScene);
+
+                    //試合中
+                    if (Game.StatusClass == StatusClass.BeforeGame)
                     {
-                        return Page();
+                        Game.StatusClass = StatusClass.DuringGame;
                     }
 
-                    //削除対象試合シーン
-                    var deleteGameSceneList = await Context.GameScenes
-                                            .Where(r => r.GameID == Game.GameID
-                                                && r.Inning == GameScene.Inning
-                                                && r.TopButtomClass == GameScene.TopButtomClass
-                                                && r.InningIndex == GameScene.InningIndex).ToListAsync();
+                    //タイブレーク
+                    if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterTieBreak)
+                    {
+                        Game.TieBreakStartInning = gameScene.Inning + 1;
+                        Game.TieBreakStartBattingOrder = tieBreakStartBattingOrder;
+                        Game.TieBreakStartOutCount = tieBreakStartOutCount;
+                        Game.TieBreakStartRunnerSceneClass = tieBreakStartRunnerSceneClass;
+                    }
+                    //チェンジ、試合終了
+                    else if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterChange
+                    || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterGameSet)
+                    {
+                        //タイブレークでない、裏終了、次イニングがタイブレーク(一度入力した)
+                        if (!IsTieBreak
+                            && gameScene.TopButtomClass == TopButtomClass.Buttom
+                            && gameScene.Inning + 1 == Game.TieBreakStartInning)
+                        {
+                            Game.TieBreakStartInning = null;
+                            Game.TieBreakStartBattingOrder = null;
+                            Game.TieBreakStartOutCount = null;
+                            Game.TieBreakStartRunnerSceneClass = null;
+                        }
+                    }
+
+                    await Context.SaveChangesAsync();
+                }
+
+                //チェンジ、試合終了時は未来データを削除
+                if (GameSceneSubmitClass != Enum.GameSceneSubmitClass.NextBatter)
+                {
+                    //試合シーン同イニング未来データ
+                    deleteGameSceneList = await Context.GameScenes
+                                        .Where(r => r.GameID == Game.GameID
+                                            && r.Inning == GameScene.Inning
+                                            && r.TopButtomClass == GameScene.TopButtomClass
+                                            && r.InningIndex > GameScene.InningIndex).ToListAsync();
 
                     Context.GameScenes.RemoveRange(deleteGameSceneList);
-
-                    var deleteGameSceneDetailList = new List<Models.GameSceneDetail>();
-                    var deleteGameSceneRunnerList = new List<Models.GameSceneRunner>();
-                    var deleteOrderList = new List<Models.Order>();
 
                     //試合シーン関連対象データ削除
                     DeleteRelatedGameScenes(deleteGameSceneList, deleteGameSceneDetailList, deleteGameSceneRunnerList, deleteOrderList);
 
                     await Context.SaveChangesAsync();
 
-                    //データ作成
-                    var gameScene = new Models.GameScene();
-                    gameScene.GameSceneDetails = new List<Models.GameSceneDetail>();
-                    gameScene.GameSceneRunners = new List<Models.GameSceneRunner>();
-                    gameScene.Orders = new List<Models.Order>();
-
-                    //POST値セット
-                    TryUpdateModel(gameScene);
-
-                    //今回データ更新対象
-                    if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.NextBatter
-                        || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterChange
-                        || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterGameSet
-                        || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterTieBreak)
-                    {
-                        //データ追加
-                        Context.GameScenes.Add(gameScene);
-
-                        //試合中
-                        if (Game.StatusClass == StatusClass.BeforeGame)
-                        {
-                            Game.StatusClass = StatusClass.DuringGame;
-                        }
-
-                        //タイブレーク
-                        if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterTieBreak)
-                        {
-                            Game.TieBreakStartInning = gameScene.Inning + 1;
-                            Game.TieBreakStartBattingOrder = tieBreakStartBattingOrder;
-                            Game.TieBreakStartOutCount = tieBreakStartOutCount;
-                            Game.TieBreakStartRunnerSceneClass = tieBreakStartRunnerSceneClass;
-                        }
-                        //チェンジ、試合終了
-                        else if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterChange
+                    //試合終了
+                    if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.BeforeBatterGameSet
                         || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterGameSet)
-                        {
-                            //タイブレークでない、裏終了、次イニングがタイブレーク(一度入力した)
-                            if (!IsTieBreak
-                                && gameScene.TopButtomClass == TopButtomClass.Buttom
-                                && gameScene.Inning + 1 == Game.TieBreakStartInning)
-                            {
-                                Game.TieBreakStartInning = null;
-                                Game.TieBreakStartBattingOrder = null;
-                                Game.TieBreakStartOutCount = null;
-                                Game.TieBreakStartRunnerSceneClass = null;
-                            }
-                        }
-
-                        await Context.SaveChangesAsync();
-                    }
-
-                    //チェンジ、試合終了時は未来データを削除
-                    if (GameSceneSubmitClass != Enum.GameSceneSubmitClass.NextBatter)
                     {
-                        //試合シーン同イニング未来データ
+                        //試合シーン未来イニング
                         deleteGameSceneList = await Context.GameScenes
                                             .Where(r => r.GameID == Game.GameID
-                                                && r.Inning == GameScene.Inning
-                                                && r.TopButtomClass == GameScene.TopButtomClass
-                                                && r.InningIndex > GameScene.InningIndex).ToListAsync();
+                                                && ((r.Inning > GameScene.Inning)
+                                                 || (r.Inning == GameScene.Inning && r.TopButtomClass == TopButtomClass.Buttom && GameScene.TopButtomClass == TopButtomClass.Top))).ToListAsync();
 
                         Context.GameScenes.RemoveRange(deleteGameSceneList);
 
                         //試合シーン関連対象データ削除
                         DeleteRelatedGameScenes(deleteGameSceneList, deleteGameSceneDetailList, deleteGameSceneRunnerList, deleteOrderList);
 
+                        //イニングスコア
+                        var deleteInningScoreList = await Context.InningScores
+                                                    .Where(r => r.GameID == Game.GameID
+                                                            && ((r.Inning > GameScene.Inning)
+                                                             || (r.Inning == GameScene.Inning && r.TopButtomClass == TopButtomClass.Buttom && GameScene.TopButtomClass == TopButtomClass.Top))).ToListAsync();
+
+                        Context.InningScores.RemoveRange(deleteInningScoreList);
+
                         await Context.SaveChangesAsync();
-
-                        //試合終了
-                        if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.BeforeBatterGameSet
-                            || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterGameSet)
-                        {
-                            //試合シーン未来イニング
-                            deleteGameSceneList = await Context.GameScenes
-                                                .Where(r => r.GameID == Game.GameID
-                                                    && ((r.Inning > GameScene.Inning)
-                                                     || (r.Inning == GameScene.Inning && r.TopButtomClass == TopButtomClass.Buttom && GameScene.TopButtomClass == TopButtomClass.Top))).ToListAsync();
-
-                            Context.GameScenes.RemoveRange(deleteGameSceneList);
-
-                            //試合シーン関連対象データ削除
-                            DeleteRelatedGameScenes(deleteGameSceneList, deleteGameSceneDetailList, deleteGameSceneRunnerList, deleteOrderList);
-
-                            //イニングスコア
-                            var deleteInningScoreList = await Context.InningScores
-                                                        .Where(r => r.GameID == Game.GameID
-                                                                && ((r.Inning > GameScene.Inning)
-                                                                 || (r.Inning == GameScene.Inning && r.TopButtomClass == TopButtomClass.Buttom && GameScene.TopButtomClass == TopButtomClass.Top))).ToListAsync();
-
-                            Context.InningScores.RemoveRange(deleteInningScoreList);
-
-                            await Context.SaveChangesAsync();
-                        }
                     }
+                }
 
-                    //イニングスコア
-                    var inningScore = Context.InningScores
-                                        .Where(r => r.GameID == Game.GameID
-                                            && r.Inning == GameScene.Inning
-                                            && r.TopButtomClass == GameScene.TopButtomClass).FirstOrDefault();
+                //イニングスコア
+                var inningScore = Context.InningScores
+                                    .Where(r => r.GameID == Game.GameID
+                                        && r.Inning == GameScene.Inning
+                                        && r.TopButtomClass == GameScene.TopButtomClass).FirstOrDefault();
 
-                    var gameScenes = Context.GameScenes
-                                        .Where(r => r.GameID == Game.GameID
-                                            && r.Inning == GameScene.Inning
-                                            && r.TopButtomClass == GameScene.TopButtomClass);
+                var gameScenes = Context.GameScenes
+                                    .Where(r => r.GameID == Game.GameID
+                                        && r.Inning == GameScene.Inning
+                                        && r.TopButtomClass == GameScene.TopButtomClass);
 
-                    var score = gameScenes.DefaultIfEmpty().Sum(r => r.Run);
+                var score = gameScenes.DefaultIfEmpty().Sum(r => r.Run);
 
-                    if (inningScore != null)
+                if (inningScore != null)
+                {
+                    inningScore.Score = score;
+
+                    //試合終了
+                    if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterGameSet
+                        || GameSceneSubmitClass == Enum.GameSceneSubmitClass.BeforeBatterGameSet)
                     {
-                        inningScore.Score = score;
-
-                        //試合終了
-                        if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterGameSet
-                            || GameSceneSubmitClass == Enum.GameSceneSubmitClass.BeforeBatterGameSet)
-                        {
-                            inningScore.LastInningFLG = true;
-                        }
-                        else
-                        {
-                            inningScore.LastInningFLG = false;
-                        }
-
-                        base.SetUpdateInfo(inningScore);
+                        inningScore.LastInningFLG = true;
                     }
                     else
                     {
-                        inningScore = new Models.InningScore();
-
-                        inningScore.GameID = Game.GameID;
-                        inningScore.TeamID = Game.TeamID;
-                        inningScore.Inning = GameScene.Inning;
-                        inningScore.TopButtomClass = GameScene.TopButtomClass;
-                        inningScore.Score = score;
-
-                        //試合終了
-                        if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterGameSet
-                            || GameSceneSubmitClass == Enum.GameSceneSubmitClass.BeforeBatterGameSet)
-                        {
-                            inningScore.LastInningFLG = true;
-                        }
-                        else
-                        {
-                            inningScore.LastInningFLG = false;
-                        }
-
-                        base.SetEntryInfo(inningScore);
-
-                        Context.InningScores.Add(inningScore);
+                        inningScore.LastInningFLG = false;
                     }
 
-                    await Context.SaveChangesAsync();
-
-                    //仮オーダー削除
-                    await DeleteTempOrders(Game.GameID, OrderDataClass.Temp);
-                    await DeleteTempOrders(Game.GameID, OrderDataClass.Change);
-
-                    //修正
-                    if (GameScene.GameSceneID.ZeroToNull() != null)
+                    base.SetUpdateInfo(inningScore);
+                }
+                else
+                {
+                    inningScore = new Models.InningScore
                     {
-                        //次回試合シーンID
-                        if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.BeforeBatterChange
-                            || GameSceneSubmitClass == Enum.GameSceneSubmitClass.BeforeBatterGameSet)
-                        {
-                            NextGameSceneID = GetNextGameSceneID(Game.GameID, GameScene.GameSceneID);
-                        }
-                        else
-                        {
-                            NextGameSceneID = GetNextGameSceneID(Game.GameID, gameScene.GameSceneID);
+                        GameID = Game.GameID,
+                        TeamID = Game.TeamID,
+                        Inning = GameScene.Inning,
+                        TopButtomClass = GameScene.TopButtomClass,
+                        Score = score
+                    };
 
-                            var nextGameScene = await Context.GameScenes
-                                                            .FindAsync(NextGameSceneID);
+                    //試合終了
+                    if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterGameSet
+                        || GameSceneSubmitClass == Enum.GameSceneSubmitClass.BeforeBatterGameSet)
+                    {
+                        inningScore.LastInningFLG = true;
+                    }
+                    else
+                    {
+                        inningScore.LastInningFLG = false;
+                    }
 
-                            if (nextGameScene != null)
+                    base.SetEntryInfo(inningScore);
+
+                    Context.InningScores.Add(inningScore);
+                }
+
+                await Context.SaveChangesAsync();
+
+                //仮オーダー削除
+                await DeleteTempOrders(Game.GameID, OrderDataClass.Temp);
+                await DeleteTempOrders(Game.GameID, OrderDataClass.Change);
+
+                //修正
+                if (GameScene.GameSceneID.ZeroToNull() != null)
+                {
+                    //次回試合シーンID
+                    if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.BeforeBatterChange
+                        || GameSceneSubmitClass == Enum.GameSceneSubmitClass.BeforeBatterGameSet)
+                    {
+                        NextGameSceneID = GetNextGameSceneID(Game.GameID, GameScene.GameSceneID);
+                    }
+                    else
+                    {
+                        NextGameSceneID = GetNextGameSceneID(Game.GameID, gameScene.GameSceneID);
+
+                        var nextGameScene = await Context.GameScenes
+                                                        .FindAsync(NextGameSceneID);
+
+                        if (nextGameScene != null)
+                        {
+                            //同イニングでない次データあり
+                            if ((nextGameScene.Inning != gameScene.Inning
+                                || nextGameScene.TopButtomClass != gameScene.TopButtomClass)
+                                && !gameScene.ChangeFLG)
                             {
-                                //同イニングでない次データあり
-                                if ((nextGameScene.Inning != gameScene.Inning
-                                    || nextGameScene.TopButtomClass != gameScene.TopButtomClass)
-                                    && !gameScene.ChangeFLG)
+                                //仮データ作成
+                                var tempChangeGameScene = new Models.GameScene
                                 {
-                                    //仮データ作成
-                                    var tempChangeGameScene = new Models.GameScene();
-                                    tempChangeGameScene.GameSceneDetails = new List<Models.GameSceneDetail>();
-                                    tempChangeGameScene.GameSceneRunners = new List<Models.GameSceneRunner>();
-                                    tempChangeGameScene.Orders = new List<Models.Order>();
+                                    GameSceneDetails = new List<Models.GameSceneDetail>(),
+                                    GameSceneRunners = new List<Models.GameSceneRunner>(),
+                                    Orders = new List<Models.Order>()
+                                };
 
-                                    CreateTempChangeData(tempChangeGameScene, gameScene);
+                                CreateTempChangeData(tempChangeGameScene, gameScene);
 
-                                    //データ追加
-                                    Context.GameScenes.Add(tempChangeGameScene);
+                                //データ追加
+                                Context.GameScenes.Add(tempChangeGameScene);
 
-                                    await Context.SaveChangesAsync();
+                                await Context.SaveChangesAsync();
 
-                                    //仮データIDをセット
-                                    NextGameSceneID = tempChangeGameScene.GameSceneID;
-                                }
+                                //仮データIDをセット
+                                NextGameSceneID = tempChangeGameScene.GameSceneID;
                             }
                         }
                     }
-
-
-                    await tran.CommitAsync();
                 }
+
+
+                await tran.CommitAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -1102,13 +1105,14 @@ namespace Bmcs.Pages.GameScene
             //試合詳細シーン
             foreach (var gameSceneDetail in BeforeGameSceneDetailList.Where(r => r.DetailResultClass != null))
             {
-                var newGameSceneDetail = new Models.GameSceneDetail();
-
-                newGameSceneDetail.GameID = gameScene.GameID;
-                newGameSceneDetail.TeamID = gameScene.TeamID;
-                newGameSceneDetail.MemberID = gameSceneDetail.MemberID;
-                newGameSceneDetail.SceneResultClass = SceneResultClass.SceneChange;
-                newGameSceneDetail.DetailResultClass = gameSceneDetail.DetailResultClass;
+                var newGameSceneDetail = new Models.GameSceneDetail
+                {
+                    GameID = gameScene.GameID,
+                    TeamID = gameScene.TeamID,
+                    MemberID = gameSceneDetail.MemberID,
+                    SceneResultClass = SceneResultClass.SceneChange,
+                    DetailResultClass = gameSceneDetail.DetailResultClass
+                };
 
                 base.SetEntryInfo(newGameSceneDetail);
 
@@ -1118,16 +1122,17 @@ namespace Bmcs.Pages.GameScene
             //試合ランナーシーン
             foreach (var gameSceneRunner in BeforeGameSceneRunnerList)
             {
-                var newGameSceneRunner = new Models.GameSceneRunner();
-
-                newGameSceneRunner.GameID = gameScene.GameID;
-                newGameSceneRunner.TeamID = gameScene.TeamID;
-                newGameSceneRunner.MemberID = gameSceneRunner.MemberID;
-                newGameSceneRunner.BattingOrder = gameSceneRunner.BattingOrder;
-                newGameSceneRunner.SceneResultClass = SceneResultClass.SceneChange;
-                newGameSceneRunner.BeforeRunnerClass = gameSceneRunner.BeforeRunnerClass;
-                newGameSceneRunner.RunnerClass = gameSceneRunner.RunnerClass;
-                newGameSceneRunner.RunnerResultClass = gameSceneRunner.RunnerResultClass;
+                var newGameSceneRunner = new Models.GameSceneRunner
+                {
+                    GameID = gameScene.GameID,
+                    TeamID = gameScene.TeamID,
+                    MemberID = gameSceneRunner.MemberID,
+                    BattingOrder = gameSceneRunner.BattingOrder,
+                    SceneResultClass = SceneResultClass.SceneChange,
+                    BeforeRunnerClass = gameSceneRunner.BeforeRunnerClass,
+                    RunnerClass = gameSceneRunner.RunnerClass,
+                    RunnerResultClass = gameSceneRunner.RunnerResultClass
+                };
 
                 base.SetEntryInfo(newGameSceneRunner);
 
@@ -1141,13 +1146,14 @@ namespace Bmcs.Pages.GameScene
             //試合詳細結果
             foreach (var gameSceneDetail in AfterGameSceneDetailList.Where(r => r.DetailResultClass != null))
             {
-                var newGameSceneDetail = new Models.GameSceneDetail();
-
-                newGameSceneDetail.GameID = gameScene.GameID;
-                newGameSceneDetail.TeamID = gameScene.TeamID;
-                newGameSceneDetail.MemberID = gameSceneDetail.MemberID;
-                newGameSceneDetail.SceneResultClass = SceneResultClass.Result;
-                newGameSceneDetail.DetailResultClass = gameSceneDetail.DetailResultClass;
+                var newGameSceneDetail = new Models.GameSceneDetail
+                {
+                    GameID = gameScene.GameID,
+                    TeamID = gameScene.TeamID,
+                    MemberID = gameSceneDetail.MemberID,
+                    SceneResultClass = SceneResultClass.Result,
+                    DetailResultClass = gameSceneDetail.DetailResultClass
+                };
 
                 base.SetEntryInfo(newGameSceneDetail);
 
@@ -1157,16 +1163,17 @@ namespace Bmcs.Pages.GameScene
             //試合ランナー結果
             foreach (var gameSceneRunner in AfterGameSceneRunnerList)
             {
-                var newGameSceneRunner = new Models.GameSceneRunner();
-
-                newGameSceneRunner.GameID = gameScene.GameID;
-                newGameSceneRunner.TeamID = gameScene.TeamID;
-                newGameSceneRunner.MemberID = gameSceneRunner.MemberID;
-                newGameSceneRunner.BattingOrder = gameSceneRunner.BattingOrder;
-                newGameSceneRunner.SceneResultClass = SceneResultClass.Result;
-                newGameSceneRunner.BeforeRunnerClass = gameSceneRunner.BeforeRunnerClass;
-                newGameSceneRunner.RunnerClass = gameSceneRunner.RunnerClass;
-                newGameSceneRunner.RunnerResultClass = gameSceneRunner.RunnerResultClass;
+                var newGameSceneRunner = new Models.GameSceneRunner
+                {
+                    GameID = gameScene.GameID,
+                    TeamID = gameScene.TeamID,
+                    MemberID = gameSceneRunner.MemberID,
+                    BattingOrder = gameSceneRunner.BattingOrder,
+                    SceneResultClass = SceneResultClass.Result,
+                    BeforeRunnerClass = gameSceneRunner.BeforeRunnerClass,
+                    RunnerClass = gameSceneRunner.RunnerClass,
+                    RunnerResultClass = gameSceneRunner.RunnerResultClass
+                };
 
                 base.SetEntryInfo(newGameSceneRunner);
 
@@ -1235,16 +1242,17 @@ namespace Bmcs.Pages.GameScene
             //オーダー作成
             foreach (var order in beforeOrders)
             {
-                var newOrder = new Models.Order();
-
-                newOrder.GameID = order.GameID;
-                newOrder.TeamID = order.TeamID;
-                newOrder.MemberID = order.MemberID;
-                newOrder.BattingOrder = order.BattingOrder;
-                newOrder.ParticipationIndex = order.ParticipationIndex;
-                newOrder.PositionClass = order.PositionClass;
-                newOrder.ParticipationClass = order.ParticipationClass;
-                newOrder.OrderDataClass = OrderDataClass.Normal;
+                var newOrder = new Models.Order
+                {
+                    GameID = order.GameID,
+                    TeamID = order.TeamID,
+                    MemberID = order.MemberID,
+                    BattingOrder = order.BattingOrder,
+                    ParticipationIndex = order.ParticipationIndex,
+                    PositionClass = order.PositionClass,
+                    ParticipationClass = order.ParticipationClass,
+                    OrderDataClass = OrderDataClass.Normal
+                };
 
                 //代打、代走
                 if (gameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
@@ -1507,16 +1515,17 @@ namespace Bmcs.Pages.GameScene
             //オーダー作成
             foreach (var order in beforeOrders)
             {
-                var newOrder = new Models.Order();
-
-                newOrder.GameID = order.GameID;
-                newOrder.TeamID = order.TeamID;
-                newOrder.MemberID = order.MemberID;
-                newOrder.BattingOrder = order.BattingOrder;
-                newOrder.ParticipationIndex = order.ParticipationIndex;
-                newOrder.PositionClass = order.PositionClass;
-                newOrder.ParticipationClass = order.ParticipationClass;
-                newOrder.OrderDataClass = OrderDataClass.Normal;
+                var newOrder = new Models.Order
+                {
+                    GameID = order.GameID,
+                    TeamID = order.TeamID,
+                    MemberID = order.MemberID,
+                    BattingOrder = order.BattingOrder,
+                    ParticipationIndex = order.ParticipationIndex,
+                    PositionClass = order.PositionClass,
+                    ParticipationClass = order.ParticipationClass,
+                    OrderDataClass = OrderDataClass.Normal
+                };
 
                 base.SetEntryInfo(newOrder);
 
@@ -2053,17 +2062,18 @@ namespace Bmcs.Pages.GameScene
             //オーダー作成
             foreach (var order in beforeOrders)
             {
-                var newOrder = new Models.Order();
-
-                newOrder.GameID = order.GameID;
-                newOrder.GameSceneID = null;
-                newOrder.TeamID = order.TeamID;
-                newOrder.MemberID = order.MemberID;
-                newOrder.BattingOrder = order.BattingOrder;
-                newOrder.ParticipationIndex = order.ParticipationIndex;
-                newOrder.PositionClass = order.PositionClass;
-                newOrder.ParticipationClass = order.ParticipationClass;
-                newOrder.OrderDataClass = OrderDataClass.Temp;
+                var newOrder = new Models.Order
+                {
+                    GameID = order.GameID,
+                    GameSceneID = null,
+                    TeamID = order.TeamID,
+                    MemberID = order.MemberID,
+                    BattingOrder = order.BattingOrder,
+                    ParticipationIndex = order.ParticipationIndex,
+                    PositionClass = order.PositionClass,
+                    ParticipationClass = order.ParticipationClass,
+                    OrderDataClass = OrderDataClass.Temp
+                };
 
                 base.SetEntryInfo(newOrder);
 

@@ -41,7 +41,7 @@ namespace Bmcs.Pages.Order
         [BindProperty]
         public decimal InterruptBattingOrder { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? gameID, int? gameSceneID = null, int? dispGameSceneID = null, bool isDuringGame = false)
+        public async Task<IActionResult> OnGetAsync(int? gameID, int? gameSceneID = null, bool isDuringGame = false)
         {
             if (!base.IsLogin())
             {
@@ -260,19 +260,20 @@ namespace Bmcs.Pages.Order
 
             foreach (var order in OrderList)
             {
-                var newOrder = new Models.Order();
-
-                newOrder.GameID = order.GameID;
-                newOrder.TeamID = order.TeamID;
-                newOrder.GameSceneID = order.GameSceneID;
-                newOrder.MemberID = order.MemberID;
-                newOrder.BattingOrder = order.BattingOrder;
-                newOrder.ParticipationIndex = order.ParticipationIndex;
-                newOrder.PositionClass = order.PositionClass;
-                newOrder.ParticipationClass = order.ParticipationClass;
+                var newOrder = new Models.Order
+                {
+                    GameID = order.GameID,
+                    TeamID = order.TeamID,
+                    GameSceneID = order.GameSceneID,
+                    MemberID = order.MemberID,
+                    BattingOrder = order.BattingOrder,
+                    ParticipationIndex = order.ParticipationIndex,
+                    PositionClass = order.PositionClass,
+                    ParticipationClass = order.ParticipationClass
+                };
 
                 //試合中
-                if(IsDuringGame)
+                if (IsDuringGame)
                 { 
                     newOrder.OrderDataClass = OrderDataClass.Change;
                     newOrder.ParticipationIndex += 1;

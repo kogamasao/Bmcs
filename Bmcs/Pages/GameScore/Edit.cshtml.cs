@@ -189,41 +189,39 @@ namespace Bmcs.Pages.GameScore
 
                 if (GameScoreSubmitClass == Enum.GameScoreSubmitClass.Fix)
                 {
-                    using (var tran = await Context.Database.BeginTransactionAsync())
+                    using var tran = await Context.Database.BeginTransactionAsync();
+
+                    if (!ModelState.IsValid)
                     {
-                   
-                        if (!ModelState.IsValid)
-                        {
-                            return Page();
-                        }
-
-                        //削除対象イニングスコア
-                        var deleteInningScores = await Context.InningScores
-                                                        .Where(r => r.GameID == Game.GameID).ToListAsync();
-
-                        Context.InningScores.RemoveRange(deleteInningScores);
-
-                        //削除対象試合投手スコア
-                        var deleteGameScorePitchers = await Context.GameScorePitchers
-                                                        .Where(r => r.GameID == Game.GameID).ToListAsync();
-
-                        Context.GameScorePitchers.RemoveRange(deleteGameScorePitchers);
-
-                        //削除対象試合野手スコア
-                        var deleteGameScoreFielders = await Context.GameScoreFielders
-                                                        .Where(r => r.GameID == Game.GameID).ToListAsync();
-
-                        Context.GameScoreFielders.RemoveRange(deleteGameScoreFielders);
-
-                        await Context.SaveChangesAsync();
-
-                        //POST値セット
-                        TryUpdateModel();
-
-                        await Context.SaveChangesAsync();
-
-                        await tran.CommitAsync();
+                        return Page();
                     }
+
+                    //削除対象イニングスコア
+                    var deleteInningScores = await Context.InningScores
+                                                    .Where(r => r.GameID == Game.GameID).ToListAsync();
+
+                    Context.InningScores.RemoveRange(deleteInningScores);
+
+                    //削除対象試合投手スコア
+                    var deleteGameScorePitchers = await Context.GameScorePitchers
+                                                    .Where(r => r.GameID == Game.GameID).ToListAsync();
+
+                    Context.GameScorePitchers.RemoveRange(deleteGameScorePitchers);
+
+                    //削除対象試合野手スコア
+                    var deleteGameScoreFielders = await Context.GameScoreFielders
+                                                    .Where(r => r.GameID == Game.GameID).ToListAsync();
+
+                    Context.GameScoreFielders.RemoveRange(deleteGameScoreFielders);
+
+                    await Context.SaveChangesAsync();
+
+                    //POST値セット
+                    TryUpdateModel();
+
+                    await Context.SaveChangesAsync();
+
+                    await tran.CommitAsync();
                 }
             }
             catch (DbUpdateConcurrencyException)
