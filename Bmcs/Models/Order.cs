@@ -54,6 +54,11 @@ namespace Bmcs.Models
             }
         }
 
+        [NotMapped]
+        [Column(TypeName = "decimal(4, 2)")]
+        [Display(Name = "一時打順")]
+        public decimal? TempBattingOrder { get; set; }
+
         public Game Game { get; set; }
 
         public GameScene GameScene { get; set; }

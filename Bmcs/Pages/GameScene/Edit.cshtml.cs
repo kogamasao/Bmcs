@@ -1732,15 +1732,16 @@ namespace Bmcs.Pages.GameScene
                     TeamID = order.TeamID,
                     GameSceneID = order.GameSceneID,
                     MemberID = order.MemberID,
-                    BattingOrder = order.BattingOrder > baseBattingOrder ? order.BattingOrder - orderCount : order.BattingOrder,
+                    BattingOrder = order.BattingOrder,
                     ParticipationIndex = order.ParticipationIndex,
                     PositionClass = order.PositionClass,
                     ParticipationClass = order.ParticipationClass,
+                    TempBattingOrder = order.BattingOrder > baseBattingOrder ? order.BattingOrder - orderCount : order.BattingOrder,
                 });
             }
 
             //降順
-            result = result.OrderByDescending(r => r.BattingOrder).ToList();
+            result = result.OrderByDescending(r => r.TempBattingOrder).ToList();
 
             return result;
         }
