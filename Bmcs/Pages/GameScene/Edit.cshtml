@@ -58,6 +58,7 @@
             <input type="hidden" asp-for="LastGameSceneID" />
             <input type="hidden" asp-for="RegularBattingOrder" id="regular-batting-order" />
             <input type="hidden" asp-for="InterruptBattingOrder" id="interrupt-batting-order" />
+            <input type="hidden" asp-for="IsTieBreak" />
 
             <div class="table-responsive">
                 <table class="table table-sm table-bordered">
@@ -488,8 +489,49 @@
                 <input type="button" value="次の打者へ" class="btn btn-primary js-submit" data-submitclass="@GameSceneSubmitClass.NextBatter" />
             </div>
             <div class="form-group">
-                <input type="button" value="この打者でチェンジ" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterChange" />
-                <input type="button" value="この打者で試合終了" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterGameSet" />
+                <input type="button" value="チェンジ" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterChange" />
+                <input type="button" value="試合終了" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterGameSet" />
+                @if(Model.GameScene.TopButtomClass == TopButtomClass.Buttom && !Model.IsTieBreak)
+                {
+                <input type="button" value="タイブレーク" class="btn btn-danger" data-toggle="modal" data-target="#tie-break" />
+
+                <!-- Modal -->
+                <div class="modal fade" id="tie-break" tabindex="-1" role="dialog" aria-labelledby="tie-break-title" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="tie-break-title">タイブレーク設定</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>タイブレークの開始打順、開始アウトカウント、開始ランナーを入力してください。</p>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label asp-for="Game.TieBreakStartBattingOrder" class="control-label"></label>
+                                        <select asp-for="Game.TieBreakStartBattingOrder" class="form-control" asp-items="Model.TieBreakBattingOrderList"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Game.TieBreakStartOutCount" class="control-label"></label>
+                                        <input asp-for="Game.TieBreakStartOutCount" class="form-control" min="0" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Game.TieBreakStartRunnerSceneClass" class="control-label"></label>
+                                        <select asp-for="Game.TieBreakStartRunnerSceneClass" class="form-control" asp-items="Model.RunnerSceneClassList"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="add-order-modal" type="button" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterTieBreak">タイブレークへ</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">戻る</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                }
             </div>
             <input id="game-scene-submit-class" type="hidden" asp-for="@Model.GameSceneSubmitClass" />
         </form>

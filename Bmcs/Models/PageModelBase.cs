@@ -418,7 +418,7 @@ namespace Bmcs.Models
         {
             get
             {
-                return EnumClass.GetSelectList<RunnerSceneClass>();
+                return EnumClass.GetSelectList<RunnerSceneClass>(false);
             }
         }
 
@@ -501,10 +501,11 @@ namespace Bmcs.Models
         {
             get
             {
-                var selectList = new List<SelectListItem>();
-
-                selectList.Add(new SelectListItem("規定除外", "True"));
-                selectList.Add(new SelectListItem("規定適用", "False"));
+                var selectList = new List<SelectListItem>
+                {
+                    new SelectListItem("規定除外", "True"),
+                    new SelectListItem("規定適用", "False")
+                };
 
                 return new SelectList(selectList, "Value", "Text");
             }
@@ -595,7 +596,7 @@ namespace Bmcs.Models
         /// <param name="selectList"></param>
         /// <param name="firstItem"></param>
         /// <returns></returns>
-        private SelectList AddFirstItem(SelectList selectList, SelectListItem firstItem)
+        public SelectList AddFirstItem(SelectList selectList, SelectListItem firstItem)
         {
             List<SelectListItem> newList = selectList.ToList();
             newList.Insert(0, firstItem);

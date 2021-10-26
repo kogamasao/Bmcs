@@ -107,6 +107,15 @@ namespace Bmcs.Pages.InningScore
 
             foreach (var gameScene in GameSceneList)
             {
+                //タイブレークイニング先頭
+                if(Game.TieBreakStartInning != null
+                    && gameScene.Inning >= Game.TieBreakStartInning
+                    && gameScene.InningIndex == 1)
+                {
+                    beforeOutCount = Game.TieBreakStartOutCount;
+                    beforeRunnerSceneClass = Game.TieBreakStartRunnerSceneClass;
+                }
+
                 //OUTカウント
                 gameScene.InningScoreListOutCount = beforeOutCount.NullToEmpty() + "アウト";
                 //ランナー

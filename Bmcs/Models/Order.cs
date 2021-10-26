@@ -50,7 +50,7 @@ namespace Bmcs.Models
         {
             get
             {
-                return Convert.ToDecimal(BattingOrder).ToString("#.##");
+                return Convert.ToDecimal(BattingOrder).ToString("0.##");
             }
         }
 

@@ -126,6 +126,18 @@ namespace Bmcs.Models
             }
         }
 
+        [Display(Name = "タイブレーク開始イニング")]
+        public int? TieBreakStartInning { get; set; }
+
+        [Display(Name = "打順")]
+        public decimal? TieBreakStartBattingOrder { get; set; }
+
+        [Display(Name = "OUTカウント")]
+        public int? TieBreakStartOutCount { get; set; }
+
+        [Display(Name = "ランナー")]
+        public RunnerSceneClass? TieBreakStartRunnerSceneClass { get; set; }
+
         [Display(Name = "ステータス")]
         public StatusClass? StatusClass { get; set; }
 

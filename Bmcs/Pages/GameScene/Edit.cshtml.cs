@@ -27,19 +27,19 @@ namespace Bmcs.Pages.GameScene
         public Models.GameScene GameScene { get; set; }
 
         [BindProperty]
-        public IList<Models.GameSceneDetail> BeforeGameSceneDetailList { get; set; }
+        public List<Models.GameSceneDetail> BeforeGameSceneDetailList { get; set; }
 
         [BindProperty]
-        public IList<Models.GameSceneDetail> AfterGameSceneDetailList { get; set; }
+        public List<Models.GameSceneDetail> AfterGameSceneDetailList { get; set; }
 
         [BindProperty]
-        public IList<Models.GameSceneRunner> BeforeGameSceneRunnerList { get; set; }
+        public List<Models.GameSceneRunner> BeforeGameSceneRunnerList { get; set; }
 
         [BindProperty]
-        public IList<Models.GameSceneRunner> AfterGameSceneRunnerList { get; set; }
+        public List<Models.GameSceneRunner> AfterGameSceneRunnerList { get; set; }
 
         [BindProperty]
-        public IList<Models.InningScore> InningScoreList { get; set; }
+        public List<Models.InningScore> InningScoreList { get; set; }
 
         [BindProperty]
         public Models.Order Order { get; set; }
@@ -65,6 +65,25 @@ namespace Bmcs.Pages.GameScene
         [BindProperty]
         public decimal? InterruptBattingOrder { get; set; }
 
+        [BindProperty]
+        public bool IsTieBreak { get; set; }
+
+        public List<Models.Order> GameOrderList { get; set; }
+
+        /// <summary>
+        /// タイブレーク打順リスト
+        /// </summary>
+        public SelectList TieBreakBattingOrderList
+        {
+            get
+            {
+                return AddFirstItem(new SelectList(Context.Orders.Where(r => r.GameID == Game.GameID && r.OrderDataClass == OrderDataClass.Temp)
+                                                                .OrderBy(r => r.BattingOrder)
+                                                                , nameof(Order.BattingOrder), nameof(Order.DisplayBattingOrder), string.Empty)
+                    , new SelectListItem("前の回から継続打順", null));
+            }
+        }
+
         public async Task<IActionResult> OnGetAsync(int? gameID, int? gameSceneID, bool isOrderChange = false, bool isInitialize = false, int skipCount = 0)
         {
             if (!base.IsLogin())
@@ -79,6 +98,10 @@ namespace Bmcs.Pages.GameScene
 
             Game = await Context.Games
                 .Include(m => m.Team).FirstOrDefaultAsync(m => m.GameID == gameID);
+
+            GameOrderList = await Context.Orders
+                .Where(r => r.GameID == gameID)
+                .ToListAsync();
 
             //試合データなし、管理者以外でマイチームでない、試合前以外でスタメン修正
             if (Game == null
@@ -138,23 +161,33 @@ namespace Bmcs.Pages.GameScene
                         RunnerSceneClass = RunnerSceneClass.None,
                     };
 
+                    //タイブレーク判断
+                    IsTieBreak = Game.TieBreakStartInning != null && Game.TieBreakStartInning <= GameScene.Inning;
+
+                    //タイブレーク中
+                    if(IsTieBreak)
+                    {
+                        GameScene.OutCount = Game.TieBreakStartOutCount;
+                        GameScene.RunnerSceneClass = Game.TieBreakStartRunnerSceneClass;
+                    }
+
                     //先攻
                     if (Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
                     {
-                        var orderCount = await Context.Orders
-                                .Where(r => r.GameID == Game.GameID && r.GameSceneID == null && r.OrderDataClass == OrderDataClass.Normal && r.BattingOrder != null)
-                                .CountAsync();
+                        var orderCount = GameOrderList
+                            .Where(r => r.GameID == Game.GameID && r.GameSceneID == null && r.OrderDataClass == OrderDataClass.Normal && r.BattingOrder != null)
+                            .Count();
 
-                        if(skipCount >= orderCount)
+                        if (skipCount >= orderCount)
                         {
                             skipCount -= orderCount;
                         }
 
-                        Order = await Context.Orders
+                        Order = GameOrderList
                                 .Where(r => r.GameID == Game.GameID && r.GameSceneID == null && r.OrderDataClass == OrderDataClass.Normal && r.BattingOrder != null)
                                 .OrderBy(r => r.BattingOrder)
                                 .Skip(skipCount)
-                                .FirstOrDefaultAsync();
+                                .FirstOrDefault();
 
                         GameScene.OffenseDefenseClass = OffenseDefenseClass.Offense;
                         GameScene.PitcherMemberID = System.Convert.ToInt32(base.OpponentPitcherMemberIDList.FirstOrDefault().Value);
@@ -162,6 +195,21 @@ namespace Bmcs.Pages.GameScene
                         GameScene.BattingOrder = Order.BattingOrder;
                         RegularBattingOrder = GameScene.BattingOrder;
                         InterruptBattingOrder = GetInterruptBattingOrder(Game.GameID, null, GameScene.BattingOrder);
+
+                        //結果ランナー(打者を初期表示)
+                        AfterGameSceneRunnerList = InitializeAfterGameSceneRunner(GameScene);
+
+                        //タイブレーク中
+                        if (IsTieBreak)
+                        {
+                            var runnerOrder = GameOrderList
+                                                .Where(r => r.GameID == Game.GameID && r.GameSceneID == null && r.OrderDataClass == OrderDataClass.Normal && r.BattingOrder != null)
+                                                .OrderByDescending(r => r.BattingOrder)
+                                                .ToList();
+
+                            //タイブレークランナー
+                            AfterGameSceneRunnerList.AddRange(GetTieBreakRunner(Game, runnerOrder));
+                        }
                     }
                     //後攻
                     else
@@ -171,31 +219,34 @@ namespace Bmcs.Pages.GameScene
                             skipCount -= 9;
                         }
 
-                        Order = await Context.Orders
+                        Order = GameOrderList
                                 .Where(r => r.GameID == Game.GameID && r.GameSceneID == null && r.OrderDataClass == OrderDataClass.Normal && r.PositionClass == PositionClass.Pitcher)
-                                .FirstOrDefaultAsync();
+                                .FirstOrDefault();
 
                         GameScene.OffenseDefenseClass = OffenseDefenseClass.Defense;
                         GameScene.PitcherMemberID = Order.MemberID;
                         GameScene.BatterMemberID = System.Convert.ToInt32(base.OpponentFielderMemberIDList.FirstOrDefault().Value);
                         GameScene.BattingOrder = 1 + skipCount;
+
+                        //結果ランナー(打者を初期表示)
+                        AfterGameSceneRunnerList = InitializeAfterGameSceneRunner(GameScene);
+
+                        //タイブレーク中
+                        if (IsTieBreak)
+                        {
+                            var runnerOrder = GetOpponentOrder(Game, GameScene.BatterMemberID).OrderByDescending(r => r.BattingOrder).ToList();
+
+                            //タイブレークランナー
+                            AfterGameSceneRunnerList.AddRange(GetTieBreakRunner(Game, runnerOrder));
+                        }
                     }
 
-                    //結果ランナー(打者を初期表示)
-                    AfterGameSceneRunnerList = new List<Models.GameSceneRunner>()
+                    //タイブレーク中
+                    if (IsTieBreak)
                     {
-                        new GameSceneRunner()
-                        {
-                            GameID = Game.GameID,
-                            TeamID = Game.TeamID,
-                            MemberID = GameScene.BatterMemberID,
-                            BattingOrder = GameScene.BattingOrder,
-                            BeforeRunnerClass = RunnerClass.Batter,
-                            RunnerClass = RunnerClass.Batter,
-                            SceneResultClass = SceneResultClass.Result,
-                            RunnerResultClass = RunnerResultClass.Out,
-                        }
-                    };
+                        //シーンランナー
+                        BeforeGameSceneRunnerList = CopyBeforeGameSceneRunnerListFromAfter(AfterGameSceneRunnerList);
+                    }
                 }
                 else
                 {
@@ -226,8 +277,6 @@ namespace Bmcs.Pages.GameScene
                     if (lastGameScene.ChangeFLG)
                     {
                         GameScene.InningIndex = 1;
-                        GameScene.OutCount = 0;
-                        GameScene.RunnerSceneClass = RunnerSceneClass.None;
 
                         if (lastGameScene.TopButtomClass == TopButtomClass.Top)
                         {
@@ -248,6 +297,21 @@ namespace Bmcs.Pages.GameScene
                         {
                             GameScene.OffenseDefenseClass = OffenseDefenseClass.Offense;
                         }
+
+                        //タイブレーク判断
+                        IsTieBreak = Game.TieBreakStartInning != null && Game.TieBreakStartInning <= GameScene.Inning;
+
+                        //タイブレーク中
+                        if (IsTieBreak)
+                        {
+                            GameScene.OutCount = Game.TieBreakStartOutCount;
+                            GameScene.RunnerSceneClass = Game.TieBreakStartRunnerSceneClass;
+                        }
+                        else
+                        {
+                            GameScene.OutCount = 0;
+                            GameScene.RunnerSceneClass = RunnerSceneClass.None;
+                        }
                     }
                     else
                     {
@@ -257,6 +321,9 @@ namespace Bmcs.Pages.GameScene
                         GameScene.OffenseDefenseClass = lastGameScene.OffenseDefenseClass;
                         GameScene.OutCount = lastGameScene.ResultOutCount;
                         GameScene.RunnerSceneClass = lastGameScene.ResultRunnerSceneClass;
+
+                        //タイブレーク判断
+                        IsTieBreak = Game.TieBreakStartInning != null && Game.TieBreakStartInning <= GameScene.Inning;
                     }
 
                     var lastBattingOrder = lastGameScene.BattingOrder;
@@ -265,18 +332,18 @@ namespace Bmcs.Pages.GameScene
                     //攻撃
                     if (GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
                     {
-                        var orderCount = await Context.Orders
+                        var orderCount = GameOrderList
                                             .Where(r => r.GameID == Game.GameID && r.GameSceneID == LastGameSceneID && r.BattingOrder != null && r.OrderDataClass == OrderDataClass.Normal)
-                                            .CountAsync();
+                                            .Count();
 
                         if (skipCount >= orderCount)
                         {
                             skipCount -= orderCount;
                         }
 
-                        var orderList = await Context.Orders
+                        var orderList = GameOrderList
                                 .Where(r => r.GameID == Game.GameID && r.GameSceneID == LastGameSceneID && r.BattingOrder != null && r.OrderDataClass == OrderDataClass.Normal)
-                                .ToListAsync();
+                                .ToList();
 
                         var lastPitcherMemberID = lastGameScene.PitcherMemberID;
 
@@ -284,22 +351,60 @@ namespace Bmcs.Pages.GameScene
                         if (lastGameScene.ChangeFLG)
                         {
                             var lastOffenceGameScene = await Context.GameScenes.Where(r => r.GameID == lastGameScene.GameID
-                                                               && r.OffenseDefenseClass == OffenseDefenseClass.Offense
-                                                               && r.Inning == GameScene.Inning - 1)
-                                                           .OrderByDescending(r => r.InningIndex)
-                                                           .FirstOrDefaultAsync();
+                                   && r.OffenseDefenseClass == OffenseDefenseClass.Offense
+                                   && r.Inning == GameScene.Inning - 1)
+                               .OrderByDescending(r => r.InningIndex)
+                               .FirstOrDefaultAsync();
 
-                            //前回攻撃
-                            if (lastOffenceGameScene != null)
+                            //タイブレーク開始イニングで打順指定あり
+                            if (IsTieBreak
+                                && Game.TieBreakStartInning == GameScene.Inning
+                                && Game.TieBreakStartBattingOrder != null)
                             {
-                                lastBattingOrder = lastOffenceGameScene.BattingOrder;
-                                lastResultClass = lastOffenceGameScene.ResultClass;
-                                lastPitcherMemberID = lastOffenceGameScene.PitcherMemberID;
+                                //前回攻撃
+                                if (lastOffenceGameScene != null)
+                                {
+                                    var lastBatter = orderList.Where(r => r.BattingOrder < Game.TieBreakStartBattingOrder).OrderByDescending(r => r.BattingOrder).FirstOrDefault();
+
+                                    if(lastBatter != null)
+                                    { 
+                                        lastBattingOrder = lastBatter.BattingOrder;
+                                    }
+                                    else
+                                    {
+                                        lastBattingOrder = orderList.OrderByDescending(r => r.BattingOrder).FirstOrDefault().BattingOrder;
+                                    }
+
+                                    lastResultClass = null;
+                                    lastPitcherMemberID = lastOffenceGameScene.PitcherMemberID;
+                                }
+                                //初回
+                                else
+                                {
+                                    lastBattingOrder = null;
+                                    lastResultClass = null;
+                                    //相手デフォルトピッチャー
+                                    lastPitcherMemberID = System.Convert.ToInt32(base.OpponentPitcherMemberIDList.FirstOrDefault().Value);
+                                }
                             }
-                            //初回
                             else
-                            {
-                                lastBattingOrder = null;
+                            { 
+
+                                //前回攻撃
+                                if (lastOffenceGameScene != null)
+                                {
+                                    lastBattingOrder = lastOffenceGameScene.BattingOrder;
+                                    lastResultClass = lastOffenceGameScene.ResultClass;
+                                    lastPitcherMemberID = lastOffenceGameScene.PitcherMemberID;
+                                }
+                                //初回
+                                else
+                                {
+                                    lastBattingOrder = null;
+                                    lastResultClass = null;
+                                    //相手デフォルトピッチャー
+                                    lastPitcherMemberID = System.Convert.ToInt32(base.OpponentPitcherMemberIDList.FirstOrDefault().Value);
+                                }
                             }
                         }
 
@@ -310,7 +415,7 @@ namespace Bmcs.Pages.GameScene
                             {
                                 var followingOrderCount = orderList.Where(r => r.BattingOrder >= lastBattingOrder).Count();
 
-                                if(followingOrderCount > skipCount)
+                                if (followingOrderCount > skipCount)
                                 {
                                     Order = orderList.Where(r => r.BattingOrder >= lastBattingOrder).OrderBy(r => r.BattingOrder).Skip(skipCount).FirstOrDefault();
                                 }
@@ -352,6 +457,21 @@ namespace Bmcs.Pages.GameScene
                         GameScene.BatterMemberID = Order.MemberID;
                         RegularBattingOrder = GameScene.BattingOrder;
                         InterruptBattingOrder = GetInterruptBattingOrder(Game.GameID, LastGameSceneID, GameScene.BattingOrder);
+
+                        //結果ランナー(打者を初期表示)
+                        AfterGameSceneRunnerList = InitializeAfterGameSceneRunner(GameScene);
+
+                        //チェンジ後、タイブレーク
+                        if (lastGameScene.ChangeFLG && IsTieBreak)
+                        {
+                            var runnerOrder = SortOrderByBaseBattingOrder(orderList, lastBattingOrder.NullToZero());
+
+                            //タイブレークランナー
+                            AfterGameSceneRunnerList.AddRange(GetTieBreakRunner(Game, runnerOrder));
+
+                            //シーンランナー
+                            BeforeGameSceneRunnerList = CopyBeforeGameSceneRunnerListFromAfter(AfterGameSceneRunnerList);
+                        }
                     }
                     //守備
                     else
@@ -361,15 +481,20 @@ namespace Bmcs.Pages.GameScene
                             skipCount -= 9;
                         }
 
-                        Order = await Context.Orders
-                              .Where(r => r.GameID == Game.GameID && r.OrderDataClass == OrderDataClass.Change && r.PositionClass == PositionClass.Pitcher)
-                              .FirstOrDefaultAsync();
+                        Order = GameOrderList
+                              .Where(r => r.GameID == Game.GameID
+                                  && r.OrderDataClass == OrderDataClass.Change
+                                  && r.PositionClass == PositionClass.Pitcher)
+                              .FirstOrDefault();
 
                         if (Order == null)
                         {
-                            Order = await Context.Orders
-                                    .Where(r => r.GameID == Game.GameID && r.OrderDataClass == OrderDataClass.Normal && r.GameSceneID == LastGameSceneID && r.PositionClass == PositionClass.Pitcher)
-                                    .FirstOrDefaultAsync();
+                            Order = GameOrderList
+                                    .Where(r => r.GameID == Game.GameID
+                                        && r.OrderDataClass == OrderDataClass.Normal
+                                        && r.GameSceneID == LastGameSceneID
+                                        && r.PositionClass == PositionClass.Pitcher)
+                                    .FirstOrDefault();
                         }
 
                         var lastBatterMemberID = lastGameScene.BatterMemberID;
@@ -377,6 +502,7 @@ namespace Bmcs.Pages.GameScene
                         //チェンジ後
                         if (lastGameScene.ChangeFLG)
                         {
+                            //相手チームはタイブレーク指定打順関係なし
                             var lastOffenceGameScene = await Context.GameScenes.Where(r => r.GameID == lastGameScene.GameID
                                                                 && r.OffenseDefenseClass == OffenseDefenseClass.Defense
                                                                 && r.Inning == GameScene.Inning - 1)
@@ -394,6 +520,9 @@ namespace Bmcs.Pages.GameScene
                             else
                             {
                                 lastBattingOrder = null;
+                                lastResultClass = null;
+                                //相手デフォルトバッター
+                                lastBatterMemberID = System.Convert.ToInt32(base.OpponentFielderMemberIDList.FirstOrDefault().Value);
                             }
                         }
 
@@ -442,23 +571,22 @@ namespace Bmcs.Pages.GameScene
 
                         GameScene.PitcherMemberID = Order.MemberID;
                         GameScene.BatterMemberID = lastBatterMemberID;
-                    }
 
-                    //結果ランナー(打者を初期表示)
-                    AfterGameSceneRunnerList = new List<Models.GameSceneRunner>()
-                    {
-                        new GameSceneRunner()
+                        //結果ランナー(打者を初期表示)
+                        AfterGameSceneRunnerList = InitializeAfterGameSceneRunner(GameScene);
+
+                        //チェンジ後、タイブレーク
+                        if (lastGameScene.ChangeFLG && IsTieBreak)
                         {
-                            GameID = Game.GameID,
-                            TeamID = Game.TeamID,
-                            MemberID = GameScene.BatterMemberID,
-                            BattingOrder = GameScene.BattingOrder,
-                            BeforeRunnerClass = RunnerClass.Batter,
-                            RunnerClass = RunnerClass.Batter,
-                            SceneResultClass = SceneResultClass.Result,
-                            RunnerResultClass = RunnerResultClass.Out,
+                            var runnerOrder = SortOrderByBaseBattingOrder(GetOpponentOrder(Game, GameScene.BatterMemberID).OrderByDescending(r => r.BattingOrder).ToList(), lastBattingOrder.NullToZero());
+
+                            //タイブレークランナー
+                            AfterGameSceneRunnerList.AddRange(GetTieBreakRunner(Game, runnerOrder));
+
+                            //シーンランナー
+                            BeforeGameSceneRunnerList = CopyBeforeGameSceneRunnerListFromAfter(AfterGameSceneRunnerList);
                         }
-                    };
+                    }
 
                     //イニング途中
                     if (!lastGameScene.ChangeFLG)
@@ -503,22 +631,7 @@ namespace Bmcs.Pages.GameScene
                         }
 
                         //シーンランナー
-                        BeforeGameSceneRunnerList = new List<Models.GameSceneRunner>();
-
-                        foreach (var afterGameSceneRunner in AfterGameSceneRunnerList.Where(r => r.RunnerClass != RunnerClass.Batter))
-                        {
-                            BeforeGameSceneRunnerList.Add(new GameSceneRunner()
-                            {
-                                GameID = Game.GameID,
-                                TeamID = Game.TeamID,
-                                MemberID = afterGameSceneRunner.MemberID,
-                                BattingOrder = afterGameSceneRunner.BattingOrder,
-                                BeforeRunnerClass = afterGameSceneRunner.RunnerClass,
-                                RunnerClass = afterGameSceneRunner.RunnerClass,
-                                SceneResultClass = SceneResultClass.SceneChange,
-                                RunnerResultClass = afterGameSceneRunner.RunnerResultClass,
-                            });
-                        }
+                        BeforeGameSceneRunnerList = CopyBeforeGameSceneRunnerListFromAfter(AfterGameSceneRunnerList);
                     }
                 }
 
@@ -588,19 +701,22 @@ namespace Bmcs.Pages.GameScene
                 GameScene = await Context.GameScenes
                             .FindAsync(gameSceneID);
 
+                //タイブレーク判断
+                IsTieBreak = Game.TieBreakStartInning != null && Game.TieBreakStartInning <= GameScene.Inning;
+
                 if (GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
                 {
                     if (GameScene.InterruptFLG)
                     {
-                        var regularBattingOrder = await Context.Orders
+                        var regularBattingOrder = GameOrderList
                                         .Where(r => r.GameID == Game.GameID
-                                                && r.GameSceneID == LastGameSceneID 
-                                                && r.BattingOrder != null 
+                                                && r.GameSceneID == LastGameSceneID
+                                                && r.BattingOrder != null
                                                 && r.BattingOrder > GameScene.BattingOrder
                                                 && r.OrderDataClass == OrderDataClass.Normal)
-                                        .FirstOrDefaultAsync();
+                                        .FirstOrDefault();
 
-                        if(regularBattingOrder != null)
+                        if (regularBattingOrder != null)
                         {
                             RegularBattingOrder = regularBattingOrder.BattingOrder;
                             InterruptBattingOrder = GameScene.BattingOrder;
@@ -669,6 +785,14 @@ namespace Bmcs.Pages.GameScene
             //スキップカウント
             SkipCount = skipCount;
 
+            //タイブレークデフォルトルール
+            if(!IsTieBreak)
+            {
+                Game.TieBreakStartBattingOrder = null;
+                Game.TieBreakStartOutCount = 0;
+                Game.TieBreakStartRunnerSceneClass = RunnerSceneClass.FirstSecond;
+            }
+
             //タイトル
             ViewData[ViewDataConstant.Title] = GameScene.Inning.ToString() + "回"
                 + GameScene.TopButtomClass.GetEnumName()
@@ -684,9 +808,14 @@ namespace Bmcs.Pages.GameScene
             {
                 using (var tran = await Context.Database.BeginTransactionAsync())
                 {
+                    var tieBreakStartBattingOrder = Game.TieBreakStartBattingOrder;
+                    var tieBreakStartOutCount = Game.TieBreakStartOutCount;
+                    var tieBreakStartRunnerSceneClass = Game.TieBreakStartRunnerSceneClass;
+
                     //再取得
                     Game = await Context.Games
                         .Include(m => m.Team).FirstOrDefaultAsync(m => m.GameID == Game.GameID);
+
                     //チームID
                     base.TeamID = Game.TeamID;
 
@@ -725,16 +854,40 @@ namespace Bmcs.Pages.GameScene
                     //今回データ更新対象
                     if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.NextBatter
                         || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterChange
-                        || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterGameSet)
+                        || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterGameSet
+                        || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterTieBreak)
                     {
-
                         //データ追加
                         Context.GameScenes.Add(gameScene);
 
                         //試合中
-                        if(Game.StatusClass == StatusClass.BeforeGame)
-                        { 
+                        if (Game.StatusClass == StatusClass.BeforeGame)
+                        {
                             Game.StatusClass = StatusClass.DuringGame;
+                        }
+
+                        //タイブレーク
+                        if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterTieBreak)
+                        {
+                            Game.TieBreakStartInning = gameScene.Inning + 1;
+                            Game.TieBreakStartBattingOrder = tieBreakStartBattingOrder;
+                            Game.TieBreakStartOutCount = tieBreakStartOutCount;
+                            Game.TieBreakStartRunnerSceneClass = tieBreakStartRunnerSceneClass;
+                        }
+                        //チェンジ、試合終了
+                        else if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterChange
+                        || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterGameSet)
+                        {
+                            //タイブレークでない、裏終了、次イニングがタイブレーク(一度入力した)
+                            if (!IsTieBreak
+                                && gameScene.TopButtomClass == TopButtomClass.Buttom
+                                && gameScene.Inning + 1 == Game.TieBreakStartInning)
+                            {
+                                Game.TieBreakStartInning = null;
+                                Game.TieBreakStartBattingOrder = null;
+                                Game.TieBreakStartOutCount = null;
+                                Game.TieBreakStartRunnerSceneClass = null;
+                            }
                         }
 
                         await Context.SaveChangesAsync();
@@ -900,6 +1053,7 @@ namespace Bmcs.Pages.GameScene
 
             if (GameSceneSubmitClass == Enum.GameSceneSubmitClass.NextBatter
                 || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterChange
+                || GameSceneSubmitClass == Enum.GameSceneSubmitClass.ThisBatterTieBreak
                 || GameSceneSubmitClass == Enum.GameSceneSubmitClass.BeforeBatterChange)
             {
                 if (NextGameSceneID != null)
@@ -1161,7 +1315,7 @@ namespace Bmcs.Pages.GameScene
                 gameScene.Orders.Add(newOrder);
             }
 
-            if(gameScene.InterruptFLG)
+            if (gameScene.InterruptFLG)
             {
                 var newOrder = new Models.Order()
                 {
@@ -1499,6 +1653,201 @@ namespace Bmcs.Pages.GameScene
         }
 
         /// <summary>
+        /// 結果ランナー初期化(打者初期表示)
+        /// </summary>
+        /// <param name="gameScene"></param>
+        /// <returns></returns>
+        private List<Models.GameSceneRunner> InitializeAfterGameSceneRunner(Models.GameScene gameScene)
+        {
+            //シーンランナー
+            return new List<Models.GameSceneRunner>()
+            {
+                new GameSceneRunner()
+                {
+                    GameID = gameScene.GameID,
+                    TeamID = gameScene.TeamID,
+                    MemberID = gameScene.BatterMemberID,
+                    BattingOrder = gameScene.BattingOrder,
+                    BeforeRunnerClass = RunnerClass.Batter,
+                    RunnerClass = RunnerClass.Batter,
+                    SceneResultClass = SceneResultClass.Result,
+                    RunnerResultClass = RunnerResultClass.Out,
+                }
+            };
+        }
+
+        /// <summary>
+        /// 打席前ランナーを結果ランナーからコピー
+        /// </summary>
+        /// <param name="afterGameSceneRunners"></param>
+        /// <returns></returns>
+        private List<Models.GameSceneRunner> CopyBeforeGameSceneRunnerListFromAfter(List<Models.GameSceneRunner> afterGameSceneRunners)
+        {
+            //シーンランナー
+            var result = new List<Models.GameSceneRunner>();
+
+            foreach (var afterGameSceneRunner in afterGameSceneRunners.Where(r => r.RunnerClass != RunnerClass.Batter))
+            {
+                result.Add(new GameSceneRunner()
+                {
+                    GameID = Game.GameID,
+                    TeamID = Game.TeamID,
+                    MemberID = afterGameSceneRunner.MemberID,
+                    BattingOrder = afterGameSceneRunner.BattingOrder,
+                    BeforeRunnerClass = afterGameSceneRunner.RunnerClass,
+                    RunnerClass = afterGameSceneRunner.RunnerClass,
+                    SceneResultClass = SceneResultClass.SceneChange,
+                    RunnerResultClass = afterGameSceneRunner.RunnerResultClass,
+                });
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 基準打順(ラスト打順)よりオーダーを並び変え
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="orders"></param>
+        /// <returns></returns>
+        private List<Models.Order> SortOrderByBaseBattingOrder(List<Models.Order> orders, decimal baseBattingOrder)
+        {
+            var result = new List<Models.Order>();
+            var orderCount = orders.Count();
+
+            foreach (var order in orders)
+            {
+                result.Add(new Models.Order()
+                {
+                    GameID = order.GameID,
+                    TeamID = order.TeamID,
+                    GameSceneID = order.GameSceneID,
+                    MemberID = order.MemberID,
+                    BattingOrder = order.BattingOrder > baseBattingOrder ? order.BattingOrder - orderCount : order.BattingOrder,
+                    ParticipationIndex = order.ParticipationIndex,
+                    PositionClass = order.PositionClass,
+                    ParticipationClass = order.ParticipationClass,
+                });
+            }
+
+            //降順
+            result = result.OrderByDescending(r => r.BattingOrder).ToList();
+
+            return result;
+        }
+
+        /// <summary>
+        /// タイブレークランナー取得
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="orders"></param>
+        /// <returns></returns>
+        private List<Models.GameSceneRunner> GetTieBreakRunner(Models.Game game, List<Models.Order> orders)
+        {
+            var result = new List<Models.GameSceneRunner>();
+            var isFirst = false;
+            var isSecond = false;
+            var isThird = false;
+
+            foreach (var order in orders)
+            { 
+                //一塁対象
+                if((game.TieBreakStartRunnerSceneClass == RunnerSceneClass.First
+                    || game.TieBreakStartRunnerSceneClass == RunnerSceneClass.FirstSecond
+                    || game.TieBreakStartRunnerSceneClass == RunnerSceneClass.FirstThird
+                    || game.TieBreakStartRunnerSceneClass == RunnerSceneClass.FullBase)
+                    && !isFirst)
+                {
+                    result.Add(new GameSceneRunner()
+                    {
+                        GameID = Game.GameID,
+                        TeamID = Game.TeamID,
+                        MemberID = order.MemberID,
+                        BattingOrder = order.BattingOrder,
+                        BeforeRunnerClass = RunnerClass.OnFirstBase,
+                        RunnerClass = RunnerClass.OnFirstBase,
+                        SceneResultClass = SceneResultClass.SceneChange,
+                        RunnerResultClass = RunnerResultClass.OnFirstBase,
+                    });
+
+                    isFirst = true;
+
+                    continue;
+                }
+                else
+                {
+                    isFirst = true;
+                }
+
+                //二塁対象
+                if ((game.TieBreakStartRunnerSceneClass == RunnerSceneClass.Second
+                    || game.TieBreakStartRunnerSceneClass == RunnerSceneClass.FirstSecond
+                    || game.TieBreakStartRunnerSceneClass == RunnerSceneClass.SecondThird
+                    || game.TieBreakStartRunnerSceneClass == RunnerSceneClass.FullBase)
+                    && !isSecond)
+                {
+                    result.Add(new GameSceneRunner()
+                    {
+                        GameID = Game.GameID,
+                        TeamID = Game.TeamID,
+                        MemberID = order.MemberID,
+                        BattingOrder = order.BattingOrder,
+                        BeforeRunnerClass = RunnerClass.OnSecondBase,
+                        RunnerClass = RunnerClass.OnSecondBase,
+                        SceneResultClass = SceneResultClass.SceneChange,
+                        RunnerResultClass = RunnerResultClass.OnSecondBase,
+                    });
+
+                    isSecond = true;
+
+                    continue;
+                }
+                else
+                {
+                    isSecond = true;
+                }
+
+                //三塁対象
+                if ((game.TieBreakStartRunnerSceneClass == RunnerSceneClass.Third
+                    || game.TieBreakStartRunnerSceneClass == RunnerSceneClass.FirstThird
+                    || game.TieBreakStartRunnerSceneClass == RunnerSceneClass.SecondThird
+                    || game.TieBreakStartRunnerSceneClass == RunnerSceneClass.FullBase)
+                    && !isThird)
+                {
+                    result.Add(new GameSceneRunner()
+                    {
+                        GameID = Game.GameID,
+                        TeamID = Game.TeamID,
+                        MemberID = order.MemberID,
+                        BattingOrder = order.BattingOrder,
+                        BeforeRunnerClass = RunnerClass.OnThirdBase,
+                        RunnerClass = RunnerClass.OnThirdBase,
+                        SceneResultClass = SceneResultClass.SceneChange,
+                        RunnerResultClass = RunnerResultClass.OnThirdBase,
+                    });
+
+                    isThird = true;
+
+                    continue;
+                }
+                else
+                {
+                    isThird = true;
+                }
+
+                //全て処理終了
+                if(isFirst
+                    && isSecond
+                    && isThird)
+                {
+                    break;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// 割込打順取得
         /// </summary>
         /// <param name="gameID"></param>
@@ -1510,7 +1859,7 @@ namespace Bmcs.Pages.GameScene
             decimal? result = null;
 
             //オーダー
-            var interruptBattingOrder = Context.Orders
+            var interruptBattingOrder = GameOrderList
                                     .Where(r => r.GameID == gameID
                                         && r.GameSceneID == gameSceneID
                                         && r.BattingOrder != null
@@ -1520,7 +1869,7 @@ namespace Bmcs.Pages.GameScene
                                     .FirstOrDefault();
 
             //先頭打者
-            if(interruptBattingOrder == null)
+            if (interruptBattingOrder == null)
             {
                 //割り込み可能
                 if ((decimal)0.1 != battingOrder)
@@ -1532,12 +1881,39 @@ namespace Bmcs.Pages.GameScene
             else
             {
                 //割り込み可能
-                if(interruptBattingOrder.BattingOrder + (decimal)0.1 != battingOrder)
+                if (interruptBattingOrder.BattingOrder + (decimal)0.1 != battingOrder)
                 {
                     //打順間を算出
                     result = interruptBattingOrder.BattingOrder + (Math.Floor((battingOrder.NullToZero() - interruptBattingOrder.BattingOrder.NullToZero()) / 2 * 10) / 10);
                 }
-            }   
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 相手チームオーダー取得
+        /// </summary>
+        /// <param name="memberID"></param>
+        /// <returns></returns>
+        private List<Models.Order> GetOpponentOrder(Models.Game game, int? memberID)
+        {
+            var result = new List<Models.Order>();
+
+            for(int i = 1; i <= 9; i++)
+            {
+                result.Add(new Models.Order()
+                {
+                    GameID = game.GameID,
+                    TeamID = null,
+                    GameSceneID = null,
+                    MemberID = memberID,
+                    BattingOrder = i,
+                    ParticipationIndex = 1,
+                    PositionClass = null,
+                    ParticipationClass = ParticipationClass.Start,
+                });
+            }
 
             return result;
         }

@@ -495,6 +495,8 @@ namespace Bmcs.Enum
         ThisBatterGameSet = 4,
         [Display(Name = "前回打者で試合終了")]
         BeforeBatterGameSet = 5,
+        [Display(Name = "この打者でタイブレーク")]
+        ThisBatterTieBreak = 6,
     }
 
     /// <summary>
