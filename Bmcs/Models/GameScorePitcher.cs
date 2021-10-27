@@ -48,8 +48,14 @@ namespace Bmcs.Models
         [Display(Name = "先発")]
         public int? Starter { get; set; }
 
+        [Display(Name = "QS")]
+        public int? QualityStart { get; set; }
+
         [Display(Name = "完投")]
         public int? CompleteGame { get; set; }
+
+        [Display(Name = "完封")]
+        public int? ShutOutGame { get; set; }
 
         [Column(TypeName = "decimal(10, 2)")]
         [Display(Name = "イニング")]
@@ -158,6 +164,20 @@ namespace Bmcs.Models
         }
 
         [NotMapped]
+        [Display(Name = "QS率(%)")]
+        public decimal? QualityStartRate { get; set; }
+
+        [NotMapped]
+        [Display(Name = "QS率(%)")]
+        public string QualityStartRateFormat
+        {
+            get
+            {
+                return QualityStartRate == null ? "-" : QualityStartRate.NullToZero().ToString("0.#");
+            }
+        }
+
+        [NotMapped]
         [Display(Name = "被打率")]
         public decimal? BattingAverage { get; set; }
 
@@ -196,6 +216,20 @@ namespace Bmcs.Models
             get
             {
                 return StrikeOutRate == null ? "-" : StrikeOutRate.NullToZero().ToString("#0.00");
+            }
+        }
+
+        [NotMapped]
+        [Display(Name = "K/BB")]
+        public decimal? StrikeOutBaseOnBallsRate { get; set; }
+
+        [NotMapped]
+        [Display(Name = "K/BB")]
+        public string StrikeOutBaseOnBallsRateFormat
+        {
+            get
+            {
+                return StrikeOutBaseOnBallsRate == null ? "-" : StrikeOutBaseOnBallsRate.NullToZero().ToString("#0.00");
             }
         }
 

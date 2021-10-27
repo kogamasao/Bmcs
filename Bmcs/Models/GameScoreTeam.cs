@@ -188,6 +188,18 @@ namespace Bmcs.Models
             }
         }
 
+        [Display(Name = "QS率(%)")]
+        public decimal? QualityStartRate { get; set; }
+
+        [Display(Name = "QS率(%)")]
+        public string QualityStartRateFormat
+        {
+            get
+            {
+                return QualityStartRate == null ? "-" : QualityStartRate.NullToZero().ToString("0.#");
+            }
+        }
+
         [Display(Name = "失点")]
         public int? PitcherRun { get; set; }
 
@@ -244,6 +256,18 @@ namespace Bmcs.Models
 
         [Display(Name = "奪三振")]
         public int? PitcherStrikeOut { get; set; }
+
+        [Display(Name = "K/BB")]
+        public decimal? PitcherStrikeOutBaseOnBallsRate { get; set; }
+
+        [Display(Name = "K/BB")]
+        public string PitcherStrikeOutBaseOnBallsRateFormat
+        {
+            get
+            {
+                return PitcherStrikeOutBaseOnBallsRate == null ? "-" : PitcherStrikeOutBaseOnBallsRate.NullToZero().ToString("#0.00");
+            }
+        }
 
         [Display(Name = "WHIP")]
         public decimal? Whip { get; set; }

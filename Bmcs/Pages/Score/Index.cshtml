@@ -307,25 +307,28 @@
                 <thead class="thead-light">
                     <tr>
                         @if (!string.IsNullOrEmpty(Model.SelectTeamID))
-                                {
-                        <th class="column-fix-left">
-                            @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Team.TeamName)
-                        </th>
-                                }
-                                else
-                                {
-                        <th class="text-center column-fix-left">
-                            @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Rank)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Team.TeamName)
-                        </th>
-                                }
+                        {
+                            <th class="column-fix-left">
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Team.TeamName)
+                            </th>
+                        }
+                        else
+                        {
+                            <th class="text-center column-fix-left">
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Rank)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Team.TeamName)
+                            </th>
+                        }
                         <th class="GameCount">
                             <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="GameCount">@Html.DisplayNameFor(model => model.GameScoreTeamList[0].GameCount)</a>
                         </th>
                         <th class="WinRate">
                             <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="WinRate">@Html.DisplayNameFor(model => model.GameScoreTeamList[0].WinRate)</a>
+                        </th>
+                        <th class="QualityStartRate">
+                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="QualityStartRate">@Html.DisplayNameFor(model => model.GameScoreTeamList[0].QualityStartRate)</a>
                         </th>
                         <th class="Win">
                             <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="Win">@Html.DisplayNameFor(model => model.GameScoreTeamList[0].Win)</a>
@@ -438,6 +441,9 @@
                         <th class="PitcherStrikeOut">
                             <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="PitcherStrikeOut">@Html.DisplayNameFor(model => model.GameScoreTeamList[0].PitcherStrikeOut)</a>
                         </th>
+                        <th class="PitcherStrikeOutBaseOnBallsRate">
+                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="PitcherStrikeOutBaseOnBallsRate">@Html.DisplayNameFor(model => model.GameScoreTeamList[0].PitcherStrikeOutBaseOnBallsRate)</a>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -450,30 +456,33 @@
                             {
                     <tr>
                         @if (!string.IsNullOrEmpty(Model.SelectTeamID))
-                                    {
-                        <td class="align-middle column-fix-left">
-                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>
-                        </td>
-                                    }
-                                    else
-                                    {
-                        <td class="text-center align-middle column-fix-left">
-                            @if (teamRankValue != item.OrderValue)
-                                            {
-                                                teamRank += 1;
-                            @teamRank
-                                            }
-                            @{teamRankValue = item.OrderValue;}
-                        </td>
-                        <td class="align-middle">
-                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>
-                        </td>
-                                    }
+                        {
+                            <td class="align-middle column-fix-left">
+                                <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="text-center align-middle column-fix-left">
+                                @if (teamRankValue != item.OrderValue)
+                                {
+                                    teamRank += 1;
+                                    @teamRank
+                                }
+                                @{teamRankValue = item.OrderValue;}
+                            </td>
+                            <td class="align-middle">
+                                <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>
+                            </td>
+                        }
                         <td class="GameCount text-center align-middle">
                             @Html.DisplayFor(modelItem => item.GameCount)
                         </td>
                         <td class="WinRate text-center align-middle">
                             @Html.DisplayFor(modelItem => item.WinRateFormat)
+                        </td>
+                        <td class="QualityStartRate text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.QualityStartRateFormat)
                         </td>
                         <td class="Win text-center align-middle">
                             @Html.DisplayFor(modelItem => item.Win)
@@ -585,6 +594,9 @@
                         </td>
                         <td class="PitcherStrikeOut text-center align-middle">
                             @Html.DisplayFor(modelItem => item.PitcherStrikeOut)
+                        </td>
+                        <td class="PitcherStrikeOutBaseOnBallsRate text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.PitcherStrikeOutBaseOnBallsRateFormat)
                         </td>
                     </tr>
                             }
@@ -976,11 +988,11 @@
                         </th>
 
                         @if (string.IsNullOrEmpty(Model.SelectTeamID))
-                            {
-                        <th>
-                            @Html.DisplayNameFor(model => model.GameScorePitcherList[0].TeamID)
-                        </th>
-                            }
+                        {
+                            <th>
+                                @Html.DisplayNameFor(model => model.GameScorePitcherList[0].TeamID)
+                            </th>
+                        }
                         <th>
                             @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
                         </th>
@@ -990,11 +1002,20 @@
                         <th class="Starter">
                             <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="Starter">@Html.DisplayNameFor(model => model.GameScorePitcherList[0].Starter)</a>
                         </th>
+                        <th class="QualityStart">
+                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="QualityStart">@Html.DisplayNameFor(model => model.GameScorePitcherList[0].QualityStart)</a>
+                        </th>
                         <th class="CompleteGame">
                             <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="CompleteGame">@Html.DisplayNameFor(model => model.GameScorePitcherList[0].CompleteGame)</a>
                         </th>
+                        <th class="ShutOutGame">
+                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="ShutOutGame">@Html.DisplayNameFor(model => model.GameScorePitcherList[0].ShutOutGame)</a>
+                        </th>
                         <th class="WinRate">
                             <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="WinRate">@Html.DisplayNameFor(model => model.GameScorePitcherList[0].WinRate)</a>
+                        </th>
+                        <th class="QualityStartRate">
+                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="QualityStartRate">@Html.DisplayNameFor(model => model.GameScorePitcherList[0].QualityStartRate)</a>
                         </th>
                         <th class="Win">
                             <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="Win">@Html.DisplayNameFor(model => model.GameScorePitcherList[0].Win)</a>
@@ -1062,6 +1083,9 @@
                         <th class="StrikeOut">
                             <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="StrikeOut">@Html.DisplayNameFor(model => model.GameScorePitcherList[0].StrikeOut)</a>
                         </th>
+                        <th class="StrikeOutBaseOnBallsRate">
+                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="StrikeOutBaseOnBallsRate">@Html.DisplayNameFor(model => model.GameScorePitcherList[0].StrikeOutBaseOnBallsRate)</a>
+                        </th>
                         <th class="PickOffBallOut">
                             <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="PickOffBallOut">@Html.DisplayNameFor(model => model.GameScorePitcherList[0].PickOffBallOut)</a>
                         </th>
@@ -1084,17 +1108,17 @@
                     <tr>
                         <td class="text-center align-middle column-fix-left">
                             @if (pitcherRankValue != item.OrderValue)
-                                {
-                                    pitcherRank += 1;
-                            @pitcherRank
-                                }
+                            {
+                                pitcherRank += 1;
+                                @pitcherRank
+                            }
                             @{pitcherRankValue = item.OrderValue;}
                         </td>
                         @if (string.IsNullOrEmpty(Model.SelectTeamID))
                         {
-                        <td class="align-middle">
-                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem">@item.Member.Team.TeamName</a>
-                        </td>
+                            <td class="align-middle">
+                                <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem">@item.Member.Team.TeamName</a>
+                            </td>
                         }
                         <td class="align-middle">
                             <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -1105,11 +1129,20 @@
                         <td class="Starter text-center align-middle">
                             @Html.DisplayFor(modelItem => item.Starter)
                         </td>
+                        <td class="QualityStart text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.QualityStart)
+                        </td>
                         <td class="CompleteGame text-center align-middle">
                             @Html.DisplayFor(modelItem => item.CompleteGame)
                         </td>
+                        <td class="ShutOutGame text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.ShutOutGame)
+                        </td>
                         <td class="WinRate text-center align-middle">
                             @Html.DisplayFor(modelItem => item.WinRateFormat)
+                        </td>
+                        <td class="QualityStartRate text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.QualityStartRateFormat)
                         </td>
                         <td class="Win text-center align-middle">
                             @Html.DisplayFor(modelItem => item.Win)
@@ -1176,6 +1209,9 @@
                         </td>
                         <td class="StrikeOut text-center align-middle">
                             @Html.DisplayFor(modelItem => item.StrikeOut)
+                        </td>
+                        <td class="StrikeOutBaseOnBallsRate text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.StrikeOutBaseOnBallsRateFormat)
                         </td>
                         <td class="PickOffBallOut text-center align-middle">
                             @Html.DisplayFor(modelItem => item.PickOffBallOut)

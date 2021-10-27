@@ -660,6 +660,14 @@ namespace Bmcs.Models
             //イニングスコア
             var inningScores = await Context.InningScores.Where(r => r.GameID == gameID).ToListAsync();
 
+            //QS計算基準イニング
+            decimal baseInning = inningScores.DefaultIfEmpty().Max(r => r.Inning);
+
+            if(baseInning > CalculateRegulationConstant.BaseInning)
+            {
+                baseInning = CalculateRegulationConstant.BaseInning;
+            }
+
             //表裏
             var myTeamOffenceTopButtomClass = game.BatFirstBatSecondClass == BatFirstBatSecondClass.First ? TopButtomClass.Top : TopButtomClass.Buttom;
 
@@ -689,7 +697,7 @@ namespace Bmcs.Models
             //全試合シーン
             var orders = await Context.Orders.Include(r => r.Member)
                                             .Include(r => r.GameScene)
-                                            .Where(r => r.GameID == gameID).ToListAsync();
+                                            .Where(r => r.GameID == gameID && r.OrderDataClass == OrderDataClass.Normal).ToListAsync();
 
             //全試合シーン
             var gameScenes = await Context.GameScenes.Include(r => r.BatterMember)
@@ -743,7 +751,9 @@ namespace Bmcs.Models
                     Hold = 0,
                     Save = 0,
                     Starter = 0,
+                    QualityStart = 0,
                     CompleteGame = 0,
+                    ShutOutGame = 0,
                 };
 
                 //先発(初回の先頭で自分が投げている)
@@ -792,6 +802,20 @@ namespace Bmcs.Models
                 gameScorePitcher.WildPitch = gameSceneDetails.Where(r => r.GameScene.PitcherMemberID == pitcherMemberID && r.MemberID == pitcherMemberID && r.DetailResultClass == DetailResultClass.WildPitch).Count();
                 //ボーク
                 gameScorePitcher.Balk = gameSceneDetails.Where(r => r.GameScene.PitcherMemberID == pitcherMemberID && r.MemberID == pitcherMemberID && r.DetailResultClass == DetailResultClass.Balk).Count();
+
+                //完封(完投かつ失点０)
+                if (gameScorePitcher.CompleteGame == 1 && gameScorePitcher.Run == 0)
+                {
+                    gameScorePitcher.ShutOutGame = 1;
+                }
+
+                //QS(9イニング換算でイニングの6回以上、3失点以内)
+                if ((gameScorePitcher.Inning >= (baseInning * 2 / 3))
+                    && (gameScorePitcher.Run <= (3 * baseInning / 9))
+                    )
+                {
+                    gameScorePitcher.QualityStart = 1;
+                }
 
                 SetEntryInfo(gameScorePitcher);
 
@@ -843,20 +867,47 @@ namespace Bmcs.Models
                     MemberID = fielderMemberID,
                 };
 
+                //守備詳細
+                gameScoreFielder.PositionDetail = string.Empty;
 
-                var batterGameScenes = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass != ResultClass.Change);
+                var prevPosition = string.Empty;
 
-                gameScoreFielder.Detail = string.Empty;
-
-                //打撃詳細
-                foreach (var batterGameScene in batterGameScenes.OrderBy(r => r.Inning).ThenBy(r => r.TopButtomClass).ThenBy(r => r.InningIndex))
+                foreach (var defenseGameScene in gameScenes.Where(r => r.OffenseDefenseClass == OffenseDefenseClass.Defense).OrderBy(r => r.Inning).ThenBy(r => r.TopButtomClass).ThenBy(r => r.InningIndex))
                 {
-                    gameScoreFielder.Detail += GetBatterResultDetail(batterGameScene);
+                    var position = string.Empty;
 
-                    gameScoreFielder.Detail += "　";
+                    foreach (var positionOrder in orders.Where(r => r.MemberID == fielderMemberID && r.GameSceneID == defenseGameScene.GameSceneID).OrderBy(r => r.BattingOrder))
+                    {
+                        position += positionOrder.PositionClass.GetEnumName();
+                        position += ",";
+                    }
+
+                    position = position.TrimEnd(',');
+
+                    if(position != prevPosition)
+                    { 
+                        gameScoreFielder.PositionDetail += position;
+                        gameScoreFielder.PositionDetail += "⇒";
+                    }
+
+                    prevPosition = position;
                 }
 
-                gameScoreFielder.Detail = gameScoreFielder.Detail.Trim();
+                gameScoreFielder.PositionDetail = gameScoreFielder.PositionDetail.TrimEnd('⇒');
+
+                //打撃詳細
+                var batterGameScenes = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass != ResultClass.Change);
+
+                gameScoreFielder.BattingDetail = string.Empty;
+
+                foreach (var batterGameScene in batterGameScenes.OrderBy(r => r.Inning).ThenBy(r => r.TopButtomClass).ThenBy(r => r.InningIndex))
+                {
+                    gameScoreFielder.BattingDetail += GetBatterResultDetail(batterGameScene);
+
+                    gameScoreFielder.BattingDetail += "　";
+                }
+
+                gameScoreFielder.BattingDetail = gameScoreFielder.BattingDetail.Trim();
 
                 //打席
                 gameScoreFielder.PlateAppearance = gameScenes.Where(r => r.BatterMemberID == fielderMemberID && r.ResultClass != ResultClass.Change).Count();
@@ -1025,6 +1076,7 @@ namespace Bmcs.Models
                 if (teamGameScorePitcher != null)
                 {
                     gameScoreTeam.EarnedRunAverage = teamGameScorePitcher.EarnedRunAverage;
+                    gameScoreTeam.QualityStartRate = teamGameScorePitcher.QualityStartRate;
                     gameScoreTeam.PitcherEarnedRun = teamGameScorePitcher.EarnedRun;
                     gameScoreTeam.PitcherFourBall = teamGameScorePitcher.FourBall;
                     gameScoreTeam.PitcherDeadBall = teamGameScorePitcher.DeadBall;
@@ -1034,6 +1086,7 @@ namespace Bmcs.Models
                     gameScoreTeam.PitcherScoringPositionBattingAverage = teamGameScorePitcher.ScoringPositionBattingAverage;
                     gameScoreTeam.PitcherStrikeOutRate = teamGameScorePitcher.StrikeOutRate;
                     gameScoreTeam.PitcherStrikeOut = teamGameScorePitcher.StrikeOut;
+                    gameScoreTeam.PitcherStrikeOutBaseOnBallsRate = teamGameScorePitcher.StrikeOutBaseOnBallsRate;
                     gameScoreTeam.Whip = teamGameScorePitcher.Whip;
                 }
 
@@ -1100,7 +1153,9 @@ namespace Bmcs.Models
                                     Hold = r.Hold,
                                     Save = r.Save,
                                     Starter = r.Starter,
+                                    QualityStart = r.QualityStart,
                                     CompleteGame = r.CompleteGame,
+                                    ShutOutGame = r.ShutOutGame,
                                     Inning = r.Inning,
                                     PlateAppearance = r.PlateAppearance,
                                     AtBat = r.AtBat,
@@ -1132,7 +1187,9 @@ namespace Bmcs.Models
                                     Hold = r.Sum(s => s.Hold),
                                     Save = r.Sum(s => s.Save),
                                     Starter = r.Sum(s => s.Starter),
+                                    QualityStart = r.Sum(s => s.QualityStart),
                                     CompleteGame = r.Sum(s => s.CompleteGame),
+                                    ShutOutGame = r.Sum(s => s.ShutOutGame),
                                     Inning = r.Sum(s => s.Inning),
                                     PlateAppearance = r.Sum(s => s.PlateAppearance),
                                     AtBat = r.Sum(s => s.AtBat),
@@ -1166,7 +1223,9 @@ namespace Bmcs.Models
                     Hold = groupGameScorePitcher.Hold,
                     Save = groupGameScorePitcher.Save,
                     Starter = groupGameScorePitcher.Starter,
+                    QualityStart = groupGameScorePitcher.QualityStart,
                     CompleteGame = groupGameScorePitcher.CompleteGame,
+                    ShutOutGame = groupGameScorePitcher.ShutOutGame,
                     Inning = groupGameScorePitcher.Inning,
                     PlateAppearance = groupGameScorePitcher.PlateAppearance,
                     AtBat = groupGameScorePitcher.AtBat,
@@ -1227,6 +1286,16 @@ namespace Bmcs.Models
                     gameScorePitcher.WinRate = System.Convert.ToDecimal(gameScorePitcher.Win) / System.Convert.ToDecimal(gameScorePitcher.Win.NullToZero() + gameScorePitcher.Lose.NullToZero());
                 }
 
+                //QS率
+                if (gameScorePitcher.Starter.NullToZero() == 0)
+                {
+                    gameScorePitcher.QualityStartRate = null;
+                }
+                else
+                {
+                    gameScorePitcher.QualityStartRate = System.Convert.ToDecimal(gameScorePitcher.QualityStart) / System.Convert.ToDecimal(gameScorePitcher.Starter.NullToZero()) * 100;
+                }
+
                 //被打率
                 if (gameScorePitcher.AtBat.NullToZero() == 0)
                 {
@@ -1255,6 +1324,16 @@ namespace Bmcs.Models
                 else
                 {
                     gameScorePitcher.StrikeOutRate = System.Convert.ToDecimal(gameScorePitcher.StrikeOut.NullToZero() * 9) / System.Convert.ToDecimal(gameScorePitcher.Inning);
+                }
+
+                //K/BB
+                if (gameScorePitcher.FourBall.NullToZero() == 0)
+                {
+                    gameScorePitcher.StrikeOutBaseOnBallsRate = System.Convert.ToDecimal(gameScorePitcher.StrikeOut);
+                }
+                else
+                {
+                    gameScorePitcher.StrikeOutBaseOnBallsRate = System.Convert.ToDecimal(gameScorePitcher.StrikeOut) / System.Convert.ToDecimal(gameScorePitcher.FourBall.NullToZero());
                 }
 
                 //WHIP

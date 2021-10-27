@@ -30,8 +30,12 @@ namespace Bmcs.Models
         public int? MemberID { get; set; }
 
         [StringLength(200)]
-        [Display(Name = "詳細")]
-        public string Detail { get; set; }
+        [Display(Name = "守備詳細")]
+        public string PositionDetail { get; set; }
+
+        [StringLength(200)]
+        [Display(Name = "打撃詳細")]
+        public string BattingDetail { get; set; }
 
         [Display(Name = "打席")]
         public int? PlateAppearance { get; set; }
