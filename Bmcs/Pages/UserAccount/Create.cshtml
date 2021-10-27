@@ -50,8 +50,16 @@
                 <input asp-for="UserAccount.TeamPassword" class="form-control" />
                 <span asp-validation-for="UserAccount.TeamPassword" class="text-danger"></span>
             </div>
+            <div class="form-group custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="term">
+                <label class="custom-control-label" for="term"><a asp-area="" asp-page="/Term">利用規約</a>に同意する。</label>
+            </div>
+            <div class="form-group custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="privacy">
+                <label class="custom-control-label" for="privacy"><a asp-area="" asp-page="/Privacy">プライバシーポリシー</a>に同意する。</label>
+            </div>
             <div class="form-group">
-                <input type="submit" value="登録" class="btn btn-primary" />
+                <input id="submit" type="submit" value="登録" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -59,4 +67,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/user-account.js" asp-append-version="true"></script>
 }
