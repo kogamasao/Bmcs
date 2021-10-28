@@ -23,6 +23,11 @@ h6 {
     font-size: 1.3rem;
 }
 
+/*.header {
+    background-color: #0288d1;
+    color: #ffffff;
+}*/
+
 .table td, .table th {
     white-space: nowrap;
 }
