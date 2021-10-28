@@ -1,0 +1,78 @@
+﻿@page
+@model Bmcs.Pages.Inquiry.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Inquiry[0].EmailAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inquiry[0].InquiryTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inquiry[0].InquiryDetail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inquiry[0].EntryUserID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inquiry[0].EntryDatetime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inquiry[0].UpdateUserID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inquiry[0].UpdateDatetime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Inquiry[0].TimeStamp)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Inquiry) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InquiryTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InquiryDetail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EntryUserID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EntryDatetime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateUserID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateDatetime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeStamp)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.InquiryID">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.InquiryID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.InquiryID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

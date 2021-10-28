@@ -34,6 +34,7 @@ namespace Bmcs.Data
         public DbSet<InningScore> InningScores { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Inquiry> Inquirys { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,6 +53,7 @@ namespace Bmcs.Data
             modelBuilder.Entity<InningScore>().ToTable("InningScore");
             modelBuilder.Entity<Message>().ToTable("Message");
             modelBuilder.Entity<Order>().ToTable("Order");
+            modelBuilder.Entity<Inquiry>().ToTable("Inquiry");
 
             modelBuilder.Entity<Member>()
                 .HasMany(m => m.PitcherGameScenes)
