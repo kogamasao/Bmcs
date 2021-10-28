@@ -2,77 +2,74 @@
 @model Bmcs.Pages.Inquiry.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData[ViewDataConstant.Title] = "お問い合わせ一覧(管理者)";
 }
 
-<h1>Index</h1>
+<h1>@ViewData[ViewDataConstant.Title]</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Inquiry[0].EmailAddress)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Inquiry[0].InquiryTitle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Inquiry[0].InquiryDetail)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Inquiry[0].EntryUserID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Inquiry[0].EntryDatetime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Inquiry[0].UpdateUserID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Inquiry[0].UpdateDatetime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Inquiry[0].TimeStamp)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Inquiry) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmailAddress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.InquiryTitle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.InquiryDetail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EntryUserID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EntryDatetime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdateUserID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdateDatetime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TimeStamp)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.InquiryID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.InquiryID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.InquiryID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="form-group">
+    <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover table-sm table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Inquiry[0].EmailAddress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Inquiry[0].InquiryTitle)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Inquiry[0].InquiryDetail)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Inquiry[0].ReplyFLG)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Inquiry[0].CompleteFLG)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Inquiry[0].EntryUserID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Inquiry[0].EntryDatetime)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Inquiry)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmailAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InquiryTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InquiryDetail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReplyFLG)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompleteFLG)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EntryUserID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EntryDatetime)
+                </td>
+                <td>
+                    <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.InquiryID">詳細</a>
+                    <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.InquiryID">削除</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -7,28 +7,37 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Bmcs.Data;
 using Bmcs.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using Bmcs.Constans;
 
 namespace Bmcs.Pages.Inquiry
 {
-    public class CreateModel : PageModel
+    public class CreateModel : PageModelBase<CreateModel>
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public CreateModel(Bmcs.Data.BmcsContext context)
+        public CreateModel(ILogger<CreateModel> logger, BmcsContext context) : base(logger, context)
         {
-            _context = context;
+
         }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
+            Inquiry = new Models.Inquiry();
+            
+            if(base.IsLogin())
+            {
+                var userAccount = await Context.UserAccounts.FindAsync(HttpContext.Session.GetString(SessionConstant.UserAccountID));
+
+                //メールアドレス
+                Inquiry.EmailAddress = userAccount.EmailAddress;
+            }
+
             return Page();
         }
 
         [BindProperty]
         public Models.Inquiry Inquiry { get; set; }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -36,10 +45,31 @@ namespace Bmcs.Pages.Inquiry
                 return Page();
             }
 
-            _context.Inquirys.Add(Inquiry);
-            await _context.SaveChangesAsync();
+            //データ作成
+            var inquiry = new Models.Inquiry();
 
-            return RedirectToPage("./Index");
+            //POST値セット
+            this.TryUpdateModel(inquiry);
+            //エントリ情報セット
+            base.SetEntryInfo(inquiry);
+
+            Context.Inquirys.Add(inquiry);
+            await Context.SaveChangesAsync();
+
+            return RedirectToPage("/Top/Index");
+        }
+
+        /// <summary>
+        /// POST値をモデルにセット
+        /// </summary>
+        /// <param name="inquiry"></param>
+        private void TryUpdateModel(Models.Inquiry inquiry)
+        {
+            inquiry.EmailAddress = Inquiry.EmailAddress;
+            inquiry.InquiryTitle = Inquiry.InquiryTitle;
+            inquiry.InquiryDetail = Inquiry.InquiryDetail;
+            inquiry.ReplyFLG = false;
+            inquiry.CompleteFLG = false;
         }
     }
 }

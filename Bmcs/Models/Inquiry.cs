@@ -29,5 +29,13 @@ namespace Bmcs.Models
         [DataType(DataType.MultilineText)]
         [Display(Name = "お問い合わせ内容")]
         public string InquiryDetail { get; set; }
+
+        [DefaultValue(false)]
+        [Display(Name = "返信フラグ")]
+        public bool ReplyFLG { get; set; }
+
+        [DefaultValue(false)]
+        [Display(Name = "完了フラグ")]
+        public bool CompleteFLG { get; set; }
     }
 }

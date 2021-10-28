@@ -5,18 +5,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Bmcs.Data;
 using Bmcs.Models;
 
 namespace Bmcs.Pages.Inquiry
 {
-    public class DeleteModel : PageModel
+    public class DeleteModel : PageModelBase<DeleteModel>
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public DeleteModel(Bmcs.Data.BmcsContext context)
+        public DeleteModel(ILogger<DeleteModel> logger, BmcsContext context) : base(logger, context)
         {
-            _context = context;
+
         }
 
         [BindProperty]
@@ -24,12 +23,12 @@ namespace Bmcs.Pages.Inquiry
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
+            if (id == null || !base.IsLogin() || !base.IsAdmin())
             {
                 return NotFound();
             }
 
-            Inquiry = await _context.Inquirys.FirstOrDefaultAsync(m => m.InquiryID == id);
+            Inquiry = await Context.Inquirys.FirstOrDefaultAsync(m => m.InquiryID == id);
 
             if (Inquiry == null)
             {
@@ -45,12 +44,12 @@ namespace Bmcs.Pages.Inquiry
                 return NotFound();
             }
 
-            Inquiry = await _context.Inquirys.FindAsync(id);
+            Inquiry = await Context.Inquirys.FindAsync(id);
 
             if (Inquiry != null)
             {
-                _context.Inquirys.Remove(Inquiry);
-                await _context.SaveChangesAsync();
+                Context.Inquirys.Remove(Inquiry);
+                await Context.SaveChangesAsync();
             }
 
             return RedirectToPage("./Index");

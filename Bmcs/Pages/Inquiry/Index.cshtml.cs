@@ -5,25 +5,31 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Bmcs.Data;
 using Bmcs.Models;
 
 namespace Bmcs.Pages.Inquiry
 {
-    public class IndexModel : PageModel
+    public class IndexModel : PageModelBase<IndexModel>
     {
-        private readonly Bmcs.Data.BmcsContext _context;
-
-        public IndexModel(Bmcs.Data.BmcsContext context)
+        public IndexModel(ILogger<IndexModel> logger, BmcsContext context) : base(logger, context)
         {
-            _context = context;
+
         }
 
         public IList<Models.Inquiry> Inquiry { get;set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            Inquiry = await _context.Inquirys.ToListAsync();
+            if (!base.IsLogin() || !base.IsAdmin())
+            {
+                return NotFound();
+            }
+
+            Inquiry = await Context.Inquirys.ToListAsync();
+
+            return Page();
         }
     }
 }

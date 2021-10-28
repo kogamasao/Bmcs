@@ -1,16 +1,14 @@
 ﻿@page
 @model Bmcs.Pages.Inquiry.CreateModel
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData[ViewDataConstant.Title] = "お問い合わせ";
 }
 
-<h1>Create</h1>
+<h1>@ViewData[ViewDataConstant.Title]</h1>
 
-<h4>Inquiry</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -29,34 +27,11 @@
                 <span asp-validation-for="Inquiry.InquiryDetail" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Inquiry.EntryUserID" class="control-label"></label>
-                <input asp-for="Inquiry.EntryUserID" class="form-control" />
-                <span asp-validation-for="Inquiry.EntryUserID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Inquiry.EntryDatetime" class="control-label"></label>
-                <input asp-for="Inquiry.EntryDatetime" class="form-control" />
-                <span asp-validation-for="Inquiry.EntryDatetime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Inquiry.UpdateUserID" class="control-label"></label>
-                <input asp-for="Inquiry.UpdateUserID" class="form-control" />
-                <span asp-validation-for="Inquiry.UpdateUserID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Inquiry.UpdateDatetime" class="control-label"></label>
-                <input asp-for="Inquiry.UpdateDatetime" class="form-control" />
-                <span asp-validation-for="Inquiry.UpdateDatetime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="登録" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {
