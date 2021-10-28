@@ -5,9 +5,14 @@
     ViewData[ViewDataConstant.Title] = "ユーザ作成";
 }
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
 
-<h4></h4>
+<h1 class="d-inline-block">
+    @ViewData[ViewDataConstant.Title]
+</h1>
+<img src="~/img/help.png" alt="ヘルプ" class="help" data-toggle="modal" data-target="#help" />
+
+@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
+
 <hr />
 <div class="row">
     <div class="col-md-6">

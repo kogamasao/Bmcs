@@ -556,6 +556,17 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
+    /// システム管理区分
+    /// </summary>
+    public enum SystemAdminClass
+    {
+        [Display(Name = "トップお知らせ")]
+        TopInformation = 1,
+        [Display(Name = "ユーザアカウント作成")]
+        UserAccountCreate = 2,
+    }
+
+    /// <summary>
     /// Enum関連処理
     /// </summary>
     public static class EnumClass

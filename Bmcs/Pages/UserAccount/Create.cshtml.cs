@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
 using Microsoft.Extensions.Logging;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.UserAccount
 {
@@ -26,8 +27,11 @@ namespace Bmcs.Pages.UserAccount
         [BindProperty]
         public Models.UserAccount UserAccount { get; set; }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync((int)SystemAdminClass.UserAccountCreate);
+
             return Page();
         }
         

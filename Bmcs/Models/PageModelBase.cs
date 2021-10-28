@@ -68,6 +68,11 @@ namespace Bmcs.Models
         public bool IsMemberIDNeedEmpty { get; set; }
 
         /// <summary>
+        /// システム管理表示用
+        /// </summary>
+        public Models.SystemAdmin SystemAdmin { get; set; }
+
+        /// <summary>
         /// チームIDリスト
         /// </summary>
         public SelectList TeamIDList

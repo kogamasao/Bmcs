@@ -21,8 +21,6 @@ namespace Bmcs.Pages.Top
 
         }
 
-        public Models.SystemAdmin SystemAdmin { get; set; }
-
         public Models.Message PublicMessage { get; set; }
 
         public Models.Message PrivateMessage { get; set; }
@@ -30,7 +28,7 @@ namespace Bmcs.Pages.Top
         public async Task<IActionResult> OnGetAsync()
         {
             //システム管理データ
-            SystemAdmin = await Context.SystemAdmins.FirstOrDefaultAsync();
+            SystemAdmin = await Context.SystemAdmins.FindAsync((int)SystemAdminClass.TopInformation);
 
             int? messageID = null;
 

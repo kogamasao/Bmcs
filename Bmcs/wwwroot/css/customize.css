@@ -23,6 +23,10 @@ h6 {
     font-size: 1.3rem;
 }
 
+hr {
+    margin-top: 0.1rem;
+}
+
 /*.header {
     background-color: #0288d1;
     color: #ffffff;
@@ -78,4 +82,12 @@ textarea.form-control {
     color: #fff;
     background-color: #007bff;
     border-color: #007bff;
+}
+
+.help {
+    cursor: pointer;
+    width: 1.8rem;
+    height: 1.8rem;
+    margin-bottom: 0.7rem;
+    margin-left: 0.7rem;
 }

@@ -22,18 +22,31 @@ namespace Bmcs.Data
             {
                 isUpdate = true;
 
-                var systemAdmins = new SystemAdmin[]
-            {
-                new SystemAdmin
+                var systemAdmins = new List<SystemAdmin>();
+
+                foreach (var value in System.Enum.GetValues(typeof(SystemAdminClass)))
                 {
-                      MessageTitle = "トップ画面お知らせ"
-                    , MessageDetail = "管理者よりお知らせ<br />α版リリース中<br />メッセージ機能以外使用可能です。"
-                    , EntryDatetime = DateTime.Now
-                    , EntryUserID = "ADMIN"
-                    , UpdateDatetime = DateTime.Now
-                    , UpdateUserID = "ADMIN"
-                },
-            };
+                    var messageDetail = string.Empty;
+
+                    if((int)value == (int)SystemAdminClass.TopInformation)
+                    {
+                        messageDetail = "基本機能使用可能です。ヘルプを作成中";
+                    }
+                    else if ((int)value == (int)SystemAdminClass.TopInformation)
+                    {
+                        messageDetail = "ユーザアカウントを作成します。";
+                    }
+
+                    systemAdmins.Add(new SystemAdmin
+                    {
+                        MessageTitle = value.GetEnumName(),
+                        MessageDetail = messageDetail,
+                        EntryDatetime = DateTime.Now,
+                        EntryUserID = "ADMIN",
+                        UpdateDatetime = DateTime.Now,
+                        UpdateUserID = "ADMIN"
+                    });
+                }
 
                 context.SystemAdmins.AddRange(systemAdmins);
             }
