@@ -64,8 +64,17 @@ namespace Bmcs.Pages.UserAccount
 
             try
             {
+                //データ更新
+                var userAccount = await Context.UserAccounts.FindAsync(UserAccount.UserAccountID);
+
+                if (userAccount == null)
+                {
+                    return NotFound();
+                }
+
                 //チームパスワードチェック
-                if (!string.IsNullOrEmpty(UserAccount.TeamID))
+                if (userAccount.TeamID != UserAccount.TeamID
+                    && !string.IsNullOrEmpty(UserAccount.TeamID))
                 {
                     var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID
                                                             && r.TeamPassword == UserAccount.TeamPassword.NullToEmpty());
@@ -76,14 +85,6 @@ namespace Bmcs.Pages.UserAccount
 
                         return Page();
                     }
-                }
-
-                //データ更新
-                var userAccount = await Context.UserAccounts.FindAsync(UserAccount.UserAccountID);
-
-                if (userAccount == null)
-                {
-                    return NotFound();
                 }
 
                 //POST値セット
@@ -115,7 +116,13 @@ namespace Bmcs.Pages.UserAccount
         private void TryUpdateModel(Models.UserAccount userAccount)
         {
             userAccount.UserAccountName = UserAccount.UserAccountName;
-            userAccount.Password = UserAccount.Password;
+
+            //パスワード変更時のみ
+            if(!string.IsNullOrEmpty(UserAccount.Password))
+            { 
+                userAccount.Password = UserAccount.Password;
+            }
+            
             userAccount.EmailAddress = UserAccount.EmailAddress;
             userAccount.TeamID = UserAccount.TeamID;
         }

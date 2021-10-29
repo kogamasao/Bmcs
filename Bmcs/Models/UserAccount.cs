@@ -28,12 +28,10 @@ namespace Bmcs.Models
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
 
-        [Required(ErrorMessage = "{0}は必須です。")]
         [DataType(DataType.Password)]
         [Display(Name = "パスワード")]
         public string Password { get; set; }
 
-        [Required(ErrorMessage = "{0}は必須です。")]
         [NotMapped]
         [DataType(DataType.Password)]
         [Display(Name = "確認用パスワード")]

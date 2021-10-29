@@ -70,6 +70,7 @@ namespace Bmcs.Models
         /// <summary>
         /// システム管理表示用
         /// </summary>
+        [BindProperty]
         public Models.SystemAdmin SystemAdmin { get; set; }
 
         /// <summary>

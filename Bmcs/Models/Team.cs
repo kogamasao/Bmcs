@@ -64,13 +64,11 @@ namespace Bmcs.Models
         [Display(Name = "チーム人数")]
         public int? TeamNumber { get; set; }
 
-        [Required(ErrorMessage = "{0}は必須です。")]
         [DataType(DataType.Password)]
         [Display(Name = "パスワード")]
         public string TeamPassword { get; set; }
 
         [NotMapped]
-        [Required(ErrorMessage = "{0}は必須です。")]
         [DataType(DataType.Password)]
         [Display(Name = "確認用パスワード")]
         public string ConfirmTeamPassword { get; set; }

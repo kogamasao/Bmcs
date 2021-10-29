@@ -100,7 +100,13 @@ namespace Bmcs.Pages.Team
         {
             team.TeamName = Team.TeamName;
             team.TeamAbbreviation = Team.TeamAbbreviation;
-            team.TeamPassword = Team.TeamPassword;
+
+            //パスワード変更時のみ
+            if(!string.IsNullOrEmpty(Team.TeamPassword))
+            { 
+                team.TeamPassword = Team.TeamPassword;
+            }
+            
             team.RepresentativeName = Team.RepresentativeName;
             team.TeamCategoryClass = Team.TeamCategoryClass;
             team.UseBallClass = Team.UseBallClass;

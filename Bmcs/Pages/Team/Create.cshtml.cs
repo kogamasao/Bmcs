@@ -49,6 +49,22 @@ namespace Bmcs.Pages.Team
                     return Page();
                 }
 
+                //パスワード必須チェック
+                if (string.IsNullOrEmpty(Team.TeamPassword))
+                {
+                    ModelState.AddModelError(nameof(Models.Team) + "." + nameof(Models.Team.TeamPassword), "パスワードは必須です。");
+
+                    return Page();
+                }
+
+                //確認パスワード必須チェック
+                if (string.IsNullOrEmpty(Team.ConfirmTeamPassword))
+                {
+                    ModelState.AddModelError(nameof(Models.Team) + "." + nameof(Models.Team.ConfirmTeamPassword), "確認用パスワードは必須です。");
+
+                    return Page();
+                }
+
                 //データ作成
                 var team = new Models.Team();
 

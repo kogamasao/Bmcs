@@ -54,8 +54,24 @@ namespace Bmcs.Pages.UserAccount
                     return Page();
                 }
 
+                //パスワード必須チェック
+                if (string.IsNullOrEmpty(UserAccount.Password))
+                {
+                    ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.Password), "パスワードは必須です。");
+
+                    return Page();
+                }
+
+                //確認パスワード必須チェック
+                if (string.IsNullOrEmpty(UserAccount.ConfirmPassword))
+                {
+                    ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.ConfirmPassword), "確認用パスワードは必須です。");
+
+                    return Page();
+                }
+
                 //チームパスワードチェック
-                if(!string.IsNullOrEmpty(UserAccount.TeamID))
+                if (!string.IsNullOrEmpty(UserAccount.TeamID))
                 { 
                     var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID
                                                             && r.TeamPassword == UserAccount.TeamPassword.NullToEmpty());

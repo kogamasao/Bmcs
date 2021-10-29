@@ -78,6 +78,11 @@ namespace Bmcs.Pages.Score
         {
             if (string.IsNullOrEmpty(teamID) && !isPublic)
             {
+                if (!base.IsLogin())
+                {
+                    return NotFound();
+                }
+
                 teamID = HttpContext.Session.GetString(SessionConstant.TeamID);
             }
 
