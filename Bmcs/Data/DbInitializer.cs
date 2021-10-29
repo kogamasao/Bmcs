@@ -32,7 +32,7 @@ namespace Bmcs.Data
                     {
                         messageDetail = "基本機能使用可能です。ヘルプを作成中";
                     }
-                    else if ((int)value == (int)SystemAdminClass.TopInformation)
+                    else if ((int)value == (int)SystemAdminClass.UserAccountCreate)
                     {
                         messageDetail = "ユーザアカウントを作成します。";
                     }

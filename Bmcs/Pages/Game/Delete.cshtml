@@ -2,10 +2,10 @@
 @model Bmcs.Pages.Game.DeleteModel
 
 @{
-    ViewData["Title"] = "試合削除";
+    ViewData[ViewDataConstant.Title] = "試合削除";
 }
 
-<h1>試合削除</h1>
+<h1>@ViewData[ViewDataConstant.Title]</h1>
 
 <h6 class="text-danger">試合情報を削除します。よろしいですか？</h6>
 <div>
