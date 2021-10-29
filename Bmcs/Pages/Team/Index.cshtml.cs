@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
 using Microsoft.Extensions.Logging;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.Team
 {
@@ -37,6 +38,9 @@ namespace Bmcs.Pages.Team
                                         .OrderBy(r => r.TeamID)
                                         .ToListAsync();
             }
+
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamIndex);
 
             return Page();
         }

@@ -5,7 +5,12 @@
     ViewData[ViewDataConstant.Title] = "チーム一覧";
 }
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
+<h1 class="d-inline-block">
+    @ViewData[ViewDataConstant.Title]
+</h1>
+
+@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
+
 <div class="form-group">
     @if (Model.IsAdmin())
     {
@@ -139,27 +144,27 @@
                         </td>
                     }
 
-                <td>
-                    <a class="btn btn-primary btn-sm" asp-page="/Game/Index" asp-route-teamID="@item.TeamID">試合</a>
-                    <span>&nbsp;</span>
-                    <a class="btn btn-primary btn-sm" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@true" asp-route-teamCategoryClass="@TeamCategoryClass.All" asp-route-useBallClass="@UseBallClass.All">成績</a>
-                    <span>&nbsp;</span>
-                    <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.TeamID">詳細</a>
-                    <span>&nbsp;</span>
-                    <a class="btn btn-primary btn-sm" asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a>
-                    @if (Model.IsAdmin())
-                    {
+                    <td>
+                        <a class="btn btn-primary btn-sm" asp-page="/Game/Index" asp-route-teamID="@item.TeamID">試合</a>
                         <span>&nbsp;</span>
-                        <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.TeamID">編集</a>
+                        <a class="btn btn-primary btn-sm" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@true" asp-route-teamCategoryClass="@TeamCategoryClass.All" asp-route-useBallClass="@UseBallClass.All">成績</a>
                         <span>&nbsp;</span>
-                        <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.TeamID">削除</a>
-                    }
-                    @if (Model.MyTeam != null && Model.MyTeam.PublicFLG)
-                    {
-                    <span>&nbsp;</span>
-                    <a class="btn btn-primary btn-sm" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-privateTeamID="@item.TeamID">メッセージを送る</a>
-                    }
-                </td>
+                        <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.TeamID">詳細</a>
+                        <span>&nbsp;</span>
+                        <a class="btn btn-primary btn-sm" asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a>
+                        @if (Model.IsAdmin())
+                        {
+                            <span>&nbsp;</span>
+                            <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.TeamID">編集</a>
+                            <span>&nbsp;</span>
+                            <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.TeamID">削除</a>
+                        }
+                        @if (Model.MyTeam != null && Model.MyTeam.PublicFLG)
+                        {
+                            <span>&nbsp;</span>
+                            <a class="btn btn-primary btn-sm" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-privateTeamID="@item.TeamID">メッセージを送る</a>
+                        }
+                    </td>
                 </tr>
             }
         </tbody>

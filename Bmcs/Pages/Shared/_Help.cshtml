@@ -1,4 +1,6 @@
-﻿<!-- Modal -->
+﻿<img src="~/img/help.png" alt="ヘルプ" class="help" data-toggle="modal" data-target="#help" />
+
+<!-- Modal -->
 <div class="modal fade" id="help" tabindex="-1" role="dialog" aria-labelledby="help-title" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -10,36 +12,27 @@
             </div>
             <div class="modal-body">
                 @Html.Raw(Model.SystemAdmin.MessageDetail)
-                @*<p>本サービスを使用するためのユーザを作成します。</p>
-                <ul class="help-ul">
-                    <li>
-                        ユーザID(必須)<br>
-                        任意のIDを入力します。(既に使用されているIDはエラーをなります。)<br>
-                    </li>
-                    <li>
-                        ユーザ名(必須)<br>
-                        任意のユーザ名を入力します。ユーザ名は「メッセージ」機能に投稿者として表示されます。<br>
-                    </li>
-                    <li>
-                        パスワード(必須)<br>
-                        ログインするためのパスワードを入力します。特に制限はありません。<br>
-                        「確認用パスワード」に同じパスワードを入力してください。<br>
-                        パスワードをお忘れの際はお問い合わせください。<br>
-                    </li>
-                    <li>
-                        メールアドレス<br>
-                        ユーザのメールアドレスを入力します。<br>
-                        現在の使用用途はサイト管理者からご連絡させて頂く以外に使用しません。<br>
-                        必須ではありませんので、空欄でも構いません。<br>
-                    </li>
-                    <li>
-                        チーム<br>
-                        別ユーザにチームを既に作成している場合はチームを選択します。<br>
-                        チームを作成したユーザよりパスワードを共有して頂き、チームパスワードを入力してください。<br>
-                        チームを未作成の場合は空欄でご登録ください。ユーザ作成後に作成します。<br>
-                    </li>
-                </ul>
-                <p>利用規約、プライバシーポリシーをご確認後にチェックを入れ、ご登録ください。</p>*@
+                @*<p>公開設定のチーム一覧を確認することができます。<br>
+                    気になるチームの情報を確認してみましょう。
+                    </p>
+        <ul class="help-ul">
+            <li>
+                試合<br>
+                該当チームの試合一覧へ遷移します。<br>
+            </li>
+            <li>
+                成績<br>
+              　該当チームの成績ページへ遷移します。<br>
+                </li>
+            <li>
+                詳細<br>
+                該当チームの詳細情報ページへ遷移します。<br>
+                </li>
+            <li>
+                メッセージを送る<br>
+                該当チームへダイレクト(非公開)メッセージを送る画面に遷移します。<br>
+            </li>
+        </ul>*@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>

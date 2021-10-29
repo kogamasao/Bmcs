@@ -5,9 +5,12 @@
     ViewData[ViewDataConstant.Title] = "ユーザ情報";
 }
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
+<h1 class="d-inline-block">
+    @ViewData[ViewDataConstant.Title]
+</h1>
 
-<h4></h4>
+@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
+
 <hr />
 <div class="row">
     <div class="col-md-6">
@@ -48,11 +51,11 @@
                 <input type="submit" value="登録" class="btn btn-primary" />
                 @if (Model.IsAdmin())
                 {
-                    <a class="btn btn-secondary" asp-page="./Index">戻る</a>
+                <a class="btn btn-secondary" asp-page="./Index">戻る</a>
                 }
                 else
                 {
-                    <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
+                <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
                 }
             </div>
         </form>

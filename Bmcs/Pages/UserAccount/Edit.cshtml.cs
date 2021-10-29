@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
 using Bmcs.Function;
 using Microsoft.Extensions.Logging;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.UserAccount
 {
@@ -51,6 +52,9 @@ namespace Bmcs.Pages.UserAccount
             {
                 return NotFound();
             }
+
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.UserAccountEdit);
 
             return Page();
         }
