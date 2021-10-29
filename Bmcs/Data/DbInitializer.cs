@@ -34,11 +34,41 @@ namespace Bmcs.Data
                     }
                     else if ((int)value == (int)SystemAdminClass.UserAccountCreate)
                     {
-                        messageDetail = "ユーザアカウントを作成します。";
+                        messageDetail = @"<p>本サービスを使用するためのユーザを作成します。</p>
+                                            <ul class=""help-ul"">
+                                                <li>
+                                                    ユーザID(必須)<br>
+                                                    任意のIDを入力します。(既に使用されているIDはエラーをなります。)<br>
+                                                </li>
+                                                <li>
+                                                    ユーザ名(必須)<br>
+                                                    任意のユーザ名を入力します。ユーザ名は「メッセージ」機能に投稿者として表示されます。<br>
+                                                </li>
+                                                <li>
+                                                    パスワード(必須)<br>
+                                                    ログインするためのパスワードを入力します。特に制限はありません。<br>
+                                                    「確認用パスワード」に同じパスワードを入力してください。<br>
+                                                    パスワードをお忘れの際はお問い合わせください。<br>
+                                                </li>
+                                                <li>
+                                                    メールアドレス<br>
+                                                    ユーザのメールアドレスを入力します。<br>
+                                                    現在の使用用途はサイト管理者からご連絡させて頂く以外に使用しません。<br>
+                                                    必須ではありませんので、空欄でも構いません。<br>
+                                                </li>
+                                                <li>
+                                                    チーム<br>
+                                                    別ユーザにチームを既に作成している場合はチームを選択します。<br>
+                                                    チームを作成したユーザよりパスワードを共有して頂き、チームパスワードを入力してください。<br>
+                                                    チームを未作成の場合は空欄でご登録ください。ユーザ作成後に作成します。<br>
+                                                </li>
+                                            </ul>
+                                            <p>利用規約、プライバシーポリシーをご確認後にチェックを入れ、ご登録ください。</p>";
                     }
 
                     systemAdmins.Add(new SystemAdmin
                     {
+                        SystemAdminClass = (SystemAdminClass)value,
                         MessageTitle = value.GetEnumName(),
                         MessageDetail = messageDetail,
                         EntryDatetime = DateTime.Now,

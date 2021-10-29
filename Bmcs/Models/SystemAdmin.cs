@@ -12,8 +12,9 @@ namespace Bmcs.Models
     public class SystemAdmin : DataModelBase
     {
         [Key]
-        [Display(Name = "システム管理ID")]
-        public int SystemAdminID { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Display(Name = "システム管理区分")]
+        public SystemAdminClass SystemAdminClass { get; set; }
 
         [Display(Name = "メッセージタイトル")]
         public string MessageTitle { get; set; }

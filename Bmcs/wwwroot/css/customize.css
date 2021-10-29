@@ -91,3 +91,7 @@ textarea.form-control {
     margin-bottom: 0.7rem;
     margin-left: 0.7rem;
 }
+
+.help-ul > li{
+    margin-bottom: 1.0rem;
+}

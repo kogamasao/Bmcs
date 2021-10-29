@@ -28,7 +28,7 @@ namespace Bmcs.Pages.Top
         public async Task<IActionResult> OnGetAsync()
         {
             //システム管理データ
-            SystemAdmin = await Context.SystemAdmins.FindAsync((int)SystemAdminClass.TopInformation);
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TopInformation);
 
             int? messageID = null;
 

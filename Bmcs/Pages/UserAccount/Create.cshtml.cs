@@ -30,7 +30,7 @@ namespace Bmcs.Pages.UserAccount
         public async Task<IActionResult> OnGetAsync()
         {
             //システム管理データ
-            SystemAdmin = await Context.SystemAdmins.FindAsync((int)SystemAdminClass.UserAccountCreate);
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.UserAccountCreate);
 
             return Page();
         }
