@@ -13,19 +13,19 @@
             <div class="form-group">
                 @if (Model.LastGameSceneID != null)
                 {
-                    <a class="btn btn-primary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.LastGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">戻る</a>
+                    <a class="btn btn-secondary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.LastGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">戻る</a>
                 }
 
                 @if (Model.NextGameSceneID != null || Model.GameScene.GameSceneID.ZeroToNull() != null)
                 {
-                    <a class="btn btn-primary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.NextGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">次へ</a>
-                    <a class="btn btn-primary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">最新へ</a>
+                    <a class="btn btn-secondary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.NextGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">次へ</a>
+                    <a class="btn btn-secondary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">最新へ</a>
                 }
 
                 @if (Model.Game.StatusClass == StatusClass.BeforeFix
             || Model.Game.StatusClass == StatusClass.EndGame)
                 {
-                    <a class="btn btn-primary" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果へ</a>
+                    <a class="btn btn-secondary" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果へ</a>
                 }
             </div>
 
