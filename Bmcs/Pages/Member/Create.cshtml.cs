@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
 using Microsoft.EntityFrameworkCore;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.Member
 {
@@ -61,6 +62,9 @@ namespace Bmcs.Pages.Member
 
             //チームID
             Member.TeamID = Member.Team.TeamID;
+
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.MemberCreate);
 
             return Page();
         }

@@ -120,6 +120,8 @@ namespace Bmcs.Pages.Member
                 }
             }
 
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.MemberDetails);
 
             return Page();
         }

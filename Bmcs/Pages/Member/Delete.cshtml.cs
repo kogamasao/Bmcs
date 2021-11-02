@@ -10,6 +10,7 @@ using Bmcs.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.Member
 {
@@ -45,6 +46,9 @@ namespace Bmcs.Pages.Member
             {
                 return NotFound();
             }
+
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.MemberDelete);
 
             return Page();
         }

@@ -5,7 +5,11 @@
     ViewData[ViewDataConstant.Title] = "メンバー情報変更";
 }
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
+<h1 class="d-inline-block">
+    @ViewData[ViewDataConstant.Title]
+</h1>
+
+@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
 
 <h4>@Model.Member.Team.TeamName</h4>
 <hr />

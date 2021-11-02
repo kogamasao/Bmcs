@@ -5,9 +5,11 @@
     ViewData[ViewDataConstant.Title] = "チーム情報変更";
 }
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
+<h1 class="d-inline-block">
+    @ViewData[ViewDataConstant.Title]
+</h1>
 
-<h4></h4>
+@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
 <hr />
 <div class="row">
     <div class="col-md-6">
@@ -34,6 +36,11 @@
                 <label asp-for="Team.ConfirmTeamPassword" class="control-label"></label>
                 <input asp-for="Team.ConfirmTeamPassword" class="form-control" />
                 <span asp-validation-for="Team.ConfirmTeamPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Team.PublicFLG" /> @Html.DisplayNameFor(model => model.Team.PublicFLG)
+                </label>
             </div>
             <div class="form-group">
                 <label asp-for="Team.RepresentativeName" class="control-label"></label>
@@ -67,11 +74,6 @@
                 <label asp-for="Team.MessageDetail" class="control-label"></label>
                 <textarea asp-for="Team.MessageDetail" class="form-control"></textarea>
                 <span asp-validation-for="Team.MessageDetail" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Team.PublicFLG" /> @Html.DisplayNameFor(model => model.Team.PublicFLG)
-                </label>
             </div>
             <div class="form-group">
                 <input type="submit" value="登録" class="btn btn-primary" />

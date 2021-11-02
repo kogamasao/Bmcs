@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
 using Bmcs.Function;
 using Microsoft.Extensions.Logging;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.Team
 {
@@ -22,8 +23,11 @@ namespace Bmcs.Pages.Team
 
         }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamCreate);
+
             return Page();
         }
 

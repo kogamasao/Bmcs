@@ -11,6 +11,7 @@ using Bmcs.Models;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
 using Microsoft.Extensions.Logging;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.Team
 {
@@ -49,6 +50,9 @@ namespace Bmcs.Pages.Team
             {
                 return NotFound();
             }
+
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamEdit);
 
             return Page();
         }

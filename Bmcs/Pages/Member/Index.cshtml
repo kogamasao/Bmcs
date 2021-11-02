@@ -5,13 +5,17 @@
     ViewData[ViewDataConstant.Title] = "メンバー一覧";
 }
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
+<h1 class="d-inline-block">
+    @ViewData[ViewDataConstant.Title]
+</h1>
+
+@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
 <h4>@Model.Team.TeamName</h4>
 
 <div class="form-group">
     @if (Model.IsMyTeam)
     {
-    <a class="btn btn-primary" asp-page="Create">メンバー追加</a>
+        <a class="btn btn-primary" asp-page="Create">メンバー追加</a>
     }
     <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
 </div>
@@ -63,64 +67,65 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Member) {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UniformNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MemberName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MemberClassName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ThrowClassName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BatClassName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PositionGroupClassName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MessageDetail)
-                </td>
-                @if (Model.IsAdmin())
-                {
+            @foreach (var item in Model.Member)
+            {
+                <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.DeleteFLG)
+                        @Html.DisplayFor(modelItem => item.UniformNumber)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.EntryUserID)
+                        @Html.DisplayFor(modelItem => item.MemberName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.EntryDatetime)
+                        @Html.DisplayFor(modelItem => item.MemberClassName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.UpdateUserID)
+                        @Html.DisplayFor(modelItem => item.ThrowClassName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.UpdateDatetime)
+                        @Html.DisplayFor(modelItem => item.BatClassName)
                     </td>
-                }
-                @if (Model.IsMyTeam || Model.IsAdmin())
-                {
-            <td>
-                <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.MemberID">編集</a>
-                <span>&nbsp;</span>
-                <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
-                <span>&nbsp;</span>
-                <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.MemberID">削除</a>
-            </td>
-                }
-                else
-                {
                     <td>
-                        <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
+                        @Html.DisplayFor(modelItem => item.PositionGroupClassName)
                     </td>
-                }
-            </tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MessageDetail)
+                    </td>
+                    @if (Model.IsAdmin())
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DeleteFLG)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EntryUserID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EntryDatetime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdateUserID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdateDatetime)
+                        </td>
+                    }
+                    @if (Model.IsMyTeam || Model.IsAdmin())
+                    {
+                        <td>
+                            <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.MemberID">編集</a>
+                            <span>&nbsp;</span>
+                            <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
+                            <span>&nbsp;</span>
+                            <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.MemberID">削除</a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
+                        </td>
+                    }
+                </tr>
             }
         </tbody>
     </table>

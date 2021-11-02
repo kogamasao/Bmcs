@@ -10,6 +10,7 @@ using Bmcs.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.Member
 {
@@ -69,6 +70,16 @@ namespace Bmcs.Pages.Member
             if (Team == null)
             {
                 return NotFound();
+            }
+
+            //システム管理データ
+            if (IsMyTeam)
+            {
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.MyTeamMemberIndex);
+            }
+            else
+            {
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.PublicMemberIndex);
             }
 
             return Page();
