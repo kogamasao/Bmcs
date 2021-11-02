@@ -10,6 +10,7 @@ using Bmcs.Models;
 using Microsoft.Extensions.Logging;
 using Bmcs.Constans;
 using Microsoft.AspNetCore.Http;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.Game
 {
@@ -45,6 +46,9 @@ namespace Bmcs.Pages.Game
             {
                 return NotFound();
             }
+
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameDelete);
 
             return Page();
         }

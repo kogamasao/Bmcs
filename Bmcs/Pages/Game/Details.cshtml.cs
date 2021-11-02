@@ -10,6 +10,7 @@ using Bmcs.Models;
 using Microsoft.Extensions.Logging;
 using Bmcs.Constans;
 using Microsoft.AspNetCore.Http;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.Game
 {

@@ -48,6 +48,9 @@ namespace Bmcs.Pages.Game
                 return NotFound();
             }
 
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameEdit);
+
             return Page();
         }
 

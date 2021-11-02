@@ -69,6 +69,9 @@ namespace Bmcs.Pages.Game
             //試合入力タイプ
             Game.GameInputTypeClass = GameInputTypeClass.ByPlay;
 
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameCreate);
+
             return Page();
         }
 

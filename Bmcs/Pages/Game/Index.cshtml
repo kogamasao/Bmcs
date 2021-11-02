@@ -5,7 +5,11 @@
     ViewData[ViewDataConstant.Title] = "試合一覧";
 }
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
+<h1 class="d-inline-block">
+    @ViewData[ViewDataConstant.Title]
+</h1>
+
+@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
 
 <h4>@Model.Team.TeamName</h4>
 
@@ -17,150 +21,150 @@
     <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
 </div>
 
-    <div class="table-responsive">
-        <table class="table table-hover table-sm table-bordered">
-            <thead class="thead-light">
+<div class="table-responsive">
+    <table class="table table-hover table-sm table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].GameDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].GameClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].OpponentTeamName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].OpponentTeamAbbreviation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].StadiumName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].WeatherClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].WinLoseClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].GameScore)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].BatFirstBatSecondClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].GameInputTypeClassName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Game[0].StatusClassName)
+                </th>
+                @if (Model.IsAdmin())
+                {
+                    <th>
+                        @Html.DisplayNameFor(model => model.Game[0].EntryUserID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Game[0].EntryDatetime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Game[0].UpdateUserID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Game[0].UpdateDatetime)
+                    </th>
+                }
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Game)
+            {
                 <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].GameDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].GameClassName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].OpponentTeamName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].OpponentTeamAbbreviation)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].StadiumName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].WeatherClassName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].WinLoseClassName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].GameScore)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].BatFirstBatSecondClassName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].GameInputTypeClassName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].StatusClassName)
-                    </th>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GameDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GameClassName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OpponentTeamName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OpponentTeamAbbreviation)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StadiumName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WeatherClassName)
+                    </td>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.WinLoseClassName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GameScore)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BatFirstBatSecondClassName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GameInputTypeClassName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StatusClassName)
+                    </td>
                     @if (Model.IsAdmin())
                     {
-                        <th>
-                            @Html.DisplayNameFor(model => model.Game[0].EntryUserID)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Game[0].EntryDatetime)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Game[0].UpdateUserID)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Game[0].UpdateDatetime)
-                        </th>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EntryUserID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EntryDatetime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdateUserID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdateDatetime)
+                        </td>
                     }
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Game)
-                {
-                    <tr>
+                    @if (Model.IsMyTeam || Model.IsAdmin())
+                    {
                         <td>
-                            @Html.DisplayFor(modelItem => item.GameDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.GameClassName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.OpponentTeamName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.OpponentTeamAbbreviation)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.StadiumName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.WeatherClassName)
-                        </td>
-                        <td class="text-center">
-                            @Html.DisplayFor(modelItem => item.WinLoseClassName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.GameScore)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.BatFirstBatSecondClassName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.GameInputTypeClassName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.StatusClassName)
-                        </td>
-                        @if (Model.IsAdmin())
-                        {
-                            <td>
-                                @Html.DisplayFor(modelItem => item.EntryUserID)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.EntryDatetime)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.UpdateUserID)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.UpdateDatetime)
-                            </td>
-                        }
-                        @if (Model.IsMyTeam || Model.IsAdmin())
-                        {
-                            <td>
-                                @if (item.StatusClass == StatusClass.DuringGame)
-                                {
-                                    <a class="btn btn-primary btn-sm" asp-page="/GameScene/Edit" asp-route-gameID="@item.GameID">試合入力</a>
-                                    <span>&nbsp;</span>
-                                }
-                                @if (item.StatusClass == StatusClass.BeforeFix
-                             || item.StatusClass == StatusClass.EndGame)
-                                {
-                                    <a class="btn btn-primary btn-sm" asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果編集</a>
-                                    <span>&nbsp;</span>
-                                }
-                                @if (item.StatusClass == StatusClass.EndGame)
-                                {
-                                    <a class="btn btn-primary btn-sm" asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果</a>
-                                    <span>&nbsp;</span>
-                                }
-                                <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.GameID">試合情報編集</a>
+                            @if (item.StatusClass == StatusClass.DuringGame)
+                            {
+                                <a class="btn btn-primary btn-sm" asp-page="/GameScene/Edit" asp-route-gameID="@item.GameID">試合入力</a>
                                 <span>&nbsp;</span>
-                                @*<a class="btn btn-primary" asp-page="./Details" asp-route-id="@item.GameID">詳細</a> |*@
-                                <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.GameID">削除</a>
-                            </td>
-                        }
-                        else
-                        {
-                    <td>
-                        @if (item.StatusClass == StatusClass.EndGame)
-                        {
-                            <a class="btn btn-primary btn-sm" asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果</a>
-                        }
-                        @*<a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.GameID">詳細</a>*@
-                    </td>
-                        }
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                            }
+                            @if (item.StatusClass == StatusClass.BeforeFix
+                        || item.StatusClass == StatusClass.EndGame)
+                            {
+                                <a class="btn btn-primary btn-sm" asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果編集</a>
+                                <span>&nbsp;</span>
+                            }
+                            @if (item.StatusClass == StatusClass.EndGame)
+                            {
+                                <a class="btn btn-primary btn-sm" asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果</a>
+                                <span>&nbsp;</span>
+                            }
+                            <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.GameID">試合情報編集</a>
+                            <span>&nbsp;</span>
+                            @*<a class="btn btn-primary" asp-page="./Details" asp-route-id="@item.GameID">詳細</a> |*@
+                            <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.GameID">削除</a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            @if (item.StatusClass == StatusClass.EndGame)
+                            {
+                                <a class="btn btn-primary btn-sm" asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果</a>
+                            }
+                            @*<a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.GameID">詳細</a>*@
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

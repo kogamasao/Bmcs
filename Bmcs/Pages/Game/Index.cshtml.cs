@@ -10,6 +10,7 @@ using Bmcs.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.Game
 {
@@ -20,7 +21,7 @@ namespace Bmcs.Pages.Game
 
         }
 
-        public IList<Models.Game> Game { get;set; }
+        public IList<Models.Game> Game { get; set; }
 
         public Models.Team Team { get; set; }
 
@@ -68,6 +69,16 @@ namespace Bmcs.Pages.Game
             if (Team == null)
             {
                 return NotFound();
+            }
+
+            //システム管理データ
+            if (IsMyTeam)
+            {
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.MyTeamGameIndex);
+            }
+            else
+            {
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.PublicGameIndex);
             }
 
             return Page();
