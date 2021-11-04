@@ -216,6 +216,16 @@ namespace Bmcs.Pages.InningScore
                 }
             }
 
+            //システム管理データ
+            if (IsMyTeam)
+            {
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.MyTeamInningScore);
+            }
+            else
+            {
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.PublicInningScore);
+            }
+
             return Page();
 
         }

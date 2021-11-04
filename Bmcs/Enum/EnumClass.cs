@@ -607,25 +607,23 @@ namespace Bmcs.Enum
         [Display(Name = "イニング詳細")]
         PublicInningScore = 23,
         [Display(Name = "試合結果詳細")]
-        MyTeamGameScoreDetails = 24,
-        [Display(Name = "試合結果詳細")]
-        PublicGameScoreDetails = 25,
+        GameScoreDetails = 24,
         [Display(Name = "試合結果編集")]
-        GameScoreEdit = 26,
+        GameScoreEdit = 25,
         [Display(Name = "チーム成績")]
-        MyTeamTeamScore = 27,
+        MyTeamTeamScore = 26,
         [Display(Name = "公開チーム成績")]
-        PublicTeamScore = 28,
+        PublicTeamScore = 27,
         [Display(Name = "メッセージ(公開)")]
-        PublicMessage= 29,
+        PublicMessage= 28,
         [Display(Name = "メッセージ(投稿)")]
-        PublicTeamMessage = 30,
+        PublicTeamMessage = 29,
         [Display(Name = "メッセージ(関連)")]
-        RelatedTeamMessage = 31,
+        RelatedTeamMessage = 30,
         [Display(Name = "メッセージ(非公開)")]
-        PrivateMessage = 32,
+        PrivateMessage = 31,
         [Display(Name = "お問い合わせ")]
-        Inquiry = 33,
+        Inquiry = 32,
     }
 
     /// <summary>

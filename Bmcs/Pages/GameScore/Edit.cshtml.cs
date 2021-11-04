@@ -75,9 +75,9 @@ namespace Bmcs.Pages.GameScore
                         .ThenBy(r => r.TopButtomClass)
                         .ToListAsync();
 
-            if(InningScoreTopList == null || !InningScoreTopList.Any())
-            { 
-                for(int i = InningScoreTopList.Count(); i < 9; i++)
+            if (InningScoreTopList == null || !InningScoreTopList.Any())
+            {
+                for (int i = InningScoreTopList.Count(); i < 9; i++)
                 {
                     InningScoreTopList.Add(new Models.InningScore()
                     {
@@ -113,7 +113,7 @@ namespace Bmcs.Pages.GameScore
             }
 
             //表のみ
-            if(InningScoreTopList.Count() != InningScoreButtomList.Count())
+            if (InningScoreTopList.Count() != InningScoreButtomList.Count())
             {
                 InningScoreButtomList.Add(new Models.InningScore()
                 {
@@ -129,7 +129,7 @@ namespace Bmcs.Pages.GameScore
             GameScorePitcherList = await Context.GameScorePitchers
                       .Where(r => r.GameID == Game.GameID)
                       .OrderBy(r => r.ScoreIndex)
-                      .ToListAsync();        
+                      .ToListAsync();
 
             //データなし
             if (!GameScorePitcherList.Any())
@@ -138,9 +138,9 @@ namespace Bmcs.Pages.GameScore
             }
 
             //勝敗HS
-            foreach(var gameScorePitcher in GameScorePitcherList)
+            foreach (var gameScorePitcher in GameScorePitcherList)
             {
-                if(gameScorePitcher.Win == 1)
+                if (gameScorePitcher.Win == 1)
                 {
                     gameScorePitcher.GameScorePitcherClass = GameScorePitcherClass.Win;
                 }
@@ -172,6 +172,9 @@ namespace Bmcs.Pages.GameScore
 
             //タイトル
             ViewData[ViewDataConstant.Title] = "試合結果";
+
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameScoreEdit);
 
             return Page();
         }
@@ -257,11 +260,11 @@ namespace Bmcs.Pages.GameScore
         {
             //試合
             var game = Context.Games.Find(Game.GameID);
-            
+
             //イニングスコア
             var inningScores = new List<Models.InningScore>();
 
-            foreach(var x in InningScoreTopList.Select((inningScoreTop, index) => new { inningScoreTop, index }))
+            foreach (var x in InningScoreTopList.Select((inningScoreTop, index) => new { inningScoreTop, index }))
             {
                 x.inningScoreTop.TopButtomClass = TopButtomClass.Top;
                 x.inningScoreTop.Inning = x.index + 1;

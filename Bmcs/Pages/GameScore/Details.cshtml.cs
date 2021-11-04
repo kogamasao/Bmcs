@@ -105,6 +105,9 @@ namespace Bmcs.Pages.GameScore
             //タイトル
             ViewData[ViewDataConstant.Title] = "試合結果詳細";
 
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameScoreDetails);
+
             return Page();
         }
     }
