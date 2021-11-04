@@ -614,16 +614,12 @@ namespace Bmcs.Enum
         MyTeamTeamScore = 26,
         [Display(Name = "公開チーム成績")]
         PublicTeamScore = 27,
-        [Display(Name = "メッセージ(公開)")]
-        PublicMessage= 28,
         [Display(Name = "メッセージ(投稿)")]
-        PublicTeamMessage = 29,
-        [Display(Name = "メッセージ(関連)")]
-        RelatedTeamMessage = 30,
-        [Display(Name = "メッセージ(非公開)")]
-        PrivateMessage = 31,
+        PostMessage= 28,
+        [Display(Name = "メッセージ(返信)")]
+        ReplyMessage = 29,
         [Display(Name = "お問い合わせ")]
-        Inquiry = 32,
+        Inquiry = 30,
     }
 
     /// <summary>

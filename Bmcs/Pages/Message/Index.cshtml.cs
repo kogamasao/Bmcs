@@ -148,33 +148,25 @@ namespace Bmcs.Pages.Message
                 IsEnablePostReply = false;
             }
 
-            //タイトル
-            ViewData[ViewDataConstant.Title] = "メッセージ";
-
-            if (messagePageClass == MessagePageClass.Public)
-            {
-                ViewData[ViewDataConstant.Title] += "(公開)";
-            }
-            else if (messagePageClass == MessagePageClass.PublicTeam)
-            {
-                ViewData[ViewDataConstant.Title] += "(投稿)";
-            }
-            else if (messagePageClass == MessagePageClass.RelatedTeam)
-            {
-                ViewData[ViewDataConstant.Title] += "(関連)";
-            }
-            else if (messagePageClass == MessagePageClass.Private)
-            {
-                ViewData[ViewDataConstant.Title] += "(非公開)";
-            }
-
             if (messageID == null)
             {
                 ViewData[ViewDataConstant.MessageMode] = "投稿";
+                //システム管理データ
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.PostMessage);
             }
             else
             {
                 ViewData[ViewDataConstant.MessageMode] = "返信";
+                //システム管理データ
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.ReplyMessage);
+            }
+
+            //タイトル
+            ViewData[ViewDataConstant.Title] = "メッセージ";
+
+            if (base.IsLogin())
+            {
+                ViewData[ViewDataConstant.Title] += "(" + ViewData[ViewDataConstant.MessageMode].ToString() + ")";
             }
 
             //引数セット

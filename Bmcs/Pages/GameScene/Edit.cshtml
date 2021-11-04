@@ -2,7 +2,11 @@
 @model Bmcs.Pages.GameScene.EditModel
 
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
+<h1 class="d-inline-block">
+    @ViewData[ViewDataConstant.Title]
+</h1>
+
+@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
 
 <h4>@Model.Game.Team.TeamName</h4>
 <hr />
@@ -23,7 +27,7 @@
                 }
 
                 @if (Model.Game.StatusClass == StatusClass.BeforeFix
-            || Model.Game.StatusClass == StatusClass.EndGame)
+           || Model.Game.StatusClass == StatusClass.EndGame)
                 {
                     <a class="btn btn-secondary" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果へ</a>
                 }
@@ -136,7 +140,7 @@
                             }
 
                             @if (Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() > 9
-                              && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
+                             && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
                             {
                                 <td class="text-center">
                                 </td>
@@ -491,44 +495,44 @@
             <div class="form-group">
                 <input type="button" value="チェンジ" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterChange" />
                 <input type="button" value="試合終了" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterGameSet" />
-                @if(Model.GameScene.TopButtomClass == TopButtomClass.Buttom && !Model.IsTieBreak)
+                @if (Model.GameScene.TopButtomClass == TopButtomClass.Buttom && !Model.IsTieBreak)
                 {
-                <input type="button" value="タイブレーク" class="btn btn-danger" data-toggle="modal" data-target="#tie-break" />
+                    <input type="button" value="タイブレーク" class="btn btn-danger" data-toggle="modal" data-target="#tie-break" />
 
-                <!-- Modal -->
-                <div class="modal fade" id="tie-break" tabindex="-1" role="dialog" aria-labelledby="tie-break-title" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="tie-break-title">タイブレーク設定</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>タイブレークの開始打順、開始アウトカウント、開始ランナーを入力してください。</p>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label asp-for="Game.TieBreakStartBattingOrder" class="control-label"></label>
-                                        <select asp-for="Game.TieBreakStartBattingOrder" class="form-control" asp-items="Model.TieBreakBattingOrderList"></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Game.TieBreakStartOutCount" class="control-label"></label>
-                                        <input asp-for="Game.TieBreakStartOutCount" class="form-control" min="0" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Game.TieBreakStartRunnerSceneClass" class="control-label"></label>
-                                        <select asp-for="Game.TieBreakStartRunnerSceneClass" class="form-control" asp-items="Model.RunnerSceneClassList"></select>
+                    <!-- Modal -->
+                    <div class="modal fade" id="tie-break" tabindex="-1" role="dialog" aria-labelledby="tie-break-title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="tie-break-title">タイブレーク設定</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>タイブレークの開始打順、開始アウトカウント、開始ランナーを入力してください。</p>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="Game.TieBreakStartBattingOrder" class="control-label"></label>
+                                            <select asp-for="Game.TieBreakStartBattingOrder" class="form-control" asp-items="Model.TieBreakBattingOrderList"></select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="Game.TieBreakStartOutCount" class="control-label"></label>
+                                            <input asp-for="Game.TieBreakStartOutCount" class="form-control" min="0" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="Game.TieBreakStartRunnerSceneClass" class="control-label"></label>
+                                            <select asp-for="Game.TieBreakStartRunnerSceneClass" class="form-control" asp-items="Model.RunnerSceneClassList"></select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button id="add-order-modal" type="button" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterTieBreak">タイブレークへ</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">戻る</button>
+                                <div class="modal-footer">
+                                    <button id="add-order-modal" type="button" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterTieBreak">タイブレークへ</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">戻る</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
                 }

@@ -799,6 +799,15 @@ namespace Bmcs.Pages.GameScene
                 + " "
                 + GameScene.OutCount.ToString() + "アウト";
 
+            //修正
+            if (gameSceneID != null)
+            {
+                ViewData[ViewDataConstant.Title] += "(修正)";
+            }
+
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameScoreEdit);
+
             return Page();
         }
 

@@ -258,6 +258,16 @@ namespace Bmcs.Pages.Score
             UseBallClass = useBallClass;
             SortItem = sortItem;
 
+            //システム管理データ
+            if (isPublic)
+            {
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.PublicTeamScore);
+            }
+            else
+            {
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.MyTeamTeamScore);
+            }
+
             return Page();
 
         }
