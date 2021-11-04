@@ -129,6 +129,7 @@ namespace Bmcs.Models
         [Display(Name = "タイブレーク開始イニング")]
         public int? TieBreakStartInning { get; set; }
 
+        [Column(TypeName = "decimal(4, 2)")]
         [Display(Name = "打順")]
         public decimal? TieBreakStartBattingOrder { get; set; }
 
