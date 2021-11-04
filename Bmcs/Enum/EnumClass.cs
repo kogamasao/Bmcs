@@ -596,9 +596,9 @@ namespace Bmcs.Enum
         GameEdit = 17,
         [Display(Name = "試合削除")]
         GameDelete = 18,
-        [Display(Name = "オーダー試合前")]
+        [Display(Name = "スターティングオーダー")]
         OrderBeforeGame = 19,
-        [Display(Name = "オーダー試合中")]
+        [Display(Name = "選手交代")]
         OrderDuringGame = 20,
         [Display(Name = "プレー入力")]
         GameScene = 21,

@@ -2,7 +2,11 @@
 @model Bmcs.Pages.Order.EditModel
 
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
+<h1 class="d-inline-block">
+    @ViewData[ViewDataConstant.Title]
+</h1>
+
+@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
 
 <h4>@Model.Game.Team.TeamName</h4>
 <hr />
@@ -67,7 +71,7 @@
                 }
                 else
                 {
-                    <input type="button" value="オーダー追加" class="btn btn-success" data-toggle="modal" data-target="#interrupt-order"/>
+                    <input type="button" value="オーダー追加" class="btn btn-success" data-toggle="modal" data-target="#interrupt-order" />
 
                     <!-- Modal -->
                     <div class="modal fade" id="interrupt-order" tabindex="-1" role="dialog" aria-labelledby="interrupt-order-title" aria-hidden="true">
@@ -126,7 +130,7 @@
                                     <select asp-for="@Model.OnlyDefenseList[i].PositionClass" class="form-control js-positionclass js-rename" asp-items="@Model.PositionClassList"></select>
                                 </td>
                                 <td>
-                                    <input type="button" value="削除" class="btn btn-danger js-only-defense-delete js-rename"/>
+                                    <input type="button" value="削除" class="btn btn-danger js-only-defense-delete js-rename" />
                                     <input class="js-battingorder js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].BattingOrder" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].GameID" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].TeamID" />

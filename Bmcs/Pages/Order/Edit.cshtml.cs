@@ -165,6 +165,16 @@ namespace Bmcs.Pages.Order
                 OrderList.Remove(order);
             }
 
+            //システム管理データ
+            if (isDuringGame)
+            {
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.OrderDuringGame);
+            }
+            else
+            {
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.OrderBeforeGame);
+            }
+
             return Page();
         }
 
