@@ -6,17 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     @if (ViewData[ViewDataConstant.Title] != null && !string.IsNullOrEmpty(ViewData[ViewDataConstant.Title].ToString()))
     {
-<title>@ViewData[ViewDataConstant.Title] - Bmcs - スコア管理SNS</title>
+    <title>@ViewData[ViewDataConstant.Title] - Bmcs - スコア管理SNS</title>
     }
     else
     {
-<title>Bmcs - スコア管理SNS</title>
+    <title>Bmcs - スコア管理SNS</title>
     }
     <meta name="description" content="野球、ソフトボールのスコア管理を行い、他チームの成績やメッセージのやり取りができる「スコア管理SNS」です。" />
 
     @if (!Model.IsIndex)
     {
-        <meta name="robots" content="noindex,nofollow" />
+    <link rel="canonical" href="https://bmcs.azurewebsites.net/">
+    @*<meta name="robots" content="noindex,nofollow" />*@
     }
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
