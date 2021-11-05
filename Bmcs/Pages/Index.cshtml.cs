@@ -30,6 +30,8 @@ namespace Bmcs.Pages
             HttpContext.Session.SetString(SessionConstant.UserAccountID, string.Empty);
             HttpContext.Session.SetString(SessionConstant.TeamID, string.Empty);
             HttpContext.Session.SetString(SessionConstant.AdminFLG, string.Empty);
+            //インデックス
+            IsIndex = true;
         }
 
         public async Task<IActionResult> OnPostAsync()

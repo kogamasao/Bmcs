@@ -174,6 +174,9 @@ namespace Bmcs.Pages.Message
             SelectTeamID = teamID;
             MessageID = messageID;
 
+            //インデックス
+            IsIndex = true;
+
             return Page();
 
         }

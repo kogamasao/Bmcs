@@ -226,6 +226,9 @@ namespace Bmcs.Pages.InningScore
                 SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.PublicInningScore);
             }
 
+            //インデックス
+            IsIndex = true;
+
             return Page();
 
         }

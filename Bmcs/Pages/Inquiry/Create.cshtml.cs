@@ -35,6 +35,8 @@ namespace Bmcs.Pages.Inquiry
 
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.Inquiry);
+            //インデックス
+            IsIndex = true;
 
             return Page();
         }

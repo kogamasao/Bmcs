@@ -63,9 +63,9 @@ namespace Bmcs.Models
         public Team MyTeam { get; set; }
 
         /// <summary>
-        /// メンバーID空必要フラグ
+        /// Indexフラグ
         /// </summary>
-        public bool IsMemberIDNeedEmpty { get; set; }
+        public bool IsIndex { get; set; }
 
         /// <summary>
         /// システム管理表示用

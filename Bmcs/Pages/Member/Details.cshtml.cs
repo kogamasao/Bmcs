@@ -122,6 +122,8 @@ namespace Bmcs.Pages.Member
 
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.MemberDetails);
+            //インデックス
+            IsIndex = true;
 
             return Page();
         }

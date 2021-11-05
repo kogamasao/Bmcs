@@ -63,6 +63,9 @@ namespace Bmcs.Pages.Top
                                         .FirstOrDefaultAsync();
             }
 
+            //インデックス
+            IsIndex = true;
+
             return Page();
         }
 

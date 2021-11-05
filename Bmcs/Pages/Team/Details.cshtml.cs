@@ -96,6 +96,8 @@ namespace Bmcs.Pages.Team
 
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamDetails);
+            //インデックス
+            IsIndex = true;
 
             return Page();
         }

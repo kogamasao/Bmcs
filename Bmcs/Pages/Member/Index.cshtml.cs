@@ -82,6 +82,9 @@ namespace Bmcs.Pages.Member
                 SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.PublicMemberIndex);
             }
 
+            //インデックス
+            IsIndex = true;
+
             return Page();
         }
     }

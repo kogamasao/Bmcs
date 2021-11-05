@@ -108,6 +108,9 @@ namespace Bmcs.Pages.GameScore
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameScoreDetails);
 
+            //インデックス
+            IsIndex = true;
+
             return Page();
         }
     }

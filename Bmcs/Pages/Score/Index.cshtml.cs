@@ -268,6 +268,9 @@ namespace Bmcs.Pages.Score
                 SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.MyTeamTeamScore);
             }
 
+            //インデックス
+            IsIndex = true;
+
             return Page();
 
         }

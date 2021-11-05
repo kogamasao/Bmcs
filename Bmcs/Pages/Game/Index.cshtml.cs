@@ -81,6 +81,9 @@ namespace Bmcs.Pages.Game
                 SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.PublicGameIndex);
             }
 
+            //インデックス
+            IsIndex = true;
+
             return Page();
         }
     }
