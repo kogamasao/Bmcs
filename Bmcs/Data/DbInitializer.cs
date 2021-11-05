@@ -621,7 +621,7 @@ namespace Bmcs.Data
                                                     <button class=""btn btn-link"" type=""button""
                                                         data-toggle=""collapse"" data-target=""#card-button-area1""
                                                         aria-expanded=""true"" aria-controls=""card-button-area1"">
-                                                        「戻る」「次へ」「最新へ」「試合結果へ」ボタン
+                                                        戻る-次へ-最新へ-試合結果へ
                                                     </button>
                                                 </div>
                                                 <div id=""card-button-area1"" class=""collapse""
@@ -657,7 +657,7 @@ namespace Bmcs.Data
                                                     <button class=""btn btn-link"" type=""button""
                                                         data-toggle=""collapse"" data-target=""#card-button-area2""
                                                         aria-expanded=""true"" aria-controls=""card-button-area2"">
-                                                        「元に戻す」「スキップ」ボタン
+                                                        元に戻す-スキップ
                                                     </button>
                                                 </div>
                                                 <div id=""card-button-area2"" class=""collapse""
@@ -714,6 +714,10 @@ namespace Bmcs.Data
                                                 <div id=""card-defense-area"" class=""collapse""
                                                     aria-labelledby=""defense-area"" data-parent=""#help"">
                                                     <div class=""card-body"">
+                                                        <p>
+                                                            守備側の選手交代を行うエリアです。<br />
+                                                            守備側に変更がない場合は入力不要です。<br />
+                                                        </p>
                                                         <ul class=""help-ul"">
                                                             <li>
                                                                 守備交代(マイチームが守備時のみ表示)<br>
@@ -726,6 +730,235 @@ namespace Bmcs.Data
                                                                 現在の投手がベンチに退かない場合は、「守備交代」より守備位置の変更を行ってださい。<br>
                                                                 相手チームが守備時はシステム側で用意している投手が表示されます。<br>
                                                                 左右毎に投手を用意していますが、システム上で判断を行うことはありません。(メモ代わりです。)<br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class=""card"">
+                                                <div class=""card-header"" id=""scene-change-area"">
+                                                    <button class=""btn btn-link"" type=""button""
+                                                        data-toggle=""collapse"" data-target=""#card-scene-change-area""
+                                                        aria-expanded=""true"" aria-controls=""card-scene-change-area"">
+                                                        打席中ランナー結果
+                                                    </button>
+                                                </div>
+                                                <div id=""card-scene-change-area"" class=""collapse""
+                                                    aria-labelledby=""scene-change-area"" data-parent=""#help"">
+                                                    <div class=""card-body"">
+                                                        <p>
+                                                            ランナーが塁上にいる場合のみ表示されます。<br />
+                                                            打席中に発生したプレー(盗塁、牽制死、WPなど)によるランナーの動きを入力します。<br />
+                                                            代走の選手交代も本エリアで入力します。<br />
+                                                            打席中にランナーの動きがない場合は入力不要です。<br />
+                                                        </p>
+                                                        <ul class=""help-ul"">
+                                                            <li>
+                                                                対象選手<br>
+                                                                発生したプレーに応じて対象選手を選択します。<br>
+                                                                どの選手を選択するかどうかは、後述する「結果」によって変わります。<br>
+                                                                対象選手が相手チームの場合は、成績管理に影響しないため任意の選択で問題ありません。<br>
+                                                                対象選手を選択しないことも可能ですが、成績に反映されなくなります。<br>
+                                                            </li>
+                                                            <li>
+                                                                結果<br>
+                                                                発生したプレーを選択します。<br>
+                                                                各プレーに「(投)」、「(捕)」、「(走)」、「(野)」と表記されていますが、対象選手にどの選手を選択すれば良いかを表しています。<br>
+                                                                「盗塁(走)」であればランナー、「WP(投)」であれば投手を選択します。<br>
+                                                                「盗塁死(走)」の場合、捕手に「盗塁阻止」が自動でカウントされるので捕手の入力は不要です。<br>
+                                                            </li>
+                                                            <li>
+                                                                追加-削除<br>
+                                                                複数プレーが発生した場合に行追加、行削除が可能です。<br>
+                                                            </li>
+                                                            <li>
+                                                                ランナー<br>
+                                                                塁上にいる選手が表示されます。<br>
+                                                                代走を送る場合は、代走の選手を選択してください。<br>
+                                                            </li>
+                                                            <li>
+                                                                ランナー結果<br>
+                                                                発生したプレーにより、結果(アウト、進塁した塁、得点)を選択します。<br>
+                                                                「得点」には４種類用意されており、「打」と「自」はそれぞれ「打点」と「自責点」を表しています。<br>
+                                                                「得点」は打点も自責点も付く得点です。<br>
+                                                                「得点(打自無)」は打点も自責点も付かない得点です。<br>
+                                                                打席中ランナー結果エリアの場合は、打点が付かない得点と想定されるので「得点(打無)」か「得点(打自無)」を選択することになります。<br>
+                                                                ※一般的に自責点が付かない得点は野手の失策が絡む場合ですが、詳細は他サイト等でご確認ください。<br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class=""card"">
+                                                <div class=""card-header"" id=""batter-area"">
+                                                    <button class=""btn btn-link"" type=""button""
+                                                        data-toggle=""collapse"" data-target=""#card-batter-area""
+                                                        aria-expanded=""true"" aria-controls=""card-batter-area"">
+                                                        打者結果
+                                                    </button>
+                                                </div>
+                                                <div id=""card-batter-area"" class=""collapse""
+                                                    aria-labelledby=""batter-area"" data-parent=""#help"">
+                                                    <div class=""card-body"">
+                                                        <p>
+                                                            打者の結果を入力します。<br />
+                                                            代打の選手交代も本エリアで入力します。<br />
+                                                            「空三振」が初期表示されるため、「空三振」の場合は入力不要です。<br />
+                                                            また、割込代打出場も本エリアで入力します。<br />
+                                                        </p>
+                                                        <ul class=""help-ul"">
+                                                            <li>
+                                                                割込<br>
+                                                                草野球に対応した機能です。<br>
+                                                                現在の打順の前に割り込んで代打として途中出場します。(指名打者扱い)<br>
+                                                                チェックを付けると打順が自動計算され割込出場が可能です。(打者を選択し直してください。)<br>
+                                                                現在の打者は次のプレーで打席に立ちます。<br>
+                                                            </li>
+                                                            <li>
+                                                                打者<br>
+                                                                現在の打者が表示されます。<br>
+                                                                代打を送る場合は、代打の選手を選択してください。<br>
+                                                            </li>
+                                                            <li>
+                                                                方向<br>
+                                                                打球方向を選択します。<br>
+                                                                三振、四球等、打球が飛ばない結果の場合は「無」を選択します。<br>
+                                                            </li>
+                                                            <li>
+                                                                打球<br>
+                                                                打球の種類を選択します。<br>
+                                                                三振、四球等、打球が飛ばない結果の場合は「無」を選択します。<br>
+                                                            </li>
+                                                            <li>
+                                                                打者結果<br>
+                                                                打席結果を選択します。<br>
+                                                                選択した打席結果によって後述する「打席後ランナー結果」のランナーが自動で進塁します。<br>
+                                                                ただし進塁するのは「塁打」分になるため、塁打以上に進塁させたい場合は進塁先を指定する必要があります。<br>
+                                                                ゴロで誰がアウトになったか、誰が進塁したかどうか、ケースによって進塁状況は様々であるため、ランナーの結果は必ず確認してください。<br>
+                                                                また、「打席中ランナー結果」によってチェンジになった場合は「チェンジ」を選択します。次イニングは再び現在の打者から攻撃が始まります。<br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class=""card"">
+                                                <div class=""card-header"" id=""scene-change-area"">
+                                                    <button class=""btn btn-link"" type=""button""
+                                                        data-toggle=""collapse"" data-target=""#card-scene-change-area""
+                                                        aria-expanded=""true"" aria-controls=""card-scene-change-area"">
+                                                        打席後ランナー結果
+                                                    </button>
+                                                </div>
+                                                <div id=""card-scene-change-area"" class=""collapse""
+                                                    aria-labelledby=""scene-change-area"" data-parent=""#help"">
+                                                    <div class=""card-body"">
+                                                        <p>
+                                                            打者結果によって発生したプレー(補殺、失策)、及びランナーの結果を入力します。<br />
+                                                            ランナーの結果は必ず確認してください。<br />
+                                                            操作方法は「打席中ランナー結果」と変わりません。<br />
+                                                        </p>
+                                                        <ul class=""help-ul"">
+                                                            <li>
+                                                                対象選手<br>
+                                                                失策した野手、補殺した野手を選択します。<br>
+                                                                「打者結果」にて「二ゴロ失策」と入力しても、二塁手に失策が記録されませんので、本エリアで改めて入力が必要です。(※野手が複数失策する場合を考慮)<br>
+                                                                対象選手が相手チームの場合は、成績管理に影響しないため任意の選択で問題ありません。<br>
+                                                                対象選手を選択しないことも可能ですが、成績に反映されなくなります。<br>
+                                                            </li>
+                                                            <li>
+                                                                結果<br>
+                                                                発生したプレーを選択します。<br>
+                                                            </li>
+                                                            <li>
+                                                                追加-削除<br>
+                                                                複数プレーが発生した場合に行追加、行削除が可能です。<br>
+                                                            </li>
+                                                            <li>
+                                                                ランナー<br>
+                                                                打者ランナーと塁上にいる選手が表示されます。<br>
+                                                                打席中ランナー結果でアウトになったランナーは表示されません。<br>
+                                                                本エリアでも代走を送ることは可能ですが、草野球においても想定されるケースはレアなので基本的に不要です。<br>
+                                                            </li>
+                                                            <li>
+                                                                ランナー結果<br>
+                                                                発生したプレーにより、結果(アウト、進塁した塁、得点)を選択します。<br>
+                                                                「得点」には４種類用意されており、「打」と「自」はそれぞれ「打点」と「自責点」を表しています。<br>
+                                                                「得点」は打点も自責点も付く得点です。<br>
+                                                                「得点(打自無)」は打点も自責点も付かない得点です。<br>
+                                                                ※打点が付かない場合、自責点が付かない場合についての詳細は他サイト等でご確認ください。<br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class=""card"">
+                                                <div class=""card-header"" id=""note-area"">
+                                                    <button class=""btn btn-link"" type=""button""
+                                                        data-toggle=""collapse"" data-target=""#card-note-area""
+                                                        aria-expanded=""true"" aria-controls=""card-note-area"">
+                                                        メモ
+                                                    </button>
+                                                </div>
+                                                <div id=""card-note-area"" class=""collapse""
+                                                    aria-labelledby=""note-area"" data-parent=""#help"">
+                                                    <div class=""card-body"">
+                                                        <ul class=""help-ul"">
+                                                            <li>
+                                                                メモ<br>
+                                                                入力したプレーのメモを残すことが可能です。<br>
+                                                                使用方法は自由ですが、後で他の人に確認して、プレーデータの修正が必要な場合は、実際に起きたプレーを文字に残しておくと良いでしょう。<br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class=""card"">
+                                                <div class=""card-header"" id=""button-area3"">
+                                                    <button class=""btn btn-link"" type=""button""
+                                                        data-toggle=""collapse"" data-target=""#card-button-area3""
+                                                        aria-expanded=""true"" aria-controls=""card-button-area3"">
+                                                        次の打者へ
+                                                    </button>
+                                                </div>
+                                                <div id=""card-button-area3"" class=""collapse""
+                                                    aria-labelledby=""button-area3"" data-parent=""#help"">
+                                                    <div class=""card-body"">
+                                                        <ul class=""help-ul"">
+                                                            <li>
+                                                                次の打者へ<br>
+                                                                現在の入力内容を登録して、同イニングの次のプレーに進みます。<br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class=""card"">
+                                                <div class=""card-header"" id=""button-area4"">
+                                                    <button class=""btn btn-link"" type=""button""
+                                                        data-toggle=""collapse"" data-target=""#card-button-area4""
+                                                        aria-expanded=""true"" aria-controls=""card-button-area4"">
+                                                        チェンジ-試合終了-タイブレーク
+                                                    </button>
+                                                </div>
+                                                <div id=""card-button-area4"" class=""collapse""
+                                                    aria-labelledby=""button-area4"" data-parent=""#help"">
+                                                    <div class=""card-body"">
+                                                        <ul class=""help-ul"">
+                                                            <li>
+                                                                チェンジ<br>
+                                                                現在の入力内容を登録して、攻守交代をします。<br>
+                                                                ３アウトでチェンジするという縛りはなく、任意のタイミングでチェンジすることが可能です。<br>
+                                                            </li>
+                                                            <li>
+                                                                試合終了<br>
+                                                                現在の入力内容を登録して、試合結果編集ページに遷移します。<br>
+                                                                指定したイニングで試合終了となる縛りはなく、任意のタイミングで試合を終了することが可能です。<br>
+                                                            </li>
+                                                            <li>
+                                                                タイブレーク(裏のイニングのみ表示)<br>
+                                                                現在の入力内容を登録して、タイブレークに移ります。<br>
+                                                                表示される画面よりタイブレークの開始打順、開始アウトカウント、開始ランナーを指定することが可能です。<br>
+                                                                「前の回から継続打順」、「０アウト」、「一二塁」が初期表示されます。<br>
                                                             </li>
                                                         </ul>
                                                     </div>

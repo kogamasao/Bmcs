@@ -1884,7 +1884,7 @@ namespace Bmcs.Pages.GameScene
                                         && r.BattingOrder != null
                                         && r.BattingOrder < battingOrder
                                         && r.OrderDataClass == OrderDataClass.Normal)
-                                    .OrderBy(r => r.BattingOrder)
+                                    .OrderByDescending(r => r.BattingOrder)
                                     .FirstOrDefault();
 
             //先頭打者
