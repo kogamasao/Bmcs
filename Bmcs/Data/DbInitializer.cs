@@ -586,7 +586,7 @@ namespace Bmcs.Data
                                             交代したい選手を選択して、新しい選手と入れ替えてください。<br />
                                             守備位置を変更したい場合も新しい守備位置を選びなおしてください。<br />
                                             投手交代はプレー入力ページからでも可能ですが、ベンチ選手との交代限定になります。<br />
-                                            代打、代走を除くその他の選手交代はこちらのページで交代処理が必要です。<br />
+                                            代打、代走を除く、その他の選手交代はこちらのページで交代処理が必要です。<br />
                                             あらゆるルールに対応するため、同一選手が複数の打順に登録、別々の選手が同じ守備位置を守る、10人以上出場、守備のみの選手の出場等を可能にしています。<br />
                                             また、試合中に打順に割込、打順から抜ける、打順を１回スキップする、再出場(リエントリー)等も対応しています。<br />
                                             ※公式戦の場合は選手の重複や、守備位置の重複等にご注意ください。<br />
@@ -613,24 +613,126 @@ namespace Bmcs.Data
                     {
                         messageDetail = @"<p>
                                             プレー入力結果を入力します。初めての方は本ヘルプをよくお読みください。<br />
+                                            確認したい項目をクリックするとヘルプが表示されます。<br />
                                         </p>
-                                        <ul class=""help-ul"">
-                                            <li>
-                                                削除<br>
-                                                試合途中に選手を離脱させたい場合は、削除します。<br>
-                                                削除後は打順が空き打順になり、他の選手の打順はそのままです。<br>
-                                                指名打者を解除し投手が打順に入る場合は、守備のみ欄の投手を削除してください。<br>
-                                            </li>
-                                            <li>
-                                                オーダー追加<br>
-                                                スターティングオーダー作成時と異なり、行追加されずに別画面が表示されます。<br>
-                                                追加したい打順(小数の指定可能)を入力し、行追加を行ってください。<br>
-                                            </li>
-                                            <li>
-                                                守備のみ追加<br>
-                                                指名打者制の場合の投手やFPの選手は、守備のみ追加ボタンより選手行を追加して選手を選択します。<br>
-                                            </li>                                 
-                                        </ul>";
+                                        <div class=""accordion"" id=""help"">
+                                            <div class=""card"">
+                                                <div class=""card-header"" id=""button-area1"">
+                                                    <button class=""btn btn-link"" type=""button""
+                                                        data-toggle=""collapse"" data-target=""#card-button-area1""
+                                                        aria-expanded=""true"" aria-controls=""card-button-area1"">
+                                                        「戻る」「次へ」「最新へ」「試合結果へ」ボタン
+                                                    </button>
+                                                </div>
+                                                <div id=""card-button-area1"" class=""collapse""
+                                                    aria-labelledby=""button-area1"" data-parent=""#help"">
+                                                    <div class=""card-body"">
+                                                        <ul class=""help-ul"">
+                                                            <li>
+                                                                戻る(試合開始直後以外は表示)<br>
+                                                                前打者のプレー入力に戻ります。<br>
+                                                                入力内容の更新は行いません。<br>
+                                                            </li>
+                                                            <li>
+                                                                次へ(修正モードのみ表示)<br>
+                                                                次打者のプレー入力に進みます。<br>
+                                                                入力内容の更新は行いません。<br>
+                                                            </li>
+                                                            <li>
+                                                                最新へ(修正モードのみ表示)<br>
+                                                                プレー入力の続きに戻ります。<br>
+                                                                入力内容の更新は行いません。<br>
+                                                            </li>       
+                                                            <li>
+                                                                試合結果へ(試合終了後のみ表示)<br>
+                                                                試合結果編集ページに遷移します。<br>
+                                                                入力内容の更新は行いません。<br>
+                                                            </li>                                 
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class=""card"">
+                                                <div class=""card-header"" id=""button-area2"">
+                                                    <button class=""btn btn-link"" type=""button""
+                                                        data-toggle=""collapse"" data-target=""#card-button-area2""
+                                                        aria-expanded=""true"" aria-controls=""card-button-area2"">
+                                                        「元に戻す」「スキップ」ボタン
+                                                    </button>
+                                                </div>
+                                                <div id=""card-button-area2"" class=""collapse""
+                                                    aria-labelledby=""button-area2"" data-parent=""#help"">
+                                                    <div class=""card-body"">
+                                                        <ul class=""help-ul"">
+                                                            <li>
+                                                                元に戻す<br>
+                                                                現在の入力内容を破棄して、現在のプレー結果を初期化して再表示します。<br>
+                                                                プレー結果修正時は一度「元に戻す」を実行してから修正することをオススメします。<br>
+                                                                前打者の修正結果が現在プレーの状況に影響を与える修正であった場合、「元に戻す」を実行しないと前打者の結果が反映されません。<br>
+                                                                現在のプレーに影響を与える前打者の修正例としては「アウトカウント」や「ランナー」、「選手交代」といった修正です。<br>
+                                                                打者の結果のみの修正(例：「見三振」⇒「空三振」)の場合は後続に影響がないため、「元に戻す」を実行する必要はありません。<br>
+                                                            </li>
+                                                            <li>
+                                                                スキップ<br>
+                                                                草野球に対応した機能です。現在の打者を一度スキップして次の打者のプレーに進みます。<br>
+                                                                一時的でなく試合に復帰しない場合は、守備時のオーダー変更で削除を行ってください。<br>
+                                                            </li>                              
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class=""card"">
+                                                <div class=""card-header"" id=""inning-score-area"">
+                                                    <button class=""btn btn-link"" type=""button""
+                                                        data-toggle=""collapse"" data-target=""#card-inning-score-area""
+                                                        aria-expanded=""true"" aria-controls=""card-inning-score-area"">
+                                                        イニングスコア
+                                                    </button>
+                                                </div>
+                                                <div id=""card-inning-score-area"" class=""collapse""
+                                                    aria-labelledby=""inning-score-area"" data-parent=""#help"">
+                                                    <div class=""card-body"">
+                                                        <ul class=""help-ul"">
+                                                            <li>
+                                                                スコア<br>
+                                                                対象のスコアを選択すると、対象イニングのイニング詳細ページに遷移します。<br>
+                                                                プレーの修正を行いたい場合は、一度イニング詳細ページに遷移して、修正対象のプレーを選択してください。<br>
+                                                                「戻る」「次へ」で修正対象のプレーに遷移することも可能です。<br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class=""card"">
+                                                <div class=""card-header"" id=""defense-area"">
+                                                    <button class=""btn btn-link"" type=""button""
+                                                        data-toggle=""collapse"" data-target=""#card-defense-area""
+                                                        aria-expanded=""true"" aria-controls=""card-defense-area"">
+                                                        守備
+                                                    </button>
+                                                </div>
+                                                <div id=""card-defense-area"" class=""collapse""
+                                                    aria-labelledby=""defense-area"" data-parent=""#help"">
+                                                    <div class=""card-body"">
+                                                        <ul class=""help-ul"">
+                                                            <li>
+                                                                守備交代(マイチームが守備時のみ表示)<br>
+                                                                選手交代ページに遷移します。<br>
+                                                                攻撃時に代打、代走、割込出場等を行った場合は、イニングの先頭に必ず確認しましょう。<br>
+                                                            </li>
+                                                            <li>
+                                                                投手交代<br>
+                                                                現在の投手とベンチの投手と交代したい場合は、新しい投手を選択してください。<br>
+                                                                現在の投手がベンチに退かない場合は、「守備交代」より守備位置の変更を行ってださい。<br>
+                                                                相手チームが守備時はシステム側で用意している投手が表示されます。<br>
+                                                                左右毎に投手を用意していますが、システム上で判断を行うことはありません。(メモ代わりです。)<br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       ";
                     }
                     else if ((int)value == (int)SystemAdminClass.MyTeamInningScore)
                     {
@@ -872,6 +974,29 @@ namespace Bmcs.Data
                                             選択したメッセージの履歴を確認します。<br />
                                             返信メッセージは返信した順番に表示されます。<br />
                                         </p>";
+                    }
+                    else if ((int)value == (int)SystemAdminClass.Inquiry)
+                    {
+                        messageDetail = @"<p>
+                                            サイト管理者へお問い合わせをします。<br />
+                                            ご質問、ご要望、不具合報告等は、こちらのページよりお問い合わせください。<br />
+                                        </p>
+                                        <ul class=""help-ul"">
+                                            <li>
+                                                メールアドレス(必須)<br>
+                                                入力したメールアドレス宛てに返信させて頂きます。<br>
+                                                ユーザ情報に登録したメールアドレスが初期表示されます。<br>
+                                            </li>
+                                            <li>
+                                                お問い合わせタイトル(必須)<br>
+                                                お問い合わせタイトルを入力します。<br>
+                                            </li>
+                                            <li>
+                                                お問い合わせ内容(必須)<br>
+                                                お問い合わせ内容を入力します。<br>
+                                            </li>
+
+                                        </ul>";
                     }
 
                     systemAdmins.Add(new SystemAdmin

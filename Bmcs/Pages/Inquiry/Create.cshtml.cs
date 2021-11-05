@@ -10,6 +10,7 @@ using Bmcs.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
+using Bmcs.Enum;
 
 namespace Bmcs.Pages.Inquiry
 {
@@ -31,6 +32,9 @@ namespace Bmcs.Pages.Inquiry
                 //メールアドレス
                 Inquiry.EmailAddress = userAccount.EmailAddress;
             }
+
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.Inquiry);
 
             return Page();
         }

@@ -806,7 +806,7 @@ namespace Bmcs.Pages.GameScene
             }
 
             //システム管理データ
-            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameScoreEdit);
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameScene);
 
             return Page();
         }
