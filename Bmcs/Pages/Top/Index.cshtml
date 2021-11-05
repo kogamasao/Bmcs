@@ -24,10 +24,10 @@
         }
         else
         {
-        <h2>Team Management</h2>
-        <h4>スコア入力＆成績管理</h4>
+        <h2 class="display-7 font-weight-bold">Team Management</h2>
+        <h4 class="display-8">スコア入力＆成績管理</h4>
         <p>
-            メンバーページより選手登録をしましょう <br />
+            メンバーページより選手登録後<br />
             試合ページからスコアの入力を行い、その結果を成績ページより確認できます
         </p>
         <div class="form-group">
@@ -44,8 +44,8 @@
         </div>
         <p></p>
         }
-        <h2>Communication</h2>
-        <h4>公開チームの試合＆成績＆メッセージ</h4>
+        <h2 class="display-7 font-weight-bold">Communication</h2>
+        <h4 class="display-8">公開チームをチェック</h4>
         <p>
             公開されているチームの情報を確認できます <br />
             メッセージを送って、他チームと連絡を取り合うことができます
@@ -95,7 +95,7 @@
                             @Html.Raw(Model.PublicMessage.MessageDetail.Replace("\n", "<br />"))
                         </div>
                         <div class="card-footer">
-                            <span>更新日時：@Model.PublicMessage.UpdateDatetime</span>
+                            <span>更新日時：@Model.PublicMessage.UpdateDatetimeFormat</span>
                             <span>&nbsp;</span>
                             <span>返信件数：@Model.PublicMessage.ReplyCount 件</span>
                             <span>&nbsp;</span>
@@ -129,7 +129,7 @@
                             @Html.Raw(Model.PrivateMessage.MessageDetail.Replace("\n", "<br />"))
                         </div>
                         <div class="card-footer">
-                            <span>更新日時：@Model.PrivateMessage.UpdateDatetime</span>
+                            <span>更新日時：@Model.PrivateMessage.UpdateDatetimeFormat</span>
                             <span>&nbsp;</span>
                             <span>返信件数：@Model.PrivateMessage.ReplyCount 件</span>
                             <span>&nbsp;</span>
@@ -141,9 +141,9 @@
         </div>
                 }
     </div>
-        </div>
+</div>
 
-        @section Scripts {
-            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-        }
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
 

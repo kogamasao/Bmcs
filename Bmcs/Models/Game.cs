@@ -25,6 +25,16 @@ namespace Bmcs.Models
         [Display(Name = "日付")]
         public DateTime GameDate { get; set; }
 
+        [NotMapped]
+        [Display(Name = "日付")]
+        public string GameDateFormat
+        {
+            get
+            {
+                return GameDate.ToString("yyyy/MM/dd");
+            }
+        }
+
         [Display(Name = "試合種別")]
         public GameClass? GameClass { get; set; }
 

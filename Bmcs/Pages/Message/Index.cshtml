@@ -147,7 +147,7 @@
                                         @Html.Raw(item.MessageDetail.Replace("\n", "<br />"))
                                     </div>
                                     <div class="card-footer">
-                                        <span>更新日時：@item.UpdateDatetime</span>
+                                        <span>更新日時：@item.UpdateDatetimeFormat</span>
                                         <span>&nbsp;</span>
                                         <span>返信件数：@item.ReplyCount 件</span>
                                         <span>&nbsp;</span>
@@ -196,7 +196,7 @@
                                         @Html.Raw(item.MessageDetail.Replace("\n", "<br />"))
                                     </div>
                                     <div class="card-footer">
-                                        <span>投稿日時：@item.EntryDatetime</span>
+                                        <span>投稿日時：@item.EntryDatetimeFormat</span>
                                         <span>&nbsp;</span>
                                     </div>
                                 </div>

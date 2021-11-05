@@ -17,12 +17,32 @@ namespace Bmcs.Models
         [Display(Name = "登録日時")]
         public DateTime? EntryDatetime { get; set; }
 
+        [NotMapped]
+        [Display(Name = "登録日時")]
+        public string EntryDatetimeFormat
+        {
+            get
+            {
+                return EntryDatetime != null ? ((DateTime)EntryDatetime).ToString("yyyy/MM/dd HH:mm:ss") : "";
+            }
+        }
+
         [StringLength(50)]
         [Display(Name = "更新ユーザID")]
         public string UpdateUserID { get; set; }
 
         [Display(Name = "更新日時")]
         public DateTime? UpdateDatetime { get; set; }
+
+        [NotMapped]
+        [Display(Name = "更新日時")]
+        public string UpdateDatetimeFormat
+        {
+            get
+            {
+                return UpdateDatetime != null ? ((DateTime)UpdateDatetime).ToString("yyyy/MM/dd HH:mm:ss") : "";
+            }
+        }
 
         [Timestamp]
         [Display(Name = "タイムスタンプ")]
