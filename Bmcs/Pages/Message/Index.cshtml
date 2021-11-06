@@ -144,7 +144,7 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        @Html.Raw(item.MessageDetail.Replace("\n", "<br />"))
+                                        @Html.Raw(item.MessageDetail.ReplaceNewLineForHtml())
                                     </div>
                                     <div class="card-footer">
                                         <span>更新日時：@item.UpdateDatetimeFormat</span>
@@ -193,7 +193,7 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        @Html.Raw(item.MessageDetail.Replace("\n", "<br />"))
+                                        @Html.Raw(item.MessageDetail.ReplaceNewLineForHtml())
                                     </div>
                                     <div class="card-footer">
                                         <span>投稿日時：@item.EntryDatetimeFormat</span>

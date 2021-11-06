@@ -72,5 +72,15 @@ namespace Bmcs.Function
         {
             return System.Convert.ToDecimal(value).ToString("#.##");
         }
+
+        /// <summary>
+        /// 小数値表示
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ReplaceNewLineForHtml(this string value)
+        {
+            return value.NullToEmpty().Replace(Environment.NewLine, "<br />");
+        }
     }
 }
