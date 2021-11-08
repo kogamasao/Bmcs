@@ -1004,6 +1004,7 @@ namespace Bmcs.Models
                 if (gameScoreFielder != null)
                 {
                     gameScoreFielder.ScoreIndex = x.index + 1;
+                    gameScoreFielder.BattingOrder = x.order.BattingOrder;
                 }
             }
 

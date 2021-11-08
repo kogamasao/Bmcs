@@ -273,7 +273,10 @@
                 <table id="fielder-score" class="table table-sm table-bordered" style="table-layout:fixed">
                     <thead class="thead-light">
                         <tr>
-                            <th style="width: 150px;" class="column-fix-left">
+                            <th style="width: 80px;" class="column-fix-left">
+                                打順
+                            </th>
+                            <th style="width: 150px;">
                                 野手名
                             </th>
                             <th style="width: 100px;">
@@ -368,98 +371,101 @@
                     <tbody>
                         @for (int i = 0; i < Model.GameScoreFielderList.Count; i++)
                         {
-                            <tr id="@("GameScoreFielderList_" + i.ToString())">
-                                <td class="column-fix-left">
-                                    <select asp-for="@Model.GameScoreFielderList[i].MemberID" class="form-control js-rename" asp-items="@Model.MemberIDList"></select>
-                                </td>
-                                <td>
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].PositionDetail" />
-                                </td>
-                                <td>
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].BattingDetail" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].PlateAppearance" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].AtBat" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Hit" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].DoubleHit" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].TripleHit" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].HomeRun" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].RBI" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Run" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StolenBasePlan" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StolenBase" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].FourBall" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].DeadBall" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Sacrifice" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].SacrificeFly" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].LeftOnBase" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].ScoringPositionPlateAppearance" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].ScoringPositionAtBat" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].ScoringPositionHit" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StrikeOut" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].DoublePlay" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Error" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StolenBasePlaned" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StopStolenBase" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Assist" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].OwnError" min="0" />
-                                </td>
-                                <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].PassBall" min="0" />
-                                </td>
-                                <td class="column-fix-right">
-                                    <input type="button" value="削除" class="btn btn-danger js-fielder-delete" />
-                                </td>
-                            </tr>
+                        <tr id="@("GameScoreFielderList_" + i.ToString())">
+                            <td class="column-fix-left text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].BattingOrder" min="0" />
+                            </td>
+                            <td>
+                                <select asp-for="@Model.GameScoreFielderList[i].MemberID" class="form-control js-rename" asp-items="@Model.MemberIDList"></select>
+                            </td>
+                            <td>
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].PositionDetail" />
+                            </td>
+                            <td>
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].BattingDetail" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].PlateAppearance" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].AtBat" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Hit" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].DoubleHit" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].TripleHit" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].HomeRun" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].RBI" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Run" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StolenBasePlan" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StolenBase" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].FourBall" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].DeadBall" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Sacrifice" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].SacrificeFly" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].LeftOnBase" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].ScoringPositionPlateAppearance" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].ScoringPositionAtBat" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].ScoringPositionHit" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StrikeOut" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].DoublePlay" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Error" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StolenBasePlaned" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StopStolenBase" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Assist" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].OwnError" min="0" />
+                            </td>
+                            <td class="text-center align-middle">
+                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].PassBall" min="0" />
+                            </td>
+                            <td class="column-fix-right">
+                                <input type="button" value="削除" class="btn btn-danger js-fielder-delete" />
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>

@@ -26,6 +26,20 @@ namespace Bmcs.Models
         [Display(Name = "スコア表示順")]
         public int? ScoreIndex { get; set; }
 
+        [Column(TypeName = "decimal(4, 2)")]
+        [Display(Name = "打順")]
+        public decimal? BattingOrder { get; set; }
+
+        [NotMapped]
+        [Display(Name = "打順")]
+        public string DisplayBattingOrder
+        {
+            get
+            {
+                return System.Convert.ToDecimal(BattingOrder).ToString("0.##");
+            }
+        }
+
         [Display(Name = "野手名")]
         public int? MemberID { get; set; }
 

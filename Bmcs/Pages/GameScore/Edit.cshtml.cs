@@ -392,6 +392,7 @@ namespace Bmcs.Pages.GameScore
                     GameID = game.GameID,
                     TeamID = game.TeamID,
                     ScoreIndex = x.index + 1,
+                    BattingOrder = x.gameScoreFielder.BattingOrder,
                     MemberID = x.gameScoreFielder.MemberID,
                     PositionDetail = x.gameScoreFielder.PositionDetail,
                     BattingDetail = x.gameScoreFielder.BattingDetail,

@@ -299,6 +299,9 @@
                 <thead class="thead-light">
                     <tr>
                         <th class="column-fix-left">
+                            @Html.DisplayNameFor(model => model.GameScoreFielderList[0].BattingOrder)
+                        </th>
+                        <th>
                             @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
                         </th>
                         <th>
@@ -388,97 +391,108 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @{
+                        var battingOrderValue = (decimal)-1;
+                    }
+
                     @foreach (var item in Model.GameScoreFielderList)
                     {
-                        <tr>
-                            <td class="column-fix-left">
-                                @Html.DisplayFor(modelItem => item.Member.MemberName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PositionDetail)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.BattingDetail)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.PlateAppearance)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.AtBat)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.Hit)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.DoubleHit)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.TripleHit)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.HomeRun)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.RBI)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.Run)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.StolenBasePlan)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.StolenBase)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.FourBall)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.DeadBall)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.Sacrifice)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.SacrificeFly)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.LeftOnBase)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.ScoringPositionPlateAppearance)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.ScoringPositionAtBat)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.ScoringPositionHit)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.StrikeOut)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.DoublePlay)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.Error)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.StolenBasePlaned)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.StopStolenBase)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.Assist)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.OwnError)
-                            </td>
-                            <td class="text-center align-middle">
-                                @Html.DisplayFor(modelItem => item.PassBall)
-                            </td>
-                        </tr>
+                    <tr>
+                        <td class="text-center align-middle column-fix-left">
+                            @if (battingOrderValue != item.BattingOrder)
+                            {
+                                @item.DisplayBattingOrder
+                            }
+                            @{battingOrderValue = item.BattingOrder.NullToZero();}
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Member.MemberName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PositionDetail)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BattingDetail)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.PlateAppearance)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.AtBat)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.Hit)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.DoubleHit)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.TripleHit)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.HomeRun)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.RBI)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.Run)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.StolenBasePlan)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.StolenBase)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.FourBall)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.DeadBall)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.Sacrifice)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.SacrificeFly)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.LeftOnBase)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.ScoringPositionPlateAppearance)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.ScoringPositionAtBat)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.ScoringPositionHit)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.StrikeOut)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.DoublePlay)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.Error)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.StolenBasePlaned)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.StopStolenBase)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.Assist)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.OwnError)
+                        </td>
+                        <td class="text-center align-middle">
+                            @Html.DisplayFor(modelItem => item.PassBall)
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>

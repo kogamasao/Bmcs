@@ -74,7 +74,7 @@ namespace Bmcs.Function
         }
 
         /// <summary>
-        /// 小数値表示
+        /// 改行コード変換
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
