@@ -152,7 +152,7 @@ textarea.form-control {
     border: double 5px #364e96; /*二重線 太さ 色*/
     /*background: #f1f8ff;*/
     padding: 0.5em 0.5em 0.5em 2em;
-    height: 350px;
+    height: 400px;
 }
 
 .landing-itemization-ul-li {
@@ -161,6 +161,13 @@ textarea.form-control {
 }
 
 .landing-itemization-title-font {
+    color: #364e96; /*文字色*/
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.landing-itemization-title-font-warning {
+    color: #ff6a6a; /*文字色*/
     font-size: 1.4rem;
     font-weight: bold;
 }
