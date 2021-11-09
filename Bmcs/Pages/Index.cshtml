@@ -12,7 +12,6 @@
             Baseball Management Communication System
         </h2>
         <h3 class="display-8">スコア管理SNS</h3>
-        <h3 class="display-8">野球とソフトボールの両方に対応</h3>
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -42,14 +41,176 @@
         </form>
     </div>
 </div>
-@*<div class="row">
-    <h2>
-        無料で使用可能＆ダウンロード不要
-    </h2>
-    <h2>
-        草野球で起こりうる10人以上、リエントリーに対応
-    </h2>
-</div>*@
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    }
+<hr />
+<div class="row">
+    <div class="col-md-12 offset-md-0 text-center">
+        <h2 class="landing-title">
+            Bmcsは
+        </h2>
+        <h3 class="landing-font">無料</h3>
+        <h3 class="landing-font">ダウンロード不要</h3>
+        <h3 class="landing-font">メールアドレス登録不要</h3>
+        <h3 class="landing-font">で野球、ソフトボールのスコア管理＆SNS機能を利用できます！</h3>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-6 offset-md-0">
+        <h2 class="landing-sub-title">
+            スコア入力は２タイプ
+        </h2>
+        <ul class="landing-itemization-ul">
+            <li class="landing-itemization-ul-li">
+                <h3 class="landing-itemization-title-font">プレー毎にスコアを入力！</h3>
+                <p class="landing-itemization-sentence-font">入力は基本選択するだけ！<br />後から修正も可能！</p>
+            </li>
+            <li class="landing-itemization-ul-li">
+                <h3 class="landing-itemization-title-font">結果だけスコア入力！</h3>
+                <p class="landing-itemization-sentence-font">
+                    試合中の入力は難しい方向けに結果入力のみ行うことも可能！
+                    <br />使い方は様々！試合後に各自に入力してもらうことも！
+                    <br />個人成績をメモ代わりに使うことも！
+                </p>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-6 offset-md-0">
+        <h2 class="landing-sub-title">
+            スコア入力は特殊ルールに対応
+        </h2>
+        <ul class="landing-itemization-ul">
+            <li class="landing-itemization-ul-li">
+                <h3 class="landing-itemization-title-font">タイブレーク</h3>
+                <p class="landing-itemization-sentence-font">開始打順、アウトカウント、ランナーの指定が可能</p>
+            </li>
+            <li class="landing-itemization-ul-li">
+                <h3 class="landing-itemization-title-font">ソフトボールルールに対応</h3>
+                <p class="landing-itemization-sentence-font">
+                    「途中交代」⇒「再出場」のリエントリー可能！
+                    <br />指名打者に対応(DP、FP対応)
+                </p>
+            </li>
+            <li class="landing-itemization-ul-li">
+                <h3 class="landing-itemization-title-font">草野球あるあるに対応</h3>
+                <p class="landing-itemization-sentence-font">
+                    １０人以上出場、打順割込、打順スキップ、途中退場可能、４アウトチェンジ可能！
+                </p>
+            </li>
+
+        </ul>
+    </div>
+    <div class="col-md-6 offset-md-0">
+        <h2 class="landing-sub-title">
+            スコア入力後は試合＆成績チェック
+        </h2>
+        <ul class="landing-itemization-ul">
+            <li class="landing-itemization-ul-li">
+                <h3 class="landing-itemization-title-font">試合の詳細を確認！</h3>
+                <p class="landing-itemization-sentence-font">プレー毎に試合を振り返れる！
+            </li>
+            <li class="landing-itemization-ul-li">
+                <h3 class="landing-itemization-title-font">チーム成績を確認！</h3>
+                <p class="landing-itemization-sentence-font">
+                    自チームのチーム成績、個人成績の詳細を確認可能！
+                    <br />公開設定にすることで他チームと比較も！
+                </p>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-6 offset-md-0">
+        <h2 class="landing-sub-title">
+            公開チームをチェック
+        </h2>
+        <ul class="landing-itemization-ul">
+            <li class="landing-itemization-ul-li">
+                <h3 class="landing-itemization-title-font">公開チームの成績を見てみよう！</h3>
+                <p class="landing-itemization-sentence-font">
+                    自チームと同様にチーム成績、個人成績のチェックが可能！
+                    <br />近い場所で活動していたら試合ができるかも！
+                </p>
+            </li>
+            <li class="landing-itemization-ul-li">
+                <h3 class="landing-itemization-title-font">メッセージを送ろう！</h3>
+                <p class="landing-itemization-sentence-font">
+                    メッセージは全チームに対する公開メッセージと特定チームへのダイレクトメッセージの両方が可能！
+                    <br />自チーム内でのメッセージやメモ管理にも！
+                </p>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-12 offset-md-0">
+        <div class="form-group">
+            <button class="btn btn-lg btn-success btn-block js-sample-login">サンプルチームにログインしてスコア入力を体験する</button>
+        </div>
+    </div>
+    <div class="col-md-12 offset-md-0">
+        <p class="landing-sub-title-warning">
+            未対応事項
+        </p>
+        <ul class="landing-itemization-ul-warning">
+            <li class="landing-itemization-ul-li">
+                <p class="landing-itemization-title-font">１球ずつの管理はしない！</p>
+                <p class="landing-itemization-sentence-font">
+                    １球ずつの管理はしないため、カウント別のデータや、球数管理等はできません。
+                </p>
+            </li>
+            <li class="landing-itemization-ul-li">
+                <p class="landing-itemization-title-font">相手チームの管理はしない！</p>
+                <p class="landing-itemization-sentence-font">
+                    相手チームの管理はしないため、試合結果ページに相手チームの成績は表示されません。
+                    <br />プレー入力に相手選手の名前等、メモを残すことは可能です。
+                </p>
+            </li>
+            <li class="landing-itemization-ul-li">
+                <p class="landing-itemization-title-font">守備成績は盗塁阻止、失策のみ管理</p>
+                <p class="landing-itemization-sentence-font">
+                    刺殺、補殺、守備率の管理はしていません。
+                    <br />補殺は記録として残すことが可能ですが、都度入力が必要になります。(外野手の補殺記録として残せるようしています。)
+                </p>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-12 offset-md-0">
+        <p class="landing-sub-title">
+            よくあるお問い合わせ
+        </p>
+        <ul class="landing-itemization-ul-question">
+            <li class="landing-itemization-ul-li">
+                <p class="landing-itemization-title-font">各ページの操作方法がわからない</p>
+                <p class="landing-itemization-sentence-font">
+                    各ページ毎に操作説明が記載されたヘルプボタンがありますので、こちらをご参照ください。
+                </p>
+            </li>
+            <li class="landing-itemization-ul-li">
+                <p class="landing-itemization-title-font">試合途中で他の人に入力を引き継ぐことはできますか？</p>
+                <p class="landing-itemization-sentence-font">
+                    データはインターネット上に保存されますので、入力内容は他の人に引き継ぐことができます。
+                    <br />※インターネットが繋がらない環境では使用できません。
+                </p>
+            </li>
+            <li class="landing-itemization-ul-li">
+                <p class="landing-itemization-title-font">投手成績、野手成績はどんな項目を確認することができますか？</p>
+                <p class="landing-itemization-sentence-font">
+                    公開チーム成績ページよりチーム成績、投手成績、野手成績のページで確認できます。
+                </p>
+            </li>
+            <li class="landing-itemization-ul-li">
+                <p class="landing-itemization-title-font">プレー毎のスコア入力は１プレーどれくらいで入力を終えられますか？</p>
+                <p class="landing-itemization-sentence-font">
+                    プレーにもよりますが、１～１０秒程で入力できます。
+                </p>
+            </li>
+            <li class="landing-itemization-ul-li">
+                <p class="landing-itemization-title-font">改善して欲しい、不具合を発見した、質問したい場合はどうすれば良いですか？</p>
+                <p class="landing-itemization-sentence-font">
+                    画面下のお問い合わせページよりお問い合わせ頂くか、メッセージ機能で気軽にご返信ください。
+                </p>
+            </li>
+        </ul>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/index.js" asp-append-version="true"></script>
+}

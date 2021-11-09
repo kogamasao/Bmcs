@@ -126,3 +126,68 @@ textarea.form-control {
     margin-bottom: 1.0rem;
 }
 
+.landing-title {
+    color: #000000; /*文字色*/
+    padding: 0.5em 0; /*上下の余白*/
+    border-top: solid 3px #364e96; /*上線*/
+    border-bottom: solid 3px #364e96; /*下線*/
+    font-weight: bold;
+}
+
+.landing-sub-title {
+    /*線の種類（二重線）太さ 色*/
+    border-bottom: double 5px #364e96;
+    color: #364e96; /*文字色*/
+    font-weight: bold;
+    font-size: 1.6rem;
+}
+
+.landing-font {
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.landing-itemization-ul {
+    color: #000000;
+    border: double 5px #364e96; /*二重線 太さ 色*/
+    /*background: #f1f8ff;*/
+    padding: 0.5em 0.5em 0.5em 2em;
+    height: 350px;
+}
+
+.landing-itemization-ul-li {
+    /*line-height: 1.5;*/
+    padding: 0.5em 0;
+}
+
+.landing-itemization-title-font {
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.landing-itemization-sentence-font {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.landing-sub-title-warning {
+    /*線の種類（二重線）太さ 色*/
+    border-bottom: double 5px #ff6a6a;
+    color: #ff6a6a; /*文字色*/
+    font-weight: bold;
+    font-size: 1.6rem;
+}
+
+.landing-itemization-ul-warning {
+    color: #000000;
+    border: double 5px #ff6a6a; /*二重線 太さ 色*/
+    /*background: #f1f8ff;*/
+    padding: 0.5em 0.5em 0.5em 2em;
+}
+
+.landing-itemization-ul-question {
+    color: #000000;
+    border: double 5px #364e96; /*二重線 太さ 色*/
+    /*background: #f1f8ff;*/
+    padding: 0.5em 0.5em 0.5em 2em;
+}
