@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
 using System.Reflection;
+using Bmcs.PageHelper;
 
 namespace Bmcs.Pages.Score
 {
@@ -68,13 +69,13 @@ namespace Bmcs.Pages.Score
         [BindProperty]
         public string SortItem { get; set; }
 
-        public List<Models.GameScoreTeam> GameScoreTeamList { get; set; }
+        public PaginatedList<Models.GameScoreTeam> GameScoreTeamList { get; set; }
 
-        public List<Models.GameScorePitcher> GameScorePitcherList { get; set; }
+        public PaginatedList<Models.GameScorePitcher> GameScorePitcherList { get; set; }
 
-        public List<Models.GameScoreFielder> GameScoreFielderList { get; set; }
+        public PaginatedList<Models.GameScoreFielder> GameScoreFielderList { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(ScorePageClass scorePageClass, string teamID, bool isPublic, int? year, GameClass? gameClass, TeamCategoryClass? teamCategoryClass, UseBallClass? useBallClass, bool isIgnoreRegulationGames, bool isIgnoreRegulationInnings, bool isIgnoreRegulationAtBatting, string sortItem)
+        public async Task<IActionResult> OnGetAsync(ScorePageClass scorePageClass, string teamID, bool isPublic, int? year, GameClass? gameClass, TeamCategoryClass? teamCategoryClass, UseBallClass? useBallClass, bool isIgnoreRegulationGames, bool isIgnoreRegulationInnings, bool isIgnoreRegulationAtBatting, string sortItem, int? pageIndex)
         {
             if (string.IsNullOrEmpty(teamID) && !isPublic)
             {
@@ -106,11 +107,11 @@ namespace Bmcs.Pages.Score
             }
 
             //チームスコア
-            GameScoreTeamList = new List<GameScoreTeam>();
+            GameScoreTeamList = new PaginatedList<GameScoreTeam>();
             //投手スコア
-            GameScorePitcherList = new List<GameScorePitcher>();
+            GameScorePitcherList = new PaginatedList<GameScorePitcher>();
             //野手スコア
-            GameScoreFielderList = new List<GameScoreFielder>();
+            GameScoreFielderList = new PaginatedList<GameScoreFielder>();
 
             //試合データ
             var gameList = await Context.Games
@@ -177,7 +178,16 @@ namespace Bmcs.Pages.Score
                 UseBallClass = useBallClass,
             };
 
-            if(scorePageClass == ScorePageClass.Index
+            //規定
+            var regulation = GetRegulation(gameList, totalingItem);
+            RegulationGames = regulation.RegulationGames;
+            RegulationInnings = regulation.RegulationInnings;
+            RegulationAtBatting = regulation.RegulationAtBatting;
+            IsIgnoreRegulationGames = isIgnoreRegulationGames;
+            IsIgnoreRegulationInnings = isIgnoreRegulationInnings;
+            IsIgnoreRegulationAtBatting = isIgnoreRegulationAtBatting;
+
+            if (scorePageClass == ScorePageClass.Index
                 || scorePageClass == ScorePageClass.Team)
             { 
                 //チームスコア集計処理
@@ -186,8 +196,33 @@ namespace Bmcs.Pages.Score
                     GameScoreTeamList.AddRange(base.TotalingGameScoreTeam(gameList, gameScorePitcherList, gameScoreFielderList, totalingItem));
                 }
 
-                //ソート項目セット
-                SetOrderValue(GameScoreTeamList, sortItem);
+                if (scorePageClass == ScorePageClass.Team)
+                {
+                    //ソート項目セット
+                    SetOrderValue(GameScoreTeamList, sortItem);
+
+                    var teamRank = 0;
+                    var teamRankValue = (decimal?)null;
+
+                    //ランク
+                    foreach (var gameScoreTeam in GameScoreTeamList.Where(r => ((r.GameCount >= RegulationGames && !IsIgnoreRegulationGames) || (IsIgnoreRegulationGames))).OrderByDescending(r => r.OrderValue))
+                    {
+                        //前回値と一致しない
+                        if (teamRankValue != gameScoreTeam.OrderValue)
+                        {
+                            teamRank += 1;
+                        }
+
+                        //ランク
+                        gameScoreTeam.Rank = teamRank;
+
+                        //前回値
+                        teamRankValue = gameScoreTeam.OrderValue;
+                    }
+
+                    GameScoreTeamList = PaginatedList<GameScoreTeam>.Create(
+                        GameScoreTeamList.Where(r => r.Rank != null).OrderBy(r => r.Rank).AsQueryable().AsNoTracking(), pageIndex ?? 1, 20);
+                }
             }
 
             if (scorePageClass == ScorePageClass.Index
@@ -199,8 +234,33 @@ namespace Bmcs.Pages.Score
                     GameScorePitcherList.AddRange(base.TotalingGameScorePitcher(gameScorePitcherList.Where(r => !r.Member.DeleteFLG).ToList(), totalingItem));
                 }
 
-                //ソート項目セット
-                SetOrderValue(GameScorePitcherList, sortItem);
+                if (scorePageClass == ScorePageClass.Pitcher)
+                {
+                    //ソート項目セット
+                    SetOrderValue(GameScorePitcherList, sortItem);
+
+                    var pitcherRank = 0;
+                    var pitcherRankValue = (decimal?)null;
+
+                    //ランク
+                    foreach (var gameScorePitcher in GameScorePitcherList.Where(r => ((r.Inning >= RegulationInnings && !IsIgnoreRegulationInnings) || (IsIgnoreRegulationInnings))).OrderByDescending(r => r.OrderValue))
+                    {
+                        //前回値と一致しない
+                        if (pitcherRankValue != gameScorePitcher.OrderValue)
+                        {
+                            pitcherRank += 1;
+                        }
+
+                        //ランク
+                        gameScorePitcher.Rank = pitcherRank;
+
+                        //前回値
+                        pitcherRankValue = gameScorePitcher.OrderValue;
+                    }
+
+                    GameScorePitcherList = PaginatedList<GameScorePitcher>.Create(
+                        GameScorePitcherList.Where(r => r.Rank != null).OrderBy(r => r.Rank).AsQueryable().AsNoTracking(), pageIndex ?? 1, 20);
+                }
             }
 
             if (scorePageClass == ScorePageClass.Index
@@ -212,18 +272,34 @@ namespace Bmcs.Pages.Score
                     GameScoreFielderList.AddRange(base.TotalingGameScoreFielder(gameScoreFielderList.Where(r => !r.Member.DeleteFLG).ToList(), totalingItem));
                 }
 
-                //ソート項目セット
-                SetOrderValue(GameScoreFielderList, sortItem);
-            }
+                if (scorePageClass == ScorePageClass.Fielder)
+                {
+                    //ソート項目セット
+                    SetOrderValue(GameScoreFielderList, sortItem);
 
-            //規定
-            var regulation = GetRegulation(gameList, totalingItem);
-            RegulationGames = regulation.RegulationGames;
-            RegulationInnings = regulation.RegulationInnings;
-            RegulationAtBatting = regulation.RegulationAtBatting;
-            IsIgnoreRegulationGames = isIgnoreRegulationGames;
-            IsIgnoreRegulationInnings = isIgnoreRegulationInnings;
-            IsIgnoreRegulationAtBatting = isIgnoreRegulationAtBatting;
+                    var fielderRank = 0;
+                    var fielderRankValue = (decimal?)null;
+
+                    //ランク
+                    foreach (var gameScoreFielder in GameScoreFielderList.Where(r => ((r.PlateAppearance >= RegulationAtBatting && !IsIgnoreRegulationAtBatting) || (IsIgnoreRegulationAtBatting))).OrderByDescending(r => r.OrderValue))
+                    {
+                        //前回値と一致しない
+                        if(fielderRankValue != gameScoreFielder.OrderValue)
+                        {
+                            fielderRank += 1;
+                        }
+
+                        //ランク
+                        gameScoreFielder.Rank = fielderRank;
+
+                        //前回値
+                        fielderRankValue = gameScoreFielder.OrderValue; 
+                    }
+
+                    GameScoreFielderList = PaginatedList<GameScoreFielder>.Create(
+                        GameScoreFielderList.Where(r => r.Rank != null).OrderBy(r => r.Rank).AsQueryable().AsNoTracking(), pageIndex ?? 1, 20);
+                }
+            }
 
             //タイトル
             if (isPublic)
