@@ -92,7 +92,8 @@ namespace Bmcs.Models
         {
             get
             {
-                return AddFirstItem(new SelectList(Context.Members.Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false).OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty)
+                var memberList = Context.Members.Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false).ToList();
+                return AddFirstItem(new SelectList(memberList.OrderBy(r => r.OrderUniformNumber).ThenBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty)
                     , new SelectListItem(string.Empty, string.Empty));
             }
         }
@@ -104,7 +105,8 @@ namespace Bmcs.Models
         {
             get
             {
-                return new SelectList(Context.Members.Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false).OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
+                var memberList = Context.Members.Where(r => r.TeamID == this.TeamID && r.DeleteFLG == false).ToList();
+                return new SelectList(memberList.OrderBy(r => r.OrderUniformNumber).ThenBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
             }
         }
 
@@ -115,9 +117,11 @@ namespace Bmcs.Models
         {
             get
             {
-                var memberIDIncludeOpponentMemberList = new SelectList(Context.Members
-                                                .Where(r => (r.TeamID == this.TeamID || r.SystemDataFLG) && r.DeleteFLG == false)
+                var memberList = Context.Members.Where(r => (r.TeamID == this.TeamID || r.SystemDataFLG) && r.DeleteFLG == false).ToList();
+
+                var memberIDIncludeOpponentMemberList = new SelectList(memberList
                                                 .OrderBy(r => r.SystemDataFLG)
+                                                .ThenBy(r => r.OrderUniformNumber)
                                                 .ThenBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
 
                 return AddFirstItem(memberIDIncludeOpponentMemberList, new SelectListItem(string.Empty, string.Empty));
@@ -131,9 +135,11 @@ namespace Bmcs.Models
         {
             get
             {
-                return AddFirstItem(new SelectList(Context.Members
-                                    .Where(r => r.SystemDataFLG)
-                                        .OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty)
+                var memberList = Context.Members.Where(r => r.SystemDataFLG).ToList();
+
+                return AddFirstItem(new SelectList(memberList
+                                        .OrderBy(r => r.OrderUniformNumber)
+                                        .ThenBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty)
                     , new SelectListItem(string.Empty, string.Empty));
             }
         }
@@ -145,9 +151,12 @@ namespace Bmcs.Models
         {
             get
             {
-                return new SelectList(Context.Members
-                                    .Where(r => r.SystemDataFLG && r.PositionGroupClass == PositionGroupClass.Pitcher)
-                                        .OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
+                var memberList = Context.Members
+                                    .Where(r => r.SystemDataFLG && r.PositionGroupClass == PositionGroupClass.Pitcher).ToList();
+
+                return new SelectList(memberList
+                                        .OrderBy(r => r.OrderUniformNumber)
+                                        .ThenBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
             }
         }
 
@@ -158,9 +167,12 @@ namespace Bmcs.Models
         {
             get
             {
-                return new SelectList(Context.Members
-                                    .Where(r => r.SystemDataFLG && r.PositionGroupClass != PositionGroupClass.Pitcher)
-                                        .OrderBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
+                var memberList = Context.Members
+                    .Where(r => r.SystemDataFLG && r.PositionGroupClass != PositionGroupClass.Pitcher).ToList();
+
+                return new SelectList(memberList
+                                        .OrderBy(r => r.OrderUniformNumber)
+                                        .ThenBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
             }
         }
 

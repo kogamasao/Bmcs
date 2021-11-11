@@ -23,6 +23,17 @@ namespace Bmcs.Models
         [Display(Name = "背番号")]
         public string UniformNumber { get; set; }
 
+
+        [NotMapped]
+        [Display(Name = "背番号")]
+        public string OrderUniformNumber
+        {
+            get
+            {
+                return Convert.ToInt32(string.IsNullOrEmpty(UniformNumber) ? "0" : UniformNumber).ToString("000");
+            }
+        }
+
         [Required(ErrorMessage = "{0}は必須です。")]
         [StringLength(50, ErrorMessage = "{0}は50桁以内で入力してください。")]
         [Display(Name = "名前")]

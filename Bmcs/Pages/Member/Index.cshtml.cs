@@ -21,7 +21,7 @@ namespace Bmcs.Pages.Member
 
         }
 
-        public IList<Models.Member> Member { get;set; }
+        public List<Models.Member> Member { get;set; }
 
         public Models.Team Team { get; set; }
 
@@ -41,29 +41,32 @@ namespace Bmcs.Pages.Member
                 return NotFound();
             }
 
+            List<Models.Member> memberList;
+
             if (!base.IsAdmin())
             {
-                Member = await Context.Members
+                memberList = await Context.Members
                     .Include(m => m.Team)
                     .Where(r => r.TeamID == teamID
                         && r.Team.DeleteFLG == false
                         && ((r.Team.PublicFLG == true && !IsMyTeam) || IsMyTeam)
                         && r.DeleteFLG == false)
-                    .OrderBy(r => r.MemberClass)
-                    .ThenBy(r => r.PositionGroupClass)
-                    .ThenBy(r => r.UniformNumber)
                     .ToListAsync();
             }
             else
             {
-                Member = await Context.Members
+                memberList = await Context.Members
                     .Include(m => m.Team)
                     .Where(r => r.TeamID == teamID)
-                    .OrderBy(r => r.MemberClass)
-                    .ThenBy(r => r.PositionGroupClass)
-                    .ThenBy(r => r.UniformNumber)
                     .ToListAsync();
             }
+
+            Member = memberList
+                    .OrderBy(r => r.MemberClass)
+                    .ThenBy(r => r.PositionGroupClass)
+                    .ThenBy(r => r.OrderUniformNumber)
+                    .ThenBy(r => r.UniformNumber)
+                    .ToList();
 
             Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID);
 
