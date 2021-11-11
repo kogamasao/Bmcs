@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
 using Bmcs.Enum;
+using Bmcs.PageHelper;
 
 namespace Bmcs.Pages.Game
 {
@@ -21,11 +22,11 @@ namespace Bmcs.Pages.Game
 
         }
 
-        public IList<Models.Game> Game { get; set; }
+        public PaginatedList<Models.Game> Game { get; set; }
 
         public Models.Team Team { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string teamID)
+        public async Task<IActionResult> OnGetAsync(string teamID, int? pageIndex)
         {
             IsMyTeam = false;
 
@@ -41,9 +42,11 @@ namespace Bmcs.Pages.Game
                 return NotFound();
             }
 
+            List<Models.Game> gameList;
+
             if (!base.IsAdmin())
             {
-                Game = await Context.Games
+                gameList = await Context.Games
                     .Include(m => m.Team)
                     .Where(r => r.TeamID == teamID
                         && r.Team.DeleteFLG == false
@@ -55,7 +58,7 @@ namespace Bmcs.Pages.Game
             }
             else
             {
-                Game = await Context.Games
+                gameList = await Context.Games
                     .Include(m => m.Team)
                     .Where(r => r.TeamID == teamID
                         && r.DeleteFLG == false)
@@ -63,6 +66,9 @@ namespace Bmcs.Pages.Game
                     .ThenBy(r => r.GameID)
                     .ToListAsync();
             }
+
+            Game = PaginatedList<Models.Game>.Create(
+                   gameList.AsQueryable().AsNoTracking(), pageIndex ?? 1, 20);
 
             Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID);
 

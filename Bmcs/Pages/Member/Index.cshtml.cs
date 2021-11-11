@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
 using Bmcs.Enum;
+using Bmcs.PageHelper;
 
 namespace Bmcs.Pages.Member
 {
@@ -21,11 +22,11 @@ namespace Bmcs.Pages.Member
 
         }
 
-        public List<Models.Member> Member { get;set; }
+        public PaginatedList<Models.Member> Member { get; set; }
 
         public Models.Team Team { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string teamID)
+        public async Task<IActionResult> OnGetAsync(string teamID, int? pageIndex)
         {
             IsMyTeam = false;
 
@@ -61,12 +62,12 @@ namespace Bmcs.Pages.Member
                     .ToListAsync();
             }
 
-            Member = memberList
+            Member = PaginatedList<Models.Member>.Create(
+                    memberList
                     .OrderBy(r => r.MemberClass)
                     .ThenBy(r => r.PositionGroupClass)
                     .ThenBy(r => r.OrderUniformNumber)
-                    .ThenBy(r => r.UniformNumber)
-                    .ToList();
+                    .ThenBy(r => r.UniformNumber).AsQueryable().AsNoTracking(), pageIndex ?? 1, 20);
 
             Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID);
 

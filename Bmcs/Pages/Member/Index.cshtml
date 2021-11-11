@@ -15,7 +15,7 @@
 <div class="form-group">
     @if (Model.IsMyTeam)
     {
-        <a class="btn btn-primary" asp-page="Create">メンバー追加</a>
+    <a class="btn btn-primary" asp-page="Create">メンバー追加</a>
     }
     <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
 </div>
@@ -47,21 +47,21 @@
                 </th>
                 @if (Model.IsAdmin())
                 {
-                    <th>
-                        @Html.DisplayNameFor(model => model.Member[0].DeleteFLG)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Member[0].EntryUserID)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Member[0].EntryDatetime)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Member[0].UpdateUserID)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Member[0].UpdateDatetime)
-                    </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].DeleteFLG)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].EntryUserID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].EntryDatetime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].UpdateUserID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member[0].UpdateDatetime)
+                </th>
                 }
                 <th></th>
             </tr>
@@ -69,64 +69,139 @@
         <tbody>
             @foreach (var item in Model.Member)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UniformNumber)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MemberName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MemberClassName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ThrowClassName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.BatClassName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PositionGroupClassName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MessageDetail)
-                    </td>
-                    @if (Model.IsAdmin())
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UniformNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MemberClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ThrowClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BatClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PositionGroupClassName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MessageDetail)
+                </td>
+                @if (Model.IsAdmin())
                     {
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DeleteFLG)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EntryUserID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EntryDatetime)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UpdateUserID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UpdateDatetime)
-                        </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DeleteFLG)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EntryUserID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EntryDatetime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateUserID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateDatetime)
+                </td>
                     }
-                    @if (Model.IsMyTeam || Model.IsAdmin())
+                @if (Model.IsMyTeam || Model.IsAdmin())
                     {
-                        <td>
-                            <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.MemberID">編集</a>
-                            <span>&nbsp;</span>
-                            <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
-                            <span>&nbsp;</span>
-                            <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.MemberID">削除</a>
-                        </td>
+                <td>
+                    <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.MemberID">編集</a>
+                    <span>&nbsp;</span>
+                    <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
+                    <span>&nbsp;</span>
+                    <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.MemberID">削除</a>
+                </td>
                     }
                     else
                     {
-                        <td>
-                            <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
-                        </td>
+                <td>
+                    <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
+                </td>
                     }
-                </tr>
+            </tr>
             }
         </tbody>
     </table>
+</div>
+
+@{
+    var prevDisabled = !Model.Member.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Member.HasNextPage ? "disabled" : "";
+}
+
+<div class="mt-1">
+    <ul class="pagination">
+        <li class="page-item @prevDisabled">
+            <a asp-page="/Member/Index"
+               asp-route-teamID="@Model.Team.TeamID"
+               class="page-link">
+                <<
+            </a>
+        </li>
+
+        @if(Model.Member.PageIndex >= 4)
+        {
+        <li class="page-item disabled">
+            <span class="page-link">
+                …
+            </span>
+        </li>
+        }
+
+        @for(var i = Model.Member.PageIndex - 2; i <= Model.Member.PageIndex + 2; i++)
+        {
+        @if(i < 1 || i > Model.Member.TotalPages)
+            {
+                continue;
+            }
+
+        @if(Model.Member.PageIndex == i)
+            {
+        <li class="page-item active">
+            <a asp-page="/Member/Index"
+               asp-route-teamID="@Model.Team.TeamID"
+               asp-route-pageIndex="@(i)"
+               class="page-link">
+                @(i)
+            </a>
+        </li>
+            }
+            else
+            {
+        <li class="page-item">
+            <a asp-page="/Member/Index"
+               asp-route-teamID="@Model.Team.TeamID"
+               asp-route-pageIndex="@(i)"
+               class="page-link">
+                @(i)
+            </a>
+        </li>
+            }
+        }
+
+        @if(Model.Member.TotalPages - Model.Member.PageIndex >= 3)
+        {
+        <li class="page-item disabled">
+            <span class="page-link">
+                …
+            </span>
+        </li>
+        }
+
+        <li class="page-item @nextDisabled">
+            <a asp-page="/Member/Index"
+               asp-route-teamID="@Model.Team.TeamID"
+               asp-route-pageIndex="@(Model.Member.TotalPages)"
+               class="page-link">
+                >>
+            </a>
+        </li>
+    </ul>
 </div>

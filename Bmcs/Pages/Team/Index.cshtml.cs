@@ -9,6 +9,7 @@ using Bmcs.Data;
 using Bmcs.Models;
 using Microsoft.Extensions.Logging;
 using Bmcs.Enum;
+using Bmcs.PageHelper;
 
 namespace Bmcs.Pages.Team
 {
@@ -19,30 +20,32 @@ namespace Bmcs.Pages.Team
 
         }
 
-        public IList<Models.Team> Team { get;set; }
+        public PaginatedList<Models.Team> Team { get; set; }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int? pageIndex)
         {
+            IQueryable<Models.Team> teamList;
+
             if (base.IsAdmin())
-            { 
+            {
                 //全チーム
-                Team = await Context.Teams
-                                .OrderBy(r => r.TeamID)
-                                .ToListAsync();
+                teamList = Context.Teams.OrderBy(r => r.TeamID);
 
             }
             else
             {
                 //公開チームのみ
-                Team = await Context.Teams.Where(r => r.PublicFLG == true && r.DeleteFLG == false)
-                                        .OrderBy(r => r.TeamID)
-                                        .ToListAsync();
+                teamList = Context.Teams.Where(r => r.PublicFLG == true && r.DeleteFLG == false)
+                                        .OrderBy(r => r.TeamID);
             }
 
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamIndex);
             //インデックス
             IsIndex = true;
+
+            Team = await PaginatedList<Models.Team>.CreateAsync(
+                teamList.AsNoTracking(), pageIndex ?? 1, 20);
 
             return Page();
         }

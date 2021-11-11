@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
 using System.Reflection;
+using Bmcs.PageHelper;
 
 namespace Bmcs.Pages.Message
 {
@@ -38,11 +39,11 @@ namespace Bmcs.Pages.Message
         [BindProperty]
         public int? MessageID { get; set; }
 
-        public List<Models.Message> MessageList { get; set; }
+        public PaginatedList<Models.Message> MessageList { get; set; }
 
         public bool IsEnablePostReply { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(MessagePageClass messagePageClass, string teamID, int? messageID, string privateTeamID)
+        public async Task<IActionResult> OnGetAsync(MessagePageClass messagePageClass, string teamID, int? messageID, string privateTeamID, int? pageIndex)
         {
             if (string.IsNullOrEmpty(teamID))
             {
@@ -69,7 +70,7 @@ namespace Bmcs.Pages.Message
             }
 
             //メッセージリスト
-            MessageList = new List<Models.Message>();
+            var messageList = new List<Models.Message>();
 
             if(messageID == null)
             { 
@@ -85,13 +86,13 @@ namespace Bmcs.Pages.Message
 
                 if(messagePageClass == MessagePageClass.PublicTeam)
                 {
-                    MessageList = tempMessageList;
+                    messageList = tempMessageList;
                 }
                 else
                 {
                     var messageIDList = tempMessageList.Select(r => new { MessageID = r.ParentMessageID == null ? r.MessageID : r.ParentMessageID.NullToZero() }).GroupBy(r => r.MessageID).Select(r => MessageID = r.Key);
 
-                    MessageList = await Context.Messages
+                    messageList = await Context.Messages
                                             .Include(r => r.UserAccount)
                                             .Include(r => r.Team)
                                             .Where(r => messageIDList.Contains(r.MessageID)).ToListAsync();
@@ -99,7 +100,7 @@ namespace Bmcs.Pages.Message
             }
             else
             {
-                MessageList = await Context.Messages
+                messageList = await Context.Messages
                                     .Include(r => r.UserAccount)
                                     .Include(r => r.Team)
                                     .Where(r => r.MessageID == messageID || r.ParentMessageID == messageID)
@@ -153,12 +154,21 @@ namespace Bmcs.Pages.Message
                 ViewData[ViewDataConstant.MessageMode] = "投稿";
                 //システム管理データ
                 SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.PostMessage);
+
+                MessageList = PaginatedList<Models.Message>.Create(
+                                messageList
+                                .OrderByDescending(r => r.UpdateDatetime).AsQueryable().AsNoTracking(), pageIndex ?? 1, 20);
+
             }
             else
             {
                 ViewData[ViewDataConstant.MessageMode] = "返信";
                 //システム管理データ
                 SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.ReplyMessage);
+
+                MessageList = PaginatedList<Models.Message>.Create(
+                                messageList
+                                .OrderBy(r => r.EntryDatetime).AsQueryable().AsNoTracking(), pageIndex ?? 1, 20);
             }
 
             //タイトル

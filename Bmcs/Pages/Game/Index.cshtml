@@ -137,7 +137,7 @@
                                 <span>&nbsp;</span>
                             }
                             @if (item.StatusClass == StatusClass.BeforeFix
-                        || item.StatusClass == StatusClass.EndGame)
+                      || item.StatusClass == StatusClass.EndGame)
                             {
                                 <a class="btn btn-primary btn-sm" asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果編集</a>
                                 <span>&nbsp;</span>
@@ -167,4 +167,79 @@
             }
         </tbody>
     </table>
+</div>
+
+@{
+    var prevDisabled = !Model.Game.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Game.HasNextPage ? "disabled" : "";
+}
+
+<div class="mt-1">
+    <ul class="pagination">
+        <li class="page-item @prevDisabled">
+            <a asp-page="/Game/Index"
+               asp-route-teamID="@Model.Team.TeamID"
+               class="page-link">
+                <<
+            </a>
+        </li>
+
+        @if (Model.Game.PageIndex >= 4)
+        {
+            <li class="page-item disabled">
+                <span class="page-link">
+                    …
+                </span>
+            </li>
+        }
+
+        @for (var i = Model.Game.PageIndex - 2; i <= Model.Game.PageIndex + 2; i++)
+        {
+            @if (i < 1 || i > Model.Game.TotalPages)
+            {
+                continue;
+            }
+
+            @if (Model.Game.PageIndex == i)
+            {
+                <li class="page-item active">
+                    <a asp-page="/Game/Index"
+                       asp-route-teamID="@Model.Team.TeamID"
+                       asp-route-pageIndex="@(i)"
+                       class="page-link">
+                        @(i)
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a asp-page="/Game/Index"
+                       asp-route-teamID="@Model.Team.TeamID"
+                       asp-route-pageIndex="@(i)"
+                       class="page-link">
+                        @(i)
+                    </a>
+                </li>
+            }
+        }
+
+        @if (Model.Game.TotalPages - Model.Game.PageIndex >= 3)
+        {
+            <li class="page-item disabled">
+                <span class="page-link">
+                    …
+                </span>
+            </li>
+        }
+
+        <li class="page-item @nextDisabled">
+            <a asp-page="/Game/Index"
+               asp-route-teamID="@Model.Team.TeamID"
+               asp-route-pageIndex="@(Model.Game.TotalPages)"
+               class="page-link">
+                >>
+            </a>
+        </li>
+    </ul>
 </div>

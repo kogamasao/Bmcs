@@ -239,7 +239,7 @@
                                 var teamRankValue = (decimal)-1;
                             }
 
-                            @foreach (var item in Model.GameScoreTeamList.Where(r => ((r.GameCount >= Model.RegulationGames && !Model.IsIgnoreRegulationGames) || (Model.IsIgnoreRegulationGames))).OrderByDescending(r => r.WinRate))
+                            @foreach (var item in Model.GameScoreTeamList.Where(r => ((r.GameCount >= Model.RegulationGames && !Model.IsIgnoreRegulationGames) || (Model.IsIgnoreRegulationGames))).OrderByDescending(r => r.WinRate).Take(10))
                             {
                                 <tr>
                                     @if (!string.IsNullOrEmpty(Model.SelectTeamID))
