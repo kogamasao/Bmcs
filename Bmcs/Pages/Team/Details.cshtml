@@ -351,6 +351,9 @@
 
 </div>
 <div class="form-group">
+    <a class="btn btn-primary" asp-page="/Game/Index" asp-route-teamID="@Model.Team.TeamID">試合</a>
+    <a class="btn btn-primary" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@Model.Team.TeamID" asp-route-isPublic="@true" asp-route-teamCategoryClass="@TeamCategoryClass.All" asp-route-useBallClass="@UseBallClass.All">成績</a>
+    <a class="btn btn-primary" asp-page="/Member/Index" asp-route-teamID="@Model.Team.TeamID">メンバー</a>
     @if (Model.MyTeam != null && Model.MyTeam.PublicFLG)
     {
         <a class="btn btn-primary" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-privateTeamID="@Model.Team.TeamID">メッセージを送る</a>

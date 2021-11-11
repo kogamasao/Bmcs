@@ -244,9 +244,10 @@
                                 <tr>
                                     @if (!string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                                        <td class="align-middle column-fix-left">
-                                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>
-                                        </td>
+                                    <td class="align-middle column-fix-left">
+                                        <a asp-page="/Team/Details" asp-route-id="@item.Team.TeamID">@item.Team.TeamName</a>
+                                        @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>*@
+                                    </td>
                                     }
                                     else
                                     {
@@ -259,7 +260,8 @@
                                             @{teamRankValue = item.WinRate.NullToZero();}
                                         </td>
                                         <td class="align-middle">
-                                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>
+                                            <a asp-page="/Team/Details" asp-route-id="@item.Team.TeamID">@item.Team.TeamName</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>*@
                                         </td>
                                     }
                                     <td class="text-center align-middle">
@@ -461,9 +463,10 @@
                                 <tr>
                                     @if (!string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                                        <td class="align-middle column-fix-left">
-                                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>
-                                        </td>
+                                    <td class="align-middle column-fix-left">
+                                        <a asp-page="/Team/Details" asp-route-id="@item.Team.TeamID">@item.Team.TeamName</a>
+                                        @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>*@
+                                    </td>
                                     }
                                     else
                                     {
@@ -476,7 +479,8 @@
                                             @{teamRankValue = item.OrderValue;}
                                         </td>
                                         <td class="align-middle">
-                                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>
+                                            <a asp-page="/Team/Details" asp-route-id="@item.Team.TeamID">@item.Team.TeamName</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>*@
                                         </td>
                                     }
                                     <td class="GameCount text-center align-middle">
@@ -665,9 +669,10 @@
                                             </td>
                                             @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                                <td class="align-middle">
-                                                    <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                                </td>
+                                        <td class="align-middle">
+                                            <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
+                                        </td>
                                             }
                                             <td class="align-middle">
                                                 <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -724,9 +729,10 @@
                                             </td>
                                             @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                                <td class="align-middle">
-                                                    <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                                </td>
+                                        <td class="align-middle">
+                                            <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
+                                        </td>
                                             }
                                             <td class="align-middle">
                                                 <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -783,9 +789,10 @@
                                             </td>
                                             @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                                <td class="align-middle">
-                                                    <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                                </td>
+                                        <td class="align-middle">
+                                            <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
+                                        </td>
                                             }
                                             <td class="align-middle">
                                                 <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -842,9 +849,10 @@
                                             </td>
                                             @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                                <td class="align-middle">
-                                                    <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                                </td>
+                                        <td class="align-middle">
+                                            <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
+                                        </td>
                                             }
                                             <td class="align-middle">
                                                 <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -901,9 +909,10 @@
                                             </td>
                                             @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                                <td class="align-middle">
-                                                    <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                                </td>
+                                        <td class="align-middle">
+                                            <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
+                                        </td>
                                             }
                                             <td class="align-middle">
                                                 <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -960,9 +969,10 @@
                                             </td>
                                             @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                                <td class="align-middle">
-                                                    <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                                </td>
+                                        <td class="align-middle">
+                                            <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
+                                        </td>
                                             }
                                             <td class="align-middle">
                                                 <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -1120,9 +1130,10 @@
                                     </td>
                                     @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                                        <td class="align-middle">
-                                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem">@item.Member.Team.TeamName</a>
-                                        </td>
+                                <td class="align-middle">
+                                    <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamName</a>
+                                    @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem">@item.Member.Team.TeamName</a>*@
+                                </td>
                                     }
                                     <td class="align-middle">
                                         <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -1291,9 +1302,10 @@
                                             </td>
                                             @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                                <td class="align-middle">
-                                                    <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                                </td>
+                                        <td class="align-middle">
+                                            <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
+                                        </td>
                                             }
                                             <td class="align-middle">
                                                 <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -1350,9 +1362,10 @@
                                             </td>
                                             @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                                <td class="align-middle">
-                                                    <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                                </td>
+                                        <td class="align-middle">
+                                            <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
+                                        </td>
                                             }
                                             <td class="align-middle">
                                                 <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -1409,9 +1422,10 @@
                                             </td>
                                             @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                                <td class="align-middle">
-                                                    <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                                </td>
+                                        <td class="align-middle">
+                                            <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
+                                        </td>
                                             }
                                             <td class="align-middle">
                                                 <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -1469,9 +1483,10 @@
                                             </td>
                                             @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                                <td class="align-middle">
-                                                    <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                                </td>
+                                        <td class="align-middle">
+                                            <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
+                                        </td>
                                             }
                                             <td class="align-middle">
                                                 <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -1528,9 +1543,10 @@
                                             </td>
                                             @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                                <td class="align-middle">
-                                                    <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                                </td>
+                                        <td class="align-middle">
+                                            <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
+                                        </td>
                                             }
                                             <td class="align-middle">
                                                 <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -1587,9 +1603,10 @@
                                             </td>
                                             @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                                <td class="align-middle">
-                                                    <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>
-                                                </td>
+                                        <td class="align-middle">
+                                            <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
+                                            @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
+                                        </td>
                                             }
                                             <td class="align-middle">
                                                 <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
@@ -1753,9 +1770,10 @@
                                     </td>
                                     @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                                        <td class="align-middle">
-                                            <a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem">@item.Member.Team.TeamName</a>
-                                        </td>
+                                <td class="align-middle">
+                                    <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamName</a>
+                                    @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem">@item.Member.Team.TeamName</a>*@
+                                </td>
                                     }
                                     <td class="align-middle">
                                         <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
