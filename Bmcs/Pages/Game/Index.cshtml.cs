@@ -29,7 +29,7 @@ namespace Bmcs.Pages.Game
         public async Task<IActionResult> OnGetAsync(string teamID, int? pageIndex)
         {
             IsMyTeam = false;
-
+            
             if (teamID == null
                 || teamID == HttpContext.Session.GetString(SessionConstant.TeamID))
             {

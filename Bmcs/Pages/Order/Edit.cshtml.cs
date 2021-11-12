@@ -45,7 +45,7 @@ namespace Bmcs.Pages.Order
         {
             if (!base.IsLogin())
             {
-                return NotFound();
+                return ReLogin();
             }
 
             if (gameID == null)

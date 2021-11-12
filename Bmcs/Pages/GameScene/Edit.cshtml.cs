@@ -88,7 +88,7 @@ namespace Bmcs.Pages.GameScene
         {
             if (!base.IsLogin())
             {
-                return NotFound();
+                return ReLogin();
             }
 
             if (gameID == null)

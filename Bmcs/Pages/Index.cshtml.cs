@@ -24,6 +24,9 @@ namespace Bmcs.Pages
         [BindProperty]
         public Models.UserAccount UserAccount { get; set; }
 
+        [BindProperty]
+        public string UrlAfterLogin { get; set; }
+
         public void OnGet()
         {
             //ログイン情報クリア
@@ -76,7 +79,14 @@ namespace Bmcs.Pages
             }
             else
             { 
-                return RedirectToPage("./Top/Index");
+                if(string.IsNullOrEmpty(HttpContext.Session.GetString(SessionConstant.UrlAfterLogin)))
+                {
+                    return RedirectToPage("./Top/Index");
+                }
+                else
+                { 
+                    return Redirect(HttpContext.Session.GetString(SessionConstant.UrlAfterLogin));
+                }
             }
         }
     }

@@ -28,7 +28,7 @@ namespace Bmcs.Pages.Member
         {
             if (!base.IsLogin())
             {
-                return NotFound();
+                return ReLogin();
             }
 
             if (id == null)

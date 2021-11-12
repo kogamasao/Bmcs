@@ -29,7 +29,7 @@ namespace Bmcs.Pages.Member
         {
             if (!base.IsLogin())
             {
-                return NotFound();
+                return ReLogin();
             }
 
             //マイチーム以外を指定して管理者でない

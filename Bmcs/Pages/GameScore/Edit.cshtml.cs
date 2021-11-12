@@ -45,7 +45,7 @@ namespace Bmcs.Pages.GameScore
         {
             if (!base.IsLogin())
             {
-                return NotFound();
+                return ReLogin();
             }
 
             if (gameID == null)

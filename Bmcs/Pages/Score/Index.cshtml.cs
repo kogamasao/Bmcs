@@ -81,7 +81,7 @@ namespace Bmcs.Pages.Score
             {
                 if (!base.IsLogin())
                 {
-                    return NotFound();
+                    return ReLogin();
                 }
 
                 teamID = HttpContext.Session.GetString(SessionConstant.TeamID);

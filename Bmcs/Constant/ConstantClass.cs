@@ -15,6 +15,8 @@ namespace Bmcs.Constans
         public static readonly string TeamID = "TeamID";
 
         public static readonly string AdminFLG = "AdminFLG";
+
+        public static readonly string UrlAfterLogin = "UrlAfterLogin";
     }
 
     /// <summary>

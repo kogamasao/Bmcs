@@ -29,7 +29,7 @@ namespace Bmcs.Pages.Team
         {
             if (!base.IsLogin())
             {
-                return NotFound();
+                return ReLogin();
             }
 
             if (id == null)

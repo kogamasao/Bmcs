@@ -586,11 +586,18 @@ namespace Bmcs.Models
             return true;
         }
 
-        /// <summary>
-        /// エントリ情報セット
-        /// </summary>
-        /// <returns></returns>
-        public void SetEntryInfo<TModel>(TModel dataModelBase) where TModel : DataModelBase
+        public IActionResult ReLogin()
+        {
+            HttpContext.Session.SetString(SessionConstant.UrlAfterLogin, Request.Scheme + "://" + Request.Host + Request.Path + Request.QueryString);
+
+            return RedirectToPage("/Index");
+        }
+
+            /// <summary>
+            /// エントリ情報セット
+            /// </summary>
+            /// <returns></returns>
+            public void SetEntryInfo<TModel>(TModel dataModelBase) where TModel : DataModelBase
         {
             dataModelBase.EntryDatetime = DateTime.Now;
             dataModelBase.EntryUserID = HttpContext.Session.GetString(SessionConstant.UserAccountID);

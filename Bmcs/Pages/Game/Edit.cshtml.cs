@@ -29,7 +29,7 @@ namespace Bmcs.Pages.Game
         {
             if (!base.IsLogin())
             {
-                return NotFound();
+                return ReLogin();
             }
 
             if (id == null)
