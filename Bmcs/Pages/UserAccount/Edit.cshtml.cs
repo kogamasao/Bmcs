@@ -80,10 +80,9 @@ namespace Bmcs.Pages.UserAccount
                 if (userAccount.TeamID != UserAccount.TeamID
                     && !string.IsNullOrEmpty(UserAccount.TeamID))
                 {
-                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID
-                                                            && r.TeamPassword == UserAccount.TeamPassword.NullToEmpty());
+                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID);
 
-                    if (dbTeam == null || dbTeam.TeamPassword != UserAccount.TeamPassword.NullToEmpty())
+                    if (dbTeam == null || dbTeam.TeamPassword != UserAccount.TeamPassword.NullToEmpty().ChangeHashValue())
                     {
                         ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "パスワードが間違っています。");
 
@@ -124,7 +123,7 @@ namespace Bmcs.Pages.UserAccount
             //パスワード変更時のみ
             if(!string.IsNullOrEmpty(UserAccount.Password))
             { 
-                userAccount.Password = UserAccount.Password;
+                userAccount.Password = UserAccount.Password.ChangeHashValue();
             }
             
             userAccount.EmailAddress = UserAccount.EmailAddress;

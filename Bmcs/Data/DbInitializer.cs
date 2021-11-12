@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Bmcs.Data;
 using Bmcs.Models;
 using Bmcs.Enum;
+using Bmcs.Function;
 
 namespace Bmcs.Data
 {
@@ -1259,9 +1260,9 @@ namespace Bmcs.Data
                     {
                           UserAccountID = "ADMIN"
                         , UserAccountName = "管理者"
-                        , Password = "1"
+                        , Password = "1".ChangeHashValue()
                         , TeamID = "JB"
-                        , EmailAddress = "proud.of.y.d@gmail.com"
+                        , EmailAddress = ""
                         , DeleteFLG = false
                         , EntryDatetime = DateTime.Now
                         , EntryUserID = "ADMIN"
@@ -1272,7 +1273,7 @@ namespace Bmcs.Data
                     {
                           UserAccountID = "YGUser"
                         , UserAccountName = "ジャイアンツ管理者"
-                        , Password = "1"
+                        , Password = "1".ChangeHashValue()
                         , TeamID = "YG"
                         , EmailAddress = ""
                         , DeleteFLG = false
@@ -1285,9 +1286,9 @@ namespace Bmcs.Data
                     {
                           UserAccountID = "HTUser"
                         , UserAccountName = "タイガース管理者"
-                        , Password = "1"
+                        , Password = "1".ChangeHashValue()
                         , TeamID = "HT"
-                        , EmailAddress = "proud.of.y.d@gmail.com"
+                        , EmailAddress = ""
                         , DeleteFLG = false
                         , EntryDatetime = DateTime.Now
                         , EntryUserID = "ADMIN"
@@ -1298,9 +1299,9 @@ namespace Bmcs.Data
                     {
                           UserAccountID = "JBUser"
                         , UserAccountName = "JAPAN BRIDGE 管理者"
-                        , Password = "1"
+                        , Password = "1".ChangeHashValue()
                         , TeamID = "JB"
-                        , EmailAddress = "proud.of.y.d@gmail.com"
+                        , EmailAddress = ""
                         , DeleteFLG = false
                         , EntryDatetime = DateTime.Now
                         , EntryUserID = "ADMIN"
@@ -1329,7 +1330,7 @@ namespace Bmcs.Data
                         , UseBallClass = UseBallClass.Other
                         , ActivityBase = "システム"
                         , TeamNumber = 10
-                        , TeamPassword = "SYSTEM"
+                        , TeamPassword = "SYSTEM".ChangeHashValue()
                         , TeamEmailAddress = ""
                         , MessageDetail= ""
                         , PublicFLG = false
@@ -1350,7 +1351,7 @@ namespace Bmcs.Data
                         , UseBallClass = UseBallClass.Hard
                         , ActivityBase = "東京"
                         , TeamNumber = 70
-                        , TeamPassword = "1"
+                        , TeamPassword = "1".ChangeHashValue()
                         , TeamEmailAddress = ""
                         , MessageDetail= "東京ドームが本拠地です。"
                         , PublicFLG = true
@@ -1371,7 +1372,7 @@ namespace Bmcs.Data
                         , UseBallClass = UseBallClass.Hard
                         , ActivityBase = "兵庫"
                         , TeamNumber = 70
-                        , TeamPassword = "1"
+                        , TeamPassword = "1".ChangeHashValue()
                         , TeamEmailAddress = ""
                         , MessageDetail= "甲子園が本拠地です。"
                         , PublicFLG = true
@@ -1392,7 +1393,7 @@ namespace Bmcs.Data
                         , UseBallClass = UseBallClass.Rubber
                         , ActivityBase = "東京都中央区"
                         , TeamNumber = 12
-                        , TeamPassword = "1"
+                        , TeamPassword = "1".ChangeHashValue()
                         , TeamEmailAddress = ""
                         , MessageDetail= "30代のチームです。"
                         , PublicFLG = false
@@ -1418,8 +1419,8 @@ namespace Bmcs.Data
                     new Member
                     {
                           TeamID = "SYSTEM"
-                        , UniformNumber = "11"
-                        , MemberName = "投手(左右未設定)"
+                        , UniformNumber = ""
+                        , MemberName = "相手投手"
                         , MemberClass = Enum.MemberClass.Player
                         , ThrowClass = null
                         , BatClass = null
@@ -1435,8 +1436,8 @@ namespace Bmcs.Data
                     new Member
                     {
                           TeamID = "SYSTEM"
-                        , UniformNumber = "12"
-                        , MemberName = "投手(右投手)"
+                        , UniformNumber = ""
+                        , MemberName = "相手投手(右)"
                         , MemberClass = Enum.MemberClass.Player
                         , ThrowClass = ThrowClass.Right
                         , BatClass = null
@@ -1452,8 +1453,8 @@ namespace Bmcs.Data
                     new Member
                     {
                           TeamID = "SYSTEM"
-                        , UniformNumber = "13"
-                        , MemberName = "投手(左投手)"
+                        , UniformNumber = ""
+                        , MemberName = "相手投手(左)"
                         , MemberClass = Enum.MemberClass.Player
                         , ThrowClass = ThrowClass.Left
                         , BatClass = null
@@ -1469,8 +1470,8 @@ namespace Bmcs.Data
                     new Member
                     {
                           TeamID = "SYSTEM"
-                        , UniformNumber = "1"
-                        , MemberName = "野手(打席未設定)"
+                        , UniformNumber = ""
+                        , MemberName = "相手野手"
                         , MemberClass = Enum.MemberClass.Player
                         , ThrowClass = null
                         , BatClass = null
@@ -1486,8 +1487,8 @@ namespace Bmcs.Data
                     new Member
                     {
                           TeamID = "SYSTEM"
-                        , UniformNumber = "2"
-                        , MemberName = "野手(右打者)"
+                        , UniformNumber = ""
+                        , MemberName = "相手野手(右)"
                         , MemberClass = Enum.MemberClass.Player
                         , ThrowClass = null
                         , BatClass = BatClass.Right
@@ -1503,8 +1504,8 @@ namespace Bmcs.Data
                      new Member
                     {
                           TeamID = "SYSTEM"
-                        , UniformNumber = "3"
-                        , MemberName = "野手(左打者)"
+                        , UniformNumber = ""
+                        , MemberName = "相手野手(左)"
                         , MemberClass = Enum.MemberClass.Player
                         , ThrowClass = null
                         , BatClass = BatClass.Left

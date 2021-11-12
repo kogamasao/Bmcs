@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace Bmcs.Function
@@ -81,6 +83,30 @@ namespace Bmcs.Function
         public static string ReplaceNewLineForHtml(this string value)
         {
             return value.NullToEmpty().Replace(Environment.NewLine, "<br />");
+        }
+
+        /// <summary>
+        /// ハッシュ値変換
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ChangeHashValue(this string value)
+        {
+            byte[] salt = new byte[128 / 8];
+
+            //using (var rngCsp = new RNGCryptoServiceProvider())
+            //{
+            //    rngCsp.GetNonZeroBytes(salt);
+            //}
+
+            string hashed = System.Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: value,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+
+            return hashed;
         }
     }
 }

@@ -43,12 +43,11 @@ namespace Bmcs.Pages
             {
                 //ユーザIDチェック
                 var dbUserAccount = await Context.UserAccounts.Include(u => u.Team).FirstOrDefaultAsync(r => r.UserAccountID == UserAccount.UserAccountID
-                                                                                && r.Password == UserAccount.Password
                                                                                 && r.DeleteFLG == false);
 
                 if (dbUserAccount == null
                     || dbUserAccount.UserAccountID != UserAccount.UserAccountID
-                    || dbUserAccount.Password != UserAccount.Password)
+                    || dbUserAccount.Password != UserAccount.Password.ChangeHashValue())
                 {
                     ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.UserAccountID), "入力したユーザID、またはパスワードが間違っています。パスワードをお忘れの場合はお問い合わせをお願いします。");
 

@@ -120,7 +120,7 @@ namespace Bmcs.Pages.Team
         {
             team.TeamID = Team.TeamID;
             team.TeamName = Team.TeamName;
-            team.TeamPassword = Team.TeamPassword;
+            team.TeamPassword = Team.TeamPassword.ChangeHashValue();
             team.TeamAbbreviation = Team.TeamAbbreviation;
             team.RepresentativeName = Team.RepresentativeName;
             team.TeamCategoryClass = Team.TeamCategoryClass;

@@ -9,6 +9,7 @@ using Bmcs.Data;
 using Bmcs.Models;
 using Microsoft.Extensions.Logging;
 using Bmcs.Enum;
+using Bmcs.Function;
 using Bmcs.PageHelper;
 
 namespace Bmcs.Pages.Team

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
 using Microsoft.Extensions.Logging;
 using Bmcs.Enum;
+using Bmcs.Function;
 
 namespace Bmcs.Pages.Team
 {
@@ -108,7 +109,7 @@ namespace Bmcs.Pages.Team
             //パスワード変更時のみ
             if(!string.IsNullOrEmpty(Team.TeamPassword))
             { 
-                team.TeamPassword = Team.TeamPassword;
+                team.TeamPassword = Team.TeamPassword.ChangeHashValue();
             }
             
             team.RepresentativeName = Team.RepresentativeName;
