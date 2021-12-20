@@ -51,6 +51,8 @@ https://bmcs.azurewebsites.net/
 　F5実行すると「Bmcs\Data\DbInitializer.cs」が実行され、DBの作成及びサンプルデータが投入されます。
 
 ## その他
+- サービス紹介記事
+  https://alivetodayblog.com/bmcs/
 - 作成期間
   Ver1.0.0まで約3か月
 - 改善したいこと
