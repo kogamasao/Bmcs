@@ -222,6 +222,8 @@ namespace Bmcs.Enum
         BeforeFix = 3,
         [Display(Name = "試合終了")]
         EndGame = 9,
+        [Display(Name = "試合終了")]
+        EndGameLock = 10,
     }
 
     /// <summary>

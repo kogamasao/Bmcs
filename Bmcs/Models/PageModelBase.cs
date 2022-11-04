@@ -504,7 +504,7 @@ namespace Bmcs.Models
             {
                 return AddFirstItem(new SelectList(Context.Games.Where(r => ((r.TeamID == this.TeamID && !string.IsNullOrEmpty(this.TeamID))
                                                                                 || (string.IsNullOrEmpty(this.TeamID)))
-                                                                            && r.StatusClass == StatusClass.EndGame && r.DeleteFLG == false )
+                                                                            && (r.StatusClass == StatusClass.EndGame || r.StatusClass == StatusClass.EndGameLock) && r.DeleteFLG == false )
                                                                 .GroupBy(r => r.GameDate.Year)
                                                                 .Select(r => new  { Year = r.Key })
                                                                 , nameof(TotalingItem.Year), nameof(TotalingItem.Year), string.Empty)

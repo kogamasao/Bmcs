@@ -27,7 +27,7 @@
     {
         <a class="btn btn-primary" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果編集</a>
     }
-    @if (Model.Game.StatusClass == StatusClass.EndGame)
+    @if (Model.Game.StatusClass == StatusClass.EndGame || Model.Game.StatusClass == StatusClass.EndGameLock)
     {
         <a class="btn btn-primary" asp-page="/GameScore/Details" asp-route-gameID="@Model.Game.GameID">試合結果</a>
     }
@@ -181,39 +181,45 @@
                             </th>
                             @if (Model.IsMyTeam || Model.IsAdmin())
                             {
-                                <th></th>
+                                @if (Model.Game.StatusClass != StatusClass.EndGameLock)
+                                {
+                                    <th></th>
+                                }
                             }
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model.GameSceneList.Where(r => r.Inning == inningScore.Inning && r.TopButtomClass == inningScore.TopButtomClass))
                         {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.InningScoreListOutCount)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.InningScoreListRunner)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.InningScoreListBattingOrder)
-                                </td>
-                                <td>
-                                    @Html.Raw(item.InningScoreListDetail)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.InningScoreListGameScore)
-                                </td>
-                                <td>
-                                    @Html.Raw(item.Note.ReplaceNewLineForHtml())
-                                </td>
-                                @if (Model.IsMyTeam || Model.IsAdmin())
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InningScoreListOutCount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InningScoreListRunner)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InningScoreListBattingOrder)
+                            </td>
+                            <td>
+                                @Html.Raw(item.InningScoreListDetail)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InningScoreListGameScore)
+                            </td>
+                            <td>
+                                @Html.Raw(item.Note.ReplaceNewLineForHtml())
+                            </td>
+                            @if (Model.IsMyTeam || Model.IsAdmin())
+                            {
+                                @if ( Model.Game.StatusClass != StatusClass.EndGameLock)
                                 {
                                     <td>
                                         <a class="btn btn-primary btn-sm" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@item.GameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">修正</a>
                                     </td>
                                 }
-                            </tr>
+                            }
+                        </tr>
                         }
                     </tbody>
                 </table>

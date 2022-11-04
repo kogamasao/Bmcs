@@ -116,7 +116,7 @@ namespace Bmcs.Pages.Score
             //試合データ
             var gameList = await Context.Games
                       .Include(r => r.Team)
-                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic)) && r.StatusClass == StatusClass.EndGame && r.DeleteFLG == false)
+                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic)) && (r.StatusClass == StatusClass.EndGame || r.StatusClass == StatusClass.EndGameLock) && r.DeleteFLG == false)
                       .ToListAsync();
 
             //投手スコアデータ
@@ -124,7 +124,7 @@ namespace Bmcs.Pages.Score
                       .Include(r => r.Game)
                       .Include(r => r.Team)
                       .Include(r => r.Member)
-                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic)) && r.Game.StatusClass == StatusClass.EndGame && r.Game.DeleteFLG == false)
+                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic)) && (r.Game.StatusClass == StatusClass.EndGame || r.Game.StatusClass == StatusClass.EndGameLock) && r.Game.DeleteFLG == false)
                       .ToListAsync();
 
             //野手スコアデータ
@@ -132,7 +132,7 @@ namespace Bmcs.Pages.Score
                       .Include(r => r.Game)
                       .Include(r => r.Team)
                       .Include(r => r.Member)
-                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic)) && r.Game.StatusClass == StatusClass.EndGame && r.Game.DeleteFLG == false)
+                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic)) && (r.Game.StatusClass == StatusClass.EndGame || r.Game.StatusClass == StatusClass.EndGameLock) && r.Game.DeleteFLG == false)
                       .ToListAsync();
 
             //年初期値

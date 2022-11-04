@@ -27,7 +27,8 @@
                 }
 
                 @if (Model.Game.StatusClass == StatusClass.BeforeFix
-           || Model.Game.StatusClass == StatusClass.EndGame)
+           || Model.Game.StatusClass == StatusClass.EndGame
+           || Model.Game.StatusClass == StatusClass.EndGameLock)
                 {
                     <a class="btn btn-secondary" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果へ</a>
                 }

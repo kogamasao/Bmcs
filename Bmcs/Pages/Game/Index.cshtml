@@ -130,33 +130,38 @@
                     }
                     @if (Model.IsMyTeam || Model.IsAdmin())
                     {
-                        <td>
-                            @if (item.StatusClass == StatusClass.DuringGame)
-                            {
-                                <a class="btn btn-primary btn-sm" asp-page="/GameScene/Edit" asp-route-gameID="@item.GameID">試合入力</a>
-                                <span>&nbsp;</span>
-                            }
-                            @if (item.StatusClass == StatusClass.BeforeFix
-                      || item.StatusClass == StatusClass.EndGame)
-                            {
-                                <a class="btn btn-primary btn-sm" asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果編集</a>
-                                <span>&nbsp;</span>
-                            }
-                            @if (item.StatusClass == StatusClass.EndGame)
-                            {
-                                <a class="btn btn-primary btn-sm" asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果</a>
-                                <span>&nbsp;</span>
-                            }
-                            <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.GameID">試合情報編集</a>
-                            <span>&nbsp;</span>
-                            @*<a class="btn btn-primary" asp-page="./Details" asp-route-id="@item.GameID">詳細</a> |*@
-                            <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.GameID">削除</a>
-                        </td>
+                <td>
+                    @if (item.StatusClass == StatusClass.DuringGame)
+                    {
+                        <a class="btn btn-primary btn-sm" asp-page="/GameScene/Edit" asp-route-gameID="@item.GameID">試合入力</a>
+                        <span>&nbsp;</span>
+                    }
+                    @if (item.StatusClass == StatusClass.BeforeFix
+             || item.StatusClass == StatusClass.EndGame)
+                    {
+                        <a class="btn btn-primary btn-sm" asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果編集</a>
+                        <span>&nbsp;</span>
+                    }
+                    @if (item.StatusClass == StatusClass.EndGame
+               || item.StatusClass == StatusClass.EndGameLock)
+                    {
+                        <a class="btn btn-primary btn-sm" asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果</a>
+                        <span>&nbsp;</span>
+                    }
+
+                    @if (item.StatusClass != StatusClass.EndGameLock)
+                    {
+                        <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.GameID">試合情報編集</a>
+                        <span>&nbsp;</span>
+                        @*<a class="btn btn-primary" asp-page="./Details" asp-route-id="@item.GameID">詳細</a> |*@
+                        <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.GameID">削除</a>
+                    }
+                    </td>
                     }
                     else
                     {
                         <td>
-                            @if (item.StatusClass == StatusClass.EndGame)
+                            @if (item.StatusClass == StatusClass.EndGame || item.StatusClass == StatusClass.EndGameLock)
                             {
                                 <a class="btn btn-primary btn-sm" asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果</a>
                             }
