@@ -136,6 +136,10 @@ namespace Bmcs.Models
             }
         }
 
+        [Display(Name = "動画コード")]
+        [StringLength(500)]
+        public string VideoCode { get; set; }
+
         [Display(Name = "タイブレーク開始イニング")]
         public int? TieBreakStartInning { get; set; }
 
