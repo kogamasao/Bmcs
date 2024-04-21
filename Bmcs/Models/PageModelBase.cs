@@ -507,6 +507,7 @@ namespace Bmcs.Models
                                                                             && (r.StatusClass == StatusClass.EndGame || r.StatusClass == StatusClass.EndGameLock) && r.DeleteFLG == false )
                                                                 .GroupBy(r => r.GameDate.Year)
                                                                 .Select(r => new  { Year = r.Key })
+                                                                .OrderBy(r => r.Year)
                                                                 , nameof(TotalingItem.Year), nameof(TotalingItem.Year), string.Empty)
                     , new SelectListItem("通算", "0"));
             }
