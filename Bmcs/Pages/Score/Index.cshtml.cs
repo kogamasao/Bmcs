@@ -106,6 +106,8 @@ namespace Bmcs.Pages.Score
                 }
             }
 
+            //チームID
+            base.TeamID = teamID;
             //チームスコア
             GameScoreTeamList = new PaginatedList<GameScoreTeam>();
             //投手スコア
