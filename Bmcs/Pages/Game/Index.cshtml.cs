@@ -52,7 +52,7 @@ namespace Bmcs.Pages.Game
                         && r.Team.DeleteFLG == false
                         && ((r.Team.PublicFLG == true && !IsMyTeam) || IsMyTeam)
                         && r.DeleteFLG == false)
-                    .OrderBy(r => r.GameDate)
+                    .OrderByDescending(r => r.GameDate)
                     .ThenBy(r => r.GameID)
                     .ToListAsync();
             }
@@ -62,7 +62,7 @@ namespace Bmcs.Pages.Game
                     .Include(m => m.Team)
                     .Where(r => r.TeamID == teamID
                         && r.DeleteFLG == false)
-                    .OrderBy(r => r.GameDate)
+                    .OrderByDescending(r => r.GameDate)
                     .ThenBy(r => r.GameID)
                     .ToListAsync();
             }
