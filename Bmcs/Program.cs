@@ -1,13 +1,11 @@
 using Bmcs.Data;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Bmcs
 {
@@ -15,16 +13,65 @@ namespace Bmcs
     {
         public static void Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
+            var builder = WebApplication.CreateBuilder(args);
 
-            CreateDbIfNotExists(host);
+            // Add services to the container (‹ŒConfigureServices•”•ª)
+            builder.Services.AddDistributedMemoryCache();
 
-            host.Run();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(1);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            builder.Services.AddRazorPages()
+                .AddRazorPagesOptions(options =>
+                {
+                    //options.Conventions.AddPageRoute("/Login/Index", "");
+                });
+
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddDbContext<BmcsContext>(options =>
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString")));
+            }
+            else
+            {
+                builder.Services.AddDbContext<BmcsContext>(options =>
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureDatabaseConnectionString")));
+            }
+
+            var app = builder.Build();
+
+            // Configure the HTTP request pipeline (‹ŒConfigure•”•ª)
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
+
+            // DB‚Ì‰Šú‰»i‹ŒCreateDbIfNotExists‚Ì“à—ej
+            CreateDbIfNotExists(app);
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseSession();
+
+            app.MapRazorPages();
+
+            app.Run();
         }
 
-        private static void CreateDbIfNotExists(IHost host)
+        private static void CreateDbIfNotExists(WebApplication app)
         {
-            using var scope = host.Services.CreateScope();
+            using var scope = app.Services.CreateScope();
             var services = scope.ServiceProvider;
             try
             {
@@ -37,12 +84,5 @@ namespace Bmcs
                 logger.LogError(ex, "An error occurred creating the DB.");
             }
         }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
     }
 }
