@@ -1265,7 +1265,7 @@ namespace Bmcs.Data
                         , UserAccountName = "管理者"
                         , Password = "1".ChangeHashValue()
                         , TeamID = "JB"
-                        , EmailAddress = ""
+                        , EmailAddress = "proud.of.y.d@gmail.com"
                         , DeleteFLG = false
                         , EntryDatetime = DateTime.Now
                         , EntryUserID = "ADMIN"

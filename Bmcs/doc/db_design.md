@@ -70,6 +70,23 @@ erDiagram
 
 ## 3. テーブル定義詳細
 
+### SystemAdmin (システム管理者)
+| カラム名 | 論理名 | 型 | 必須 | 説明 |
+| --- | --- | --- | --- | --- |
+| SystemAdminClass | システム管理区分 | enum | Yes | PK |
+| MessageTitle | メッセージタイトル | string | No | |
+| MessageDetail | メッセージ | string | No | |
+
+### UserAccount (ユーザーアカウント)
+| カラム名 | 論理名 | 型 | 必須 | 説明 |
+| --- | --- | --- | --- | --- |
+| UserAccountID | ユーザID | string | Yes | PK |
+| UserAccountName | ユーザ名 | string | Yes | |
+| TeamID | チームID | string | No | FK(Team) |
+| Password | パスワード | string | No | |
+| EmailAddress | メールアドレス | string | No | |
+| DeleteFLG | 削除フラグ | bool | Yes | |
+
 ### Team (チーム)
 | カラム名 | 論理名 | 型 | 必須 | 説明 |
 | --- | --- | --- | --- | --- |
