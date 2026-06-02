@@ -273,10 +273,10 @@
                 <table id="fielder-score" class="table table-sm table-bordered" style="table-layout:fixed">
                     <thead class="thead-light">
                         <tr>
-                            <th style="width: 80px;" class="column-fix-left">
+                            <th style="width: 80px;">
                                 打順
                             </th>
-                            <th style="width: 150px;">
+                            <th style="width: 150px;" class="column-fix-left">
                                 野手名
                             </th>
                             <th style="width: 100px;">
@@ -372,10 +372,10 @@
                         @for (int i = 0; i < Model.GameScoreFielderList.Count; i++)
                         {
                         <tr id="@("GameScoreFielderList_" + i.ToString())">
-                            <td class="column-fix-left text-center align-middle">
+                            <td class="text-center align-middle">
                                 <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].BattingOrder" min="0" />
                             </td>
-                            <td>
+                            <td class="column-fix-left">
                                 <select asp-for="@Model.GameScoreFielderList[i].MemberID" class="form-control js-rename" asp-items="@Model.MemberIDList"></select>
                             </td>
                             <td>

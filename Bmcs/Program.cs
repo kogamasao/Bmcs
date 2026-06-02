@@ -15,7 +15,7 @@ namespace Bmcs
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container (‹ŒConfigureServices•”•ª)
+            // Add services to the container (æ—§ConfigureServiceséƒ¨åˆ†)
             builder.Services.AddDistributedMemoryCache();
 
             builder.Services.AddSession(options =>
@@ -42,9 +42,12 @@ namespace Bmcs
                     options.UseSqlServer(builder.Configuration.GetConnectionString("AzureDatabaseConnectionString")));
             }
 
+            // Email Service Registration
+            builder.Services.AddTransient<Bmcs.Function.IEmailSender, Bmcs.Function.EmailSender>();
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline (‹ŒConfigure•”•ª)
+            // Configure the HTTP request pipeline (æ—§Configureéƒ¨åˆ†)
             if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -55,7 +58,7 @@ namespace Bmcs
                 app.UseHsts();
             }
 
-            // DB‚Ì‰Šú‰»i‹ŒCreateDbIfNotExists‚Ì“à—ej
+            // DBã®åˆæœŸåŒ–ï¼ˆæ—§CreateDbIfNotExistsã®å†…å®¹ï¼‰
             CreateDbIfNotExists(app);
 
             app.UseHttpsRedirection();

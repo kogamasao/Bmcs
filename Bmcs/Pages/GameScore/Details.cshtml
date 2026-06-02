@@ -305,10 +305,10 @@
             <table class="table table-sm table-hover table-bordered">
                 <thead class="thead-light">
                     <tr>
-                        <th class="column-fix-left">
+                        <th>
                             @Html.DisplayNameFor(model => model.GameScoreFielderList[0].BattingOrder)
                         </th>
-                        <th>
+                        <th class="column-fix-left">
                             @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
                         </th>
                         <th>
@@ -405,14 +405,14 @@
                     @foreach (var item in Model.GameScoreFielderList)
                     {
                         <tr>
-                            <td class="text-center align-middle column-fix-left">
+                            <td class="text-center align-middle">
                                 @if (battingOrderValue != item.BattingOrder)
                                 {
                                     @item.DisplayBattingOrder
                                 }
                                 @{battingOrderValue = item.BattingOrder.NullToZero();}
                             </td>
-                            <td>
+                            <td class="align-middle column-fix-left">
                                 @Html.DisplayFor(modelItem => item.Member.MemberName)
                             </td>
                             <td>
