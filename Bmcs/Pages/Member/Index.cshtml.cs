@@ -69,6 +69,14 @@ namespace Bmcs.Pages.Member
                     .ThenBy(r => r.OrderUniformNumber)
                     .ThenBy(r => r.UniformNumber).AsQueryable().AsNoTracking(), pageIndex ?? 1, 20);
 
+            //存在しないページを指定された場合は1ページ目へ戻す
+            //※そのまま表示すると「メンバーが登録されていません」と誤表示され、
+            //  ページ送りも描画されないため一覧へ戻れなくなる
+            if (Member.TotalPages > 0 && Member.PageIndex > Member.TotalPages)
+            {
+                return RedirectToPage("./Index", new { teamID });
+            }
+
             Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID);
 
             if (Team == null)

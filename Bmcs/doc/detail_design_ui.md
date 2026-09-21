@@ -288,7 +288,28 @@ curl -s -b cookie.jar http://localhost:15080/Game/Index | grep -oP '<a class="na
 - 集計対象が0件のとき何も描画されない。空状態の案内を出す
 - 確定前の試合がある場合は、その旨と確定への導線を出す（7.1の注意書きと対応させる）
 
-## 9. 制約事項・未対応
+## 9. 入力エラー時の再表示について（移行時の必須チェック）
+
+**`ModelState.IsValid == false` で `return Page()` する箇所は、画面が参照する
+関連データを取り直しているか必ず確認する。**
+
+取り直していないと、
+- ビューがナビゲーションプロパティ（`Game.Team.TeamName` など）を参照していれば **500**
+- ヘルプ（`SystemAdmin`）を参照していれば**ヘルプボタンが消える**
+
+実際に `Member/Create`・`Member/Edit`・`Game/Create`・`Game/Edit` の4画面で
+500が発生していた（いずれも修正済み）。対処は `SetPageDataAsync()` を用意して
+`return Page()` の前に呼ぶ形で統一している。
+
+### 未対応（各画面の移行時に対応する）
+入力エラー時にヘルプが消える画面。500にはならないが、
+**ユーザが最も困っている瞬間にヘルプが消える**。
+
+`Order/Edit`・`GameScene/Edit`・`GameScore/Edit`・`Team/Edit`・`UserAccount/Edit`・`Message/Index`
+
+※`Team/Create`・`UserAccount/Create`・`Inquiry/Create` は対応済み。
+
+## 10. 制約事項・未対応
 - **スクリーンショットが無い**。スコア管理アプリとして、実際の画面が見えないのは弱い。
   画像を用意できていないため、現状は「サンプルチームで体験する」と
   「ログインせずに公開チームの成績を見る」で実物を見せる導線にしている

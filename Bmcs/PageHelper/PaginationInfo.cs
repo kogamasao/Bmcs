@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Bmcs.PageHelper
 {
@@ -49,6 +49,17 @@ namespace Bmcs.PageHelper
         /// <returns></returns>
         public static PaginationInfo Create(int pageIndex, int totalPages, string pageName, Dictionary<string, string> routeValues = null)
         {
+            //0や負の値を指定された場合に「0 / 3 ページ」と表示されないよう範囲内に丸める
+            if (pageIndex < 1)
+            {
+                pageIndex = 1;
+            }
+
+            if (totalPages > 0 && pageIndex > totalPages)
+            {
+                pageIndex = totalPages;
+            }
+
             return new PaginationInfo
             {
                 PageIndex = pageIndex,
