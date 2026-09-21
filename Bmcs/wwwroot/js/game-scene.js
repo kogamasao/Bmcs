@@ -1,5 +1,40 @@
 ﻿$(function () {
 
+    //タイブレーク設定ダイアログの開閉
+    //※Bootstrapのモーダルに依存していたため <dialog> に置き換えている
+    var tieBreakDialog = document.getElementById("tie-break");
+
+    $(".js-tiebreak-open").on("click", function () {
+        if (tieBreakDialog) {
+            tieBreakDialog.showModal();
+        }
+    });
+
+    $(".js-tiebreak-close").on("click", function () {
+        if (tieBreakDialog) {
+            tieBreakDialog.close();
+        }
+    });
+
+    if (tieBreakDialog) {
+        tieBreakDialog.addEventListener("click", function (event) {
+            if (event.target === tieBreakDialog) {
+                tieBreakDialog.close();
+            }
+        });
+    }
+
+    //「試合終了」の誤操作対策
+    //※「チェンジ」と隣接しており、押すと試合が終了して修正には戻り操作が必要になる。
+    //  確認を入れる（jsのsubmit処理より先に実行されるよう、先頭でバインドする）
+    $(".js-confirm-gameset").on("click", function (event) {
+        if (!window.confirm("試合を終了します。よろしいですか？\n（イニングを進める場合は「チェンジ」を押してください）")) {
+            event.stopImmediatePropagation();
+            event.preventDefault();
+        }
+    });
+
+
     //初期表示ボタン制御
     IsUseDeleteButton();
 
@@ -54,7 +89,7 @@
         $('#game-scene-submit-class').val(submitclass);
 
         //非表示
-        $('body').addClass('d-none');
+        $('body').addClass('hidden');
 
         //submit
         $('form').submit();
@@ -91,10 +126,10 @@
             if (result == 1
                 || (result >= 5
                     && result <= 8)) {
-                afterRunnerResult.parent().parent().addClass('d-none');
+                afterRunnerResult.parent().parent().addClass('hidden');
             }
             else {
-                afterRunnerResult.parent().parent().removeClass('d-none');
+                afterRunnerResult.parent().parent().removeClass('hidden');
             }
         }
 

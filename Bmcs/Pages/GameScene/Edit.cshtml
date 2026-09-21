@@ -2,42 +2,45 @@
 @model Bmcs.Pages.GameScene.EditModel
 
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+@{
+    Layout = "_LayoutTailwind";
+}
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
+<div class="mx-auto max-w-5xl px-4 py-6">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Game.Team.TeamName</p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
-<h4>@Model.Game.Team.TeamName</h4>
-<hr />
-<div class="row">
-    <div class="col-md-8">
         <form method="post">
 
-            <div class="form-group">
+            <div class="mt-4">
                 @if (Model.LastGameSceneID != null)
                 {
-                    <a class="btn btn-secondary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.LastGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">戻る</a>
+                    <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.LastGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">戻る</a>
                 }
 
                 @if (Model.NextGameSceneID != null || Model.GameScene.GameSceneID.ZeroToNull() != null)
                 {
-                    <a class="btn btn-secondary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.NextGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">次へ</a>
-                    <a class="btn btn-secondary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">最新へ</a>
+                    <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.NextGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">次へ</a>
+                    <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">最新へ</a>
                 }
 
                 @if (Model.Game.StatusClass == StatusClass.BeforeFix
            || Model.Game.StatusClass == StatusClass.EndGame
            || Model.Game.StatusClass == StatusClass.EndGameLock)
                 {
-                    <a class="btn btn-secondary" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果へ</a>
+                    <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果へ</a>
                 }
             </div>
 
 
-            <div class="form-group">
-                <a class="btn btn-danger" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isOrderChange="@false" asp-route-isInitialize="@true">元に戻す</a>
-                <a class="btn btn-danger" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isOrderChange="@false" asp-route-isInitialize="@true" asp-route-skipCount="@(Model.SkipCount + 1)">スキップ</a>
+            <div class="mt-4">
+                <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isOrderChange="@false" asp-route-isInitialize="@true">元に戻す</a>
+                <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isOrderChange="@false" asp-route-isInitialize="@true" asp-route-skipCount="@(Model.SkipCount + 1)">スキップ</a>
 
                 @if (Model.GameScene.InningIndex != 1)
                 {
@@ -49,8 +52,8 @@
                 }
             </div>
 
-            <span asp-validation-for="Game.GameID" class="text-danger"></span>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <span asp-validation-for="Game.GameID" class="mt-1 block text-sm text-red-600"></span>
+            <div asp-validation-summary="ModelOnly" class="mt-1 block text-sm text-red-600"></div>
             <input type="hidden" asp-for="Game.GameID" />
             <input type="hidden" asp-for="GameScene.GameSceneID" />
             <input type="hidden" asp-for="GameScene.Inning" />
@@ -65,26 +68,26 @@
             <input type="hidden" asp-for="InterruptBattingOrder" id="interrupt-batting-order" />
             <input type="hidden" asp-for="IsTieBreak" />
 
-            <div class="table-responsive">
-                <table class="table table-sm table-bordered">
-                    <thead class="thead-light">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200 text-sm">
+                    <thead class="bg-slate-50 text-left text-xs font-semibold text-slate-500">
                         <tr>
                             <th>
                                 チーム名
                             </th>
                             @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top))
                             {
-                                <th class="text-center">
+                                <th class="px-2 py-2 text-center">
                                     @inning.Inning
                                 </th>
                             }
                             @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count(); i < 9; i++)
                             {
-                                <th class="text-center">
+                                <th class="px-2 py-2 text-center">
                                     @(i + 1)
                                 </th>
                             }
-                            <th class="text-center">
+                            <th class="px-2 py-2 text-center">
                                 計
                             </th>
                         </tr>
@@ -103,16 +106,16 @@
                             </td>
                             @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top))
                             {
-                                <td class="text-center">
+                                <td class="px-2 py-2 text-center">
                                     <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
                                 </td>
                             }
                             @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count(); i < 9; i++)
                             {
-                                <td class="text-center">
+                                <td class="px-2 py-2 text-center">
                                 </td>
                             }
-                            <td class="text-center">
+                            <td class="px-2 py-2 text-center">
                                 @Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Select(r => r.Score).Sum()
                             </td>
                         </tr>
@@ -129,24 +132,24 @@
                             </td>
                             @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom))
                             {
-                                <td class="text-center">
+                                <td class="px-2 py-2 text-center">
                                     <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
                                 </td>
                             }
 
                             @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count(); i < 9; i++)
                             {
-                                <td class="text-center">
+                                <td class="px-2 py-2 text-center">
                                 </td>
                             }
 
                             @if (Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() > 9
                              && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
                             {
-                                <td class="text-center">
+                                <td class="px-2 py-2 text-center">
                                 </td>
                             }
-                            <td class="text-center">
+                            <td class="px-2 py-2 text-center">
                                 @Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Select(r => r.Score).Sum()
                             </td>
                         </tr>
@@ -154,20 +157,20 @@
                 </table>
             </div>
 
-            <div class="box">
-                <div class="box-title">
+            <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700">
                     守備
                 </div>
-                <div class="box-inner">
+                <div class="px-4 py-3">
                     @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Defense)
                     {
-                        <div class="form-group">
-                            <a class="btn btn-success" asp-page="/Order/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isDuringGame="@true">守備変更</a>
+                        <div class="mt-4">
+                            <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Order/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isDuringGame="@true">守備変更</a>
                         </div>
                     }
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered">
-                            <thead class="thead-light">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200 text-sm">
+                            <thead class="bg-slate-50 text-left text-xs font-semibold text-slate-500">
                                 <tr>
                                     <th>
                                         投手
@@ -179,13 +182,13 @@
                                     @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
                                     {
                                         <td>
-                                            <select asp-for="@Model.GameScene.PitcherMemberID" class="form-control" asp-items="@Model.OpponentPitcherMemberIDList"></select>
+                                            <select asp-for="@Model.GameScene.PitcherMemberID" class="block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.OpponentPitcherMemberIDList"></select>
                                         </td>
                                     }
                                     else
                                     {
                                         <td>
-                                            <select asp-for="@Model.GameScene.PitcherMemberID" class="form-control" asp-items="@Model.MemberIDNoEmptyList"></select>
+                                            <select asp-for="@Model.GameScene.PitcherMemberID" class="block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.MemberIDNoEmptyList"></select>
                                         </td>
                                     }
                                 </tr>
@@ -196,14 +199,14 @@
             </div>
             @if (Model.BeforeGameSceneRunnerList != null && Model.BeforeGameSceneRunnerList.Any())
             {
-                <div class="box">
-                    <div class="box-title">
+                <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                    <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700">
                         打席中ランナー結果
                     </div>
-                    <div class="box-inner">
-                        <div class="table-responsive">
-                            <table id="before-detail" class="table table-sm table-bordered">
-                                <thead class="thead-light">
+                    <div class="px-4 py-3">
+                        <div class="overflow-x-auto">
+                            <table id="before-detail" class="min-w-full divide-y divide-slate-200 text-sm">
+                                <thead class="bg-slate-50 text-left text-xs font-semibold text-slate-500">
                                     <tr>
                                         <th>
                                             対象選手
@@ -221,13 +224,13 @@
                                     {
                                         <tr id="@("BeforeGameSceneDetailList_" + i.ToString())">
                                             <td>
-                                                <select asp-for="@Model.BeforeGameSceneDetailList[i].MemberID" class="form-control js-memberid js-rename" asp-items="@Model.MemberIDIncludeOpponentMemberList"></select>
+                                                <select asp-for="@Model.BeforeGameSceneDetailList[i].MemberID" class="js-memberid js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.MemberIDIncludeOpponentMemberList"></select>
                                             </td>
                                             <td>
-                                                <select asp-for="@Model.BeforeGameSceneDetailList[i].DetailResultClass" class="form-control js-result js-rename" asp-items="@Model.BeforeDetailResultClassList"></select>
+                                                <select asp-for="@Model.BeforeGameSceneDetailList[i].DetailResultClass" class="js-result js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.BeforeDetailResultClassList"></select>
                                             </td>
                                             <td>
-                                                <input type="button" value="削除" class="btn btn-danger js-before-delete js-rename" />
+                                                <input type="button" value="削除" class="js-before-delete js-rename cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" />
                                             </td>
                                         </tr>
                                     }
@@ -235,13 +238,13 @@
                             </table>
                         </div>
 
-                        <div class="form-group">
-                            <input type="button" value="追加" class="btn btn-success" id="add-before-detail" />
+                        <div class="mt-4">
+                            <input type="button" value="追加" class="cursor-pointer rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" id="add-before-detail" />
                         </div>
 
-                        <div class="table-responsive">
-                            <table class="table table-sm table-bordered">
-                                <thead class="thead-light">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-slate-200 text-sm">
+                                <thead class="bg-slate-50 text-left text-xs font-semibold text-slate-500">
                                     <tr>
                                         <th>
 
@@ -258,7 +261,7 @@
                                     @for (int i = 0; i < Model.BeforeGameSceneRunnerList.Count; i++)
                                     {
                                         <tr>
-                                            <td class="align-middle">
+                                            <td class="px-2 py-2 align-middle">
                                                 <span>@Model.BeforeGameSceneRunnerList[i].RunnerClass.GetEnumName()</span>
                                                 <input class="js-rename" type="hidden" asp-for="@Model.BeforeGameSceneRunnerList[i].BattingOrder" />
                                                 <input class="js-rename" type="hidden" asp-for="@Model.BeforeGameSceneRunnerList[i].BeforeRunnerClass" />
@@ -269,17 +272,17 @@
                                             @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
                                             {
                                                 <td>
-                                                    <select asp-for="@Model.BeforeGameSceneRunnerList[i].MemberID" class="form-control js-before-runner-member" data-runnerclass="@Model.BeforeGameSceneRunnerList[i].RunnerClass" asp-items="@Model.MemberIDNoEmptyList"></select>
+                                                    <select asp-for="@Model.BeforeGameSceneRunnerList[i].MemberID" class="js-before-runner-member block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" data-runnerclass="@Model.BeforeGameSceneRunnerList[i].RunnerClass" asp-items="@Model.MemberIDNoEmptyList"></select>
                                                 </td>
                                             }
                                             else
                                             {
                                                 <td>
-                                                    <select asp-for="@Model.BeforeGameSceneRunnerList[i].MemberID" class="form-control js-before-runner-member" data-runnerclass="@Model.BeforeGameSceneRunnerList[i].RunnerClass" asp-items="@Model.OpponentFielderMemberIDList"></select>
+                                                    <select asp-for="@Model.BeforeGameSceneRunnerList[i].MemberID" class="js-before-runner-member block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" data-runnerclass="@Model.BeforeGameSceneRunnerList[i].RunnerClass" asp-items="@Model.OpponentFielderMemberIDList"></select>
                                                 </td>
                                             }
                                             <td>
-                                                <select asp-for="@Model.BeforeGameSceneRunnerList[i].RunnerResultClass" class="form-control js-before-runner-result" data-runnerclass="@Model.BeforeGameSceneRunnerList[i].RunnerClass" asp-items="@Model.RunnerResultClassList"></select>
+                                                <select asp-for="@Model.BeforeGameSceneRunnerList[i].RunnerResultClass" class="js-before-runner-result block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" data-runnerclass="@Model.BeforeGameSceneRunnerList[i].RunnerClass" asp-items="@Model.RunnerResultClassList"></select>
                                             </td>
                                         </tr>
                                     }
@@ -290,14 +293,14 @@
                     </div>
                 </div>
             }
-            <div class="box">
-                <div class="box-title">
+            <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700">
                     打者結果
                 </div>
-                <div class="box-inner">
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered">
-                            <thead class="thead-light">
+                <div class="px-4 py-3">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200 text-sm">
+                            <thead class="bg-slate-50 text-left text-xs font-semibold text-slate-500">
                                 <tr>
                                     @if (Model.InterruptBattingOrder != null)
                                     {
@@ -317,26 +320,26 @@
                                 <tr>
                                     @if (Model.InterruptBattingOrder != null)
                                     {
-                                        <td class="text-center align-middle">
+                                        <td class="px-2 py-2 text-center align-middle">
                                             <div class="ml-1 custom-control custom-checkbox">
                                                 <input type="checkbox" class="custom-control-input" id="interruptFLG" asp-for="GameScene.InterruptFLG">
                                                 <label class="custom-control-label" for="interruptFLG"></label>
                                             </div>
                                         </td>
                                     }
-                                    <td class="text-center align-middle">
+                                    <td class="px-2 py-2 text-center align-middle">
                                         <span id="display-batting-order">@Model.GameScene.BattingOrder.DisplayDecimal()</span>
                                     </td>
                                     @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
                                     {
                                         <td>
-                                            <select asp-for="@Model.GameScene.BatterMemberID" class="form-control js-batter-member" asp-items="@Model.MemberIDNoEmptyList"></select>
+                                            <select asp-for="@Model.GameScene.BatterMemberID" class="js-batter-member block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.MemberIDNoEmptyList"></select>
                                         </td>
                                     }
                                     else
                                     {
                                         <td>
-                                            <select asp-for="@Model.GameScene.BatterMemberID" class="form-control js-batter-member" asp-items="@Model.OpponentFielderMemberIDList"></select>
+                                            <select asp-for="@Model.GameScene.BatterMemberID" class="js-batter-member block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.OpponentFielderMemberIDList"></select>
                                         </td>
                                     }
                                 </tr>
@@ -344,9 +347,9 @@
                         </table>
                     </div>
 
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered">
-                            <thead class="thead-light">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200 text-sm">
+                            <thead class="bg-slate-50 text-left text-xs font-semibold text-slate-500">
                                 <tr>
                                     <th>
                                         方向
@@ -362,13 +365,13 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        <select asp-for="@Model.GameScene.HittingDirectionClass" class="form-control" asp-items="@Model.HittingDirectionClassList"></select>
+                                        <select asp-for="@Model.GameScene.HittingDirectionClass" class="block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.HittingDirectionClassList"></select>
                                     </td>
                                     <td>
-                                        <select asp-for="@Model.GameScene.HitBallClass" class="form-control" asp-items="@Model.HitBallClassList"></select>
+                                        <select asp-for="@Model.GameScene.HitBallClass" class="block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.HitBallClassList"></select>
                                     </td>
                                     <td>
-                                        <select asp-for="@Model.GameScene.ResultClass" class="form-control js-batter-result" asp-items="@Model.ResultClassList"></select>
+                                        <select asp-for="@Model.GameScene.ResultClass" class="js-batter-result block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.ResultClassList"></select>
                                     </td>
                                 </tr>
                             </tbody>
@@ -377,14 +380,14 @@
                 </div>
             </div>
 
-            <div id="after-detail-runner" class="box">
-                <div class="box-title">
+            <div id="after-detail-runner" class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700">
                     打席後ランナー結果
                 </div>
-                <div class="box-inner">
-                    <div class="table-responsive">
-                        <table id="after-detail" class="table table-sm table-bordered">
-                            <thead class="thead-light">
+                <div class="px-4 py-3">
+                    <div class="overflow-x-auto">
+                        <table id="after-detail" class="min-w-full divide-y divide-slate-200 text-sm">
+                            <thead class="bg-slate-50 text-left text-xs font-semibold text-slate-500">
                                 <tr>
                                     <th>
                                         対象選手
@@ -404,33 +407,33 @@
                                         @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
                                         {
                                             <td>
-                                                <select asp-for="@Model.AfterGameSceneDetailList[i].MemberID" class="form-control js-memberid js-rename" asp-items="@Model.OpponentMemberIDList"></select>
+                                                <select asp-for="@Model.AfterGameSceneDetailList[i].MemberID" class="js-memberid js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.OpponentMemberIDList"></select>
                                             </td>
                                         }
                                         else
                                         {
                                             <td>
-                                                <select asp-for="@Model.AfterGameSceneDetailList[i].MemberID" class="form-control js-memberid js-rename" asp-items="@Model.MemberIDList"></select>
+                                                <select asp-for="@Model.AfterGameSceneDetailList[i].MemberID" class="js-memberid js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.MemberIDList"></select>
                                             </td>
                                         }
                                         <td>
-                                            <select asp-for="@Model.AfterGameSceneDetailList[i].DetailResultClass" class="form-control js-result js-rename" asp-items="@Model.AfterDetailResultClassList"></select>
+                                            <select asp-for="@Model.AfterGameSceneDetailList[i].DetailResultClass" class="js-result js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.AfterDetailResultClassList"></select>
                                         </td>
                                         <td>
-                                            <input type="button" value="削除" class="btn btn-danger js-after-delete js-rename" />
+                                            <input type="button" value="削除" class="js-after-delete js-rename cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" />
                                         </td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
-                    <div class="form-group">
-                        <input type="button" value="追加" class="btn btn-success" id="add-after-detail" />
+                    <div class="mt-4">
+                        <input type="button" value="追加" class="cursor-pointer rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" id="add-after-detail" />
                     </div>
 
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered">
-                            <thead class="thead-light">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200 text-sm">
+                            <thead class="bg-slate-50 text-left text-xs font-semibold text-slate-500">
                                 <tr>
                                     <th>
 
@@ -454,7 +457,7 @@
                                     }
 
                                     <tr class="@addHiddenClass js-after-runner">
-                                        <td class="align-middle">
+                                        <td class="px-2 py-2 align-middle">
                                             <span class="js-after-runner-class-name" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass">@Model.AfterGameSceneRunnerList[i].RunnerClass.GetEnumName()</span>
                                             <input class="js-rename js-after-runner-batting-order" type="hidden" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" asp-for="@Model.AfterGameSceneRunnerList[i].BattingOrder" />
                                             <input class="js-rename" type="hidden" asp-for="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" />
@@ -466,17 +469,17 @@
                                         @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
                                         {
                                             <td>
-                                                <select asp-for="@Model.AfterGameSceneRunnerList[i].MemberID" class="form-control js-after-runner-member" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" asp-items="@Model.MemberIDNoEmptyList"></select>
+                                                <select asp-for="@Model.AfterGameSceneRunnerList[i].MemberID" class="js-after-runner-member block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" asp-items="@Model.MemberIDNoEmptyList"></select>
                                             </td>
                                         }
                                         else
                                         {
                                             <td>
-                                                <select asp-for="@Model.AfterGameSceneRunnerList[i].MemberID" class="form-control js-after-runner-member" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" asp-items="@Model.OpponentFielderMemberIDList"></select>
+                                                <select asp-for="@Model.AfterGameSceneRunnerList[i].MemberID" class="js-after-runner-member block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" asp-items="@Model.OpponentFielderMemberIDList"></select>
                                             </td>
                                         }
                                         <td>
-                                            <select asp-for="@Model.AfterGameSceneRunnerList[i].RunnerResultClass" class="form-control js-after-runner-result" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" asp-items="@Model.RunnerResultClassList"></select>
+                                            <select asp-for="@Model.AfterGameSceneRunnerList[i].RunnerResultClass" class="js-after-runner-result block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" data-runnerclass="@Model.AfterGameSceneRunnerList[i].BeforeRunnerClass" asp-items="@Model.RunnerResultClassList"></select>
                                         </td>
                                     </tr>
                                 }
@@ -485,66 +488,79 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label asp-for="GameScene.Note" class="control-label"></label>
-                <textarea asp-for="GameScene.Note" class="form-control"></textarea>
-                <span asp-validation-for="GameScene.Note" class="text-danger"></span>
+            <div class="mt-4">
+                <label asp-for="GameScene.Note" class="block text-sm font-semibold text-slate-800"></label>
+                <textarea asp-for="GameScene.Note" class="block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"></textarea>
+                <span asp-validation-for="GameScene.Note" class="mt-1 block text-sm text-red-600"></span>
             </div>
-            <div class="form-group">
-                <input type="button" value="次の打者へ" class="btn btn-primary js-submit" data-submitclass="@GameSceneSubmitClass.NextBatter" />
+            @*
+                3アウトになっても「次の打者へ」を押し続けられる（草野球向けの意図的な仕様で、
+                任意のタイミングでチェンジできる）。ただし初回の利用者は押し続けてしまい、
+                4アウト・5アウトと進んでしまうため、3アウト以上では案内を出す。
+            *@
+            @if (Model.GameScene.OutCount >= 3)
+            {
+                <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                    <p class="font-bold text-amber-900">@(Model.GameScene.OutCount)アウトです</p>
+                    <p class="mt-1 text-sm text-amber-900/80">
+                        イニングを進める場合は下の<strong class="font-semibold">「チェンジ」</strong>を押してください。
+                        （このまま打者を進めることもできます）
+                    </p>
+                </div>
+            }
+
+            <div class="mt-4">
+                <input type="button" value="次の打者へ" class="js-submit w-full sm:w-auto cursor-pointer rounded-lg bg-sky-700 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-sky-800" data-submitclass="@GameSceneSubmitClass.NextBatter" />
+                <p class="mt-2 text-sm text-slate-500">打者の結果を選んで押します。凡打ならそのまま押すだけです。</p>
             </div>
-            <div class="form-group">
-                <input type="button" value="チェンジ" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterChange" />
-                <input type="button" value="試合終了" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterGameSet" />
+            <div class="mt-6 flex flex-wrap items-center gap-2 border-t border-slate-200 pt-4">
+                <input type="button" value="チェンジ" class="js-submit cursor-pointer rounded-lg bg-amber-500 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-amber-600" data-submitclass="@GameSceneSubmitClass.ThisBatterChange" />
+                <input type="button" value="試合終了" class="js-submit js-confirm-gameset cursor-pointer rounded-lg bg-red-600 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-red-700" data-submitclass="@GameSceneSubmitClass.ThisBatterGameSet" />
                 @if (Model.GameScene.TopButtomClass == TopButtomClass.Buttom && !Model.IsTieBreak)
                 {
-                    <input type="button" value="タイブレーク" class="btn btn-danger" data-toggle="modal" data-target="#tie-break" />
+                    <input type="button" value="タイブレーク" class="js-tiebreak-open cursor-pointer rounded-lg bg-amber-500 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-amber-600" />
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="tie-break" tabindex="-1" role="dialog" aria-labelledby="tie-break-title" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="tie-break-title">タイブレーク設定</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>タイブレークの開始打順、開始アウトカウント、開始ランナーを入力してください。</p>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label asp-for="Game.TieBreakStartBattingOrder" class="control-label"></label>
-                                            <select asp-for="Game.TieBreakStartBattingOrder" class="form-control" asp-items="Model.TieBreakBattingOrderList"></select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label asp-for="Game.TieBreakStartOutCount" class="control-label"></label>
-                                            <input asp-for="Game.TieBreakStartOutCount" class="form-control" min="0" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label asp-for="Game.TieBreakStartRunnerSceneClass" class="control-label"></label>
-                                            <select asp-for="Game.TieBreakStartRunnerSceneClass" class="form-control" asp-items="Model.RunnerSceneClassList"></select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button id="add-order-modal" type="button" class="btn btn-danger js-submit" data-submitclass="@GameSceneSubmitClass.ThisBatterTieBreak">タイブレークへ</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">戻る</button>
-                                </div>
+                    @*
+                        タイブレーク設定。
+                        Bootstrap のモーダルに依存していたため <dialog> に置き換えている。
+                        ※m-auto が無いと Tailwind のリセットで左上に表示される
+                    *@
+                    <dialog id="tie-break" aria-labelledby="tie-break-title" class="m-auto w-[min(28rem,calc(100vw-2rem))] rounded-xl border border-slate-200 bg-white p-0 shadow-2xl backdrop:bg-slate-900/50">
+                        <div class="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4">
+                            <h2 id="tie-break-title" class="text-base font-bold text-slate-900">タイブレーク設定</h2>
+                            <button type="button" class="js-tiebreak-close rounded-md p-1.5 text-slate-500 transition hover:bg-slate-100" aria-label="閉じる">
+                                <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" /></svg>
+                            </button>
+                        </div>
+                        <div class="space-y-4 px-5 py-4">
+                            <p class="text-sm text-slate-600">開始打順、開始アウトカウント、開始ランナーを入力してください。</p>
+                            <div>
+                                <label asp-for="Game.TieBreakStartBattingOrder" class="block text-sm font-semibold text-slate-800"></label>
+                                <select asp-for="Game.TieBreakStartBattingOrder" class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="Model.TieBreakBattingOrderList"></select>
+                            </div>
+                            <div>
+                                <label asp-for="Game.TieBreakStartOutCount" class="block text-sm font-semibold text-slate-800"></label>
+                                <input asp-for="Game.TieBreakStartOutCount" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" min="0" />
+                            </div>
+                            <div>
+                                <label asp-for="Game.TieBreakStartRunnerSceneClass" class="block text-sm font-semibold text-slate-800"></label>
+                                <select asp-for="Game.TieBreakStartRunnerSceneClass" class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="Model.RunnerSceneClassList"></select>
                             </div>
                         </div>
-                    </div>
-
-
+                        <div class="flex justify-end gap-2 border-t border-slate-200 px-5 py-3">
+                            <button type="button" class="js-tiebreak-close rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">やめる</button>
+                            <button type="button" class="js-submit rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-600" data-submitclass="@GameSceneSubmitClass.ThisBatterTieBreak">タイブレークへ</button>
+                        </div>
+                    </dialog>
                 }
             </div>
+
             <input id="game-scene-submit-class" type="hidden" asp-for="@Model.GameSceneSubmitClass" />
         </form>
-    </div>
-</div>
 
-<div class="form-group">
-    <a class="btn btn-secondary" asp-page="/Game/Index" asp-route-teamID="@Model.Game.TeamID">試合一覧へ戻る</a>
+    <div class="mt-6">
+        <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Game/Index" asp-route-teamID="@Model.Game.TeamID">試合一覧へ戻る</a>
+    </div>
 </div>
 
 @section Scripts {
