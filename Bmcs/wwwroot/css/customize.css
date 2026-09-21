@@ -148,6 +148,11 @@ textarea.form-control {
     font-weight: bold;
 }
 
+.landing-font-note {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
 .landing-itemization-ul {
     color: #000000;
     border: double 5px #364e96; /*二重線 太さ 色*/

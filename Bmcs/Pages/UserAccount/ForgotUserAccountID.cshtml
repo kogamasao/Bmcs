@@ -1,0 +1,54 @@
+@page
+@model Bmcs.Pages.UserAccount.ForgotUserAccountIDModel
+@{
+    ViewData[ViewDataConstant.Title] = "ユーザIDをお忘れの場合";
+}
+
+<h1 class="d-inline-block">
+    @ViewData[ViewDataConstant.Title]
+</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        @if (Model.IsComplete)
+        {
+            <div class="alert alert-success" role="alert">
+                <p>
+                    ご入力のメールアドレス宛にユーザIDを送信しました。
+                    <br />メールが届かない場合は、そのメールアドレスでの登録がない可能性があります。
+                    <br />お困りの場合はお問い合わせページよりご連絡ください。
+                </p>
+            </div>
+            <div class="form-group">
+                <a class="btn btn-primary" asp-page="/Index">ログイン画面へ</a>
+                <a class="btn btn-secondary" asp-page="/Inquiry/Create">お問い合わせ</a>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-primary" role="alert">
+                <p>ユーザ登録時のメールアドレスを入力してください。該当するユーザIDをメールで送信します。</p>
+            </div>
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="EmailAddress" class="control-label">メールアドレス</label>
+                    <input asp-for="EmailAddress" class="form-control" />
+                    <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="ユーザIDを送信" class="btn btn-primary" />
+                    <a class="btn btn-secondary" asp-page="/Index">戻る</a>
+                </div>
+                <div class="form-group">
+                    <a asp-page="./ForgotPassword">パスワードがわからない場合</a>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

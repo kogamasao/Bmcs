@@ -36,6 +36,8 @@ namespace Bmcs.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<Inquiry> Inquirys { get; set; }
 
+        public DbSet<ResetToken> ResetTokens { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.UseCollation("SQL_Latin1_General_CP1_CS_AS");
@@ -54,6 +56,10 @@ namespace Bmcs.Data
             modelBuilder.Entity<Message>().ToTable("Message");
             modelBuilder.Entity<Order>().ToTable("Order");
             modelBuilder.Entity<Inquiry>().ToTable("Inquiry");
+            modelBuilder.Entity<ResetToken>().ToTable("ResetToken");
+
+            modelBuilder.Entity<ResetToken>()
+                .HasIndex(r => new { r.ResetTokenClass, r.TargetID });
 
             modelBuilder.Entity<Member>()
                 .HasMany(m => m.PitcherGameScenes)

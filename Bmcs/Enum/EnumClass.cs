@@ -558,6 +558,17 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
+    /// 再設定トークン区分
+    /// </summary>
+    public enum ResetTokenClass
+    {
+        [Display(Name = "ユーザパスワード")]
+        UserPassword = 1,
+        [Display(Name = "チームパスワード")]
+        TeamPassword = 2,
+    }
+
+    /// <summary>
     /// システム管理区分
     /// </summary>
     public enum SystemAdminClass
