@@ -75,6 +75,30 @@
 }
 
 /*
+ * 一覧表の操作列を右端に固定する。
+ * ※列数が多い一覧はスマートフォン幅で横スクロールし、操作ボタンが画面外になって
+ *   存在に気づけない。主要な操作なので常に見える位置に留める。
+ */
+@layer components {
+    .col-fix-right {
+        position: sticky;
+        right: 0;
+        z-index: 10;
+        background-color: var(--color-white);
+        border-left: 1px solid var(--color-slate-200);
+    }
+
+    thead .col-fix-right {
+        z-index: 20;
+        background-color: var(--color-slate-50);
+    }
+
+    tbody tr:hover .col-fix-right {
+        background-color: var(--color-slate-50);
+    }
+}
+
+/*
  * jquery-validation-unobtrusive が動的に付与するクラス。
  * これらはHTMLに書かれないためTailwindの検出対象にならず、ここで定義する。
  * ※Bootstrapを外したページでも入力チェックの表示が崩れないようにするため
