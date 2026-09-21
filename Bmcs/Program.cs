@@ -17,7 +17,29 @@ namespace Bmcs
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container (旧ConfigureServices部分)
-            builder.Services.AddDistributedMemoryCache();
+
+            //セッションの保存先
+            //※メモリ保持だとアプリの再起動（デプロイ・スケール・プラットフォーム保守）で
+            //  全員がログアウトし、スコア入力中のユーザが弾き出される。
+            //  接続文字列がある場合はSQL Serverに保持する。
+            var sessionConnectionString = builder.Configuration.GetConnectionString("SqlServerConnectionString");
+
+            if (string.IsNullOrEmpty(sessionConnectionString))
+            {
+                //接続できない環境（設定漏れ）でも起動はできるようにする
+                builder.Services.AddDistributedMemoryCache();
+            }
+            else
+            {
+                builder.Services.AddDistributedSqlServerCache(options =>
+                {
+                    options.ConnectionString = sessionConnectionString;
+                    options.SchemaName = "dbo";
+                    options.TableName = "SessionCache";
+                    //期限切れレコードの削除間隔
+                    options.ExpiredItemsDeletionInterval = TimeSpan.FromMinutes(30);
+                });
+            }
 
             builder.Services.AddSession(options =>
             {

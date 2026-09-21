@@ -42,6 +42,15 @@ namespace Bmcs.Models
         [Display(Name = "メールアドレス")]
         public string EmailAddress { get; set; }
 
+        /// <summary>
+        /// 最終ログイン日時
+        /// ※長期間使用されていないデータの判別に使用する。
+        ///   本項目の追加以前のデータは、関連データの更新日時から推定した値を設定している。
+        /// </summary>
+        [Display(Name = "最終ログイン日時")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
+        public DateTime? LastLoginDatetime { get; set; }
+
         [DefaultValue(false)]
         [Display(Name = "削除フラグ")]
         public bool DeleteFLG { get; set; }

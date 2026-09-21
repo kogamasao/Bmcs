@@ -66,6 +66,28 @@ namespace Bmcs.Pages
                     }
                     else
                     {
+                        //最終ログイン日時
+                        //※長期間使用されていないデータを判別するために保持する。
+                        //  チーム側にも持たせ、所属ユーザを1人ずつ調べずに抽出できるようにする。
+                        var loginDatetime = DateTime.Now;
+
+                        dbUserAccount.LastLoginDatetime = loginDatetime;
+
+                        if (dbUserAccount.Team != null)
+                        {
+                            dbUserAccount.Team.LastLoginDatetime = loginDatetime;
+                        }
+
+                        //※ログインを妨げないよう、保存に失敗しても処理は続行する
+                        try
+                        {
+                            await Context.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.LogError(ex, "最終ログイン日時の更新に失敗しました。");
+                        }
+
                         //ログイン情報セット
                         HttpContext.Session.SetString(SessionConstant.UserAccountID, dbUserAccount.UserAccountID.NullToEmpty());
                         HttpContext.Session.SetString(SessionConstant.TeamID, dbUserAccount.TeamID.NullToEmpty());
