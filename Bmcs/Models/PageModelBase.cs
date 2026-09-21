@@ -685,6 +685,63 @@ namespace Bmcs.Models
             }
         }
 
+        /// <summary>
+        /// ヘッダメニューのリンク一覧を取得する
+        /// ※Bootstrap版・Tailwind版の両レイアウトから使用する。
+        ///   レイアウトごとにリンクを書くと片方だけ写し漏れるため、ここに1本化する。
+        /// </summary>
+        /// <returns></returns>
+        public List<PageHelper.NavigationLink> GetHeaderLinkList()
+        {
+            var linkList = new List<PageHelper.NavigationLink>();
+
+            if (IsLogin())
+            {
+                linkList.Add(PageHelper.NavigationLink.Create("/Game/Index", "試合"));
+                linkList.Add(PageHelper.NavigationLink.Create("/Score/Index", "成績",
+                    new Dictionary<string, string> { { "scorePageClass", ScorePageClass.Index.ToString() }, { "isPublic", "false" } }));
+                linkList.Add(PageHelper.NavigationLink.Create("/Member/Index", "メンバー"));
+                linkList.Add(PageHelper.NavigationLink.Create("/Team/Edit", "チーム情報"));
+                linkList.Add(PageHelper.NavigationLink.Create("/UserAccount/Edit", "ユーザ情報"));
+            }
+
+            linkList.Add(PageHelper.NavigationLink.Create("/Team/Index", "公開チーム"));
+            linkList.Add(PageHelper.NavigationLink.Create("/Score/Index", "公開チーム成績",
+                new Dictionary<string, string> { { "scorePageClass", ScorePageClass.Index.ToString() }, { "isPublic", "true" } }));
+            linkList.Add(PageHelper.NavigationLink.Create("/Message/Index", "メッセージ",
+                new Dictionary<string, string> { { "messagePageClass", MessagePageClass.Public.ToString() } }));
+
+            if (IsAdmin())
+            {
+                linkList.Add(PageHelper.NavigationLink.Create("/UserAccount/Index", "ユーザ一覧"));
+                linkList.Add(PageHelper.NavigationLink.Create("/Inquiry/Index", "お問い合わせ一覧"));
+                linkList.Add(PageHelper.NavigationLink.Create("/Survey/Result", "アンケート集計"));
+            }
+
+            return linkList;
+        }
+
+        /// <summary>
+        /// ヘッダ右側（ログイン・ログアウト・登録）のリンク一覧を取得する
+        /// </summary>
+        /// <returns></returns>
+        public List<PageHelper.NavigationLink> GetHeaderAccountLinkList()
+        {
+            var linkList = new List<PageHelper.NavigationLink>();
+
+            if (IsLogin())
+            {
+                linkList.Add(PageHelper.NavigationLink.Create("/Index", "ログアウト"));
+            }
+            else
+            {
+                linkList.Add(PageHelper.NavigationLink.Create("/Index", "ログイン"));
+                linkList.Add(PageHelper.NavigationLink.Create("/UserAccount/Create", "無料で登録", null, true));
+            }
+
+            return linkList;
+        }
+
         public IActionResult ReLogin()
         {
             HttpContext.Session.SetString(SessionConstant.UrlAfterLogin, Request.Scheme + "://" + Request.Host + Request.Path + Request.QueryString);

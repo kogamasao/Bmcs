@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model Bmcs.Pages.Member.IndexModel
 @using Bmcs.PageHelper
 
@@ -26,7 +26,7 @@
                 <p class="mx-auto mt-2 max-w-md text-slate-600">
                     試合に出る選手を登録してください。<strong class="font-semibold text-slate-800">名前だけで登録できます</strong>。
                 </p>
-                <a class="mt-6 inline-flex items-center justify-center rounded-lg bg-emerald-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-700" asp-page="Create">
+                <a class="mt-6 inline-flex items-center justify-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800" asp-page="Create">
                     メンバーを追加する
                 </a>
             }
@@ -34,6 +34,15 @@
             {
                 <p class="mt-2 text-slate-600">このチームはまだメンバーを公開していません。</p>
             }
+
+            @* 空状態でも必ず脱出口を出す（以前はヘッダ以外に戻る手段が無かった） *@
+            <div class="mt-6 flex flex-wrap justify-center gap-3">
+                @if (!Model.IsMyTeam)
+                {
+                    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Team/Index">公開チーム一覧へ</a>
+                }
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">トップへ</a>
+            </div>
         </div>
     }
     else
@@ -41,7 +50,7 @@
         <div class="mt-6 flex flex-wrap items-center gap-3">
             @if (Model.IsMyTeam)
             {
-                <a class="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700" asp-page="Create">
+                <a class="inline-flex items-center justify-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800" asp-page="Create">
                     メンバーを追加
                 </a>
 
@@ -50,8 +59,15 @@
                     従来はこの画面に試合作成への導線が1本も無く、選択肢が
                     「メンバー追加」と「戻る」だけだったため、ここで手が止まっていた。
                 *@
-                <a class="inline-flex items-center justify-center rounded-lg bg-sky-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-800" asp-page="/Game/Create">
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Game/Create">
                     試合を登録する
+                </a>
+            }
+            @if (!Model.IsMyTeam)
+            {
+                @* 公開チーム一覧・チーム情報から来るため、そこへ戻れるようにする *@
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Team/Index">
+                    公開チーム一覧へ
                 </a>
             }
             <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">
@@ -103,13 +119,13 @@
                             <td class="whitespace-nowrap px-4 py-3 text-right">
                                 @if (Model.IsMyTeam || Model.IsAdmin())
                                 {
-                                    <a class="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="./Edit" asp-route-id="@item.MemberID">編集</a>
-                                    <a class="ml-1 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
-                                    <a class="ml-1 rounded-md border border-red-300 bg-white px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-50" asp-page="./Delete" asp-route-id="@item.MemberID">削除</a>
+                                    <a class="rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="./Edit" asp-route-id="@item.MemberID">編集</a>
+                                    <a class="ml-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
+                                    <a class="ml-1 rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" asp-page="./Delete" asp-route-id="@item.MemberID">削除</a>
                                 }
                                 else
                                 {
-                                    <a class="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
+                                    <a class="rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
                                 }
                             </td>
                         </tr>

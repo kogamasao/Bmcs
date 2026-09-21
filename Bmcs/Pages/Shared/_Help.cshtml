@@ -1,4 +1,8 @@
-﻿<img src="~/img/help.png" alt="ヘルプ" class="help" data-toggle="modal" data-target="#help" />
+﻿@* キーボードでも開けるようにボタンにする（imgのままでは tabindex も role も無く操作できない） *@
+<button type="button" class="btn btn-link p-0 border-0 align-baseline" data-toggle="modal" data-target="#help">
+    <img src="~/img/help.png" alt="" class="help" />
+    <span class="sr-only">この画面の使い方</span>
+</button>
 
 <!-- Modal -->
 <div class="modal fade" id="help" tabindex="-1" role="dialog" aria-labelledby="help-title" aria-hidden="true">

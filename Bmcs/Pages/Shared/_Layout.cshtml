@@ -22,62 +22,21 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
-                        @*<li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Top/Index">Top</a>
-                            </li>*@
-
-                        @if (Model.IsLogin())
+                        @*
+                            メニューのリンクは PageModelBase.GetHeaderLinkList() に1本化している。
+                            Tailwind版と別々に書くと片方だけ写し漏れるため（実際に発生した）。
+                        *@
+                        @foreach (var link in Model.GetHeaderLinkList())
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Game/Index">試合</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@false">成績</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Member/Index">メンバー</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Team/Edit">チーム情報</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/UserAccount/Edit">ユーザ情報</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="@link.PageName" asp-all-route-data="@link.RouteValues">@link.Text</a>
                             </li>
                         }
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Team/Index">公開チーム</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@true">公開チーム成績</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public">メッセージ</a>
-                        </li>
-
-                        @if (Model.IsAdmin())
+                        @foreach (var link in Model.GetHeaderAccountLinkList())
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/UserAccount/Index">ユーザ一覧</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Inquiry/Index">お問い合わせ一覧</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Survey/Result">アンケート集計</a>
-                            </li>
-                        }
-
-                        @if (Model.IsLogin())
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">ログアウト</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">ログイン</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="@link.PageName">@link.Text</a>
                             </li>
                         }
                     </ul>

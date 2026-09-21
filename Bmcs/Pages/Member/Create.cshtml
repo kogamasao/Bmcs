@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model Bmcs.Pages.Member.CreateModel
 
 @{
@@ -62,7 +62,7 @@
             <summary class="flex cursor-pointer items-center justify-between gap-4 px-6 py-4 font-semibold text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
                 <span>
                     くわしい情報を入力する
-                    <span class="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">任意・あとから設定できます</span>
+                    <span class="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">任意・あとから設定できます</span>
                 </span>
                 <svg class="size-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
             </summary>
@@ -104,7 +104,7 @@
         </details>
 
         <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <input type="submit" value="登録する" class="rounded-lg bg-emerald-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" />
+            <input type="submit" value="登録する" class="rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" />
             <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="Index" asp-route-teamID="@Model.Member.Team.TeamID">メンバー一覧へ</a>
         </div>
     </form>
