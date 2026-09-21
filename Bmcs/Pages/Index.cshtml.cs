@@ -92,7 +92,8 @@ namespace Bmcs.Pages
                 //※ログイン前にアクセスしていたページがある場合は、そちらを優先する
                 if (!base.IsAdmin()
                     && string.IsNullOrEmpty(HttpContext.Session.GetString(SessionConstant.UrlAfterLogin))
-                    && await HasUnansweredSurveyAsync())
+                    && string.IsNullOrEmpty(HttpContext.Session.GetString(SessionConstant.SurveySkip))
+                    && (await base.GetUnansweredSurveyAsync()) != null)
                 {
                     return RedirectToPage("./Survey/Answer");
                 }
@@ -109,46 +110,5 @@ namespace Bmcs.Pages
                 }
             }
 
-        /// <summary>
-        /// 未回答のアンケートがあるかどうか
-        /// </summary>
-        /// <returns></returns>
-        private async Task<bool> HasUnansweredSurveyAsync()
-        {
-            //このセッションで「あとで回答する」を選択済みの場合は誘導しない
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString(SessionConstant.SurveySkip)))
-            {
-                return false;
-            }
-
-            try
-            {
-                var userAccountID = HttpContext.Session.GetString(SessionConstant.UserAccountID);
-
-                var surveyList = await Context.Surveys
-                    .Where(r => r.DeleteFLG == false
-                             && r.StatusClass == SurveyStatusClass.Open)
-                    .ToListAsync();
-
-                if (!surveyList.Any(r => r.IsOpen()))
-                {
-                    return false;
-                }
-
-                var answeredSurveyIDList = await Context.SurveyAnswers
-                    .Where(r => r.UserAccountID == userAccountID)
-                    .Select(r => r.SurveyID)
-                    .ToListAsync();
-
-                return surveyList.Any(r => r.IsOpen() && !answeredSurveyIDList.Contains(r.SurveyID));
-            }
-            catch (Exception ex)
-            {
-                //アンケート用テーブルが未作成の場合などでも、ログインは通す
-                Logger.LogError(ex, "アンケートの未回答判定に失敗しました。");
-
-                return false;
-            }
-        }
     }
 }

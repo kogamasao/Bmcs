@@ -25,6 +25,12 @@ namespace Bmcs.Pages.Top
 
         public Models.Message PrivateMessage { get; set; }
 
+        /// <summary>
+        /// 未回答のアンケート（無い場合はnull）
+        /// ※ログイン時に「あとで回答する」を選んだ場合でも、ここから回答できるようにする
+        /// </summary>
+        public Models.Survey UnansweredSurvey { get; set; }
+
         public async Task<IActionResult> OnGetAsync()
         {
             //システム管理データ
@@ -61,6 +67,12 @@ namespace Bmcs.Pages.Top
                                         .Where(r => messageIDList.Contains(r.MessageID))
                                         .OrderByDescending(r => r.UpdateDatetime)
                                         .FirstOrDefaultAsync();
+
+                //未回答のアンケートがある場合は案内を表示する（管理者は対象外）
+                if (!base.IsAdmin())
+                {
+                    UnansweredSurvey = await base.GetUnansweredSurveyAsync();
+                }
             }
 
             //インデックス
