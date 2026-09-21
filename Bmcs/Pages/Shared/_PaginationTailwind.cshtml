@@ -1,0 +1,85 @@
+@*
+    ページ送り（Tailwind版）。
+    一覧画面ごとに同じHTMLを書かないよう部品化する。
+
+    使い方：
+      @await Html.PartialAsync("~/Pages/Shared/_PaginationTailwind.cshtml",
+          PaginationInfo.Create(Model.Member.PageIndex, Model.Member.TotalPages, "/Member/Index",
+              new Dictionary<string, string> { { "teamID", Model.Team.TeamID } }))
+*@
+@using Bmcs.PageHelper
+@model PaginationInfo
+
+@if (Model != null && Model.TotalPages > 1)
+{
+    @functions {
+        /// <summary>
+        /// ページ番号を含むルート値を作る
+        /// </summary>
+        Dictionary<string, string> CreateRouteValues(int pageIndex)
+        {
+            var routeValues = new Dictionary<string, string>(Model.RouteValues);
+            routeValues["pageIndex"] = pageIndex.ToString();
+
+            return routeValues;
+        }
+    }
+
+    <nav class="mt-6 flex flex-wrap items-center gap-1" aria-label="ページ送り">
+        @if (Model.HasPreviousPage)
+        {
+            <a class="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+               asp-page="@Model.PageName" asp-all-route-data="CreateRouteValues(1)" aria-label="最初のページ">&laquo;</a>
+            <a class="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+               asp-page="@Model.PageName" asp-all-route-data="CreateRouteValues(Model.PageIndex - 1)" aria-label="前のページ">&lsaquo;</a>
+        }
+        else
+        {
+            <span class="cursor-not-allowed rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-300">&laquo;</span>
+            <span class="cursor-not-allowed rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-300">&lsaquo;</span>
+        }
+
+        @if (Model.PageIndex >= 4)
+        {
+            <span class="px-2 text-sm text-slate-400">…</span>
+        }
+
+        @for (var i = Model.PageIndex - 2; i <= Model.PageIndex + 2; i++)
+        {
+            if (i < 1 || i > Model.TotalPages)
+            {
+                continue;
+            }
+
+            if (i == Model.PageIndex)
+            {
+                <span class="rounded-md border border-sky-700 bg-sky-700 px-3.5 py-2 text-sm font-semibold text-white" aria-current="page">@i</span>
+            }
+            else
+            {
+                <a class="rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+                   asp-page="@Model.PageName" asp-all-route-data="CreateRouteValues(i)">@i</a>
+            }
+        }
+
+        @if (Model.TotalPages - Model.PageIndex >= 3)
+        {
+            <span class="px-2 text-sm text-slate-400">…</span>
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <a class="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+               asp-page="@Model.PageName" asp-all-route-data="CreateRouteValues(Model.PageIndex + 1)" aria-label="次のページ">&rsaquo;</a>
+            <a class="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+               asp-page="@Model.PageName" asp-all-route-data="CreateRouteValues(Model.TotalPages)" aria-label="最後のページ">&raquo;</a>
+        }
+        else
+        {
+            <span class="cursor-not-allowed rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-300">&rsaquo;</span>
+            <span class="cursor-not-allowed rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-300">&raquo;</span>
+        }
+
+        <span class="ml-2 text-sm text-slate-500">@Model.PageIndex / @Model.TotalPages ページ</span>
+    </nav>
+}

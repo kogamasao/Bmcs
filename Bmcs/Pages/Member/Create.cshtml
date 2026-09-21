@@ -1,60 +1,113 @@
-﻿@page
+@page
 @model Bmcs.Pages.Member.CreateModel
 
 @{
     ViewData[ViewDataConstant.Title] = "メンバー追加";
+    Layout = "_LayoutTailwind";
+
+    //折りたたみの中でエラーが出た場合、閉じたままだと気づけないため開いておく
+    var optionalFieldList = new[]
+    {
+        nameof(Model.Member.MemberClass), nameof(Model.Member.ThrowClass),
+        nameof(Model.Member.BatClass), nameof(Model.Member.PositionGroupClass),
+        nameof(Model.Member.MessageDetail),
+    };
+
+    var hasOptionalError = optionalFieldList.Any(r =>
+        (ViewData.ModelState[nameof(Model.Member) + "." + r]?.Errors.Count ?? 0) > 0);
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
-
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-
-<h4>@Model.Member.Team.TeamName</h4>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Member.TeamID" />
-            <div class="form-group">
-                <label asp-for="Member.UniformNumber" class="control-label"></label>
-                <input asp-for="Member.UniformNumber" class="form-control" />
-                <span asp-validation-for="Member.UniformNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.MemberName" class="control-label"></label>
-                <input asp-for="Member.MemberName" class="form-control" />
-                <span asp-validation-for="Member.MemberName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.MemberClass" class="control-label"></label>
-                <select asp-for="Member.MemberClass" class="form-control" asp-items="Model.MemberClassList"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.ThrowClass" class="control-label"></label>
-                <select asp-for="Member.ThrowClass" class="form-control" asp-items="Model.ThrowClassList"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.BatClass" class="control-label"></label>
-                <select asp-for="Member.BatClass" class="form-control" asp-items="Model.BatClassList"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.PositionGroupClass" class="control-label"></label>
-                <select asp-for="Member.PositionGroupClass" class="form-control" asp-items="Model.PositionGroupClassList"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.MessageDetail" class="control-label"></label>
-                <textarea asp-for="Member.MessageDetail" class="form-control"></textarea>
-                <span asp-validation-for="Member.MessageDetail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="登録" class="btn btn-primary" />
-                <a class="btn btn-secondary" asp-page="Index" asp-route-teamID="@Model.Member.Team.TeamID">戻る</a>
-            </div>
-        </form>
+<div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Member.Team.TeamName</p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
     </div>
+
+    @*
+        「選手」と「参加ユーザ」の違いを明示する。
+        チームIDで参加したチームメイトは UserAccount として参加するだけで、
+        Member（選手）は作られない。チームIDを配れば選手が増えると誤解されるため。
+    *@
+    <div class="mt-6 rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-900">
+        試合に出る<strong class="font-semibold">選手は、この画面で登録します</strong>。
+        <br />チームIDで参加したチームメイトは「ユーザ」としてスコア入力ができるようになりますが、選手としては登録されません。
+    </div>
+
+    <form method="post" class="mt-6">
+        @* 項目のエラーも先頭にまとめて出す（折りたたみの中のエラーに気づけるようにするため） *@
+        <div asp-validation-summary="All" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
+        <input type="hidden" asp-for="Member.TeamID" />
+
+        <div class="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div>
+                <label asp-for="Member.MemberName" class="block text-sm font-semibold text-slate-800"></label>
+                <p class="mt-0.5 text-sm text-slate-500">入力が必要なのはここだけです。</p>
+                <input asp-for="Member.MemberName" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" placeholder="例：山田 太郎" />
+                <span asp-validation-for="Member.MemberName" class="mt-1 block text-sm text-red-600"></span>
+            </div>
+
+            <div>
+                <label asp-for="Member.UniformNumber" class="block text-sm font-semibold text-slate-800"></label>
+                <p class="mt-0.5 text-sm text-slate-500">未定の場合は空のままで構いません。あとから設定できます。</p>
+                <input asp-for="Member.UniformNumber" class="mt-1 block w-24 rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" inputmode="numeric" />
+                <span asp-validation-for="Member.UniformNumber" class="mt-1 block text-sm text-red-600"></span>
+            </div>
+        </div>
+
+        @* 任意項目。選手ごとに5項目あり、必須と並べると実際より重く見えるため折りたたむ *@
+        <details class="group mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm" open="@hasOptionalError">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 px-6 py-4 font-semibold text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+                <span>
+                    くわしい情報を入力する
+                    <span class="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">任意・あとから設定できます</span>
+                </span>
+                <svg class="size-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </summary>
+
+            <div class="space-y-6 border-t border-slate-200 px-6 py-6">
+                <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-y-0">
+                    <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                        <label asp-for="Member.ThrowClass" class="block text-sm font-semibold text-slate-800"></label>
+                        <p class="mt-0.5 text-sm text-slate-500">右投げ・左投げ</p>
+                        <select asp-for="Member.ThrowClass" class="mt-1 block w-full self-start rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="Model.ThrowClassList"></select>
+                    </div>
+                    <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                        <label asp-for="Member.BatClass" class="block text-sm font-semibold text-slate-800"></label>
+                        <p class="mt-0.5 text-sm text-slate-500">右打ち・左打ち・両打ち</p>
+                        <select asp-for="Member.BatClass" class="mt-1 block w-full self-start rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="Model.BatClassList"></select>
+                    </div>
+                </div>
+
+                <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-y-0">
+                    <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                        <label asp-for="Member.PositionGroupClass" class="block text-sm font-semibold text-slate-800"></label>
+                        <p class="mt-0.5 text-sm text-slate-500">主に守る位置の区分です。</p>
+                        <select asp-for="Member.PositionGroupClass" class="mt-1 block w-full self-start rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="Model.PositionGroupClassList"></select>
+                    </div>
+                    <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                        <label asp-for="Member.MemberClass" class="block text-sm font-semibold text-slate-800"></label>
+                        <p class="mt-0.5 text-sm text-slate-500">選手・監督などの区分です。</p>
+                        <select asp-for="Member.MemberClass" class="mt-1 block w-full self-start rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="Model.MemberClassList"></select>
+                    </div>
+                </div>
+
+                <div>
+                    <label asp-for="Member.MessageDetail" class="block text-sm font-semibold text-slate-800"></label>
+                    <p class="mt-0.5 text-sm text-slate-500">メモや紹介文など。</p>
+                    <textarea asp-for="Member.MessageDetail" rows="3" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"></textarea>
+                    <span asp-validation-for="Member.MessageDetail" class="mt-1 block text-sm text-red-600"></span>
+                </div>
+            </div>
+        </details>
+
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <input type="submit" value="登録する" class="rounded-lg bg-emerald-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" />
+            <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="Index" asp-route-teamID="@Model.Member.Team.TeamID">メンバー一覧へ</a>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

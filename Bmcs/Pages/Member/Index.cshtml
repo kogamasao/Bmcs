@@ -1,207 +1,125 @@
-﻿@page
+@page
 @model Bmcs.Pages.Member.IndexModel
+@using Bmcs.PageHelper
 
 @{
     ViewData[ViewDataConstant.Title] = "メンバー一覧";
+    Layout = "_LayoutTailwind";
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+<div class="mx-auto max-w-6xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Team.TeamName</p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-<h4>@Model.Team.TeamName</h4>
-
-<div class="form-group">
-    @if (Model.IsMyTeam)
+    @if (!Model.Member.Any())
     {
-    <a class="btn btn-primary" asp-page="Create">メンバー追加</a>
-    }
-    <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
-</div>
-
-<div class="table-responsive">
-    <table class="table table-hover table-sm table-bordered">
-        <thead class="thead-light">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Member[0].UniformNumber)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Member[0].MemberName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Member[0].MemberClassName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Member[0].ThrowClassName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Member[0].BatClassName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Member[0].PositionGroupClassName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Member[0].MessageDetail)
-                </th>
-                @if (Model.IsAdmin())
-                {
-                <th>
-                    @Html.DisplayNameFor(model => model.Member[0].DeleteFLG)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Member[0].EntryUserID)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Member[0].EntryDatetime)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Member[0].UpdateUserID)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Member[0].UpdateDatetime)
-                </th>
-                }
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Member)
+        @* 空状態。従来はヘッダだけのテーブルが表示されていた *@
+        <div class="mt-8 rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+            <h2 class="text-lg font-bold text-slate-900">まだメンバーが登録されていません</h2>
+            @if (Model.IsMyTeam)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UniformNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MemberName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MemberClassName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ThrowClassName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BatClassName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PositionGroupClassName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MessageDetail)
-                </td>
-                @if (Model.IsAdmin())
-                    {
-                <td>
-                    @Html.DisplayFor(modelItem => item.DeleteFLG)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EntryUserID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EntryDatetime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UpdateUserID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UpdateDatetime)
-                </td>
-                    }
-                @if (Model.IsMyTeam || Model.IsAdmin())
-                    {
-                <td>
-                    <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.MemberID">編集</a>
-                    <span>&nbsp;</span>
-                    <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
-                    <span>&nbsp;</span>
-                    <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.MemberID">削除</a>
-                </td>
-                    }
-                    else
-                    {
-                <td>
-                    <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
-                </td>
-                    }
-            </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-@{
-    var prevDisabled = !Model.Member.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.Member.HasNextPage ? "disabled" : "";
-}
-
-<div class="mt-1">
-    <ul class="pagination">
-        <li class="page-item @prevDisabled">
-            <a asp-page="/Member/Index"
-               asp-route-teamID="@Model.Team.TeamID"
-               class="page-link">
-                <<
-            </a>
-        </li>
-
-        @if(Model.Member.PageIndex >= 4)
-        {
-        <li class="page-item disabled">
-            <span class="page-link">
-                …
-            </span>
-        </li>
-        }
-
-        @for(var i = Model.Member.PageIndex - 2; i <= Model.Member.PageIndex + 2; i++)
-        {
-        @if(i < 1 || i > Model.Member.TotalPages)
-            {
-                continue;
-            }
-
-        @if(Model.Member.PageIndex == i)
-            {
-        <li class="page-item active">
-            <a asp-page="/Member/Index"
-               asp-route-teamID="@Model.Team.TeamID"
-               asp-route-pageIndex="@(i)"
-               class="page-link">
-                @(i)
-            </a>
-        </li>
+                <p class="mx-auto mt-2 max-w-md text-slate-600">
+                    試合に出る選手を登録してください。<strong class="font-semibold text-slate-800">名前だけで登録できます</strong>。
+                </p>
+                <a class="mt-6 inline-flex items-center justify-center rounded-lg bg-emerald-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-700" asp-page="Create">
+                    メンバーを追加する
+                </a>
             }
             else
             {
-        <li class="page-item">
-            <a asp-page="/Member/Index"
-               asp-route-teamID="@Model.Team.TeamID"
-               asp-route-pageIndex="@(i)"
-               class="page-link">
-                @(i)
-            </a>
-        </li>
+                <p class="mt-2 text-slate-600">このチームはまだメンバーを公開していません。</p>
             }
-        }
+        </div>
+    }
+    else
+    {
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+            @if (Model.IsMyTeam)
+            {
+                <a class="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700" asp-page="Create">
+                    メンバーを追加
+                </a>
 
-        @if(Model.Member.TotalPages - Model.Member.PageIndex >= 3)
-        {
-        <li class="page-item disabled">
-            <span class="page-link">
-                …
-            </span>
-        </li>
-        }
-
-        <li class="page-item @nextDisabled">
-            <a asp-page="/Member/Index"
-               asp-route-teamID="@Model.Team.TeamID"
-               asp-route-pageIndex="@(Model.Member.TotalPages)"
-               class="page-link">
-                >>
+                @*
+                    メンバー登録の次にやることは試合の登録。
+                    従来はこの画面に試合作成への導線が1本も無く、選択肢が
+                    「メンバー追加」と「戻る」だけだったため、ここで手が止まっていた。
+                *@
+                <a class="inline-flex items-center justify-center rounded-lg bg-sky-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-800" asp-page="/Game/Create">
+                    試合を登録する
+                </a>
+            }
+            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">
+                トップへ
             </a>
-        </li>
-    </ul>
+        </div>
+
+        <div class="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+            <table class="min-w-full divide-y divide-slate-200 text-sm">
+                <thead class="bg-slate-50">
+                    <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].UniformNumber)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].MemberName)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].MemberClassName)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].ThrowClassName)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].BatClassName)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].PositionGroupClassName)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].MessageDetail)</th>
+                        @if (Model.IsAdmin())
+                        {
+                            <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].DeleteFLG)</th>
+                            <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].EntryUserID)</th>
+                            <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].EntryDatetime)</th>
+                            <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].UpdateUserID)</th>
+                            <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].UpdateDatetime)</th>
+                        }
+                        <th class="px-4 py-3"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @foreach (var item in Model.Member)
+                    {
+                        <tr class="transition hover:bg-slate-50">
+                            <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-500">@Html.DisplayFor(modelItem => item.UniformNumber)</td>
+                            <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-900">@Html.DisplayFor(modelItem => item.MemberName)</td>
+                            <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.MemberClassName)</td>
+                            <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.ThrowClassName)</td>
+                            <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.BatClassName)</td>
+                            <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.PositionGroupClassName)</td>
+                            <td class="px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.MessageDetail)</td>
+                            @if (Model.IsAdmin())
+                            {
+                                <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.DeleteFLG)</td>
+                                <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.EntryUserID)</td>
+                                <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.EntryDatetime)</td>
+                                <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.UpdateUserID)</td>
+                                <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.UpdateDatetime)</td>
+                            }
+                            <td class="whitespace-nowrap px-4 py-3 text-right">
+                                @if (Model.IsMyTeam || Model.IsAdmin())
+                                {
+                                    <a class="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="./Edit" asp-route-id="@item.MemberID">編集</a>
+                                    <a class="ml-1 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
+                                    <a class="ml-1 rounded-md border border-red-300 bg-white px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-50" asp-page="./Delete" asp-route-id="@item.MemberID">削除</a>
+                                }
+                                else
+                                {
+                                    <a class="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="./Details" asp-route-id="@item.MemberID">詳細</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @await Html.PartialAsync("~/Pages/Shared/_PaginationTailwind.cshtml",
+            PaginationInfo.Create(Model.Member.PageIndex, Model.Member.TotalPages, "/Member/Index",
+                new Dictionary<string, string> { { "teamID", Model.Team.TeamID } }))
+    }
 </div>
