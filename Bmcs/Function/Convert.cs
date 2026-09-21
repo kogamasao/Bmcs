@@ -77,12 +77,21 @@ namespace Bmcs.Function
 
         /// <summary>
         /// 改行コード変換
+        /// ※このメソッドの戻り値は Html.Raw で出力されるため、
+        ///   タグとして解釈されないようHTMLエスケープしてから改行を変換する。
+        ///   エスケープしない場合、メッセージ本文やプレーのメモに書いたHTMLがそのまま
+        ///   出力され、他の利用者の画面でスクリプトが実行される（ストアドXSS）。
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         public static string ReplaceNewLineForHtml(this string value)
         {
-            return value.NullToEmpty().Replace(Environment.NewLine, "<br />");
+            //Environment.NewLine だけでは、Linux上(Azure App Service)で
+            //ブラウザが送信するCRLFを変換できないため、CRLF・LF・CRのいずれも変換する
+            return System.Net.WebUtility.HtmlEncode(value.NullToEmpty())
+                         .Replace("\r\n", "<br />")
+                         .Replace("\n", "<br />")
+                         .Replace("\r", "<br />");
         }
 
         /// <summary>
