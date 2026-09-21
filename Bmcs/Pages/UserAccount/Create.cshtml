@@ -34,7 +34,7 @@
             </div>
 
             @* 説明文の行数が違っても入力欄の高さがそろうよう subgrid を使う *@
-            <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto]">
+            <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-y-0">
                 <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
                     <label asp-for="UserAccount.Password" class="block text-sm font-semibold text-slate-800"></label>
                     <p class="mt-0.5 text-sm text-slate-500">ログインに使用します。</p>

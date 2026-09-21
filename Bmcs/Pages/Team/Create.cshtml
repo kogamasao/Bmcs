@@ -50,7 +50,7 @@
                 説明文の行数が左右で違うと入力欄の高さがずれるため、subgrid で
                 「ラベル／説明／入力欄」の各行を左右でそろえる。
             *@
-            <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto]">
+            <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-y-0">
                 <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
                     <label asp-for="Team.TeamPassword" class="block text-sm font-semibold text-slate-800"></label>
                     <p class="mt-0.5 text-sm text-slate-500">チームメイトが参加するときに使います。あなたのログインパスワードとは別のものです。</p>
@@ -105,7 +105,7 @@
                     <span asp-validation-for="Team.RepresentativeName" class="mt-1 block text-sm text-red-600"></span>
                 </div>
 
-                <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto]">
+                <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-y-0">
                     <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
                         <label asp-for="Team.TeamCategoryClass" class="block text-sm font-semibold text-slate-800"></label>
                         <p class="mt-0.5 text-sm text-slate-500">カテゴリごとに公開チームの成績を比較できます。</p>
@@ -118,7 +118,7 @@
                     </div>
                 </div>
 
-                <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto]">
+                <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-y-0">
                     <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
                         <label asp-for="Team.ActivityBase" class="block text-sm font-semibold text-slate-800"></label>
                         <p class="mt-0.5 text-sm text-slate-500">例：東京都世田谷区</p>
