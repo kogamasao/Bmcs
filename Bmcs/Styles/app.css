@@ -4,6 +4,9 @@
  */
 @import "tailwindcss";
 
+/* 管理者が登録したHTML（ヘルプ・お知らせ）を素の見た目で表示するために使用する */
+@plugin "@tailwindcss/typography";
+
 /* クラス名の検出対象（このファイルからの相対パス） */
 @source "../Pages/**/*.cshtml";
 @source "../wwwroot/js/**/*.js";

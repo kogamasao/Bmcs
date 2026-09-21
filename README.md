@@ -109,6 +109,7 @@ chmod +x ~/.local/bin/tailwindcss
 
 - 20260920_password_reset.sql … アカウント復旧機能（ResetTokenテーブル、ヘルプ文言の更新）
 - 20260921_survey.sql … アンケート機能（Survey関連5テーブル、第1回アンケートの設問）
+- 20260921_help_message.sql … ヘルプ本文の修正（ユーザ作成のチーム選択→チームID入力、チームIDの説明追加、誤字）
 
 ※移行SQLは、アプリのデプロイ「前」に実行してください。
 

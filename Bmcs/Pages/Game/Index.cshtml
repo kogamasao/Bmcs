@@ -132,12 +132,21 @@
                     {
                 <td>
                     @*
-                        試合前は打順設定への導線が無く、試合を作った直後に打順画面から離脱すると
-                        その試合のスコア入力に到達できなくなっていたため、ボタンを追加する。
+                        試合前は入力への導線が無く、試合を作った直後にその画面から離脱すると
+                        スコア入力に到達できなくなっていたため、ボタンを追加する。
+                        ※入力方式で遷移先を分ける。「試合結果のみ」の試合を打順設定へ送ると、
+                        　選んでいないプレー毎入力に入ってしまう。
                     *@
                     @if (item.StatusClass == StatusClass.BeforeGame)
                     {
-                        <a class="btn btn-primary btn-sm" asp-page="/Order/Edit" asp-route-gameID="@item.GameID">打順設定</a>
+                        @if (item.GameInputTypeClass == GameInputTypeClass.OnlyGame)
+                        {
+                            <a class="btn btn-primary btn-sm" asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果入力</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-primary btn-sm" asp-page="/Order/Edit" asp-route-gameID="@item.GameID">打順設定</a>
+                        }
                         <span>&nbsp;</span>
                     }
                     @if (item.StatusClass == StatusClass.DuringGame)

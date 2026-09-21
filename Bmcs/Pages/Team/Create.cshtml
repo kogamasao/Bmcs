@@ -1,91 +1,182 @@
-﻿@page
+@page
 @model Bmcs.Pages.Team.CreateModel
 @using Bmcs.Enum
 
 @{
     ViewData[ViewDataConstant.Title] = "チーム作成";
+    ViewData[ViewDataConstant.Description] = "野球・ソフトボールのチームを作成します。必要な入力は5項目だけです。";
+    Layout = "_LayoutTailwind";
+
+    //折りたたみの中の任意項目でエラーが出た場合、閉じたままだと気づけないため開いておく
+    var optionalFieldList = new[]
+    {
+        nameof(Model.Team.RepresentativeName), nameof(Model.Team.TeamCategoryClass),
+        nameof(Model.Team.UseBallClass), nameof(Model.Team.ActivityBase),
+        nameof(Model.Team.TeamNumber), nameof(Model.Team.TeamEmailAddress),
+        nameof(Model.Team.MessageDetail),
+    };
+
+    var hasOptionalError = optionalFieldList.Any(r =>
+        (ViewData.ModelState[nameof(Model.Team) + "." + r]?.Errors.Count ?? 0) > 0);
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
-
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Team.TeamID" class="control-label"></label>
-                <input asp-for="Team.TeamID" class="form-control" />
-                <span asp-validation-for="Team.TeamID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Team.TeamName" class="control-label"></label>
-                <input asp-for="Team.TeamName" class="form-control" />
-                <span asp-validation-for="Team.TeamName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Team.TeamAbbreviation" class="control-label"></label>
-                <input asp-for="Team.TeamAbbreviation" class="form-control" />
-                <span asp-validation-for="Team.TeamAbbreviation" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Team.TeamPassword" class="control-label"></label>
-                <input asp-for="Team.TeamPassword" class="form-control" />
-                <span asp-validation-for="Team.TeamPassword" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Team.ConfirmTeamPassword" class="control-label"></label>
-                <input asp-for="Team.ConfirmTeamPassword" class="form-control" />
-                <span asp-validation-for="Team.ConfirmTeamPassword" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Team.PublicFLG" /> @Html.DisplayNameFor(model => model.Team.PublicFLG)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Team.RepresentativeName" class="control-label"></label>
-                <input asp-for="Team.RepresentativeName" class="form-control" />
-                <span asp-validation-for="Team.RepresentativeName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Team.TeamCategoryClass" class="control-label"></label>
-                <select asp-for="Team.TeamCategoryClass" class="form-control" asp-items="Model.TeamCategoryClassList"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Team.UseBallClass" class="control-label"></label>
-                <select asp-for="Team.UseBallClass" class="form-control" asp-items="Model.UseBallClassList"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Team.ActivityBase" class="control-label"></label>
-                <input asp-for="Team.ActivityBase" class="form-control" />
-                <span asp-validation-for="Team.ActivityBase" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Team.TeamNumber" class="control-label"></label>
-                <input asp-for="Team.TeamNumber" class="form-control" />
-                <span asp-validation-for="Team.TeamNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Team.TeamEmailAddress" class="control-label"></label>
-                <input asp-for="Team.TeamEmailAddress" class="form-control" />
-                <span asp-validation-for="Team.TeamEmailAddress" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Team.MessageDetail" class="control-label"></label>
-                <textarea asp-for="Team.MessageDetail" class="form-control"></textarea>
-                <span asp-validation-for="Team.MessageDetail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="登録" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="mx-auto max-w-3xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
     </div>
+
+    <p class="mt-2 text-slate-600">
+        入力が必要なのは<strong class="font-semibold text-slate-900">5項目だけ</strong>です。それ以外はあとから設定できます。
+    </p>
+
+    <form method="post" class="mt-8">
+        @* 項目のエラーも先頭にまとめて出す（折りたたみの中のエラーに気づけるようにするため） *@
+        <div asp-validation-summary="All" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
+
+        <div class="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div>
+                <label asp-for="Team.TeamName" class="block text-sm font-semibold text-slate-800"></label>
+                <input asp-for="Team.TeamName" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" placeholder="例：ジャパンブリッジ" />
+                <span asp-validation-for="Team.TeamName" class="mt-1 block text-sm text-red-600"></span>
+            </div>
+
+            <div>
+                <label asp-for="Team.TeamAbbreviation" class="block text-sm font-semibold text-slate-800"></label>
+                <p class="mt-0.5 text-sm text-slate-500">スコアボードのチーム名として表示されます。10文字以内。</p>
+                @* チーム名から候補を入れる（wwwroot/js/team-create.js）。編集できる *@
+                <input asp-for="Team.TeamAbbreviation" class="js-team-abbreviation mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" placeholder="例：ジャパン" />
+                <span asp-validation-for="Team.TeamAbbreviation" class="mt-1 block text-sm text-red-600"></span>
+            </div>
+
+            <div>
+                <label asp-for="Team.TeamID" class="block text-sm font-semibold text-slate-800"></label>
+                <p class="mt-0.5 text-sm text-slate-500">
+                    チームメイトがこのチームに参加するときに入力するIDです。下の「パスワード」と一緒に伝えてください。
+                    <br /><strong class="font-semibold text-amber-700">あとから変更できません。</strong>半角英数字がおすすめです。
+                </p>
+                <input asp-for="Team.TeamID" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 font-mono shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" placeholder="例：japanbridge" autocomplete="off" />
+                <span asp-validation-for="Team.TeamID" class="mt-1 block text-sm text-red-600"></span>
+            </div>
+
+            @*
+                説明文の行数が左右で違うと入力欄の高さがずれるため、subgrid で
+                「ラベル／説明／入力欄」の各行を左右でそろえる。
+            *@
+            <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-y-0">
+                <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                    <label asp-for="Team.TeamPassword" class="block text-sm font-semibold text-slate-800"></label>
+                    <p class="mt-0.5 text-sm text-slate-500">チームメイトが参加するときに使います。あなたのログインパスワードとは別のものです。</p>
+                    <div>
+                        <input asp-for="Team.TeamPassword" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="new-password" />
+                        <span asp-validation-for="Team.TeamPassword" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
+                </div>
+                <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                    <label asp-for="Team.ConfirmTeamPassword" class="block text-sm font-semibold text-slate-800"></label>
+                    <p class="mt-0.5 text-sm text-slate-500">確認のため、もう一度入力してください。</p>
+                    <div>
+                        <input asp-for="Team.ConfirmTeamPassword" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="new-password" />
+                        <span asp-validation-for="Team.ConfirmTeamPassword" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* 公開設定は「決めてもらう」必要があるため、任意項目とは分けて置く *@
+        <div class="mt-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <label class="flex cursor-pointer items-start gap-3">
+                <input class="mt-0.5 size-5 shrink-0 rounded border-slate-300 text-sky-700 focus:ring-sky-500" asp-for="Team.PublicFLG" />
+                <span>
+                    <span class="block font-semibold text-slate-800">@Html.DisplayNameFor(model => model.Team.PublicFLG)（おすすめ）</span>
+                    <span class="mt-1 block text-sm text-slate-600">
+                        公開すると、他チームとメッセージのやり取りができ、成績を比較できます。試合結果とメンバーも他チームから見えるようになります。
+                        <br />公開しても機能が制限されることはありません。あとから変更できます。
+                    </span>
+                </span>
+            </label>
+        </div>
+
+        @* 任意項目。8項目あり、必須と並べると実際より重く見えるため折りたたむ *@
+        <details class="group mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm" open="@hasOptionalError">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 px-6 py-4 font-semibold text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+                <span>
+                    くわしい情報を入力する
+                    <span class="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">任意・あとから設定できます</span>
+                </span>
+                <svg class="size-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </summary>
+
+            <div class="space-y-6 border-t border-slate-200 px-6 py-6">
+                <p class="text-sm text-slate-500">
+                    以下は、公開チームとした場合に他チームから見える情報です。対戦相手を募集するときの参考情報になります。
+                </p>
+
+                <div>
+                    <label asp-for="Team.RepresentativeName" class="block text-sm font-semibold text-slate-800"></label>
+                    <input asp-for="Team.RepresentativeName" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" />
+                    <span asp-validation-for="Team.RepresentativeName" class="mt-1 block text-sm text-red-600"></span>
+                </div>
+
+                <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-y-0">
+                    <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                        <label asp-for="Team.TeamCategoryClass" class="block text-sm font-semibold text-slate-800"></label>
+                        <p class="mt-0.5 text-sm text-slate-500">カテゴリごとに公開チームの成績を比較できます。</p>
+                        <select asp-for="Team.TeamCategoryClass" class="mt-1 block w-full self-start rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="Model.TeamCategoryClassList"></select>
+                    </div>
+                    <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                        <label asp-for="Team.UseBallClass" class="block text-sm font-semibold text-slate-800"></label>
+                        <p class="mt-0.5 text-sm text-slate-500">使用球ごとにも成績を比較できます。</p>
+                        <select asp-for="Team.UseBallClass" class="mt-1 block w-full self-start rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="Model.UseBallClassList"></select>
+                    </div>
+                </div>
+
+                <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-y-0">
+                    <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                        <label asp-for="Team.ActivityBase" class="block text-sm font-semibold text-slate-800"></label>
+                        <p class="mt-0.5 text-sm text-slate-500">例：東京都世田谷区</p>
+                        <div>
+                            <input asp-for="Team.ActivityBase" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" />
+                            <span asp-validation-for="Team.ActivityBase" class="mt-1 block text-sm text-red-600"></span>
+                        </div>
+                    </div>
+                    <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                        <label asp-for="Team.TeamNumber" class="block text-sm font-semibold text-slate-800"></label>
+                        <p class="mt-0.5 text-sm text-slate-500">おおよその人数で構いません。</p>
+                        <div>
+                            <input asp-for="Team.TeamNumber" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" />
+                            <span asp-validation-for="Team.TeamNumber" class="mt-1 block text-sm text-red-600"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label asp-for="Team.TeamEmailAddress" class="block text-sm font-semibold text-slate-800"></label>
+                    <p class="mt-0.5 text-sm text-slate-500">
+                        <strong class="font-semibold text-slate-700">チームパスワードを忘れたときの再設定に使用します。</strong>
+                        非公開チームの場合も、他チームには公開されません。
+                    </p>
+                    <input asp-for="Team.TeamEmailAddress" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" />
+                    <span asp-validation-for="Team.TeamEmailAddress" class="mt-1 block text-sm text-red-600"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Team.MessageDetail" class="block text-sm font-semibold text-slate-800"></label>
+                    <p class="mt-0.5 text-sm text-slate-500">チーム紹介や募集内容など。公開チーム一覧に表示されます。</p>
+                    <textarea asp-for="Team.MessageDetail" rows="4" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"></textarea>
+                    <span asp-validation-for="Team.MessageDetail" class="mt-1 block text-sm text-red-600"></span>
+                </div>
+            </div>
+        </details>
+
+        <div class="mt-8">
+            <input type="submit" value="チームを作成する" class="w-full rounded-lg bg-emerald-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 sm:w-auto" />
+            <p class="mt-3 text-sm text-slate-500">作成すると、続けて選手（メンバー）の登録に進みます。</p>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/team-create.js" asp-append-version="true"></script>
 }

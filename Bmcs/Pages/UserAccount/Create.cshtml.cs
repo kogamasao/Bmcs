@@ -45,6 +45,9 @@ namespace Bmcs.Pages.UserAccount
         
         public async Task<IActionResult> OnPostAsync()
         {
+            //入力エラーでの再表示でもヘルプを表示できるようにする
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.UserAccountCreate);
+
             try
             {
                 if (!ModelState.IsValid)
@@ -94,7 +97,8 @@ namespace Bmcs.Pages.UserAccount
 
                     if (dbTeam == null || dbTeam.TeamPassword != UserAccount.TeamPassword.NullToEmpty().ChangeHashValue())
                     {
-                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "パスワードが間違っています。");
+                        //チームが存在しない場合も同じ文言とする（チームの有無を判別させないため）
+                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "チームID、またはチームパスワードが間違っています。");
 
                         return Page();
                     }

@@ -76,12 +76,21 @@ namespace Bmcs.Models
 
         /// <summary>
         /// チームIDリスト
+        /// ※公開チームのみを対象とする。
+        ///   非公開にしたチームは「他ユーザから参照されたくないチーム」であり、
+        ///   チーム名とチームIDを一覧に出すべきではないため。
+        ///   ただし自分の所属チームは、選択肢から消えると変更できなくなるため含める。
         /// </summary>
         public SelectList TeamIDList
-        { 
+        {
             get
             {
-                return AddFirstItem(new SelectList(Context.Teams.Where(r => r.DeleteFLG == false && r.SystemDataFLG == false), nameof(Team.TeamID), nameof(Team.TeamIDName), string.Empty)
+                var myTeamID = HttpContext.Session.GetString(SessionConstant.TeamID).NullToEmpty();
+
+                return AddFirstItem(new SelectList(Context.Teams.Where(r => r.DeleteFLG == false
+                                                                         && r.SystemDataFLG == false
+                                                                         && (r.PublicFLG || r.TeamID == myTeamID))
+                                                 , nameof(Team.TeamID), nameof(Team.TeamIDName), string.Empty)
                     , new SelectListItem(string.Empty, string.Empty));
             }
         }

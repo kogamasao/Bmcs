@@ -1,76 +1,130 @@
-﻿@page
+@page
 @model Bmcs.Pages.UserAccount.CreateModel
 
 @{
     ViewData[ViewDataConstant.Title] = "ユーザ作成";
+
+    //折りたたみの中でエラーが出た場合、閉じたままだと気づけないため開いておく
+    var hasTeamError = (ViewData.ModelState[nameof(Model.UserAccount) + "." + nameof(Model.UserAccount.TeamID)]?.Errors.Count ?? 0) > 0
+                    || (ViewData.ModelState[nameof(Model.UserAccount) + "." + nameof(Model.UserAccount.TeamPassword)]?.Errors.Count ?? 0) > 0;
+
+    //同意チェックはモデルに紐づかないため、再表示時は送信内容から復元する
+    var request = ViewContext.HttpContext.Request;
+    var isPostBack = request.HasFormContentType;
+    var isTermChecked = isPostBack && request.Form.ContainsKey("term");
+    var isPrivacyChecked = isPostBack && request.Form.ContainsKey("privacy");
+    ViewData[ViewDataConstant.Description] = "Bmcsのユーザを作成します。無料で、すぐに使いはじめられます。";
+    Layout = "_LayoutTailwind";
 }
 
-
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
-
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserAccount.UserAccountID" class="control-label"></label>
-                <input asp-for="UserAccount.UserAccountID" class="form-control" />
-                <span asp-validation-for="UserAccount.UserAccountID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserAccount.UserAccountName" class="control-label"></label>
-                <input asp-for="UserAccount.UserAccountName" class="form-control" />
-                <span asp-validation-for="UserAccount.UserAccountName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserAccount.Password" class="control-label"></label>
-                <input asp-for="UserAccount.Password" class="form-control" />
-                <span asp-validation-for="UserAccount.Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserAccount.ConfirmPassword" class="control-label"></label>
-                <input asp-for="UserAccount.ConfirmPassword" class="form-control" />
-                <span asp-validation-for="UserAccount.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserAccount.EmailAddress" class="control-label"></label>
-                <input asp-for="UserAccount.EmailAddress" class="form-control" />
-                <span asp-validation-for="UserAccount.EmailAddress" class="text-danger"></span>
-                <small class="form-text text-danger">
-                    ※ユーザIDやパスワードを忘れた際の復旧に使用するため、必須項目です。
-                    受信できるメールアドレスを入力してください。
-                </small>
-            </div>
-            <div class="alert alert-primary" role="alert">
-                ※チームを作成済みの場合は以下を入力してください
-            </div>
-            <div class="form-group">
-                <label asp-for="UserAccount.TeamID" class="control-label"></label>
-                <select asp-for="UserAccount.TeamID" class="form-control" asp-items="Model.TeamIDList"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserAccount.TeamPassword" class="control-label"></label>
-                <input asp-for="UserAccount.TeamPassword" class="form-control" />
-                <span asp-validation-for="UserAccount.TeamPassword" class="text-danger"></span>
-            </div>
-            <div class="form-group custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="term">
-                <label class="custom-control-label" for="term"><a asp-area="" asp-page="/Term">利用規約</a>に同意する。</label>
-            </div>
-            <div class="form-group custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="privacy">
-                <label class="custom-control-label" for="privacy"><a asp-area="" asp-page="/Privacy">プライバシーポリシー</a>に同意する。</label>
-            </div>
-            <div class="form-group">
-                <input id="submit" type="submit" value="登録" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
     </div>
+
+    <p class="mt-2 text-slate-600">無料です。登録後、続けてチームを作成できます。</p>
+
+    <form method="post" class="mt-8">
+        @* 項目のエラーも先頭にまとめて出す（折りたたみの中のエラーに気づけるようにするため） *@
+        <div asp-validation-summary="All" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
+
+        <div class="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div>
+                <label asp-for="UserAccount.UserAccountID" class="block text-sm font-semibold text-slate-800"></label>
+                <p class="mt-0.5 text-sm text-slate-500">ログインに使用します。半角英数字がおすすめです。</p>
+                <input asp-for="UserAccount.UserAccountID" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 font-mono shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="username" />
+                <span asp-validation-for="UserAccount.UserAccountID" class="mt-1 block text-sm text-red-600"></span>
+            </div>
+
+            <div>
+                <label asp-for="UserAccount.UserAccountName" class="block text-sm font-semibold text-slate-800"></label>
+                <p class="mt-0.5 text-sm text-slate-500">メッセージ機能で投稿者として表示されます。</p>
+                <input asp-for="UserAccount.UserAccountName" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="nickname" />
+                <span asp-validation-for="UserAccount.UserAccountName" class="mt-1 block text-sm text-red-600"></span>
+            </div>
+
+            @* 説明文の行数が違っても入力欄の高さがそろうよう subgrid を使う *@
+            <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-y-0">
+                <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                    <label asp-for="UserAccount.Password" class="block text-sm font-semibold text-slate-800"></label>
+                    <p class="mt-0.5 text-sm text-slate-500">ログインに使用します。</p>
+                    <div>
+                        <input asp-for="UserAccount.Password" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="new-password" />
+                        <span asp-validation-for="UserAccount.Password" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
+                </div>
+                <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                    <label asp-for="UserAccount.ConfirmPassword" class="block text-sm font-semibold text-slate-800"></label>
+                    <p class="mt-0.5 text-sm text-slate-500">確認のため、もう一度入力してください。</p>
+                    <div>
+                        <input asp-for="UserAccount.ConfirmPassword" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="new-password" />
+                        <span asp-validation-for="UserAccount.ConfirmPassword" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label asp-for="UserAccount.EmailAddress" class="block text-sm font-semibold text-slate-800"></label>
+                <p class="mt-0.5 text-sm text-slate-500">
+                    <strong class="font-semibold text-amber-700">ユーザIDやパスワードを忘れた際の復旧に使用します。</strong>
+                    受信できるメールアドレスを入力してください。
+                </p>
+                <input asp-for="UserAccount.EmailAddress" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="email" />
+                <span asp-validation-for="UserAccount.EmailAddress" class="mt-1 block text-sm text-red-600"></span>
+            </div>
+        </div>
+
+        @*
+            チームへの参加。
+            以前は全チームのプルダウンだったが、参加する人はチーム代表からIDを聞いているため
+            入力欄でよい。（非公開チームの一覧が未ログインの画面に出ないようにするためでもある）
+        *@
+        <details class="group mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm" open="@hasTeamError">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 px-6 py-4 font-semibold text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+                <span>
+                    既にあるチームに参加する
+                    <span class="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">チームに誘われた方はこちら</span>
+                </span>
+                <svg class="size-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </summary>
+
+            <div class="space-y-6 border-t border-slate-200 px-6 py-6">
+                <p class="text-sm text-slate-500">
+                    チームの代表者から教えてもらった「チームID」と「チームパスワード」を入力してください。
+                    <br />新しくチームを作る場合は、ここは空のままで構いません。登録後にチーム作成画面へ進みます。
+                </p>
+
+                <div>
+                    <label asp-for="UserAccount.TeamID" class="block text-sm font-semibold text-slate-800"></label>
+                    <input asp-for="UserAccount.TeamID" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 font-mono shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="off" />
+                    <span asp-validation-for="UserAccount.TeamID" class="mt-1 block text-sm text-red-600"></span>
+                </div>
+
+                <div>
+                    <label asp-for="UserAccount.TeamPassword" class="block text-sm font-semibold text-slate-800"></label>
+                    <input asp-for="UserAccount.TeamPassword" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="off" />
+                    <span asp-validation-for="UserAccount.TeamPassword" class="mt-1 block text-sm text-red-600"></span>
+                </div>
+            </div>
+        </details>
+
+        <div class="mt-6 space-y-3 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <label class="flex cursor-pointer items-center gap-3">
+                <input type="checkbox" class="size-5 shrink-0 rounded border-slate-300 text-sky-700 focus:ring-sky-500" id="term" name="term" checked="@isTermChecked">
+                <span class="text-slate-700"><a class="text-sky-700 underline underline-offset-2 hover:text-sky-800" asp-page="/Term">利用規約</a>に同意する。</span>
+            </label>
+            <label class="flex cursor-pointer items-center gap-3">
+                <input type="checkbox" class="size-5 shrink-0 rounded border-slate-300 text-sky-700 focus:ring-sky-500" id="privacy" name="privacy" checked="@isPrivacyChecked">
+                <span class="text-slate-700"><a class="text-sky-700 underline underline-offset-2 hover:text-sky-800" asp-page="/Privacy">プライバシーポリシー</a>に同意する。</span>
+            </label>
+        </div>
+
+        <div class="mt-8">
+            <input id="submit" type="submit" value="ユーザを登録する" class="w-full rounded-lg bg-emerald-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none sm:w-auto" />
+            <p class="mt-3 text-sm text-slate-500">上の2つに同意すると登録できます。</p>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
