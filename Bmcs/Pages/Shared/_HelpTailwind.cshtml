@@ -18,7 +18,11 @@
         この画面の使い方
     </button>
 
-    <dialog id="help-dialog" class="w-[min(48rem,calc(100vw-2rem))] rounded-xl border border-slate-200 bg-white p-0 shadow-2xl backdrop:bg-slate-900/50">
+    @*
+        m-auto は必須。Tailwind のリセットCSSが全要素の margin を0にするため、
+        <dialog> が既定で持つ中央寄せ（margin: auto）が打ち消され、左上に表示されてしまう。
+    *@
+    <dialog id="help-dialog" class="m-auto w-[min(48rem,calc(100vw-2rem))] rounded-xl border border-slate-200 bg-white p-0 shadow-2xl backdrop:bg-slate-900/50">
         <div class="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4">
             <h2 class="text-base font-bold text-slate-900">@Model.SystemAdmin.MessageTitle</h2>
             <button type="button" class="js-help-close rounded-md p-1.5 text-slate-500 transition hover:bg-slate-100" aria-label="閉じる">
