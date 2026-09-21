@@ -76,13 +76,34 @@ namespace Bmcs.Function
         }
 
         /// <summary>
+        /// HTMLエスケープ
+        /// ※Html.Raw で出力する文字列を組み立てる際、利用者が入力した値に必ず使用する。
+        ///   選手名などをそのまま連結すると、タグとして解釈される（ストアドXSS）。
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string EscapeForHtml(this string value)
+        {
+            return System.Net.WebUtility.HtmlEncode(value.NullToEmpty());
+        }
+
+        /// <summary>
         /// 改行コード変換
+        /// ※このメソッドの戻り値は Html.Raw で出力されるため、
+        ///   タグとして解釈されないようHTMLエスケープしてから改行を変換する。
+        ///   エスケープしない場合、メッセージ本文やプレーのメモに書いたHTMLがそのまま
+        ///   出力され、他の利用者の画面でスクリプトが実行される（ストアドXSS）。
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         public static string ReplaceNewLineForHtml(this string value)
         {
-            return value.NullToEmpty().Replace(Environment.NewLine, "<br />");
+            //Environment.NewLine だけでは、Linux上(Azure App Service)で
+            //ブラウザが送信するCRLFを変換できないため、CRLF・LF・CRのいずれも変換する
+            return System.Net.WebUtility.HtmlEncode(value.NullToEmpty())
+                         .Replace("\r\n", "<br />")
+                         .Replace("\n", "<br />")
+                         .Replace("\r", "<br />");
         }
 
         /// <summary>

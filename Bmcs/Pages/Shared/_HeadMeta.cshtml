@@ -1,0 +1,70 @@
+@*
+    head内の共通タグ（title・description・canonical・OGP・計測）。
+
+    旧レイアウト（_Layout.cshtml）と Tailwind版（_LayoutTailwind.cshtml）の
+    両方から読み込む。レイアウトごとに書くと、片方だけ直す事故が起きるため。
+*@
+@model dynamic
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+@{
+    var pageTitle = ViewData[ViewDataConstant.Title] != null && !string.IsNullOrEmpty(ViewData[ViewDataConstant.Title].ToString())
+                    ? ViewData[ViewDataConstant.Title].ToString() + " - Bmcs - 草野球・ソフトボールのスコア管理"
+                    : "Bmcs - 草野球・ソフトボールのスコア管理SNS";
+
+    var pageDescription = ViewData[ViewDataConstant.Description] != null && !string.IsNullOrEmpty(ViewData[ViewDataConstant.Description].ToString())
+                          ? ViewData[ViewDataConstant.Description].ToString()
+                          : "野球、ソフトボールのスコア管理を行い、他チームの成績やメッセージのやり取りができる「スコア管理SNS」です。無料・登録後すぐに使えます。";
+
+    //共有時のURL。Hostヘッダを書き換えられても不正なURLを出さないよう、設定値を優先する
+    var baseUrl = Configuration.GetSection("EmailSettings")["BaseUrl"];
+
+    if (string.IsNullOrEmpty(baseUrl))
+    {
+        baseUrl = Context.Request.Scheme + "://" + Context.Request.Host;
+    }
+
+    var pageUrl = baseUrl.TrimEnd('/') + Context.Request.Path + Context.Request.QueryString;
+
+    //OGP画像。未設定の場合は画像なしのカードとして表示される
+    var ogImage = Configuration.GetSection("Site")["OgImage"];
+
+    var clarityProjectID = Configuration.GetSection("Analytics")["ClarityProjectID"];
+
+    var canonicalUrl = baseUrl.TrimEnd('/') + "/";
+}
+<title>@pageTitle</title>
+<meta name="description" content="@pageDescription" />
+
+@if (!Model.IsIndex)
+{
+    <link rel="canonical" href="@canonicalUrl" />
+}
+
+@* SNSやLINEにURLを貼ったときの表示（設定しないとタイトルも説明も出ない） *@
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Bmcs" />
+<meta property="og:locale" content="ja_JP" />
+<meta property="og:title" content="@pageTitle" />
+<meta property="og:description" content="@pageDescription" />
+<meta property="og:url" content="@pageUrl" />
+@if (!string.IsNullOrEmpty(ogImage))
+{
+    <meta property="og:image" content="@(baseUrl.TrimEnd('/') + "/" + ogImage.TrimStart('/'))" />
+    <meta name="twitter:card" content="summary_large_image" />
+}
+else
+{
+    <meta name="twitter:card" content="summary" />
+}
+
+@* 計測。Analytics:ClarityProjectID を設定したときだけ出力する *@
+@if (!string.IsNullOrEmpty(clarityProjectID))
+{
+    <script>
+        (function (c, l, a, r, i, t, y) {
+            c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+            t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "@clarityProjectID");
+    </script>
+}

@@ -130,11 +130,13 @@ namespace Bmcs.Pages.InningScore
                                         .ToListAsync();
 
                 //結果
+                //※InningScoreListDetail は Html.Raw で出力されるため、
+                //  利用者が入力した選手名は必ず EscapeForHtml() を通す
                 foreach(var beforeGameSceneDetail in gameSceneDetails.Where(r => r.GameSceneID == gameScene.GameSceneID && r.SceneResultClass == SceneResultClass.SceneChange))
                 {
                     if(!string.IsNullOrEmpty(beforeGameSceneDetail.MemberID.NullToEmpty()))
                     {
-                        gameScene.InningScoreListDetail += beforeGameSceneDetail.Member.MemberName + "が" + beforeGameSceneDetail.DetailResultClass.GetEnumName(); 
+                        gameScene.InningScoreListDetail += beforeGameSceneDetail.Member.MemberName.EscapeForHtml() + "が" + beforeGameSceneDetail.DetailResultClass.GetEnumName(); 
                     }
                     else
                     {
@@ -151,7 +153,7 @@ namespace Bmcs.Pages.InningScore
                     gameScene.InningScoreListDetail += "<br/>";
                 }
 
-                gameScene.InningScoreListDetail += "投手：" + gameScene.PitcherMember.MemberName + " 打者：" + gameScene.BatterMember.MemberName + " ";
+                gameScene.InningScoreListDetail += "投手：" + gameScene.PitcherMember.MemberName.EscapeForHtml() + " 打者：" + gameScene.BatterMember.MemberName.EscapeForHtml() + " ";
 
                 gameScene.InningScoreListDetail += GetBatterResultDetail(gameScene);
 
@@ -161,7 +163,7 @@ namespace Bmcs.Pages.InningScore
 
                     if (!string.IsNullOrEmpty(afterGameSceneDetail.MemberID.NullToEmpty()))
                     {
-                        gameScene.InningScoreListDetail += afterGameSceneDetail.Member.MemberName + "が" + afterGameSceneDetail.DetailResultClass.GetEnumName();
+                        gameScene.InningScoreListDetail += afterGameSceneDetail.Member.MemberName.EscapeForHtml() + "が" + afterGameSceneDetail.DetailResultClass.GetEnumName();
                     }
                     else
                     {

@@ -31,6 +31,12 @@ namespace Bmcs.Constans
     {
         public static readonly string Title = "Title";
         public static readonly string MessageMode = "MessageMode";
+
+        /// <summary>
+        /// ページごとの説明文（meta description・OGPに使用する）
+        /// ※設定しない場合はサービス全体の説明文を使用する
+        /// </summary>
+        public static readonly string Description = "Description";
     }
 
     /// <summary>
