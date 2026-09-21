@@ -94,7 +94,8 @@ namespace Bmcs.Pages.UserAccount
 
                     if (dbTeam == null || dbTeam.TeamPassword != UserAccount.TeamPassword.NullToEmpty().ChangeHashValue())
                     {
-                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "パスワードが間違っています。");
+                        //チームが存在しない場合も同じ文言とする（チームの有無を判別させないため）
+                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "チームID、またはチームパスワードが間違っています。");
 
                         return Page();
                     }
