@@ -558,6 +558,32 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
+    /// アンケート状態区分
+    /// </summary>
+    public enum SurveyStatusClass
+    {
+        [Display(Name = "下書き")]
+        Draft = 1,
+        [Display(Name = "公開中")]
+        Open = 2,
+        [Display(Name = "終了")]
+        Closed = 3,
+    }
+
+    /// <summary>
+    /// アンケート回答形式区分
+    /// </summary>
+    public enum SurveyAnswerTypeClass
+    {
+        [Display(Name = "単一選択")]
+        SingleSelect = 1,
+        [Display(Name = "複数選択")]
+        MultiSelect = 2,
+        [Display(Name = "自由記述")]
+        FreeText = 3,
+    }
+
+    /// <summary>
     /// 再設定トークン区分
     /// </summary>
     public enum ResetTokenClass
