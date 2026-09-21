@@ -1,0 +1,97 @@
+@*
+    Tailwind CSS 用のレイアウト。
+    Bootstrap を読み込まないため、1ページ内でクラス名が衝突しない。
+    移行が済んだページから、_ViewStart ではなくページ側で Layout を指定して使う。
+*@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @if (ViewData[ViewDataConstant.Title] != null && !string.IsNullOrEmpty(ViewData[ViewDataConstant.Title].ToString()))
+    {
+        <title>@ViewData[ViewDataConstant.Title] - Bmcs - スコア管理SNS</title>
+    }
+    else
+    {
+        <title>Bmcs - スコア管理SNS</title>
+    }
+    <meta name="description" content="野球、ソフトボールのスコア管理を行い、他チームの成績やメッセージのやり取りができる「スコア管理SNS」です。" />
+
+    @if (!Model.IsIndex)
+    {
+        <link rel="canonical" href="https://bmcs.azurewebsites.net/">
+    }
+    <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
+</head>
+
+<body class="min-h-screen bg-slate-50 font-sans text-slate-800 antialiased">
+    <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+        <div class="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3">
+            <a class="text-xl font-bold tracking-tight text-slate-900" asp-page="/Top/Index">Bmcs</a>
+
+            @* PC用のメニュー *@
+            <nav class="hidden flex-1 items-center gap-1 md:flex">
+                @if (Model.IsLogin())
+                {
+                    <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Game/Index">試合</a>
+                    <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@false">成績</a>
+                    <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Member/Index">メンバー</a>
+                    <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Team/Edit">チーム情報</a>
+                }
+                <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Team/Index">公開チーム</a>
+                <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public">メッセージ</a>
+            </nav>
+
+            <div class="ml-auto flex items-center gap-2">
+                @if (Model.IsLogin())
+                {
+                    <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100" asp-page="/Index">ログアウト</a>
+                }
+                else
+                {
+                    <a class="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700" asp-page="/UserAccount/Create">無料で登録</a>
+                }
+
+                @* スマートフォン用のメニュー（JavaScript不要） *@
+                <details class="relative md:hidden">
+                    <summary class="flex cursor-pointer items-center rounded-md p-2 text-slate-600 hover:bg-slate-100 [&::-webkit-details-marker]:hidden">
+                        <span class="sr-only">メニュー</span>
+                        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" />
+                        </svg>
+                    </summary>
+                    <nav class="absolute right-0 z-40 mt-2 w-52 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
+                        @if (Model.IsLogin())
+                        {
+                            <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Game/Index">試合</a>
+                            <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@false">成績</a>
+                            <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Member/Index">メンバー</a>
+                            <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Team/Edit">チーム情報</a>
+                            <div class="my-1 border-t border-slate-100"></div>
+                        }
+                        <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Team/Index">公開チーム</a>
+                        <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public">メッセージ</a>
+                    </nav>
+                </details>
+            </div>
+        </div>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="mt-16 border-t border-slate-200 bg-white">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-3 gap-y-1 px-4 py-6 text-sm text-slate-500">
+            <span>&copy; 2021 - Bmcs</span>
+            <a class="hover:text-slate-800 hover:underline" asp-page="/Term">利用規約</a>
+            <a class="hover:text-slate-800 hover:underline" asp-page="/Privacy">Privacy</a>
+            <a class="hover:text-slate-800 hover:underline" asp-page="/Inquiry/Create">お問い合わせ</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

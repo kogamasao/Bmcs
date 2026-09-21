@@ -1,228 +1,245 @@
-﻿@page
+@page
 @model IndexModel
 @{
     ViewData[ViewDataConstant.Title] = "";
+    Layout = "_LayoutTailwind";
 }
-<div class="row">
-    <div class="col-md-6 offset-md-3 text-center">
-        <h1 class="display-3">
-            Bmcs
-        </h1>
-        <h2 class="display-5">
-            Baseball Management Communication System
-        </h2>
-        <h3 class="display-8">スコア管理SNS</h3>
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserAccount.UserAccountID" class="control-label"></label>
-                <input asp-for="UserAccount.UserAccountID" class="form-control" />
-                <span asp-validation-for="UserAccount.UserAccountID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserAccount.Password" class="control-label"></label>
-                <input asp-for="UserAccount.Password" class="form-control" />
-                <span asp-validation-for="UserAccount.Password" class="text-danger"></span>
-            </div>
-            <div class="alert alert-primary" role="alert">
-                <span>ユーザID：YGUser</span>
-                <span>&nbsp;&nbsp;</span>
-                <span>パスワード：1</span>
-                <br />
-                <span>でサンプルチームにログインできます。</span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="ログイン" class="btn btn-primary" />
-                <a class="btn btn-primary" asp-page="./UserAccount/Create">新しくユーザを作成</a>
-            </div>
-            <div class="form-group">
-                <a asp-page="./UserAccount/ForgotPassword">パスワードをお忘れの場合</a>
-                <span>&nbsp;/&nbsp;</span>
-                <a asp-page="./UserAccount/ForgotUserAccountID">ユーザIDをお忘れの場合</a>
-            </div>
-            <div class="form-group">
-                <a class="btn btn-success" asp-page="./Top/Index">ログインせずに体験する</a>
-            </div>
-        </form>
-    </div>
-</div>
-<hr />
-<div class="row">
-    <div class="col-md-12 offset-md-0 text-center">
-        <h2 class="landing-title">
-            Bmcsは
-        </h2>
-        <h3 class="landing-font">無料</h3>
-        <h3 class="landing-font">ダウンロード不要</h3>
-        <h3 class="landing-font">すぐに使いはじめられる</h3>
-        <p class="landing-font-note">
-            ※ユーザ登録にはメールアドレスが必要です。ID・パスワードを忘れた際の復旧に使用します。
-        </p>
-        <h2 class="landing-font">野球、ソフトボールのスコア管理＆SNS機能を利用できます！</h2>
-    </div>
-</div>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <h2 class="landing-sub-title">
-            スコア入力は２タイプ
-        </h2>
-        <ul class="landing-itemization-ul">
-            <li class="landing-itemization-ul-li">
-                <h3 class="landing-itemization-title-font">プレー毎にスコアを入力！</h3>
-                <p class="landing-itemization-sentence-font">入力は基本選択するだけ！<br />後から修正も可能！</p>
-            </li>
-            <li class="landing-itemization-ul-li">
-                <h3 class="landing-itemization-title-font">結果だけスコア入力！</h3>
-                <p class="landing-itemization-sentence-font">
-                    試合中の入力は難しい方向けに結果入力のみ行うことも可能！
-                    <br />使い方は様々！試合後に各自に入力してもらうことも！
-                    <br />個人成績をメモ代わりに使うことも！
-                </p>
-            </li>
-        </ul>
-    </div>
-    <div class="col-md-6">
-        <h2 class="landing-sub-title">
-            スコア入力は特殊ルールに対応
-        </h2>
-        <ul class="landing-itemization-ul">
-            <li class="landing-itemization-ul-li">
-                <h3 class="landing-itemization-title-font">タイブレーク</h3>
-                <p class="landing-itemization-sentence-font">開始打順、アウトカウント、ランナーの指定が可能</p>
-            </li>
-            <li class="landing-itemization-ul-li">
-                <h3 class="landing-itemization-title-font">ソフトボールルールに対応</h3>
-                <p class="landing-itemization-sentence-font">
-                    「途中交代」⇒「再出場」のリエントリー可能！
-                    <br />指名打者に対応(DP、FP対応)
-                </p>
-            </li>
-            <li class="landing-itemization-ul-li">
-                <h3 class="landing-itemization-title-font">草野球あるあるに対応</h3>
-                <p class="landing-itemization-sentence-font">
-                    １０人以上出場、打順割込、打順スキップ、途中退場可能、４アウトチェンジ可能！
-                </p>
-            </li>
 
-        </ul>
-    </div>
-    <div class="col-md-6">
-        <h2 class="landing-sub-title">
-            スコア入力後は試合＆成績チェック
-        </h2>
-        <ul class="landing-itemization-ul">
-            <li class="landing-itemization-ul-li">
-                <h3 class="landing-itemization-title-font">試合の詳細を確認！</h3>
-                <p class="landing-itemization-sentence-font">プレー毎に試合を振り返れる！
-            </li>
-            <li class="landing-itemization-ul-li">
-                <h3 class="landing-itemization-title-font">チーム成績を確認！</h3>
-                <p class="landing-itemization-sentence-font">
-                    自チームのチーム成績、個人成績の詳細を確認可能！
-                    <br />公開設定にすることで他チームと比較も！
-                </p>
-            </li>
-        </ul>
-    </div>
-    <div class="col-md-6">
-        <h2 class="landing-sub-title">
-            公開チームをチェック
-        </h2>
-        <ul class="landing-itemization-ul">
-            <li class="landing-itemization-ul-li">
-                <h3 class="landing-itemization-title-font">公開チームの成績を見てみよう！</h3>
-                <p class="landing-itemization-sentence-font">
-                    自チームと同様にチーム成績、個人成績のチェックが可能！
-                    <br />近い場所で活動していたら試合ができるかも！
-                </p>
-            </li>
-            <li class="landing-itemization-ul-li">
-                <h3 class="landing-itemization-title-font">メッセージを送ろう！</h3>
-                <p class="landing-itemization-sentence-font">
-                    メッセージは全チームに対する公開メッセージと特定チームへのダイレクトメッセージの両方が可能！
-                    <br />自チーム内でのメッセージやメモ管理にも！
-                </p>
-            </li>
-        </ul>
-    </div>
-</div>
+@* ヒーロー：新規訪問者への説明を主役にし、ログインは右側のカードにまとめる *@
+<section class="border-b border-slate-200 bg-white">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 py-10 lg:grid-cols-[1fr_22rem] lg:py-16">
+        <div>
+            <div class="flex flex-wrap gap-2">
+                <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">無料</span>
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">ダウンロード不要</span>
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">ブラウザだけで使える</span>
+            </div>
 
-<div class="col-md-12 offset-md-0">
-    <div class="form-group">
-        <button class="btn btn-lg btn-success btn-block js-sample-login">サンプルチームにログインして<br />スコア入力を体験する</button>
-    </div>
-</div>
+            <h1 class="mt-5 text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+                野球・ソフトボールの<br class="hidden sm:block" />
+                スコアと成績を、チームで残す。
+            </h1>
 
-<div class="row">
+            <p class="mt-5 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+                試合のスコアを入力すると、チーム成績と個人成績が自動で集計されます。
+                タイブレークやリエントリー、１０人以上の出場といった草野球・ソフトボールのルールにも対応しています。
+            </p>
 
-    <div class="col-md-12 offset-md-0">
-        <p class="landing-sub-title-warning">
-            未対応事項
-        </p>
-        <ul class="landing-itemization-ul-warning">
-            <li class="landing-itemization-ul-li">
-                <p class="landing-itemization-title-font-warning">１球ずつの管理はしない！</p>
-                <p class="landing-itemization-sentence-font">
-                    １球ずつの管理はしないため、カウント別のデータや、球数管理等はできません。
-                </p>
-            </li>
-            <li class="landing-itemization-ul-li">
-                <p class="landing-itemization-title-font-warning">相手チームの管理はしない！</p>
-                <p class="landing-itemization-sentence-font">
-                    相手チームの管理はしないため、試合結果ページに相手チームの成績は表示されません。
-                    <br />プレー入力に相手選手の名前等、メモを残すことは可能です。
-                </p>
-            </li>
-            <li class="landing-itemization-ul-li">
-                <p class="landing-itemization-title-font-warning">守備成績は一部のみ管理</p>
-                <p class="landing-itemization-sentence-font">
-                    刺殺、補殺、守備率の管理はしていません。
-                    <br />補殺は記録として残すことが可能ですが、都度入力が必要になります。(外野手の補殺記録として残せるようしています。)
-                </p>
-            </li>
-        </ul>
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <button type="button" class="js-sample-login inline-flex items-center justify-center rounded-lg bg-emerald-600 px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2">
+                    サンプルチームで体験する
+                </button>
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-6 py-3.5 text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="./UserAccount/Create">
+                    無料でユーザ登録
+                </a>
+            </div>
+
+            <p class="mt-4 text-sm text-slate-500">
+                体験は登録不要です。スコア入力まで試せます。
+            </p>
+
+            <p class="mt-6 text-sm text-slate-500">
+                <a class="font-medium text-sky-700 underline decoration-sky-300 underline-offset-2 hover:text-sky-800" asp-page="./Top/Index">ログインせずに公開チームの成績を見る</a>
+            </p>
+        </div>
+
+        @* ログイン：既存ユーザが毎回使うため、ファーストビューに残す *@
+        <div id="login" class="lg:pt-2">
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+                <h2 class="text-lg font-bold text-slate-900">ログイン</h2>
+
+                <form method="post" class="mt-4 space-y-4">
+                    <div asp-validation-summary="ModelOnly" class="text-sm text-red-600"></div>
+
+                    <div>
+                        <label asp-for="UserAccount.UserAccountID" class="block text-sm font-medium text-slate-700"></label>
+                        <input asp-for="UserAccount.UserAccountID" autocomplete="username" class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" />
+                        <span asp-validation-for="UserAccount.UserAccountID" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="UserAccount.Password" class="block text-sm font-medium text-slate-700"></label>
+                        <input asp-for="UserAccount.Password" autocomplete="current-password" class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-slate-900 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" />
+                        <span asp-validation-for="UserAccount.Password" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
+
+                    <button type="submit" class="w-full rounded-lg bg-sky-700 px-4 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-sky-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2">
+                        ログイン
+                    </button>
+
+                    <p class="text-sm text-slate-600">
+                        <a class="underline decoration-slate-300 underline-offset-2 hover:text-slate-900" asp-page="./UserAccount/ForgotPassword">パスワードをお忘れの場合</a>
+                        <span class="mx-1 text-slate-300">/</span>
+                        <a class="underline decoration-slate-300 underline-offset-2 hover:text-slate-900" asp-page="./UserAccount/ForgotUserAccountID">ユーザIDをお忘れの場合</a>
+                    </p>
+
+                    <div class="rounded-md border border-sky-200 bg-sky-50 p-3 text-sm text-sky-900">
+                        サンプルチームのログイン情報
+                        <br />ユーザID：<span class="font-mono font-semibold">YGUser</span>
+                        <span class="mx-1">/</span>
+                        パスワード：<span class="font-mono font-semibold">1</span>
+                    </div>
+                </form>
+            </div>
+
+            <p class="mt-4 text-center text-sm text-slate-500 lg:text-left">
+                ユーザ登録にはメールアドレスが必要です。<br class="hidden lg:block" />
+                ID・パスワードを忘れた際の復旧に使用します。
+            </p>
+        </div>
     </div>
-    <div class="col-md-12 offset-md-0">
-        <p class="landing-sub-title">
-            よくあるお問い合わせ
-        </p>
-        <ul class="landing-itemization-ul-question">
-            <li class="landing-itemization-ul-li">
-                <p class="landing-itemization-title-font">各ページの操作方法がわからない</p>
-                <p class="landing-itemization-sentence-font">
-                    各ページ毎に操作説明が記載されたヘルプボタン「？」がありますので、こちらを押して説明をご参照ください。
-                    また、サービス紹介ページの <a href="https://alivetodayblog.com/bmcs/">こちら</a>をご覧ください。
-                </p>
-            </li>
-            <li class="landing-itemization-ul-li">
-                <p class="landing-itemization-title-font">試合途中で他の人に入力を引き継ぐことはできますか？</p>
-                <p class="landing-itemization-sentence-font">
-                    データはインターネット上に保存されますので、入力内容は他の人に引き継ぐことができます。
-                    <br />※インターネットが繋がらない環境では使用できません。
-                </p>
-            </li>
-            <li class="landing-itemization-ul-li">
-                <p class="landing-itemization-title-font">投手成績、野手成績はどんな項目を確認することができますか？</p>
-                <p class="landing-itemization-sentence-font">
-                    公開チーム成績ページよりチーム成績、投手成績、野手成績のページで確認できます。
-                </p>
-            </li>
-            <li class="landing-itemization-ul-li">
-                <p class="landing-itemization-title-font">プレー毎のスコア入力は１プレーどれくらいで入力を終えられますか？</p>
-                <p class="landing-itemization-sentence-font">
-                    プレーにもよりますが、１～１０秒程で入力できます。
-                </p>
-            </li>
-            <li class="landing-itemization-ul-li">
-                <p class="landing-itemization-title-font">改善して欲しい、不具合を発見した、質問したい場合はどうすれば良いですか？</p>
-                <p class="landing-itemization-sentence-font">
-                    画面下のお問い合わせページよりお問い合わせ頂くか、メッセージ機能で気軽にご返信ください。
-                </p>
-            </li>
-        </ul>
+</section>
+
+@* 機能紹介 *@
+<section class="mx-auto max-w-6xl px-4 py-14">
+    <h2 class="text-center text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">できること</h2>
+
+    <div class="mt-10 grid gap-6 md:grid-cols-2">
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="flex size-11 items-center justify-center rounded-lg bg-sky-50 text-sky-700">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 7h6m-6 4h4" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-slate-900">スコア入力は２タイプ</h3>
+            <ul class="mt-3 space-y-2 text-slate-600">
+                <li><span class="font-semibold text-slate-800">プレー毎に入力</span> — 基本は選択するだけ。後から修正もできます。</li>
+                <li><span class="font-semibold text-slate-800">結果だけ入力</span> — 試合中の入力が難しい場合は、試合後に結果だけ登録できます。個人成績のメモ代わりにも使えます。</li>
+            </ul>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="flex size-11 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-slate-900">特殊ルールに対応</h3>
+            <ul class="mt-3 space-y-2 text-slate-600">
+                <li><span class="font-semibold text-slate-800">タイブレーク</span> — 開始打順、アウトカウント、ランナーを指定できます。</li>
+                <li><span class="font-semibold text-slate-800">ソフトボール</span> — 途中交代からの再出場（リエントリー）、指名打者（DP・FP）に対応。</li>
+                <li><span class="font-semibold text-slate-800">草野球あるある</span> — １０人以上の出場、打順の割込・スキップ、途中退場、４アウトチェンジ。</li>
+            </ul>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="flex size-11 items-center justify-center rounded-lg bg-indigo-50 text-indigo-700">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-slate-900">試合と成績をふり返る</h3>
+            <ul class="mt-3 space-y-2 text-slate-600">
+                <li>試合はプレー毎にふり返れます。</li>
+                <li>チーム成績と個人成績を自動で集計。公開設定にすれば、他チームとの比較もできます。</li>
+            </ul>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="flex size-11 items-center justify-center rounded-lg bg-amber-50 text-amber-700">
+                <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm3.75 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm3.75 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <h3 class="mt-4 text-lg font-bold text-slate-900">他チームとつながる</h3>
+            <ul class="mt-3 space-y-2 text-slate-600">
+                <li>公開チームの成績を見られます。近くで活動しているチームが見つかるかもしれません。</li>
+                <li>全チームへの公開メッセージと、特定チームへのダイレクトメッセージが送れます。チーム内の連絡やメモにも使えます。</li>
+            </ul>
+        </div>
     </div>
-</div>
+</section>
+
+@* 体験への導線 *@
+<section class="bg-slate-900">
+    <div class="mx-auto max-w-6xl px-4 py-12 text-center">
+        <h2 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">まずは触ってみてください</h2>
+        <p class="mt-3 text-slate-300">サンプルチームのデータで、スコア入力まで体験できます。登録は不要です。</p>
+        <button type="button" class="js-sample-login mt-7 inline-flex items-center justify-center rounded-lg bg-emerald-500 px-8 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900">
+            サンプルチームで体験する
+        </button>
+    </div>
+</section>
+
+@* できないことも先に伝える（登録後の期待外れを防ぐため） *@
+<section class="mx-auto max-w-6xl px-4 py-14">
+    <h2 class="text-2xl font-bold tracking-tight text-slate-900">できないこと</h2>
+    <p class="mt-2 text-slate-600">登録後に「思っていたものと違った」となる前に、対応していない範囲をお伝えします。</p>
+
+    <div class="mt-6 grid gap-4 md:grid-cols-3">
+        <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
+            <h3 class="font-bold text-amber-900">１球ずつの管理はしません</h3>
+            <p class="mt-2 text-sm leading-relaxed text-amber-900/80">カウント別のデータや、球数の管理はできません。</p>
+        </div>
+        <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
+            <h3 class="font-bold text-amber-900">相手チームの管理はしません</h3>
+            <p class="mt-2 text-sm leading-relaxed text-amber-900/80">試合結果ページに相手チームの成績は表示されません。プレー入力に相手選手名などのメモを残すことはできます。</p>
+        </div>
+        <div class="rounded-xl border border-amber-200 bg-amber-50 p-5">
+            <h3 class="font-bold text-amber-900">守備成績は一部のみ</h3>
+            <p class="mt-2 text-sm leading-relaxed text-amber-900/80">刺殺、補殺、守備率は管理していません。外野手の補殺は、都度入力すれば記録として残せます。</p>
+        </div>
+    </div>
+</section>
+
+@* よくあるお問い合わせ *@
+<section class="mx-auto max-w-4xl px-4 pb-16">
+    <h2 class="text-2xl font-bold tracking-tight text-slate-900">よくあるお問い合わせ</h2>
+
+    <div class="mt-6 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <details class="group">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+                各ページの操作方法がわからない
+                <svg class="size-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </summary>
+            <div class="px-5 pb-5 text-slate-600">
+                各ページにヘルプボタン「？」があります。こちらを押すと操作説明をご覧いただけます。
+                サービス紹介ページ（<a class="text-sky-700 underline underline-offset-2 hover:text-sky-800" href="https://alivetodayblog.com/bmcs/" target="_blank" rel="noopener">こちら</a>）もご参照ください。
+            </div>
+        </details>
+
+        <details class="group">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+                試合途中で他の人に入力を引き継げますか？
+                <svg class="size-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </summary>
+            <div class="px-5 pb-5 text-slate-600">
+                できます。データはインターネット上に保存されるため、入力内容をそのまま他の人が引き継げます。
+                ※インターネットに繋がらない環境では使用できません。
+            </div>
+        </details>
+
+        <details class="group">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+                投手成績、野手成績はどんな項目を確認できますか？
+                <svg class="size-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </summary>
+            <div class="px-5 pb-5 text-slate-600">
+                公開チーム成績ページから、チーム成績・投手成績・野手成績をご確認いただけます。登録前でもご覧になれます。
+            </div>
+        </details>
+
+        <details class="group">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+                プレー毎のスコア入力は、１プレーどれくらいで終わりますか？
+                <svg class="size-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </summary>
+            <div class="px-5 pb-5 text-slate-600">
+                プレーにもよりますが、１〜１０秒ほどで入力できます。
+            </div>
+        </details>
+
+        <details class="group">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 font-medium text-slate-900 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+                改善の要望や不具合を伝えたい場合は？
+                <svg class="size-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </summary>
+            <div class="px-5 pb-5 text-slate-600">
+                画面下の<a class="text-sky-700 underline underline-offset-2 hover:text-sky-800" asp-page="./Inquiry/Create">お問い合わせ</a>から、またはログイン後のメッセージ機能からお気軽にご連絡ください。
+            </div>
+        </details>
+    </div>
+</section>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
