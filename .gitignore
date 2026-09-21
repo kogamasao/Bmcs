@@ -365,3 +365,6 @@ FodyWeavers.xsd
 # appsettings
 appsettings.json
 appsettings.Development.json
+# DB export files (contain production data)
+*.bacpac
+*.bak
