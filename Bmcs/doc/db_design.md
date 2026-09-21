@@ -19,6 +19,8 @@ erDiagram
     Game ||--o{ GameScoreFielder : has
     GameScene ||--o{ GameSceneDetail : details
     GameScene ||--o{ GameSceneRunner : runners
+    UserAccount ||..o{ ResetToken : resets_password
+    Team ||..o{ ResetToken : resets_team_password
 
     UserAccount {
         string UserAccountID PK
@@ -47,7 +49,16 @@ erDiagram
         int PitcherMemberID FK
         int BatterMemberID FK
     }
+    ResetToken {
+        string ResetTokenID PK
+        enum ResetTokenClass
+        string TargetID
+        datetime ExpireDatetime
+        bool UsedFLG
+    }
 ```
+
+※ResetToken の TargetID は UserAccountID または TeamID を保持する（区分により切り替わるため、DB上のFK制約は設定しない）。
 
 ## 2. テーブル一覧
 
@@ -67,6 +78,7 @@ erDiagram
 | Message | メッセージ | ユーザー間のメッセージ |
 | Order | オーダー | 試合のスターティングメンバー情報 |
 | Inquiry | 問い合わせ | ユーザーからの問い合わせ情報 |
+| ResetToken | 再設定トークン | パスワード・チームパスワードの再設定用トークン |
 
 ## 3. テーブル定義詳細
 
@@ -200,3 +212,18 @@ erDiagram
 | InquiryDetail | 内容 | string | Yes | |
 | ReplyDetail | 返信内容 | string | No | |
 | StatusClass | ステータス | enum | No | 未対応、対応中、完了 |
+
+### ResetToken (再設定トークン)
+| カラム名 | 論理名 | 型 | 必須 | 説明 |
+| --- | --- | --- | --- | --- |
+| ResetTokenID | トークン | string(100) | Yes | PK。32バイトの乱数をBase64URL化した43文字 |
+| ResetTokenClass | トークン区分 | enum | Yes | 1:ユーザパスワード, 2:チームパスワード |
+| TargetID | 対象ID | string(50) | Yes | 区分1はUserAccountID、区分2はTeamID |
+| ExpireDatetime | 有効期限 | datetime | Yes | 発行から1時間（SystemConstant.ResetTokenExpireHour） |
+| UsedFLG | 使用済フラグ | bool | Yes | 使用後にtrue。1トークン1回のみ有効 |
+
+- インデックス：IX_ResetToken_ResetTokenClass_TargetID (ResetTokenClass, TargetID)
+- 同一対象へ新しいトークンを発行する際、その対象の未使用トークンはすべて使用済へ更新する
+- 期限切れ・使用済のレコードは動作に影響しないが、定期的に削除して構わない
+- 本テーブルは既存の本番DBには存在しないため、`doc/migration/20260920_password_reset.sql` で追加する
+  （本DBは EnsureCreated で作成しているため、モデル追加だけでは既存DBへ反映されない）
