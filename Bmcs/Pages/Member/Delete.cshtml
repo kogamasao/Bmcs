@@ -1,97 +1,83 @@
-﻿@page
+@page
 @model Bmcs.Pages.Member.DeleteModel
 
 @{
     ViewData[ViewDataConstant.Title] = "メンバー削除";
+    Layout = "_LayoutTailwind";
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+<div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Member.Team.TeamName</p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
+    <div class="mt-6 rounded-xl border border-red-200 bg-red-50 p-5">
+        <h2 class="font-bold text-red-900">このメンバーを削除します。よろしいですか？</h2>
+        <p class="mt-1 text-sm text-red-900/80">
+            削除すると、メンバー一覧と打順の選択肢から外れます。
+            <br />※過去の試合に記録された成績は残ります。
+        </p>
+    </div>
 
-<h6 class="text-danger">メンバーを削除します。よろしいですか？</h6>
-<div>
-    <h4>@Model.Member.Team.TeamName</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.UniformNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.UniformNumber)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.MemberName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.MemberName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.MemberClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.MemberClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.ThrowClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.ThrowClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.BatClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.BatClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.PositionGroupClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.PositionGroupClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.MessageDetail)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.MessageDetail)
-        </dd>
+    <dl class="mt-6 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.UniformNumber)</dt>
+            <dd class="text-slate-900">@Html.DisplayFor(model => model.Member.UniformNumber)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.MemberName)</dt>
+            <dd class="font-semibold text-slate-900">@Html.DisplayFor(model => model.Member.MemberName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.MemberClassName)</dt>
+            <dd class="text-slate-900">@Html.DisplayFor(model => model.Member.MemberClassName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.ThrowClassName)</dt>
+            <dd class="text-slate-900">@Html.DisplayFor(model => model.Member.ThrowClassName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.BatClassName)</dt>
+            <dd class="text-slate-900">@Html.DisplayFor(model => model.Member.BatClassName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.PositionGroupClassName)</dt>
+            <dd class="text-slate-900">@Html.DisplayFor(model => model.Member.PositionGroupClassName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.MessageDetail)</dt>
+            <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.MessageDetail)</dd>
+        </div>
+
         @if (Model.IsAdmin())
         {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Member.EntryUserID)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Member.EntryUserID)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Member.EntryDatetime)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Member.EntryDatetime)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Member.UpdateUserID)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Member.UpdateUserID)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Member.UpdateDatetime)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Member.UpdateDatetime)
-            </dd>
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.EntryUserID)</dt>
+                <dd class="text-slate-900">@Html.DisplayFor(model => model.Member.EntryUserID)</dd>
+            </div>
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.EntryDatetime)</dt>
+                <dd class="text-slate-900">@Html.DisplayFor(model => model.Member.EntryDatetime)</dd>
+            </div>
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.UpdateUserID)</dt>
+                <dd class="text-slate-900">@Html.DisplayFor(model => model.Member.UpdateUserID)</dd>
+            </div>
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.UpdateDatetime)</dt>
+                <dd class="text-slate-900">@Html.DisplayFor(model => model.Member.UpdateDatetime)</dd>
+            </div>
         }
     </dl>
 
-    <form method="post">
+    <form method="post" class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
         <input type="hidden" asp-for="Member.TeamID" />
         <input type="hidden" asp-for="Member.MemberID" />
-        <input type="submit" value="削除" class="btn btn-danger" />
-        <a class="btn btn-secondary" asp-page="./Index" asp-route-teamID="@Model.Member.Team.TeamID">戻る</a>
+        <input type="submit" value="削除する" class="rounded-lg bg-red-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2" />
+        <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="./Index" asp-route-teamID="@Model.Member.Team.TeamID">やめる</a>
     </form>
-
 </div>

@@ -1,62 +1,72 @@
-﻿@page
+@page
 @model Bmcs.Pages.Member.EditModel
 
 @{
     ViewData[ViewDataConstant.Title] = "メンバー情報変更";
+    Layout = "_LayoutTailwind";
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
-
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-
-<h4>@Model.Member.Team.TeamName</h4>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Member.MemberID" />
-            <input type="hidden" asp-for="Member.TimeStamp" />
-            <div class="form-group">
-                <label asp-for="Member.UniformNumber" class="control-label"></label>
-                <input asp-for="Member.UniformNumber" class="form-control" />
-                <span asp-validation-for="Member.UniformNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.MemberName" class="control-label"></label>
-                <input asp-for="Member.MemberName" class="form-control" />
-                <span asp-validation-for="Member.MemberName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.MemberClass" class="control-label"></label>
-                <select asp-for="Member.MemberClass" class="form-control" asp-items="Model.MemberClassList"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.ThrowClass" class="control-label"></label>
-                <select asp-for="Member.ThrowClass" class="form-control" asp-items="Model.ThrowClassList"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.BatClass" class="control-label"></label>
-                <select asp-for="Member.BatClass" class="form-control" asp-items="Model.BatClassList"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.PositionGroupClass" class="control-label"></label>
-                <select asp-for="Member.PositionGroupClass" class="form-control" asp-items="Model.PositionGroupClassList"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Member.MessageDetail" class="control-label"></label>
-                <textarea asp-for="Member.MessageDetail" class="form-control"></textarea>
-                <span asp-validation-for="Member.MessageDetail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="登録" class="btn btn-primary" />
-                <a class="btn btn-secondary" asp-page="Index" asp-route-teamID="@Model.Member.Team.TeamID">戻る</a>
-
-            </div>
-        </form>
+<div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Member.Team.TeamName</p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
     </div>
+
+    <form method="post" class="mt-6">
+        <div asp-validation-summary="All" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
+        <input type="hidden" asp-for="Member.MemberID" />
+        <input type="hidden" asp-for="Member.TimeStamp" />
+
+        <div class="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div>
+                <label asp-for="Member.MemberName" class="block text-sm font-semibold text-slate-800"></label>
+                <input asp-for="Member.MemberName" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" />
+                <span asp-validation-for="Member.MemberName" class="mt-1 block text-sm text-red-600"></span>
+            </div>
+
+            <div>
+                <label asp-for="Member.UniformNumber" class="block text-sm font-semibold text-slate-800"></label>
+                <input asp-for="Member.UniformNumber" class="mt-1 block w-24 rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" inputmode="numeric" />
+                <span asp-validation-for="Member.UniformNumber" class="mt-1 block text-sm text-red-600"></span>
+            </div>
+
+            <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto] sm:gap-y-0">
+                <div class="sm:row-span-2 sm:grid sm:grid-rows-subgrid">
+                    <label asp-for="Member.ThrowClass" class="block text-sm font-semibold text-slate-800"></label>
+                    <select asp-for="Member.ThrowClass" class="mt-1 block w-full self-start rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="Model.ThrowClassList"></select>
+                </div>
+                <div class="sm:row-span-2 sm:grid sm:grid-rows-subgrid">
+                    <label asp-for="Member.BatClass" class="block text-sm font-semibold text-slate-800"></label>
+                    <select asp-for="Member.BatClass" class="mt-1 block w-full self-start rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="Model.BatClassList"></select>
+                </div>
+            </div>
+
+            <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto] sm:gap-y-0">
+                <div class="sm:row-span-2 sm:grid sm:grid-rows-subgrid">
+                    <label asp-for="Member.PositionGroupClass" class="block text-sm font-semibold text-slate-800"></label>
+                    <select asp-for="Member.PositionGroupClass" class="mt-1 block w-full self-start rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="Model.PositionGroupClassList"></select>
+                </div>
+                <div class="sm:row-span-2 sm:grid sm:grid-rows-subgrid">
+                    <label asp-for="Member.MemberClass" class="block text-sm font-semibold text-slate-800"></label>
+                    <select asp-for="Member.MemberClass" class="mt-1 block w-full self-start rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="Model.MemberClassList"></select>
+                </div>
+            </div>
+
+            <div>
+                <label asp-for="Member.MessageDetail" class="block text-sm font-semibold text-slate-800"></label>
+                <textarea asp-for="Member.MessageDetail" rows="3" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"></textarea>
+                <span asp-validation-for="Member.MessageDetail" class="mt-1 block text-sm text-red-600"></span>
+            </div>
+        </div>
+
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <input type="submit" value="変更を保存する" class="rounded-lg bg-emerald-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" />
+            <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="Index" asp-route-teamID="@Model.Member.Team.TeamID">メンバー一覧へ</a>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
