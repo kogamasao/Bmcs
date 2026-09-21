@@ -71,6 +71,12 @@ namespace Bmcs.Pages.Score
 
         public PaginatedList<Models.GameScoreTeam> GameScoreTeamList { get; set; }
 
+        /// <summary>
+        /// 確定前の試合件数（自チーム表示のときのみ）
+        /// ※確定するまで成績に集計されないため、その旨を案内するために数える
+        /// </summary>
+        public int BeforeFixGameCount { get; set; }
+
         public PaginatedList<Models.GameScorePitcher> GameScorePitcherList { get; set; }
 
         public PaginatedList<Models.GameScoreFielder> GameScoreFielderList { get; set; }
@@ -344,6 +350,16 @@ namespace Bmcs.Pages.Score
             else
             {
                 SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.MyTeamTeamScore);
+            }
+
+            //確定前の試合件数
+            //※確定するまで成績に集計されないため、集計が0件・少ない理由として案内する
+            if (!string.IsNullOrEmpty(teamID))
+            {
+                BeforeFixGameCount = await Context.Games
+                    .CountAsync(r => r.TeamID == teamID
+                                  && r.StatusClass == StatusClass.BeforeFix
+                                  && r.DeleteFLG == false);
             }
 
             //インデックス
