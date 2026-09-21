@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
+using Bmcs.Constans;
+using Microsoft.AspNetCore.Http;
 using Bmcs.Models;
 using Microsoft.Extensions.Logging;
 
@@ -50,6 +52,14 @@ namespace Bmcs.Pages.UserAccount
 
                 UserAccount = await Context.UserAccounts.FindAsync(id);
 
+
+                //本人以外は削除できない（管理者は除く）
+                if (UserAccount != null
+                    && !base.IsAdmin()
+                    && UserAccount.UserAccountID != HttpContext.Session.GetString(SessionConstant.UserAccountID))
+                {
+                    return NotFound();
+                }
                 if (UserAccount != null)
                 {
                     UserAccount.DeleteFLG = true;

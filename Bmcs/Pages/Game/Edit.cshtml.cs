@@ -73,6 +73,12 @@ namespace Bmcs.Pages.Game
                     return NotFound();
                 }
 
+
+                //自チーム以外のデータは更新できない（管理者は除く）
+                if (!base.IsMyTeamData(game.TeamID))
+                {
+                    return NotFound();
+                }
                 //POST値セット
                 this.TryUpdateModel(game);
                 //エントリ情報セット

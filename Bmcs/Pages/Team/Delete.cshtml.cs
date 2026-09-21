@@ -49,6 +49,12 @@ namespace Bmcs.Pages.Team
 
                 var team = await Context.Teams.FindAsync(id);
 
+
+                //チーム削除は管理者のみ（削除画面の表示条件と揃える）
+                if (!base.IsAdmin())
+                {
+                    return NotFound();
+                }
                 if (team != null)
                 {
                     team.DeleteFLG = true;

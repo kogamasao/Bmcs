@@ -15,7 +15,7 @@ https://bmcs.azurewebsites.net/
 
 ## 使用技術
 ### 言語、フレームワーク等
-- Asp.Net core 3.1 Razor
+- ASP.NET Core 8.0 Razor Pages
 - Entity Framework(O/R Mapper)
 - C#
 - Html
@@ -27,6 +27,10 @@ https://bmcs.azurewebsites.net/
 ### データベース
 - SQL Server(for Local)
 - Azure Database(for Production)
+
+### メール送信
+- MailKit(SMTP)
+  - ユーザID・パスワードの再設定メール、問い合わせの管理者通知に使用
 
 ### インフラ
 - Azure App Service
@@ -49,6 +53,16 @@ https://bmcs.azurewebsites.net/
 ```
 - ソリューションを実行する
 　F5実行すると「Bmcs\Data\DbInitializer.cs」が実行され、DBの作成及びサンプルデータが投入されます。
+
+- メール送信を確認する場合は「Bmcs\appsettings.json」に「EmailSettings」を設定する
+　設定例は「Bmcs\appsettings.sample.json」を参照してください。
+　BaseUrlは再設定メールに記載するURLの基点です（未設定時はリクエストのホストを使用）。
+　AdminEmailは問い合わせ通知の宛先です（未設定時はSenderEmailへ送信）。
+
+## DBの変更を既存環境へ適用する方法
+本プロジェクトはEF Migrationsではなく「DbInitializer.cs」のEnsureCreatedでDBを作成しています。
+そのため、既に作成済みのDB（本番・開発）へテーブル追加等を反映する場合は、
+「Bmcs\doc\migration」配下のSQLをSSMSまたはsqlcmdで実行してください。
 
 ## その他
 - サービス紹介記事

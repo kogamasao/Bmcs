@@ -1,0 +1,127 @@
+﻿@page
+@model Bmcs.Pages.UserAccount.RecoverByTeamModel
+@{
+    ViewData[ViewDataConstant.Title] = "チーム情報でアカウントを確認する";
+}
+
+<h1 class="d-inline-block">
+    @ViewData[ViewDataConstant.Title]
+</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        @if (Model.IsComplete)
+        {
+            <div class="alert alert-success" role="alert">
+                <p>パスワードを再設定しました。新しいパスワードでログインしてください。</p>
+            </div>
+            <div class="form-group">
+                <a class="btn btn-primary" asp-page="/Index">ログイン画面へ</a>
+            </div>
+        }
+        else if (Model.IsAuthenticated)
+        {
+            <div class="alert alert-success" role="alert">
+                <p>
+                    チーム「@Model.RecoverTeamName」のうち、メールアドレスを登録していないユーザの一覧です。
+                    <br />ご自身のユーザIDを選び、新しいパスワードを設定してください。
+                    <br />一覧に無い場合はメールアドレスが登録済みですので、「パスワードをお忘れの場合」からお手続きください。
+                </p>
+            </div>
+            <form method="post" asp-page-handler="Reset">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="RecoverTeamID" />
+                @* チームパスワードはHTMLに平文で残さないため、再設定時に再入力してもらう *@
+                <div class="form-group">
+                    <label asp-for="TeamPassword" class="control-label">チームパスワード（確認のため再入力）</label>
+                    <input asp-for="TeamPassword" type="password" class="form-control" autocomplete="off" />
+                    <span asp-validation-for="TeamPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>ユーザID</th>
+                                <th>ユーザ名</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var userAccount in Model.UserAccountList)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="radio" asp-for="SelectedUserAccountID" value="@userAccount.UserAccountID" />
+                                    </td>
+                                    <td>@userAccount.UserAccountID</td>
+                                    <td>@userAccount.UserAccountName</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <span asp-validation-for="SelectedUserAccountID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label">新しいパスワード</label>
+                    <input asp-for="Password" type="password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="control-label">確認用パスワード</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="パスワードを再設定" class="btn btn-primary" />
+                    <a class="btn btn-secondary" asp-page="/Index">戻る</a>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div class="alert alert-primary" role="alert">
+                <p>
+                    メールアドレスを登録していない場合は、チームIDとチームパスワードでご本人の確認を行います。
+                    <br />一致した場合、そのチームのユーザのうち<strong>メールアドレス未登録のもの</strong>について、
+                    ユーザIDの確認とパスワードの再設定ができます。
+                </p>
+            </div>
+            <div class="alert alert-warning" role="alert">
+                <p>
+                    ※チームパスワードを知っている方は、同じチームのメールアドレス未登録ユーザのパスワードも再設定できます。
+                    <br />チームパスワードはチーム内で慎重に管理してください。
+                    <br />※今後の復旧のために、ログイン後はユーザ編集画面からメールアドレスのご登録をおすすめします。
+                </p>
+            </div>
+            <form method="post" asp-page-handler="Authenticate">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="RecoverTeamID" class="control-label">チームID</label>
+                    <input asp-for="RecoverTeamID" class="form-control" />
+                    <span asp-validation-for="RecoverTeamID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TeamPassword" class="control-label">チームパスワード</label>
+                    <input asp-for="TeamPassword" type="password" class="form-control" />
+                    <span asp-validation-for="TeamPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="ユーザを確認する" class="btn btn-primary" />
+                    <a class="btn btn-secondary" asp-page="/Index">戻る</a>
+                </div>
+                <div class="form-group">
+                    <a asp-page="/Team/ForgotTeamPassword">チームパスワードがわからない場合</a>
+                    <br />
+                    <a asp-page="./ForgotPassword">メールアドレスを登録している場合（メールで再設定）</a>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

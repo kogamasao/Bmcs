@@ -75,6 +75,13 @@ namespace Bmcs.Pages.Team
                     return NotFound();
                 }
 
+                //自チーム以外は更新できない（管理者は除く）
+                if (!base.IsAdmin()
+                    && team.TeamID != HttpContext.Session.GetString(SessionConstant.TeamID))
+                {
+                    return NotFound();
+                }
+
                 //POST値セット
                 this.TryUpdateModel(team);
                 //更新情報セット

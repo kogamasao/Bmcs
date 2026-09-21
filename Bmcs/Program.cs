@@ -1,5 +1,6 @@
-using Bmcs.Data;
+﻿using Bmcs.Data;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,7 +46,24 @@ namespace Bmcs
             // Email Service Registration
             builder.Services.AddTransient<Bmcs.Function.IEmailSender, Bmcs.Function.EmailSender>();
 
+            // 試行回数制限（アカウント復旧機能の総当たり対策）
+            builder.Services.AddMemoryCache();
+            builder.Services.AddSingleton<Bmcs.Function.IRateLimiter, Bmcs.Function.RateLimiter>();
+
+            // Azure App Service等のリバースプロキシ配下で、アクセス元IPを正しく取得する
+            // ※未設定の場合、全リクエストが同一IPと判定され、試行回数制限がサイト全体で共有されてしまう
+            builder.Services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                //Azure App Serviceのフロントエンドを信頼するため、既定の制限を解除する
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });
+
             var app = builder.Build();
+
+            //プロキシからのヘッダを反映する（他のミドルウェアより先に実行する）
+            app.UseForwardedHeaders();
 
             // Configure the HTTP request pipeline (旧Configure部分)
             if (app.Environment.IsDevelopment())

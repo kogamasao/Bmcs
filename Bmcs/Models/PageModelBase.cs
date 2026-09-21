@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -549,8 +550,50 @@ namespace Bmcs.Models
             base.OnPageHandlerSelected(context);
         }
 
+        /// <summary>
+        /// 更新対象が自チームのデータかどうかを判定する
+        /// ※他チームのデータを更新されないよう、更新系処理の先頭で判定する。管理者は常に許可。
+        /// </summary>
+        /// <param name="teamID">更新対象データのチームID</param>
+        /// <returns>更新可能な場合true</returns>
+        public bool IsMyTeamData(string teamID)
+        {
+            if (IsAdmin())
+            {
+                return true;
+            }
+
+            if (string.IsNullOrEmpty(teamID))
+            {
+                return false;
+            }
+
+            return teamID == HttpContext.Session.GetString(SessionConstant.TeamID);
+        }
+
+        /// <summary>
+        /// 未ログインでもPOSTを許可するか
+        /// ログイン、ユーザ作成、問い合わせ、アカウント復旧など、
+        /// 未ログイン状態で使用する画面のみ true を返すようオーバーライドする。
+        /// </summary>
+        public virtual bool AllowAnonymousPost
+        {
+            get { return false; }
+        }
+
         public override void OnPageHandlerExecuting(PageHandlerExecutingContext context)
         {
+            //更新系（POST）はログインを必須とする
+            //※各画面のOnPostでのログインチェック漏れを防ぐため、基底クラスで一律に判定する
+            if (HttpMethods.IsPost(HttpContext.Request.Method)
+                && !AllowAnonymousPost
+                && !IsLogin())
+            {
+                context.Result = RedirectToPage("/Index");
+
+                return;
+            }
+
             base.OnPageHandlerExecuting(context);
         }
 
@@ -592,6 +635,37 @@ namespace Bmcs.Models
             HttpContext.Session.SetString(SessionConstant.UrlAfterLogin, Request.Scheme + "://" + Request.Host + Request.Path + Request.QueryString);
 
             return RedirectToPage("/Index");
+        }
+
+        /// <summary>
+        /// アクセス元IPアドレスを取得する（試行回数制限のキーに使用）
+        /// </summary>
+        /// <returns></returns>
+        public string GetRemoteIpAddress()
+        {
+            return HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        }
+
+        /// <summary>
+        /// メールに記載する絶対URLを生成する
+        /// 設定値（EmailSettings:BaseUrl）があればそれを使用し、なければリクエストのホストを使用する。
+        /// ※Hostヘッダを書き換えられた場合に不正なURLをメールへ載せないため、設定値を優先する。
+        /// </summary>
+        /// <param name="relativeUrl"></param>
+        /// <returns></returns>
+        public string CreateAbsoluteUrl(string relativeUrl)
+        {
+            var baseUrl = HttpContext.RequestServices
+                                     .GetService(typeof(IConfiguration)) is IConfiguration configuration
+                          ? configuration.GetSection("EmailSettings")["BaseUrl"]
+                          : null;
+
+            if (string.IsNullOrWhiteSpace(baseUrl))
+            {
+                baseUrl = Request.Scheme + "://" + Request.Host;
+            }
+
+            return baseUrl.TrimEnd('/') + relativeUrl;
         }
 
             /// <summary>

@@ -190,6 +190,13 @@ namespace Bmcs.Pages.Order
                 //再取得
                 Game = await Context.Games
                     .Include(m => m.Team).FirstOrDefaultAsync(m => m.GameID == Game.GameID);
+
+                //自チーム以外の試合は更新できない（管理者は除く）
+                if (Game == null || !base.IsMyTeamData(Game.TeamID))
+                {
+                    return NotFound();
+                }
+
                 //チームID
                 base.TeamID = Game.TeamID;
 
@@ -221,8 +228,10 @@ namespace Bmcs.Pages.Order
 
                 }
                 //削除対象
+                //※対象の試合IDはPOST値ではなく、権限チェック済みのGame.GameIDを使用する
+                //　（POST値を使うと、他チームの試合のオーダーを削除できてしまう）
                 var deleteOrderList = await Context.Orders
-                                        .Where(m => m.GameID == OrderList.FirstOrDefault().GameID
+                                        .Where(m => m.GameID == Game.GameID
                                             && m.GameSceneID == OrderList.FirstOrDefault().GameSceneID
                                             && m.OrderDataClass == OrderList.FirstOrDefault().OrderDataClass).ToListAsync();
 
@@ -272,8 +281,9 @@ namespace Bmcs.Pages.Order
             {
                 var newOrder = new Models.Order
                 {
-                    GameID = order.GameID,
-                    TeamID = order.TeamID,
+                    //※POST値ではなく、権限チェック済みの試合の値を使用する
+                    GameID = Game.GameID,
+                    TeamID = Game.TeamID,
                     GameSceneID = order.GameSceneID,
                     MemberID = order.MemberID,
                     BattingOrder = order.BattingOrder,

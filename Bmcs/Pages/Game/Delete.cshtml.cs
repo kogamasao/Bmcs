@@ -64,6 +64,12 @@ namespace Bmcs.Pages.Game
 
                 var game = await Context.Games.FindAsync(id);
 
+
+                //自チーム以外のデータは削除できない（管理者は除く）
+                if (game != null && !base.IsMyTeamData(game.TeamID))
+                {
+                    return NotFound();
+                }
                 if (game != null)
                 {
                     game.DeleteFLG = true;

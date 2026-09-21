@@ -78,6 +78,12 @@ namespace Bmcs.Pages.Member
                     return Page();
                 }
 
+                //自チーム以外にはメンバーを登録できない（管理者は除く）
+                if (!base.IsMyTeamData(Member.TeamID))
+                {
+                    return NotFound();
+                }
+
                 //データ作成
                 var member = new Models.Member();
 

@@ -21,6 +21,14 @@ namespace Bmcs.Pages
             
         }
 
+        /// <summary>
+        /// 未ログインで使用する画面のため、POSTを許可する
+        /// </summary>
+        public override bool AllowAnonymousPost
+        {
+            get { return true; }
+        }
+
         [BindProperty]
         public Models.UserAccount UserAccount { get; set; }
 
@@ -49,7 +57,7 @@ namespace Bmcs.Pages
                     || dbUserAccount.UserAccountID != UserAccount.UserAccountID
                     || dbUserAccount.Password != UserAccount.Password.ChangeHashValue())
                 {
-                    ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.UserAccountID), "入力したユーザID、またはパスワードが間違っています。パスワードをお忘れの場合はお問い合わせをお願いします。");
+                    ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.UserAccountID), "入力したユーザID、またはパスワードが間違っています。お忘れの場合は「パスワードをお忘れの場合」「ユーザIDをお忘れの場合」からお手続きください。");
 
                     return Page();
                 }
