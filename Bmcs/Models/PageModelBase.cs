@@ -873,7 +873,7 @@ namespace Bmcs.Models
             var inningScores = await Context.InningScores.Where(r => r.GameID == gameID).ToListAsync();
 
             //QS計算基準イニング
-            decimal baseInning = inningScores.DefaultIfEmpty().Max(r => r.Inning);
+            decimal baseInning = inningScores.Select(r => r.Inning).DefaultIfEmpty().Max();
 
             if(baseInning > CalculateRegulationConstant.BaseInning)
             {
@@ -884,8 +884,8 @@ namespace Bmcs.Models
             var myTeamOffenceTopButtomClass = game.BatFirstBatSecondClass == BatFirstBatSecondClass.First ? TopButtomClass.Top : TopButtomClass.Buttom;
 
             //得点
-            game.Score = inningScores.Where(r => r.TopButtomClass == myTeamOffenceTopButtomClass).DefaultIfEmpty().Sum(r => r.Score);
-            game.OpponentTeamScore = inningScores.Where(r => r.TopButtomClass != myTeamOffenceTopButtomClass).DefaultIfEmpty().Sum(r => r.Score);
+            game.Score = inningScores.Where(r => r.TopButtomClass == myTeamOffenceTopButtomClass).Sum(r => r.Score);
+            game.OpponentTeamScore = inningScores.Where(r => r.TopButtomClass != myTeamOffenceTopButtomClass).Sum(r => r.Score);
 
             //勝敗
             if (game.Score > game.OpponentTeamScore)
@@ -993,9 +993,9 @@ namespace Bmcs.Models
                 //被本塁打
                 gameScorePitcher.HomeRun = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass == ResultClass.HomeRun).Count();
                 //失点
-                gameScorePitcher.Run = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID).DefaultIfEmpty().Sum(r => r.Run);
+                gameScorePitcher.Run = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID).Sum(r => r.Run);
                 //自責点
-                gameScorePitcher.EarnedRun = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID).DefaultIfEmpty().Sum(r => r.EarnedRun);
+                gameScorePitcher.EarnedRun = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID).Sum(r => r.EarnedRun);
                 //与四球
                 gameScorePitcher.FourBall = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass == ResultClass.FourBalls).Count();
                 //与死球
@@ -1138,7 +1138,7 @@ namespace Bmcs.Models
                 //打点
                 if (gameScenes.Any(r => r.BatterMemberID == fielderMemberID))
                 {
-                    gameScoreFielder.RBI = gameScenes.Where(r => r.BatterMemberID == fielderMemberID).DefaultIfEmpty().Sum(r => r.RBI);
+                    gameScoreFielder.RBI = gameScenes.Where(r => r.BatterMemberID == fielderMemberID).Sum(r => r.RBI);
                 }
                 else
                 {
@@ -1807,7 +1807,7 @@ namespace Bmcs.Models
 
             foreach (var game in targetGameList)
             {
-                decimal maxInning = inningScoreList.Where(r => r.GameID == game.GameID).DefaultIfEmpty().Max(r => r.Inning);
+                decimal maxInning = inningScoreList.Where(r => r.GameID == game.GameID).Select(r => r.Inning).DefaultIfEmpty().Max();
 
                 //最大でも9
                 if(maxInning > CalculateRegulationConstant.BaseInning)

@@ -74,9 +74,10 @@ curl -s -b cookie.jar http://localhost:15080/Game/Index | grep -oP '<a class="na
 6. **試合一覧・試合作成（`/Game/Index`・`/Game/Create`）** ← 完了
 7. **打順設定（`/Order/Edit`）** ← 完了
 8. **スコア入力（`/GameScene/Edit`）** ← 完了
-9. 試合結果 → 成績 → メッセージ → …
+9. **試合結果（`/GameScore/Edit`・`/GameScore/Details`）** ← 完了
+10. 成績 → メッセージ → チーム → 管理系 → …
    ※ランディングに載せるスクリーンショットは、スコア入力と成績の移行後に撮影する
-10. Bootstrap と `site.css` を削除
+11. Bootstrap と `site.css` を削除
 
 ### 2.3 移行完了時に対応が必要なもの
 - **ナビの開閉とモーダル**（`data-toggle` 4箇所）… Bootstrap の JS を外すと動かなくなる。
@@ -322,6 +323,34 @@ curl -s -b cookie.jar http://localhost:15080/Game/Index | grep -oP '<a class="na
 **ヘルプ本文（3,393文字）の分割は未実施。** 要点は画面内に出したが、
 本文そのものの整理は別途行う（DBの `SystemAdmin` の更新が必要）。
 
+## 7.8 試合結果（`/GameScore/Edit`・`/GameScore/Details`）
+
+| 変更 | 理由 |
+| --- | --- |
+| **「確定」の位置づけを明示** | 「試合終了」だけでは成績に反映されないことが、どこにも書かれていなかった。確定ボタンの周りに「確定すると成績ページに集計されます」と明記し、確定後も修正できることも添えた |
+| ボタンの役割を整理 | 「再集計する」「イニング追加・削除」を副次操作の見た目にし、確定のみを主要操作にした |
+| 成績表を共通スタイルへ | `.stat-table` / `.col-fix-left` / `.col-fix-right`（旧 `column-fix-*` に相当） |
+| 動画埋め込みを `aspect-video` に | Bootstrap の `embed-responsive` に依存していた |
+
+### 発見した既存バグ（修正済み）
+**イニングを入力せずに「確定」を押すと500エラー**になっていた。
+
+```csharp
+// 修正前：空のリストに DefaultIfEmpty() を使うと null 要素が1件返り、
+//         セレクタで null 参照となる
+inningScores.DefaultIfEmpty().Max(r => r.Inning)
+```
+
+**同じ書き方が21箇所**あったため、まとめて安全な形に変更した。
+
+| 対象 | 修正 |
+| --- | --- |
+| `Sum` 10箇所 | `DefaultIfEmpty()` を削除（`Sum` は空で0を返すため不要） |
+| `Max` 11箇所 | `.Select(r => r.X).DefaultIfEmpty().Max()` に変更（値を取り出してから既定値を与える） |
+
+対象ファイルは `PageModelBase.cs`・`GameScene/Edit.cshtml.cs`・`GameScore/Edit.cshtml.cs`・
+`InningScore/Index.cshtml.cs`。**空でない場合の挙動は変わらない。**
+
 ## 8. 画面リニューアル時に必ず対応すること（レビュー指摘の申し送り）
 
 離脱分析とレビューで判明した問題のうち、**該当画面のリニューアル時にまとめて対応する**もの。
@@ -332,7 +361,7 @@ curl -s -b cookie.jar http://localhost:15080/Game/Index | grep -oP '<a class="na
 | 対応 | 内容 |
 | --- | --- |
 | **「確定」の注意書き**（決定事項） | 「試合終了」だけでは成績に反映されない。`GameSet()` は `StatusClass = BeforeFix` を設定し、`/Score` は `EndGame`・`EndGameLock` のみを集計対象とするため、**確定するまで成績が白紙になる**。集計値は試合終了時点で計算済みだが、**確定ボタンは仕様として残し、画面に注意書きを入れる方針**とした |
-| 確定後の遷移先 | 現在は試合一覧。成績か試合結果へ送り、入力した成果を見せる |
+| 確定後の遷移先 | 現在は試合一覧。成績か試合結果へ送り、入力した成果を見せる（未対応） |
 | プレー入力のヘルプ本文 | 3,393文字のモーダル1枚。要点は画面内に出したが、本文の整理は未実施（DBの更新が必要） |
 
 ※空状態・ラベル・確定の注意書きは**7.5で対応済み**（注意書きは試合一覧に追加。

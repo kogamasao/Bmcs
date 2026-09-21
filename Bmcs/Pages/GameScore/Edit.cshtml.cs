@@ -300,7 +300,7 @@ namespace Bmcs.Pages.GameScore
             }
 
             //最終イニング
-            var maxInning = inningScores.DefaultIfEmpty().Max(r => r.Inning);
+            var maxInning = inningScores.Select(r => r.Inning).DefaultIfEmpty().Max();
 
             foreach (var inningScore in inningScores)
             {
@@ -327,8 +327,8 @@ namespace Bmcs.Pages.GameScore
             var myTeamOffenceTopButtomClass = game.BatFirstBatSecondClass == BatFirstBatSecondClass.First ? TopButtomClass.Top : TopButtomClass.Buttom;
 
             //得点
-            game.Score = inningScores.Where(r => r.TopButtomClass == myTeamOffenceTopButtomClass).DefaultIfEmpty().Sum(r => r.Score);
-            game.OpponentTeamScore = inningScores.Where(r => r.TopButtomClass != myTeamOffenceTopButtomClass).DefaultIfEmpty().Sum(r => r.Score);
+            game.Score = inningScores.Where(r => r.TopButtomClass == myTeamOffenceTopButtomClass).Sum(r => r.Score);
+            game.OpponentTeamScore = inningScores.Where(r => r.TopButtomClass != myTeamOffenceTopButtomClass).Sum(r => r.Score);
 
             //勝敗
             if (game.Score > game.OpponentTeamScore)

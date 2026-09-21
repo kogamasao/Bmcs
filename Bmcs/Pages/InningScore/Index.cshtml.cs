@@ -191,12 +191,12 @@ namespace Bmcs.Pages.InningScore
 
                 if(myScoreList != null && myScoreList.Any())
                 {
-                    myScore = myScoreList.DefaultIfEmpty().Sum(r => r.Run).NullToZero();
+                    myScore = myScoreList.Sum(r => r.Run).NullToZero();
                 }
 
                 if (opponentScoreList != null && opponentScoreList.Any())
                 {
-                    opponentScore = opponentScoreList.DefaultIfEmpty().Sum(r => r.Run).NullToZero();
+                    opponentScore = opponentScoreList.Sum(r => r.Run).NullToZero();
                 }
 
                 gameScene.InningScoreListGameScore = myScore.ToString() + "-" +  opponentScore.ToString();

@@ -53,48 +53,51 @@
         background-color: var(--color-slate-50);
     }
 
-    /* 横スクロール時に左端の列を固定する（どの行か分からなくなるため） */
-    .stat-table .col-fix-left {
-        position: sticky;
-        left: 0;
-        z-index: 10;
-        background-color: var(--color-white);
-        font-weight: 600;
-        color: var(--color-slate-900);
-        border-right: 1px solid var(--color-slate-200);
-    }
-
-    .stat-table thead th.col-fix-left {
-        z-index: 30;
-        background-color: var(--color-slate-100);
-    }
-
-    .stat-table tbody tr:hover td.col-fix-left {
-        background-color: var(--color-slate-50);
-    }
 }
 
 /*
- * 一覧表の操作列を右端に固定する。
- * ※列数が多い一覧はスマートフォン幅で横スクロールし、操作ボタンが画面外になって
- *   存在に気づけない。主要な操作なので常に見える位置に留める。
+ * 横スクロールする表の端の列を固定する。
+ * ※旧 customize.css の .column-fix-left / .column-fix-right に相当。
+ *   左端＝どの行か分からなくなるため、右端＝操作ボタンが画面外になるため。
  */
 @layer components {
+    .col-fix-left,
     .col-fix-right {
         position: sticky;
-        right: 0;
         z-index: 10;
         background-color: var(--color-white);
+    }
+
+    .col-fix-left {
+        left: 0;
+        border-right: 1px solid var(--color-slate-200);
+    }
+
+    .col-fix-right {
+        right: 0;
         border-left: 1px solid var(--color-slate-200);
     }
 
+    thead .col-fix-left,
     thead .col-fix-right {
         z-index: 20;
         background-color: var(--color-slate-50);
     }
 
+    tbody tr:hover .col-fix-left,
     tbody tr:hover .col-fix-right {
         background-color: var(--color-slate-50);
+    }
+
+    /* 成績表では左端が行の見出しになるため強調する */
+    .stat-table .col-fix-left {
+        font-weight: 600;
+        color: var(--color-slate-900);
+    }
+
+    .stat-table thead th.col-fix-left {
+        z-index: 30;
+        background-color: var(--color-slate-100);
     }
 }
 

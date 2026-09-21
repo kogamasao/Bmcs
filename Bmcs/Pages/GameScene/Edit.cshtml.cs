@@ -437,7 +437,7 @@ namespace Bmcs.Pages.GameScene
                             else
                             {
                                 //前回が最終打者
-                                if (orderList.DefaultIfEmpty().Max(r => r.BattingOrder) == lastBattingOrder)
+                                if (orderList.Select(r => r.BattingOrder).DefaultIfEmpty().Max() == lastBattingOrder)
                                 {
                                     Order = orderList.OrderBy(r => r.BattingOrder).Skip(skipCount).FirstOrDefault();
                                 }
@@ -974,7 +974,7 @@ namespace Bmcs.Pages.GameScene
                                         && r.Inning == GameScene.Inning
                                         && r.TopButtomClass == GameScene.TopButtomClass);
 
-                var score = gameScenes.DefaultIfEmpty().Sum(r => r.Run);
+                var score = gameScenes.Sum(r => r.Run);
 
                 if (inningScore != null)
                 {
@@ -1406,7 +1406,7 @@ namespace Bmcs.Pages.GameScene
                 if (lastBattingOrder != null)
                 {
                     //前回が最終打者
-                    if (orderList.DefaultIfEmpty().Max(r => r.BattingOrder) == lastBattingOrder)
+                    if (orderList.Select(r => r.BattingOrder).DefaultIfEmpty().Max() == lastBattingOrder)
                     {
                         Order = orderList.OrderBy(r => r.BattingOrder).FirstOrDefault();
                     }
@@ -1588,9 +1588,9 @@ namespace Bmcs.Pages.GameScene
 
             if (selectGameSceneID == null)
             {
-                inning = gameScenes.DefaultIfEmpty().Max(r => r.Inning);
-                topButtomClass = gameScenes.Where(r => r.Inning == inning).DefaultIfEmpty().Max(r => r.TopButtomClass);
-                inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).DefaultIfEmpty().Max(r => r.InningIndex);
+                inning = gameScenes.Select(r => r.Inning).DefaultIfEmpty().Max();
+                topButtomClass = gameScenes.Where(r => r.Inning == inning).Select(r => r.TopButtomClass).DefaultIfEmpty().Max();
+                inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).Select(r => r.InningIndex).DefaultIfEmpty().Max();
             }
             else
             {
@@ -1606,21 +1606,21 @@ namespace Bmcs.Pages.GameScene
                 {
                     inning = selectGameScene.Inning;
                     topButtomClass = selectGameScene.TopButtomClass;
-                    inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass && r.InningIndex < selectGameScene.InningIndex).DefaultIfEmpty().Max(r => r.InningIndex);
+                    inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass && r.InningIndex < selectGameScene.InningIndex).Select(r => r.InningIndex).DefaultIfEmpty().Max();
                 }
                 //裏⇒表
                 else if (selectGameScene.TopButtomClass == TopButtomClass.Buttom)
                 {
                     inning = selectGameScene.Inning;
                     topButtomClass = TopButtomClass.Top;
-                    inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).DefaultIfEmpty().Max(r => r.InningIndex);
+                    inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).Select(r => r.InningIndex).DefaultIfEmpty().Max();
                 }
                 //表⇒前回の裏
                 else
                 {
                     inning = selectGameScene.Inning - 1;
                     topButtomClass = TopButtomClass.Buttom;
-                    inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).DefaultIfEmpty().Max(r => r.InningIndex);
+                    inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).Select(r => r.InningIndex).DefaultIfEmpty().Max();
                 }
             }
 
