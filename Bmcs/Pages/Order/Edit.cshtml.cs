@@ -38,6 +38,11 @@ namespace Bmcs.Pages.Order
         [BindProperty]
         public bool IsDuringGame { get; set; }
 
+        /// <summary>
+        /// 初回のため、登録済みの選手を自動で割り当てたか
+        /// </summary>
+        public bool IsPreset { get; set; }
+
         [BindProperty]
         public decimal InterruptBattingOrder { get; set; }
 
@@ -111,6 +116,22 @@ namespace Bmcs.Pages.Order
                 //初試合
                 if (!OrderList.Any())
                 {
+                    //初回は前回オーダーが無いため、登録済みの選手を背番号順に割り当てる。
+                    //※9枠すべてを空で出すと、9回分の選択を求めることになる。
+                    //  並べ替えるだけで済むようにしておき、画面に「あとから変更できる」旨を表示する。
+                    var memberList = await Context.Members
+                        .Where(r => r.TeamID == Game.TeamID
+                                 && r.DeleteFLG == false
+                                 && (r.MemberClass == MemberClass.Player
+                                  || r.MemberClass == MemberClass.PlayingManager))
+                        .ToListAsync();
+
+                    var presetMemberList = memberList
+                        .OrderBy(r => r.OrderUniformNumber)
+                        .ThenBy(r => r.UniformNumber)
+                        .Take(9)
+                        .ToList();
+
                     for(var i = 1; i <= 9; i++)
                     {
                         var order = new Models.Order()
@@ -118,7 +139,7 @@ namespace Bmcs.Pages.Order
                             GameID = gameID,
                             TeamID = Game.TeamID,
                             GameSceneID = null,
-                            MemberID = null,
+                            MemberID = presetMemberList.Count >= i ? presetMemberList[i - 1].MemberID : (int?)null,
                             BattingOrder = i,
                             ParticipationIndex = 1,
                             PositionClass = (PositionClass)System.Enum.ToObject(typeof(PositionClass), i),
@@ -128,6 +149,9 @@ namespace Bmcs.Pages.Order
 
                         OrderList.Add(order);
                     }
+
+                    //画面に案内を出すための判定
+                    IsPreset = presetMemberList.Any();
                 }
                 else
                 {
