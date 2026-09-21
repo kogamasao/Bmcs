@@ -115,6 +115,16 @@ namespace Bmcs.Pages.GameScene
             //チームID
             base.TeamID = Game.TeamID;
 
+            //打順が未設定の場合は打順設定画面へ誘導する
+            //※未設定のまま入力画面を開くと、投手の打順を参照する箇所で例外となり
+            //  エラー画面になっていた。打順画面から離脱すると、その試合のスコア入力に
+            //  到達する手段が無くなっていたため誘導する。
+            if (!GameOrderList.Any(r => r.GameSceneID == null
+                                     && r.OrderDataClass == OrderDataClass.Normal))
+            {
+                return RedirectToPage("/Order/Edit", new { gameID = Game.GameID });
+            }
+
             //前回試合シーンID
             LastGameSceneID = GetLastGameSceneID(Game.GameID, gameSceneID);
             //次回試合シーンID(修正時のみ)
