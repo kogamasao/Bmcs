@@ -60,6 +60,20 @@ https://bmcs.azurewebsites.net/
 　BaseUrlは再設定メールに記載するURLの基点です（未設定時はリクエストのホストを使用）。
 　AdminEmailは問い合わせ通知の宛先です（未設定時はSenderEmailへ送信）。
 
+## 設定値(appsettings.json)
+`Bmcs/appsettings.sample.json` を `appsettings.json` にコピーして使用する(git管理外)。
+本番(Azure App Service)では「構成」→「アプリケーション設定」に登録する。
+階層は `__`(アンダースコア2つ)で区切る。例: `Analytics__ClarityProjectID`
+
+| キー | 用途 |
+| --- | --- |
+| `EmailSettings:*` | メール送信(SMTP)、メール本文に載せる絶対URL |
+| `Site:OgImage` | SNS共有時に表示する画像のパス。**未設定の場合は画像なしのカードになる** |
+| `Analytics:ClarityProjectID` | Microsoft Clarity のプロジェクトID。**未設定の場合は計測タグを出力しない** |
+
+※計測タグを有効にする場合、プライバシーポリシー(`Pages/Privacy.cshtml` 第10条)の
+　記載と実際の運用が一致しているか確認すること。
+
 ## CSS(Tailwind)のビルド方法
 移行済み画面は Tailwind CSS を使用している。
 `Bmcs/Styles/app.css` がソースで、`Bmcs/wwwroot/css/app.css` が生成物。

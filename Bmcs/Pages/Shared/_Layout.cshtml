@@ -4,21 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    @if (ViewData[ViewDataConstant.Title] != null && !string.IsNullOrEmpty(ViewData[ViewDataConstant.Title].ToString()))
-    {
-    <title>@ViewData[ViewDataConstant.Title] - Bmcs - スコア管理SNS</title>
-    }
-    else
-    {
-    <title>Bmcs - スコア管理SNS</title>
-    }
-    <meta name="description" content="野球、ソフトボールのスコア管理を行い、他チームの成績やメッセージのやり取りができる「スコア管理SNS」です。" />
-
-    @if (!Model.IsIndex)
-    {
-    <link rel="canonical" href="https://bmcs.azurewebsites.net/">
-    @*<meta name="robots" content="noindex,nofollow" />*@
-    }
+    @* title・description・canonical・OGP・計測はTailwind版と共通 *@
+    @{await Html.RenderPartialAsync("_HeadMeta");}
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/customize.css" asp-append-version="true" />
@@ -106,7 +93,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - Bmcs - <a asp-area="" asp-page="/Term">利用規約</a>
+            &copy; 2021-@DateTime.Now.Year - Bmcs - <a asp-area="" asp-page="/Term">利用規約</a>
             <span> - </span>
             <a asp-area="" asp-page="/Privacy">Privacy</a>
             <span> - </span>

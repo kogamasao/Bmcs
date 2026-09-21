@@ -8,20 +8,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    @if (ViewData[ViewDataConstant.Title] != null && !string.IsNullOrEmpty(ViewData[ViewDataConstant.Title].ToString()))
-    {
-        <title>@ViewData[ViewDataConstant.Title] - Bmcs - スコア管理SNS</title>
-    }
-    else
-    {
-        <title>Bmcs - スコア管理SNS</title>
-    }
-    <meta name="description" content="野球、ソフトボールのスコア管理を行い、他チームの成績やメッセージのやり取りができる「スコア管理SNS」です。" />
-
-    @if (!Model.IsIndex)
-    {
-        <link rel="canonical" href="https://bmcs.azurewebsites.net/">
-    }
+    @* title・description・canonical・OGP・計測は旧レイアウトと共通 *@
+    @{await Html.RenderPartialAsync("_HeadMeta");}
     <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
 </head>
 
@@ -111,7 +99,9 @@
 
     <footer class="mt-16 border-t border-slate-200 bg-white">
         <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-3 gap-y-1 px-4 py-6 text-sm text-slate-500">
-            <span>&copy; 2021 - Bmcs</span>
+            @* 稼働年数を示す。「2021」だけだと放置されたサービスに見えるため *@
+            <span>&copy; 2021-@DateTime.Now.Year - Bmcs</span>
+            <span class="text-slate-400">稼働@(DateTime.Now.Year - 2021 + 1)年目</span>
             <a class="hover:text-slate-800 hover:underline" asp-page="/Term">利用規約</a>
             <a class="hover:text-slate-800 hover:underline" asp-page="/Privacy">Privacy</a>
             <a class="hover:text-slate-800 hover:underline" asp-page="/Inquiry/Create">お問い合わせ</a>
