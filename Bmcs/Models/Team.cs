@@ -82,6 +82,15 @@ namespace Bmcs.Models
         [Display(Name = "メッセージ")]
         public string MessageDetail { get; set; }
 
+        /// <summary>
+        /// 最終ログイン日時
+        /// ※所属ユーザの誰かがログインした日時。チーム単位で使用状況を判別するために保持する。
+        ///   （所属ユーザを1人ずつ調べずに、未使用チームを抽出できるようにするため）
+        /// </summary>
+        [Display(Name = "最終ログイン日時")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
+        public DateTime? LastLoginDatetime { get; set; }
+
         [DefaultValue(true)]
         [Display(Name = "公開フラグ")]
         public bool PublicFLG { get; set; }

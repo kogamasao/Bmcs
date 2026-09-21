@@ -6,15 +6,66 @@ using Bmcs.Data;
 using Bmcs.Models;
 using Bmcs.Enum;
 using Bmcs.Function;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bmcs.Data
 {
     public static class DbInitializer
     {
+        /// <summary>
+        /// セッション保存用テーブルを作成する（存在しない場合のみ）
+        /// </summary>
+        /// <param name="context"></param>
+        private static void CreateSessionCacheTable(BmcsContext context)
+        {
+            context.Database.ExecuteSqlRaw(@"
+IF OBJECT_ID('dbo.SessionCache') IS NULL
+BEGIN
+    CREATE TABLE dbo.SessionCache
+    (
+        Id                         nvarchar(449)  NOT NULL
+      , Value                      varbinary(MAX) NOT NULL
+      , ExpiresAtTime              datetimeoffset NOT NULL
+      , SlidingExpirationInSeconds bigint         NULL
+      , AbsoluteExpiration         datetimeoffset NULL
+      , CONSTRAINT PK_SessionCache PRIMARY KEY (Id)
+    );
+
+    CREATE NONCLUSTERED INDEX Index_ExpiresAtTime ON dbo.SessionCache (ExpiresAtTime);
+END");
+        }
+
+        /// <summary>
+        /// 最終ログイン日時の列を追加する（存在しない場合のみ）
+        /// </summary>
+        /// <param name="context"></param>
+        private static void AddLastLoginDatetimeColumn(BmcsContext context)
+        {
+            context.Database.ExecuteSqlRaw(@"
+IF COL_LENGTH('dbo.UserAccount', 'LastLoginDatetime') IS NULL
+    ALTER TABLE dbo.UserAccount ADD LastLoginDatetime datetime2(7) NULL;
+IF COL_LENGTH('dbo.Team', 'LastLoginDatetime') IS NULL
+    ALTER TABLE dbo.Team ADD LastLoginDatetime datetime2(7) NULL;");
+        }
+
         public static void Initialize(BmcsContext context)
         {
             //context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
+
+            //セッション保存用テーブル
+            //※EnsureCreated() はモデルにない表を作らないため、ここで作成する。
+            //  無い状態で起動すると、ログインPOSTは302を返すのにセッションが保存されず
+            //  ログイン画面へ戻り続ける（500にならないため監視でも気づけない）。
+            //  ここで作成しておけば、移行SQLの実行順序に依存しなくなる。
+            //  列の定義は Microsoft.Extensions.Caching.SqlServer が要求する形式で固定。
+            CreateSessionCacheTable(context);
+
+            //最終ログイン日時
+            //※EnsureCreated() は既存テーブルへの列追加を行わないため、ここで追加する。
+            //  列が無い状態で起動すると UserAccount / Team の参照が全て失敗し、
+            //  ログインすらできなくなる（移行SQLの実行順序に依存させない）。
+            AddLastLoginDatetimeColumn(context);
 
             var isUpdate = false;
 

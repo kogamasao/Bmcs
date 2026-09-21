@@ -17,7 +17,35 @@ namespace Bmcs
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container (旧ConfigureServices部分)
-            builder.Services.AddDistributedMemoryCache();
+
+            //接続文字列
+            //※環境によってキーが異なる。EFとセッションで別々に取得すると、
+            //  片方だけ設定漏れになっても気づけないため、ここで1つに決める。
+            var connectionString = builder.Environment.IsDevelopment()
+                                   ? builder.Configuration.GetConnectionString("SqlServerConnectionString")
+                                   : builder.Configuration.GetConnectionString("AzureDatabaseConnectionString");
+
+            //セッションの保存先
+            //※メモリ保持だとアプリの再起動（デプロイ・スケール・プラットフォーム保守）で
+            //  全員がログアウトし、スコア入力中のユーザが弾き出される。
+            var isSessionInMemory = string.IsNullOrEmpty(connectionString);
+
+            if (isSessionInMemory)
+            {
+                //接続文字列が無い環境でも起動はできるようにする（起動後に警告を出す）
+                builder.Services.AddDistributedMemoryCache();
+            }
+            else
+            {
+                builder.Services.AddDistributedSqlServerCache(options =>
+                {
+                    options.ConnectionString = connectionString;
+                    options.SchemaName = "dbo";
+                    options.TableName = "SessionCache";
+                    //期限切れレコードの削除間隔
+                    options.ExpiredItemsDeletionInterval = TimeSpan.FromMinutes(30);
+                });
+            }
 
             builder.Services.AddSession(options =>
             {
@@ -32,16 +60,8 @@ namespace Bmcs
                     //options.Conventions.AddPageRoute("/Login/Index", "");
                 });
 
-            if (builder.Environment.IsDevelopment())
-            {
-                builder.Services.AddDbContext<BmcsContext>(options =>
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionString")));
-            }
-            else
-            {
-                builder.Services.AddDbContext<BmcsContext>(options =>
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureDatabaseConnectionString")));
-            }
+            builder.Services.AddDbContext<BmcsContext>(options =>
+                options.UseSqlServer(connectionString));
 
             // Email Service Registration
             builder.Services.AddTransient<Bmcs.Function.IEmailSender, Bmcs.Function.EmailSender>();
@@ -74,6 +94,12 @@ namespace Bmcs
             {
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
+            }
+
+            if (isSessionInMemory)
+            {
+                //無言でメモリ保持になると「直したつもりで直っていない」状態になるため警告する
+                app.Logger.LogWarning("接続文字列が取得できないため、セッションをメモリに保持します。アプリの再起動で全員がログアウトします。");
             }
 
             // DBの初期化（旧CreateDbIfNotExistsの内容）
