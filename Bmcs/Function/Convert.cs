@@ -76,6 +76,18 @@ namespace Bmcs.Function
         }
 
         /// <summary>
+        /// HTMLエスケープ
+        /// ※Html.Raw で出力する文字列を組み立てる際、利用者が入力した値に必ず使用する。
+        ///   選手名などをそのまま連結すると、タグとして解釈される（ストアドXSS）。
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string EscapeForHtml(this string value)
+        {
+            return System.Net.WebUtility.HtmlEncode(value.NullToEmpty());
+        }
+
+        /// <summary>
         /// 改行コード変換
         /// ※このメソッドの戻り値は Html.Raw で出力されるため、
         ///   タグとして解釈されないようHTMLエスケープしてから改行を変換する。
