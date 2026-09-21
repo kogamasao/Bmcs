@@ -69,22 +69,27 @@ namespace Bmcs.Pages
                         //最終ログイン日時
                         //※長期間使用されていないデータを判別するために保持する。
                         //  チーム側にも持たせ、所属ユーザを1人ずつ調べずに抽出できるようにする。
-                        var loginDatetime = DateTime.Now;
-
-                        dbUserAccount.LastLoginDatetime = loginDatetime;
-
-                        if (dbUserAccount.Team != null)
-                        {
-                            dbUserAccount.Team.LastLoginDatetime = loginDatetime;
-                        }
-
-                        //※ログインを妨げないよう、保存に失敗しても処理は続行する
+                        //※SaveChanges を使うと rowversion による排他制御が働き、
+                        //  同じチームのユーザが同時にログインした際に競合してエラーログが出る。
+                        //  記録のためだけの更新なので、UPDATE文で直接更新する。
                         try
                         {
-                            await Context.SaveChangesAsync();
+                            var loginDatetime = DateTime.Now;
+
+                            await Context.Database.ExecuteSqlRawAsync(
+                                "UPDATE dbo.UserAccount SET LastLoginDatetime = {0} WHERE UserAccountID = {1}",
+                                loginDatetime, dbUserAccount.UserAccountID);
+
+                            if (!string.IsNullOrEmpty(dbUserAccount.TeamID))
+                            {
+                                await Context.Database.ExecuteSqlRawAsync(
+                                    "UPDATE dbo.Team SET LastLoginDatetime = {0} WHERE TeamID = {1}",
+                                    loginDatetime, dbUserAccount.TeamID);
+                            }
                         }
                         catch (Exception ex)
                         {
+                            //ログインを妨げないよう、記録に失敗しても処理は続行する
                             Logger.LogError(ex, "最終ログイン日時の更新に失敗しました。");
                         }
 
