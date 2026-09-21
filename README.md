@@ -64,6 +64,11 @@ https://bmcs.azurewebsites.net/
 そのため、既に作成済みのDB（本番・開発）へテーブル追加等を反映する場合は、
 「Bmcs\doc\migration」配下のSQLをSSMSまたはsqlcmdで実行してください。
 
+- 20260920_password_reset.sql … アカウント復旧機能（ResetTokenテーブル、ヘルプ文言の更新）
+- 20260921_survey.sql … アンケート機能（Survey関連5テーブル、第1回アンケートの設問）
+
+※移行SQLは、アプリのデプロイ「前」に実行してください。
+
 ## その他
 - サービス紹介記事
   https://alivetodayblog.com/bmcs/

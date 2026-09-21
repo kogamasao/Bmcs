@@ -21,6 +21,11 @@ erDiagram
     GameScene ||--o{ GameSceneRunner : runners
     UserAccount ||..o{ ResetToken : resets_password
     Team ||..o{ ResetToken : resets_team_password
+    Survey ||--o{ SurveyQuestion : has
+    SurveyQuestion ||--o{ SurveyChoice : has
+    Survey ||--o{ SurveyAnswer : collects
+    SurveyAnswer ||--o{ SurveyAnswerDetail : details
+    UserAccount ||..o{ SurveyAnswer : answers
 
     UserAccount {
         string UserAccountID PK
@@ -56,6 +61,36 @@ erDiagram
         datetime ExpireDatetime
         bool UsedFLG
     }
+    Survey {
+        int SurveyID PK
+        string SurveyTitle
+        enum StatusClass
+    }
+    SurveyQuestion {
+        int SurveyQuestionID PK
+        int SurveyID FK
+        string QuestionText
+        enum AnswerTypeClass
+    }
+    SurveyChoice {
+        int SurveyChoiceID PK
+        int SurveyQuestionID FK
+        string ChoiceText
+        bool FreeTextFLG
+    }
+    SurveyAnswer {
+        int SurveyAnswerID PK
+        int SurveyID FK
+        string UserAccountID
+        string TeamID
+    }
+    SurveyAnswerDetail {
+        int SurveyAnswerDetailID PK
+        int SurveyAnswerID FK
+        int SurveyQuestionID FK
+        int SurveyChoiceID FK
+        string AnswerText
+    }
 ```
 
 ※ResetToken の TargetID は UserAccountID または TeamID を保持する（区分により切り替わるため、DB上のFK制約は設定しない）。
@@ -79,6 +114,11 @@ erDiagram
 | Order | オーダー | 試合のスターティングメンバー情報 |
 | Inquiry | 問い合わせ | ユーザーからの問い合わせ情報 |
 | ResetToken | 再設定トークン | パスワード・チームパスワードの再設定用トークン |
+| Survey | アンケート | アンケートの定義 |
+| SurveyQuestion | アンケート設問 | 設問。アンケートに紐づく |
+| SurveyChoice | アンケート選択肢 | 選択肢。設問に紐づく |
+| SurveyAnswer | アンケート回答 | 回答ヘッダ（誰が・いつ答えたか） |
+| SurveyAnswerDetail | アンケート回答明細 | 設問ごとの回答内容 |
 
 ## 3. テーブル定義詳細
 
@@ -227,3 +267,64 @@ erDiagram
 - 期限切れ・使用済のレコードは動作に影響しないが、定期的に削除して構わない
 - 本テーブルは既存の本番DBには存在しないため、`doc/migration/20260920_password_reset.sql` で追加する
   （本DBは EnsureCreated で作成しているため、モデル追加だけでは既存DBへ反映されない）
+
+### Survey (アンケート)
+| カラム名 | 論理名 | 型 | 必須 | 説明 |
+| --- | --- | --- | --- | --- |
+| SurveyID | アンケートID | int | Yes | PK。自動採番 |
+| SurveyTitle | タイトル | string(100) | Yes | 回答画面の見出し |
+| SurveyDetail | 説明 | string | No | 回答画面の冒頭に表示する案内文 |
+| StartDatetime | 開始日時 | datetime | No | 未設定の場合は制限なし |
+| EndDatetime | 終了日時 | datetime | No | 未設定の場合は制限なし |
+| StatusClass | 状態 | enum | Yes | 1:下書き 2:公開中 3:終了 |
+| DeleteFLG | 削除フラグ | bool | Yes | |
+
+- 回答を受け付けるのは「公開中」かつ「期間内」のもののみ
+- 設問の作成は移行SQLで行う（管理画面からの設問作成は未実装）
+
+### SurveyQuestion (アンケート設問)
+| カラム名 | 論理名 | 型 | 必須 | 説明 |
+| --- | --- | --- | --- | --- |
+| SurveyQuestionID | 設問ID | int | Yes | PK。自動採番 |
+| SurveyID | アンケートID | int | Yes | FK(Survey) |
+| DisplayOrder | 表示順 | int | Yes | |
+| QuestionText | 設問 | string(200) | Yes | |
+| QuestionNote | 補足説明 | string(200) | No | 設問の下に小さく表示する |
+| AnswerTypeClass | 回答形式 | enum | Yes | 1:単一選択 2:複数選択 3:自由記述 |
+| RequiredFLG | 必須フラグ | bool | Yes | |
+| MaxSelectCount | 選択上限数 | int | No | 複数選択時の上限（例：3つまで） |
+
+### SurveyChoice (アンケート選択肢)
+| カラム名 | 論理名 | 型 | 必須 | 説明 |
+| --- | --- | --- | --- | --- |
+| SurveyChoiceID | 選択肢ID | int | Yes | PK。自動採番 |
+| SurveyQuestionID | 設問ID | int | Yes | FK(SurveyQuestion) |
+| DisplayOrder | 表示順 | int | Yes | |
+| ChoiceText | 選択肢 | string(200) | Yes | |
+| FreeTextFLG | 自由入力フラグ | bool | Yes | 「その他」など、選択時に自由入力欄を表示する |
+
+### SurveyAnswer (アンケート回答)
+| カラム名 | 論理名 | 型 | 必須 | 説明 |
+| --- | --- | --- | --- | --- |
+| SurveyAnswerID | 回答ID | int | Yes | PK。自動採番 |
+| SurveyID | アンケートID | int | Yes | FK(Survey) |
+| UserAccountID | ユーザID | string(50) | Yes | 回答者 |
+| TeamID | チームID | string(50) | No | **回答時点**のチーム。後からチームを移動しても集計がぶれないよう保持する |
+| AnswerDatetime | 回答日時 | datetime | Yes | |
+
+- インデックス：IX_SurveyAnswer_SurveyID_UserAccountID (SurveyID, UserAccountID) **UNIQUE**
+  → 同一ユーザの二重回答を防ぐ。回答済み判定にも使用する
+
+### SurveyAnswerDetail (アンケート回答明細)
+| カラム名 | 論理名 | 型 | 必須 | 説明 |
+| --- | --- | --- | --- | --- |
+| SurveyAnswerDetailID | 回答明細ID | int | Yes | PK。自動採番 |
+| SurveyAnswerID | 回答ID | int | Yes | FK(SurveyAnswer) |
+| SurveyQuestionID | 設問ID | int | Yes | |
+| SurveyChoiceID | 選択肢ID | int | No | 選択式の場合に設定。自由記述の場合はNULL |
+| AnswerText | 自由記述 | string | No | 自由記述、および「その他」選択時の入力内容 |
+
+- 複数選択の場合、選択された数だけ明細を作成する
+- **列名を AnswerText としているのは、`FreeText` がSQL Serverの予約語（全文検索の FREETEXT 述語）のため**
+- インデックス：IX_SurveyAnswerDetail_SurveyAnswerID (SurveyAnswerID)
+- 本テーブル群は既存の本番DBには存在しないため、`doc/migration/20260921_survey.sql` で追加する
