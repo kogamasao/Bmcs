@@ -64,6 +64,12 @@ namespace Bmcs.Pages.Member
 
                 var member = await Context.Members.FindAsync(id);
 
+
+                //自チーム以外のデータは削除できない（管理者は除く）
+                if (member != null && !base.IsMyTeamData(member.TeamID))
+                {
+                    return NotFound();
+                }
                 if (member != null)
                 {
                     member.DeleteFLG = true;

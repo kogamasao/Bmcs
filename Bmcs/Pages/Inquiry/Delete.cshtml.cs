@@ -44,6 +44,12 @@ namespace Bmcs.Pages.Inquiry
                 return NotFound();
             }
 
+            //問い合わせの削除は管理者のみ
+            if (!base.IsAdmin())
+            {
+                return NotFound();
+            }
+
             Inquiry = await Context.Inquirys.FindAsync(id);
 
             if (Inquiry != null)

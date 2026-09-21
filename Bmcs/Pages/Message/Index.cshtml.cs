@@ -195,6 +195,12 @@ namespace Bmcs.Pages.Message
         {
             try
             {
+                //自チーム以外の名義でメッセージを投稿できない（管理者は除く）
+                if (Message == null || !base.IsMyTeamData(Message.TeamID))
+                {
+                    return NotFound();
+                }
+
                 Team = await Context.Teams.FindAsync(Message.TeamID);
 
                 UserAccount = await Context.UserAccounts.FindAsync(Message.UserAccountID);
@@ -241,7 +247,8 @@ namespace Bmcs.Pages.Message
         private void TryUpdateModel(Models.Message message, Models.Message parentMessage)
         {
             message.TeamID = Message.TeamID;
-            message.UserAccountID = Message.UserAccountID;
+            //投稿者はログインユーザから設定する（POST値を信用すると他人になりすませるため）
+            message.UserAccountID = HttpContext.Session.GetString(SessionConstant.UserAccountID);
             message.PrivateTeamID = MessageID == null ? Message.PrivateTeamID : null;
             message.ParentMessageID = MessageID;
             message.MessageClass = MessageID == null ? MessageClass.Post : MessageClass.Reply;

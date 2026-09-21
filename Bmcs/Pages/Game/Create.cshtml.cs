@@ -85,6 +85,12 @@ namespace Bmcs.Pages.Game
                     return Page();
                 }
 
+                //自チーム以外には試合を登録できない（管理者は除く）
+                if (!base.IsMyTeamData(Game.TeamID))
+                {
+                    return NotFound();
+                }
+
                 //データ作成
                 var game = new Models.Game();
 

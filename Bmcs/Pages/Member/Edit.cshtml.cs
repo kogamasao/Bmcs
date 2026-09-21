@@ -71,6 +71,12 @@ namespace Bmcs.Pages.Member
                     return NotFound();
                 }
 
+
+                //自チーム以外のデータは更新できない（管理者は除く）
+                if (!base.IsMyTeamData(member.TeamID))
+                {
+                    return NotFound();
+                }
                 //POST値セット
                 this.TryUpdateModel(member);
                 //エントリ情報セット

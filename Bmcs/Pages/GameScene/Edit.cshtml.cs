@@ -824,6 +824,12 @@ namespace Bmcs.Pages.GameScene
                 Game = await Context.Games
                     .Include(m => m.Team).FirstOrDefaultAsync(m => m.GameID == Game.GameID);
 
+                //自チーム以外の試合は更新できない（管理者は除く）
+                if (Game == null || !base.IsMyTeamData(Game.TeamID))
+                {
+                    return NotFound();
+                }
+
                 //チームID
                 base.TeamID = Game.TeamID;
 
