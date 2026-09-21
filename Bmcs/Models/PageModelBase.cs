@@ -873,7 +873,11 @@ namespace Bmcs.Models
             var inningScores = await Context.InningScores.Where(r => r.GameID == gameID).ToListAsync();
 
             //QS計算基準イニング
-            decimal baseInning = inningScores.Select(r => r.Inning).DefaultIfEmpty().Max();
+            //※イニングスコアが無い場合は9回として扱う。
+            //  0にすると「0 >= 0 かつ 0 <= 0」が成立し、0イニングの投手にQSが付いてしまう。
+            decimal baseInning = inningScores.Select(r => r.Inning)
+                                             .DefaultIfEmpty((int)CalculateRegulationConstant.BaseInning)
+                                             .Max();
 
             if(baseInning > CalculateRegulationConstant.BaseInning)
             {

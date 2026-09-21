@@ -349,7 +349,15 @@ inningScores.DefaultIfEmpty().Max(r => r.Inning)
 | `Max` 11箇所 | `.Select(r => r.X).DefaultIfEmpty().Max()` に変更（値を取り出してから既定値を与える） |
 
 対象ファイルは `PageModelBase.cs`・`GameScene/Edit.cshtml.cs`・`GameScore/Edit.cshtml.cs`・
-`InningScore/Index.cshtml.cs`。**空でない場合の挙動は変わらない。**
+`InningScore/Index.cshtml.cs`。**空でない場合の挙動は変わらない**（レビューで21箇所すべて実測確認済み）。
+
+### 空のときの既定値について
+| 箇所 | 空のときの値 | 判断 |
+| --- | --- | --- |
+| QS計算基準イニング（`PageModelBase.cs`） | **9**（`CalculateRegulationConstant.BaseInning`） | 0にすると「0イニング以上・0失点以下」が成立し、**0イニングの投手にQSが付く**ため9回として扱う |
+| 得点・失点（`Sum`） | 0 | イニング未入力で確定した場合は 0-0 の引き分けとして計上される（仕様として認識しておく） |
+| 規定投球回の判定（`PageModelBase.cs:1810`） | 0 | **この修正は必要だった。** IQueryable のため旧形は空集合で例外となり、イニング0件の試合を確定できるようになった今、成績ページが500になる状態だった |
+| 打順・イニング添字（`GameScene/Edit`） | null | 対象が nullable のため旧形と同じ。後続で0件→null を返すだけ |
 
 なお試合作成後の遷移先（プレー毎→打順設定、結果のみ→試合結果入力）は**元からの実装**で、
 入力方式によって次の作業が異なるため妥当。今回踏みやすくなったのは、

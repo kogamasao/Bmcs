@@ -94,7 +94,8 @@
                             <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].UpdateUserID)</th>
                             <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Member[0].UpdateDatetime)</th>
                         }
-                        <th class="px-4 py-3"></th>
+                        @* 列数が多く、スマートフォン幅では操作ボタンが画面外になるため右端に固定する *@
+                        <th class="col-fix-right px-4 py-3"></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -116,7 +117,7 @@
                                 <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.UpdateUserID)</td>
                                 <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.UpdateDatetime)</td>
                             }
-                            <td class="whitespace-nowrap px-4 py-3 text-right">
+                            <td class="col-fix-right whitespace-nowrap px-4 py-3 text-right">
                                 @if (Model.IsMyTeam || Model.IsAdmin())
                                 {
                                     <a class="rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="./Edit" asp-route-id="@item.MemberID">編集</a>
