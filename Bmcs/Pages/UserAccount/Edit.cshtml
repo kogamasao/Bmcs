@@ -37,6 +37,10 @@
                 <label asp-for="UserAccount.EmailAddress" class="control-label"></label>
                 <input asp-for="UserAccount.EmailAddress" class="form-control" />
                 <span asp-validation-for="UserAccount.EmailAddress" class="text-danger"></span>
+                <small class="form-text text-danger">
+                    ※ユーザIDやパスワードを忘れた際の復旧に使用します。登録を強くおすすめします。
+                    一度登録したメールアドレスは削除できません（変更は可能です）。
+                </small>
             </div>
             <div class="form-group">
                 <label asp-for="UserAccount.TeamID" class="control-label"></label>

@@ -41,6 +41,10 @@
                 <label asp-for="UserAccount.EmailAddress" class="control-label"></label>
                 <input asp-for="UserAccount.EmailAddress" class="form-control" />
                 <span asp-validation-for="UserAccount.EmailAddress" class="text-danger"></span>
+                <small class="form-text text-danger">
+                    ※ユーザIDやパスワードを忘れた際の復旧に使用するため、必須項目です。
+                    受信できるメールアドレスを入力してください。
+                </small>
             </div>
             <div class="alert alert-primary" role="alert">
                 ※チームを作成済みの場合は以下を入力してください

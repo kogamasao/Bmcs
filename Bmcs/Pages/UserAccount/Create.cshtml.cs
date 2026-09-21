@@ -24,6 +24,14 @@ namespace Bmcs.Pages.UserAccount
 
         }
 
+        /// <summary>
+        /// 未ログインで使用する画面のため、POSTを許可する
+        /// </summary>
+        public override bool AllowAnonymousPost
+        {
+            get { return true; }
+        }
+
         [BindProperty]
         public Models.UserAccount UserAccount { get; set; }
 
@@ -66,6 +74,15 @@ namespace Bmcs.Pages.UserAccount
                 if (string.IsNullOrEmpty(UserAccount.ConfirmPassword))
                 {
                     ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.ConfirmPassword), "確認用パスワードは必須です。");
+
+                    return Page();
+                }
+
+                //メールアドレス必須チェック
+                //※ID・パスワードを忘れた際の復旧に必要なため、新規登録では必須とする
+                if (string.IsNullOrWhiteSpace(UserAccount.EmailAddress))
+                {
+                    ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.EmailAddress), "メールアドレスは必須です。ユーザIDやパスワードを忘れた際の復旧に使用します。");
 
                     return Page();
                 }

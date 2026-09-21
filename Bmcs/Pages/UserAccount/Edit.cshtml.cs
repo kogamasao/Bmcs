@@ -76,6 +76,24 @@ namespace Bmcs.Pages.UserAccount
                     return NotFound();
                 }
 
+                //本人以外のユーザは更新できない（管理者は除く）
+                if (!base.IsAdmin()
+                    && userAccount.UserAccountID != HttpContext.Session.GetString(SessionConstant.UserAccountID))
+                {
+                    return NotFound();
+                }
+
+                //メールアドレスの削除チェック
+                //※既存ユーザ（未登録のまま利用中の方）に影響を与えないため、
+                //　登録済みのメールアドレスを空に戻すことのみ禁止する
+                if (!string.IsNullOrWhiteSpace(userAccount.EmailAddress)
+                    && string.IsNullOrWhiteSpace(UserAccount.EmailAddress))
+                {
+                    ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.EmailAddress), "メールアドレスは削除できません。ユーザIDやパスワードを忘れた際の復旧に使用します。");
+
+                    return Page();
+                }
+
                 //チームパスワードチェック
                 if (userAccount.TeamID != UserAccount.TeamID
                     && !string.IsNullOrEmpty(UserAccount.TeamID))
