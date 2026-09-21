@@ -3,101 +3,80 @@
 
 @{
     ViewData[ViewDataConstant.Title] = "メンバー情報";
+    Layout = "_LayoutTailwind";
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+<div class="mx-auto max-w-6xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Member.Team.TeamName</p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-
-<div>
-    <h4>@Model.Member.Team.TeamName</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.UniformNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.UniformNumber)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.MemberName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.MemberName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.MemberClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.MemberClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.ThrowClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.ThrowClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.BatClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.BatClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.PositionGroupClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.PositionGroupClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Member.MessageDetail)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Member.MessageDetail)
-        </dd>
+    <dl class="mt-6 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.UniformNumber)</dt>
+                <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.UniformNumber)</dd>
+            </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.MemberName)</dt>
+                <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.MemberName)</dd>
+            </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.MemberClassName)</dt>
+                <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.MemberClassName)</dd>
+            </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.ThrowClassName)</dt>
+                <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.ThrowClassName)</dd>
+            </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.BatClassName)</dt>
+                <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.BatClassName)</dd>
+            </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.PositionGroupClassName)</dt>
+                <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.PositionGroupClassName)</dd>
+            </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.MessageDetail)</dt>
+                <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.MessageDetail)</dd>
+            </div>
         @if (Model.IsAdmin())
         {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Member.EntryUserID)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Member.EntryUserID)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Member.EntryDatetime)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Member.EntryDatetime)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Member.UpdateUserID)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Member.UpdateUserID)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Member.UpdateDatetime)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Member.UpdateDatetime)
-            </dd>
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                    <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.EntryUserID)</dt>
+                    <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.EntryUserID)</dd>
+                </div>
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                    <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.EntryDatetime)</dt>
+                    <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.EntryDatetime)</dd>
+                </div>
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                    <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.UpdateUserID)</dt>
+                    <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.UpdateUserID)</dd>
+                </div>
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                    <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.UpdateDatetime)</dt>
+                    <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.UpdateDatetime)</dd>
+                </div>
         }
     </dl>
 
     @if (Model.GameScorePitcherList.Any())
     {
-        <div class="box">
-            <div class="box-title">
+        <div class="mt-8 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <h2 class="border-b border-slate-200 bg-slate-800 px-5 py-3 text-sm font-bold text-white">
                 投手成績
-            </div>
-            <div class="box-inner">
-                <div class="table-responsive">
-                    <table class="table table-sm table-bordered">
-                        <thead class="thead-light">
+            </h2>
+            <div>
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
-                                <th class="column-fix-left">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Year)
                                 </th>
                                 <th>
@@ -205,7 +184,7 @@
                             @foreach (var item in Model.GameScorePitcherList.OrderBy(r => r.Year))
                             {
                                 <tr>
-                                    <td class="column-fix-left">
+                                    <td class="col-fix-left">
                                         @Html.DisplayFor(modelItem => item.Year)
                                     </td>
                                     <td class="text-center align-middle">
@@ -318,16 +297,16 @@
 
     @if (Model.GameScoreFielderList.Any())
     {
-        <div class="box">
-            <div class="box-title">
+        <div class="mt-8 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <h2 class="border-b border-slate-200 bg-slate-800 px-5 py-3 text-sm font-bold text-white">
                 野手成績
-            </div>
-            <div class="box-inner">
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+            </h2>
+            <div>
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
-                                <th class="column-fix-left">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Year)
                                 </th>
                                 <th>
@@ -441,7 +420,7 @@
                             @foreach (var item in Model.GameScoreFielderList.OrderBy(r => r.Year))
                             {
                                 <tr>
-                                    <td class="column-fix-left">
+                                    <td class="col-fix-left">
                                         @Html.DisplayFor(modelItem => item.Year)
                                     </td>
                                     <td class="text-center align-middle">
@@ -557,7 +536,8 @@
             </div>
         </div>
     }
-</div>
-<div class="form-group">
-    <a class="btn btn-secondary" asp-page="./Index" asp-route-teamID="@Model.Member.Team.TeamID">戻る</a>
+
+    <div class="mt-8">
+        <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-6 py-3 text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="./Index" asp-route-teamID="@Model.Member.Team.TeamID">メンバー一覧へ</a>
+    </div>
 </div>

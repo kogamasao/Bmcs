@@ -54,12 +54,36 @@ namespace Bmcs.Pages.Member
             return Page();
         }
 
+        /// <summary>
+        /// 画面の表示に必要なデータを取得する（入力エラーでの再表示にも使用する）
+        /// </summary>
+        /// <returns></returns>
+        private async Task SetPageDataAsync()
+        {
+            if (Member != null)
+            {
+                var dbMember = await Context.Members
+                    .Include(r => r.Team)
+                    .FirstOrDefaultAsync(r => r.MemberID == Member.MemberID);
+
+                Member.Team = dbMember?.Team;
+                Member.TeamID = dbMember?.TeamID;
+            }
+
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.MemberEdit);
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
+                    //再表示に必要なデータを取り直す
+                    //※取り直さないと、画面でチーム名を参照している箇所で例外となる
+                    await SetPageDataAsync();
+
                     return Page();
                 }
 

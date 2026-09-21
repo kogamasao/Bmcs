@@ -40,6 +40,9 @@ namespace Bmcs.Pages.UserAccount
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.UserAccountCreate);
 
+            //このページ自身を正規URLとする（canonicalがトップを指すと個別ページとして扱われない）
+            IsIndex = true;
+
             return Page();
         }
         

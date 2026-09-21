@@ -17,6 +17,64 @@
 }
 
 /*
+ * 成績テーブル。
+ * 列数が多く横スクロールする表（投手成績・野手成績など）で使用する。
+ * ※セルごとにユーティリティを並べると1ファイルに100箇所以上必要になるため、
+ *   繰り返し現れるこのパターンだけはコンポーネントとして定義する。
+ */
+@layer components {
+    .stat-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.8125rem;
+        white-space: nowrap;
+    }
+
+    .stat-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background-color: var(--color-slate-100);
+        padding: 0.5rem 0.625rem;
+        text-align: left;
+        font-weight: 600;
+        color: var(--color-slate-600);
+        border-bottom: 1px solid var(--color-slate-300);
+    }
+
+    .stat-table tbody td {
+        padding: 0.5rem 0.625rem;
+        color: var(--color-slate-700);
+        border-bottom: 1px solid var(--color-slate-100);
+    }
+
+    .stat-table tbody tr:hover td {
+        background-color: var(--color-slate-50);
+    }
+
+    /* 横スクロール時に左端の列を固定する（どの行か分からなくなるため） */
+    .stat-table .col-fix-left {
+        position: sticky;
+        left: 0;
+        z-index: 10;
+        background-color: var(--color-white);
+        font-weight: 600;
+        color: var(--color-slate-900);
+        border-right: 1px solid var(--color-slate-200);
+    }
+
+    .stat-table thead th.col-fix-left {
+        z-index: 30;
+        background-color: var(--color-slate-100);
+    }
+
+    .stat-table tbody tr:hover td.col-fix-left {
+        background-color: var(--color-slate-50);
+    }
+}
+
+/*
  * jquery-validation-unobtrusive が動的に付与するクラス。
  * これらはHTMLに書かれないためTailwindの検出対象にならず、ここで定義する。
  * ※Bootstrapを外したページでも入力チェックの表示が崩れないようにするため
