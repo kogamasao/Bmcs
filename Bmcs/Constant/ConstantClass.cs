@@ -17,6 +17,11 @@ namespace Bmcs.Constans
         public static readonly string AdminFLG = "AdminFLG";
 
         public static readonly string UrlAfterLogin = "UrlAfterLogin";
+
+        /// <summary>
+        /// アンケートを「あとで回答する」で保留したかどうか
+        /// </summary>
+        public static readonly string SurveySkip = "SurveySkip";
     }
 
     /// <summary>
@@ -59,6 +64,11 @@ namespace Bmcs.Constans
         /// メール送信を伴う受け付けの回数を数える期間（分）
         /// </summary>
         public static readonly int SendMailLimitMinute = 60;
+
+        /// <summary>
+        /// アンケートの自由記述の文字数上限
+        /// </summary>
+        public static readonly int SurveyFreeTextMaxLength = 1000;
 
         /// <summary>
         /// 問い合わせの試行回数上限

@@ -10,6 +10,18 @@
 
 <h1>@ViewData[ViewDataConstant.Title]</h1>
 
+@if (Model.UnansweredSurvey != null)
+{
+    @* 未回答のアンケートがある場合のみ表示する（回答するとこの案内は出なくなる） *@
+    <div class="alert alert-info" role="alert">
+        <strong>@Model.UnansweredSurvey.SurveyTitle</strong>
+        <br />今後の改善のため、ご意見をお聞かせください。（選択式・1分程度）
+        <div class="form-group mt-2 mb-0">
+            <a class="btn btn-info" asp-page="/Survey/Answer">アンケートに回答する</a>
+        </div>
+    </div>
+}
+
 <div class="row">
     <div class="col-md-6 text-center mb-3">
         @if (!Model.IsLogin())

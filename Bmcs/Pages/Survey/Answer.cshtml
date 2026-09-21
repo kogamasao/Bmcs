@@ -1,0 +1,128 @@
+﻿@page
+@using Bmcs.Enum
+@model Bmcs.Pages.Survey.AnswerModel
+@{
+    ViewData[ViewDataConstant.Title] = Model.IsComplete ? "ご協力ありがとうございました" : Model.Survey?.SurveyTitle;
+}
+
+<h1 class="d-inline-block">
+    @ViewData[ViewDataConstant.Title]
+</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        @if (Model.IsComplete)
+        {
+            <div class="alert alert-success" role="alert">
+                <p>
+                    ご回答ありがとうございました。
+                    <br />いただいたご意見は、今後の改善の参考にさせていただきます。
+                </p>
+            </div>
+            <div class="form-group">
+                <a class="btn btn-primary" asp-page="/Top/Index">トップページへ</a>
+            </div>
+        }
+        else
+        {
+            @if (!string.IsNullOrEmpty(Model.Survey?.SurveyDetail))
+            {
+                <div class="alert alert-primary" role="alert">
+                    @* 改行を保持して表示する（HTMLとして解釈させない） *@
+                    <p style="white-space: pre-line;">@Model.Survey.SurveyDetail</p>
+                </div>
+            }
+
+            <form method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                @for (var i = 0; i < Model.SurveyQuestionList.Count; i++)
+                {
+                    var question = Model.SurveyQuestionList[i];
+
+                    <input type="hidden" name="AnswerInputList[@i].SurveyQuestionID" value="@question.SurveyQuestionID" />
+
+                    <div class="card mb-3 js-survey-question" data-question-index="@i" data-max-select="@(question.MaxSelectCount?.ToString() ?? "")">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                @question.QuestionText
+                                @if (question.RequiredFLG)
+                                {
+                                    <span class="badge badge-danger">必須</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-secondary">任意</span>
+                                }
+                            </h5>
+                            @if (!string.IsNullOrEmpty(question.QuestionNote))
+                            {
+                                <p class="text-muted small">@question.QuestionNote</p>
+                            }
+
+                            <span class="text-danger">@Html.ValidationMessage($"Q{question.SurveyQuestionID}")</span>
+
+                            @if (question.AnswerTypeClass == SurveyAnswerTypeClass.FreeText)
+                            {
+                                <textarea name="AnswerInputList[@i].FreeText" class="form-control" rows="4" maxlength="@Bmcs.Constans.SystemConstant.SurveyFreeTextMaxLength">@Model.GetFreeText(question.SurveyQuestionID)</textarea>
+                            }
+                            else
+                            {
+                                foreach (var choice in question.SurveyChoices)
+                                {
+                                    var inputID = $"choice_{choice.SurveyChoiceID}";
+                                    var isSelected = Model.IsSelected(question.SurveyQuestionID, choice.SurveyChoiceID);
+
+                                    <div class="form-check survey-choice">
+                                        @if (question.AnswerTypeClass == SurveyAnswerTypeClass.SingleSelect)
+                                        {
+                                            <input class="form-check-input js-survey-choice" type="radio"
+                                                   id="@inputID"
+                                                   name="AnswerInputList[@i].SelectedChoiceID"
+                                                   value="@choice.SurveyChoiceID"
+                                                   data-question-index="@i"
+                                                   data-free-text="@choice.FreeTextFLG.ToString().ToLower()"
+                                                   checked="@isSelected" />
+                                        }
+                                        else
+                                        {
+                                            <input class="form-check-input js-survey-choice" type="checkbox"
+                                                   id="@inputID"
+                                                   name="AnswerInputList[@i].SelectedChoiceIDList"
+                                                   value="@choice.SurveyChoiceID"
+                                                   data-question-index="@i"
+                                                   data-free-text="@choice.FreeTextFLG.ToString().ToLower()"
+                                                   checked="@isSelected" />
+                                        }
+                                        <label class="form-check-label" for="@inputID">@choice.ChoiceText</label>
+                                    </div>
+                                }
+
+                                @* 「その他」を選択したときだけ表示する自由入力欄 *@
+                                @if (question.SurveyChoices.Any(r => r.FreeTextFLG))
+                                {
+                                    <div class="form-group mt-2 js-survey-freetext" id="freetext_@i" style="display:none;">
+                                        <input type="text" name="AnswerInputList[@i].FreeText" class="form-control" value="@Model.GetFreeText(question.SurveyQuestionID)" maxlength="@Bmcs.Constans.SystemConstant.SurveyFreeTextMaxLength" placeholder="「その他」の内容をご記入ください" />
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+
+                <div class="form-group">
+                    <input type="submit" value="回答を送信する" class="btn btn-primary btn-lg btn-block" />
+                    <div class="text-center mt-2">
+                        <button type="submit" asp-page-handler="Skip" class="btn btn-link text-muted" formnovalidate>あとで回答する</button>
+                    </div>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/survey.js" asp-append-version="true"></script>
+}

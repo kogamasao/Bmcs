@@ -38,6 +38,16 @@ namespace Bmcs.Data
 
         public DbSet<ResetToken> ResetTokens { get; set; }
 
+        public DbSet<Survey> Surveys { get; set; }
+
+        public DbSet<SurveyQuestion> SurveyQuestions { get; set; }
+
+        public DbSet<SurveyChoice> SurveyChoices { get; set; }
+
+        public DbSet<SurveyAnswer> SurveyAnswers { get; set; }
+
+        public DbSet<SurveyAnswerDetail> SurveyAnswerDetails { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.UseCollation("SQL_Latin1_General_CP1_CS_AS");
@@ -57,9 +67,19 @@ namespace Bmcs.Data
             modelBuilder.Entity<Order>().ToTable("Order");
             modelBuilder.Entity<Inquiry>().ToTable("Inquiry");
             modelBuilder.Entity<ResetToken>().ToTable("ResetToken");
+            modelBuilder.Entity<Survey>().ToTable("Survey");
+            modelBuilder.Entity<SurveyQuestion>().ToTable("SurveyQuestion");
+            modelBuilder.Entity<SurveyChoice>().ToTable("SurveyChoice");
+            modelBuilder.Entity<SurveyAnswer>().ToTable("SurveyAnswer");
+            modelBuilder.Entity<SurveyAnswerDetail>().ToTable("SurveyAnswerDetail");
 
             modelBuilder.Entity<ResetToken>()
                 .HasIndex(r => new { r.ResetTokenClass, r.TargetID });
+
+            //回答済み判定に使用する
+            modelBuilder.Entity<SurveyAnswer>()
+                .HasIndex(r => new { r.SurveyID, r.UserAccountID })
+                .IsUnique();
 
             modelBuilder.Entity<Member>()
                 .HasMany(m => m.PitcherGameScenes)

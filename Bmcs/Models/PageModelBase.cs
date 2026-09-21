@@ -630,6 +630,52 @@ namespace Bmcs.Models
             return true;
         }
 
+        /// <summary>
+        /// 未回答のアンケートを取得する（無い場合はnull）
+        /// ※ログイン時の誘導と、トップページの案内表示で共用する
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Survey> GetUnansweredSurveyAsync()
+        {
+            if (Context == null || !IsLogin())
+            {
+                return null;
+            }
+
+            try
+            {
+                var userAccountID = HttpContext.Session.GetString(SessionConstant.UserAccountID);
+
+                var surveyList = await Context.Surveys
+                    .Where(r => r.DeleteFLG == false
+                             && r.StatusClass == SurveyStatusClass.Open)
+                    .OrderBy(r => r.SurveyID)
+                    .ToListAsync();
+
+                //回答受付期間内のものに絞る（開始日時・終了日時の判定）
+                surveyList = surveyList.Where(r => r.IsOpen()).ToList();
+
+                if (!surveyList.Any())
+                {
+                    return null;
+                }
+
+                var answeredSurveyIDList = await Context.SurveyAnswers
+                    .Where(r => r.UserAccountID == userAccountID)
+                    .Select(r => r.SurveyID)
+                    .ToListAsync();
+
+                return surveyList.FirstOrDefault(r => !answeredSurveyIDList.Contains(r.SurveyID));
+            }
+            catch (Exception ex)
+            {
+                //アンケート用テーブルが未作成の場合などでも、画面の表示は妨げない
+                Logger.LogError(ex, "アンケートの未回答判定に失敗しました。");
+
+                return null;
+            }
+        }
+
         public IActionResult ReLogin()
         {
             HttpContext.Session.SetString(SessionConstant.UrlAfterLogin, Request.Scheme + "://" + Request.Host + Request.Path + Request.QueryString);

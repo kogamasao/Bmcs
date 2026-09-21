@@ -1,0 +1,148 @@
+@page
+@using Bmcs.Enum
+@model Bmcs.Pages.Survey.ResultModel
+@{
+    ViewData[ViewDataConstant.Title] = "アンケート集計";
+}
+
+<h1 class="d-inline-block">
+    @ViewData[ViewDataConstant.Title]
+</h1>
+
+<hr />
+@if (Model.Survey == null)
+{
+    <div class="alert alert-primary" role="alert">
+        <p>アンケートが登録されていません。</p>
+    </div>
+}
+else
+{
+    <form method="get" class="form-inline mb-3">
+        <div class="form-group mr-2 mb-2">
+            <label asp-for="SurveyID" class="mr-2">アンケート</label>
+            <select asp-for="SurveyID" asp-items="Model.SurveyIDList" class="form-control"></select>
+        </div>
+        <div class="form-group mr-2 mb-2">
+            <label asp-for="TeamCategoryClass" class="mr-2">カテゴリ</label>
+            <select asp-for="TeamCategoryClass" asp-items="Html.GetEnumSelectList<TeamCategoryClass>()" class="form-control">
+                <option value="">全て</option>
+            </select>
+        </div>
+        <div class="form-group mr-2 mb-2">
+            <label asp-for="FilterChoiceID" class="mr-2">回答で絞り込み</label>
+            <select asp-for="FilterChoiceID" asp-items="Model.FilterChoiceIDList" class="form-control">
+                <option value="">絞り込まない</option>
+            </select>
+        </div>
+        <div class="form-group mb-2">
+            <input type="submit" value="表示" class="btn btn-primary" />
+            <a class="btn btn-secondary ml-2" asp-page="./Result" asp-route-SurveyID="@Model.SurveyID">絞り込み解除</a>
+        </div>
+    </form>
+
+    <div class="alert alert-primary" role="alert">
+        <strong>@Model.Survey.SurveyTitle</strong>
+        <br />状態：@Model.Survey.StatusClassName
+        <br />
+        回答者数：<strong>@Model.AnswerCount 名</strong>
+        @if (Model.AnswerCount != Model.TotalAnswerCount)
+        {
+            <span>（絞り込み前 @Model.TotalAnswerCount 名）</span>
+        }
+        　／　回答チーム数：<strong>@Model.AnswerTeamCount</strong>
+        　／　回答率：<strong>@Model.AnswerRate.ToString("#0.0")%</strong>（有効ユーザ @Model.TargetUserCount 名中 @Model.TotalAnswerCount 名）
+        @if (Model.TeamCategoryClass != null)
+        {
+            <br />
+            <span class="text-muted small">※カテゴリで絞り込んでいるため、チーム未所属のユーザの回答は含まれません。</span>
+        }
+    </div>
+
+    @foreach (var questionResult in Model.QuestionResultList)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">
+                    Q@(questionResult.SurveyQuestion.DisplayOrder). @questionResult.SurveyQuestion.QuestionText
+                </h5>
+                <p class="text-muted small mb-2">
+                    この設問への回答：@questionResult.AnsweredCount 名
+                    @if (questionResult.NoAnswerCount > 0)
+                    {
+                        <span>／ 無回答：@questionResult.NoAnswerCount 名</span>
+                    }
+                    @if (questionResult.SurveyQuestion.AnswerTypeClass == SurveyAnswerTypeClass.MultiSelect)
+                    {
+                        <span>　※複数選択のため合計は100%を超えます</span>
+                    }
+                </p>
+
+                @if (questionResult.SurveyQuestion.AnswerTypeClass == SurveyAnswerTypeClass.FreeText)
+                {
+                    @if (!questionResult.FreeTextList.Any())
+                    {
+                        <p class="text-muted">回答なし</p>
+                    }
+                    else
+                    {
+                        <ul class="list-unstyled">
+                            @foreach (var freeText in questionResult.FreeTextList)
+                            {
+                                <li class="mb-2">
+                                    ・@freeText.AnswerText
+                                    <br /><span class="text-muted small">［@freeText.AnswererNote］</span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                }
+                else
+                {
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:55%">選択肢</th>
+                                <th style="width:10%" class="text-right">件数</th>
+                                <th style="width:35%">割合（設問の回答者比）</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                @* 単一選択は選択肢の順、複数選択は件数の多い順で表示する *@
+                                var choiceResultList = questionResult.SurveyQuestion.AnswerTypeClass == SurveyAnswerTypeClass.SingleSelect
+                                    ? questionResult.ChoiceResultList
+                                    : questionResult.ChoiceResultList.OrderByDescending(r => r.Count).ToList();
+                            }
+                            @foreach (var choiceResult in choiceResultList)
+                            {
+                                <tr>
+                                    <td>
+                                        @choiceResult.ChoiceText
+                                        @if (choiceResult.FreeTextList.Any())
+                                        {
+                                            <ul class="small text-muted mb-0">
+                                                @foreach (var freeText in choiceResult.FreeTextList)
+                                                {
+                                                    <li>@freeText.AnswerText ［@freeText.AnswererNote］</li>
+                                                }
+                                            </ul>
+                                        }
+                                    </td>
+                                    <td class="text-right">@choiceResult.Count</td>
+                                    <td>
+                                        <div class="progress" style="height:18px;">
+                                            <div class="progress-bar" role="progressbar" style="width:@choiceResult.Rate.ToString("#0.0")%">
+                                                @choiceResult.Rate.ToString("#0.0")%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    }
+}
