@@ -33,16 +33,23 @@
                 <span asp-validation-for="UserAccount.UserAccountName" class="mt-1 block text-sm text-red-600"></span>
             </div>
 
-            <div class="grid gap-6 sm:grid-cols-2">
-                <div>
+            @* 説明文の行数が違っても入力欄の高さがそろうよう subgrid を使う *@
+            <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto]">
+                <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
                     <label asp-for="UserAccount.Password" class="block text-sm font-semibold text-slate-800"></label>
-                    <input asp-for="UserAccount.Password" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="new-password" />
-                    <span asp-validation-for="UserAccount.Password" class="mt-1 block text-sm text-red-600"></span>
+                    <p class="mt-0.5 text-sm text-slate-500">ログインに使用します。</p>
+                    <div>
+                        <input asp-for="UserAccount.Password" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="new-password" />
+                        <span asp-validation-for="UserAccount.Password" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
                 </div>
-                <div>
+                <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
                     <label asp-for="UserAccount.ConfirmPassword" class="block text-sm font-semibold text-slate-800"></label>
-                    <input asp-for="UserAccount.ConfirmPassword" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="new-password" />
-                    <span asp-validation-for="UserAccount.ConfirmPassword" class="mt-1 block text-sm text-red-600"></span>
+                    <p class="mt-0.5 text-sm text-slate-500">確認のため、もう一度入力してください。</p>
+                    <div>
+                        <input asp-for="UserAccount.ConfirmPassword" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="new-password" />
+                        <span asp-validation-for="UserAccount.ConfirmPassword" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
                 </div>
             </div>
 
