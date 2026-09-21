@@ -38,9 +38,18 @@
                     <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@false">成績</a>
                     <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Member/Index">メンバー</a>
                     <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Team/Edit">チーム情報</a>
+                    <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/UserAccount/Edit">ユーザ情報</a>
                 }
                 <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Team/Index">公開チーム</a>
+                <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@true">公開チーム成績</a>
                 <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public">メッセージ</a>
+
+                @if (Model.IsAdmin())
+                {
+                    <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/UserAccount/Index">ユーザ一覧</a>
+                    <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Inquiry/Index">お問い合わせ一覧</a>
+                    <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900" asp-page="/Survey/Result">アンケート集計</a>
+                }
             </nav>
 
             <div class="ml-auto flex items-center gap-2">
@@ -50,6 +59,8 @@
                 }
                 else
                 {
+                    @* 既存ユーザが公開ページからログインに戻れるよう、登録の隣に必ず置く *@
+                    <a class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100" asp-page="/Index">ログイン</a>
                     <a class="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700" asp-page="/UserAccount/Create">無料で登録</a>
                 }
 
@@ -68,10 +79,26 @@
                             <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@false">成績</a>
                             <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Member/Index">メンバー</a>
                             <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Team/Edit">チーム情報</a>
+                            <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/UserAccount/Edit">ユーザ情報</a>
                             <div class="my-1 border-t border-slate-100"></div>
                         }
                         <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Team/Index">公開チーム</a>
+                        <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="@true">公開チーム成績</a>
                         <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public">メッセージ</a>
+
+                        @if (Model.IsAdmin())
+                        {
+                            <div class="my-1 border-t border-slate-100"></div>
+                            <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/UserAccount/Index">ユーザ一覧</a>
+                            <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Inquiry/Index">お問い合わせ一覧</a>
+                            <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Survey/Result">アンケート集計</a>
+                        }
+
+                        @if (!Model.IsLogin())
+                        {
+                            <div class="my-1 border-t border-slate-100"></div>
+                            <a class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" asp-page="/Index">ログイン</a>
+                        }
                     </nav>
                 </details>
             </div>
