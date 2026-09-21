@@ -131,6 +131,15 @@
                     @if (Model.IsMyTeam || Model.IsAdmin())
                     {
                 <td>
+                    @*
+                        試合前は打順設定への導線が無く、試合を作った直後に打順画面から離脱すると
+                        その試合のスコア入力に到達できなくなっていたため、ボタンを追加する。
+                    *@
+                    @if (item.StatusClass == StatusClass.BeforeGame)
+                    {
+                        <a class="btn btn-primary btn-sm" asp-page="/Order/Edit" asp-route-gameID="@item.GameID">打順設定</a>
+                        <span>&nbsp;</span>
+                    }
                     @if (item.StatusClass == StatusClass.DuringGame)
                     {
                         <a class="btn btn-primary btn-sm" asp-page="/GameScene/Edit" asp-route-gameID="@item.GameID">試合入力</a>
