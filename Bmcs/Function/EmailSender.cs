@@ -37,7 +37,8 @@ namespace Bmcs.Function
                 var bodyBuilder = new BodyBuilder
                 {
                     HtmlBody = message,
-                    TextBody = message // Fallback for plain text
+                    //HTMLタグをそのまま表示させないため、テキストパートはタグを除去した内容とする
+                    TextBody = MailBody.ToPlainText(message)
                 };
                 mimeMessage.Body = bodyBuilder.ToMessageBody();
 

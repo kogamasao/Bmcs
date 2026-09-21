@@ -92,6 +92,13 @@ namespace Bmcs.Function
         /// <returns></returns>
         public static string ChangeHashValue(this string value)
         {
+            //未入力時に例外とならないよう空文字として扱う
+            //※ログイン画面や再設定画面でパスワード未入力のまま送信された場合に発生する
+            if (value == null)
+            {
+                value = string.Empty;
+            }
+
             byte[] salt = new byte[128 / 8];
 
             //using (var rngCsp = new RNGCryptoServiceProvider())
