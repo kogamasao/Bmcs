@@ -1,4 +1,4 @@
-$(function () {
+﻿$(function () {
 
     // チーム名からチーム略名の候補を入れる。
     // ※略名は必須だが「何を入れればいいか」が分かりにくく、
@@ -11,7 +11,8 @@ $(function () {
     }
 
     //ユーザが自分で入力した後は上書きしない
-    var isEditedByUser = false;
+    //※入力エラーでの再表示では値が復元されているため、その場合も上書きしない
+    var isEditedByUser = $abbreviation.val().length > 0;
 
     $abbreviation.on("input", function () {
         isEditedByUser = true;

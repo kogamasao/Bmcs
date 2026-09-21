@@ -3,6 +3,16 @@
 
 @{
     ViewData[ViewDataConstant.Title] = "ユーザ作成";
+
+    //折りたたみの中でエラーが出た場合、閉じたままだと気づけないため開いておく
+    var hasTeamError = (ViewData.ModelState[nameof(Model.UserAccount) + "." + nameof(Model.UserAccount.TeamID)]?.Errors.Count ?? 0) > 0
+                    || (ViewData.ModelState[nameof(Model.UserAccount) + "." + nameof(Model.UserAccount.TeamPassword)]?.Errors.Count ?? 0) > 0;
+
+    //同意チェックはモデルに紐づかないため、再表示時は送信内容から復元する
+    var request = ViewContext.HttpContext.Request;
+    var isPostBack = request.HasFormContentType;
+    var isTermChecked = isPostBack && request.Form.ContainsKey("term");
+    var isPrivacyChecked = isPostBack && request.Form.ContainsKey("privacy");
     ViewData[ViewDataConstant.Description] = "Bmcsのユーザを作成します。無料で、すぐに使いはじめられます。";
     Layout = "_LayoutTailwind";
 }
@@ -16,7 +26,8 @@
     <p class="mt-2 text-slate-600">無料です。登録後、続けてチームを作成できます。</p>
 
     <form method="post" class="mt-8">
-        <div asp-validation-summary="ModelOnly" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
+        @* 項目のエラーも先頭にまとめて出す（折りたたみの中のエラーに気づけるようにするため） *@
+        <div asp-validation-summary="All" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
 
         <div class="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <div>
@@ -69,7 +80,7 @@
             以前は全チームのプルダウンだったが、参加する人はチーム代表からIDを聞いているため
             入力欄でよい。（非公開チームの一覧が未ログインの画面に出ないようにするためでもある）
         *@
-        <details class="group mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <details class="group mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm" open="@hasTeamError">
             <summary class="flex cursor-pointer items-center justify-between gap-4 px-6 py-4 font-semibold text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
                 <span>
                     既にあるチームに参加する
@@ -100,11 +111,11 @@
 
         <div class="mt-6 space-y-3 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <label class="flex cursor-pointer items-center gap-3">
-                <input type="checkbox" class="size-5 shrink-0 rounded border-slate-300 text-sky-700 focus:ring-sky-500" id="term">
+                <input type="checkbox" class="size-5 shrink-0 rounded border-slate-300 text-sky-700 focus:ring-sky-500" id="term" name="term" checked="@isTermChecked">
                 <span class="text-slate-700"><a class="text-sky-700 underline underline-offset-2 hover:text-sky-800" asp-page="/Term">利用規約</a>に同意する。</span>
             </label>
             <label class="flex cursor-pointer items-center gap-3">
-                <input type="checkbox" class="size-5 shrink-0 rounded border-slate-300 text-sky-700 focus:ring-sky-500" id="privacy">
+                <input type="checkbox" class="size-5 shrink-0 rounded border-slate-300 text-sky-700 focus:ring-sky-500" id="privacy" name="privacy" checked="@isPrivacyChecked">
                 <span class="text-slate-700"><a class="text-sky-700 underline underline-offset-2 hover:text-sky-800" asp-page="/Privacy">プライバシーポリシー</a>に同意する。</span>
             </label>
         </div>

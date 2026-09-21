@@ -45,6 +45,9 @@ namespace Bmcs.Pages.UserAccount
         
         public async Task<IActionResult> OnPostAsync()
         {
+            //入力エラーでの再表示でもヘルプを表示できるようにする
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.UserAccountCreate);
+
             try
             {
                 if (!ModelState.IsValid)

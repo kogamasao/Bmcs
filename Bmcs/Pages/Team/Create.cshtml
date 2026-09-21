@@ -6,6 +6,18 @@
     ViewData[ViewDataConstant.Title] = "チーム作成";
     ViewData[ViewDataConstant.Description] = "野球・ソフトボールのチームを作成します。必要な入力は5項目だけです。";
     Layout = "_LayoutTailwind";
+
+    //折りたたみの中の任意項目でエラーが出た場合、閉じたままだと気づけないため開いておく
+    var optionalFieldList = new[]
+    {
+        nameof(Model.Team.RepresentativeName), nameof(Model.Team.TeamCategoryClass),
+        nameof(Model.Team.UseBallClass), nameof(Model.Team.ActivityBase),
+        nameof(Model.Team.TeamNumber), nameof(Model.Team.TeamEmailAddress),
+        nameof(Model.Team.MessageDetail),
+    };
+
+    var hasOptionalError = optionalFieldList.Any(r =>
+        (ViewData.ModelState[nameof(Model.Team) + "." + r]?.Errors.Count ?? 0) > 0);
 }
 
 <div class="mx-auto max-w-3xl px-4 py-8">
@@ -19,7 +31,8 @@
     </p>
 
     <form method="post" class="mt-8">
-        <div asp-validation-summary="ModelOnly" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
+        @* 項目のエラーも先頭にまとめて出す（折りたたみの中のエラーに気づけるようにするため） *@
+        <div asp-validation-summary="All" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
 
         <div class="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <div>
@@ -85,7 +98,7 @@
         </div>
 
         @* 任意項目。8項目あり、必須と並べると実際より重く見えるため折りたたむ *@
-        <details class="group mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <details class="group mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm" open="@hasOptionalError">
             <summary class="flex cursor-pointer items-center justify-between gap-4 px-6 py-4 font-semibold text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
                 <span>
                     くわしい情報を入力する

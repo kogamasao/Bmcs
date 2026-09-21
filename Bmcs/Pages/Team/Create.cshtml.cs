@@ -25,6 +25,20 @@ namespace Bmcs.Pages.Team
 
         public async Task<IActionResult> OnGetAsync()
         {
+            //未ログインで入力させると、送信時に全て失われるためログイン画面へ
+            if (!base.IsLogin())
+            {
+                return ReLogin();
+            }
+
+            //既にチームに所属している場合は作成させない
+            //※作成すると所属が新しいチームへ移り、元のチームが所属ユーザ0になってしまう
+            if (!base.IsAdmin()
+                && !string.IsNullOrEmpty(HttpContext.Session.GetString(SessionConstant.TeamID)))
+            {
+                return RedirectToPage("./Edit");
+            }
+
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamCreate);
 
@@ -36,6 +50,9 @@ namespace Bmcs.Pages.Team
 
         public async Task<IActionResult> OnPostAsync()
         {
+            //入力エラーでの再表示でもヘルプを表示できるようにする
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamCreate);
+
             try
             {
                 if (!ModelState.IsValid)
