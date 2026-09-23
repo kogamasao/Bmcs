@@ -77,6 +77,11 @@ namespace Bmcs.Pages.Score
         /// </summary>
         public int BeforeFixGameCount { get; set; }
 
+        /// <summary>
+        /// 自チームの成績を表示しているか（空状態の文言の出し分けに使用する）
+        /// </summary>
+        public bool IsMyTeamScore { get; set; }
+
         public PaginatedList<Models.GameScorePitcher> GameScorePitcherList { get; set; }
 
         public PaginatedList<Models.GameScoreFielder> GameScoreFielderList { get; set; }
@@ -354,13 +359,18 @@ namespace Bmcs.Pages.Score
 
             //確定前の試合件数
             //※確定するまで成績に集計されないため、集計が0件・少ない理由として案内する
-            if (!string.IsNullOrEmpty(teamID))
+            //※自チームのときのみ。他チームの公開成績を見ている訪問者に
+            //  「確定してください」と表示しても操作できない
+            if (!string.IsNullOrEmpty(teamID) && base.IsMyTeamData(teamID))
             {
                 BeforeFixGameCount = await Context.Games
                     .CountAsync(r => r.TeamID == teamID
                                   && r.StatusClass == StatusClass.BeforeFix
                                   && r.DeleteFLG == false);
             }
+
+            //空状態の文言を自チーム／他チームで出し分けるために保持する
+            IsMyTeamScore = !string.IsNullOrEmpty(teamID) && base.IsMyTeamData(teamID);
 
             //インデックス
             IsIndex = true;

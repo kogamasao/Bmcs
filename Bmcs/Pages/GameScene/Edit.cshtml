@@ -229,7 +229,7 @@
                                             <td>
                                                 <select asp-for="@Model.BeforeGameSceneDetailList[i].DetailResultClass" class="js-result js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.BeforeDetailResultClassList"></select>
                                             </td>
-                                            <td>
+                                            <td class="col-fix-right">
                                                 <input type="button" value="削除" class="js-before-delete js-rename cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" />
                                             </td>
                                         </tr>
@@ -321,10 +321,8 @@
                                     @if (Model.InterruptBattingOrder != null)
                                     {
                                         <td class="px-2 py-2 text-center align-middle">
-                                            <div class="ml-1 custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="interruptFLG" asp-for="GameScene.InterruptFLG">
-                                                <label class="custom-control-label" for="interruptFLG"></label>
-                                            </div>
+                                            @* Bootstrapの custom-control に依存していたため素のチェックボックスにする *@
+                                            <input type="checkbox" class="size-5 rounded border-slate-300 text-sky-700 focus:ring-sky-500" id="interruptFLG" asp-for="GameScene.InterruptFLG">
                                         </td>
                                     }
                                     <td class="px-2 py-2 text-center align-middle">
@@ -419,7 +417,7 @@
                                         <td>
                                             <select asp-for="@Model.AfterGameSceneDetailList[i].DetailResultClass" class="js-result js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.AfterDetailResultClassList"></select>
                                         </td>
-                                        <td>
+                                        <td class="col-fix-right">
                                             <input type="button" value="削除" class="js-after-delete js-rename cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" />
                                         </td>
                                     </tr>
@@ -453,7 +451,8 @@
 
                                     if (Model.AfterGameSceneRunnerList[i].RunnerClass == null)
                                     {
-                                        addHiddenClass = "d-none";
+                                        //※JS側は hidden に移行済み。Bootstrapを読まないため d-none は効かない
+                                        addHiddenClass = "hidden";
                                     }
 
                                     <tr class="@addHiddenClass js-after-runner">
@@ -514,11 +513,11 @@
                 <p class="mt-2 text-sm text-slate-500">打者の結果を選んで押します。凡打ならそのまま押すだけです。</p>
             </div>
             <div class="mt-6 flex flex-wrap items-center gap-2 border-t border-slate-200 pt-4">
-                <input type="button" value="チェンジ" class="js-submit cursor-pointer rounded-lg bg-amber-500 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-amber-600" data-submitclass="@GameSceneSubmitClass.ThisBatterChange" />
+                <input type="button" value="チェンジ" class="js-submit cursor-pointer rounded-lg bg-amber-700 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-amber-800" data-submitclass="@GameSceneSubmitClass.ThisBatterChange" />
                 <input type="button" value="試合終了" class="js-submit js-confirm-gameset cursor-pointer rounded-lg bg-red-600 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-red-700" data-submitclass="@GameSceneSubmitClass.ThisBatterGameSet" />
                 @if (Model.GameScene.TopButtomClass == TopButtomClass.Buttom && !Model.IsTieBreak)
                 {
-                    <input type="button" value="タイブレーク" class="js-tiebreak-open cursor-pointer rounded-lg bg-amber-500 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-amber-600" />
+                    <input type="button" value="タイブレーク" class="js-tiebreak-open cursor-pointer rounded-lg bg-amber-700 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-amber-800" />
 
                     @*
                         タイブレーク設定。
@@ -549,7 +548,7 @@
                         </div>
                         <div class="flex justify-end gap-2 border-t border-slate-200 px-5 py-3">
                             <button type="button" class="js-tiebreak-close rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">やめる</button>
-                            <button type="button" class="js-submit rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-600" data-submitclass="@GameSceneSubmitClass.ThisBatterTieBreak">タイブレークへ</button>
+                            <button type="button" class="js-submit rounded-lg bg-amber-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-800" data-submitclass="@GameSceneSubmitClass.ThisBatterTieBreak">タイブレークへ</button>
                         </div>
                     </dialog>
                 }

@@ -1,4 +1,7 @@
-﻿@* キーボードでも開けるようにボタンにする（imgのままでは tabindex も role も無く操作できない） *@
+﻿@* ※Tailwind版と同じく、データが無い場合に落ちないようガードする *@
+@if (Model.SystemAdmin != null && !string.IsNullOrEmpty(Model.SystemAdmin.MessageDetail))
+{
+@* キーボードでも開けるようにボタンにする（imgのままでは tabindex も role も無く操作できない） *@
 <button type="button" class="btn btn-link p-0 border-0 align-baseline" data-toggle="modal" data-target="#help">
     <img src="~/img/help.png" alt="" class="help" />
     <span class="sr-only">この画面の使い方</span>
@@ -23,3 +26,4 @@
         </div>
     </div>
 </div>
+}

@@ -59,13 +59,13 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+  /* フッタを絶対配置にせず通常の流れに置くため、下余白は不要になった */
+  margin-bottom: 0;
 }
 .footer {
-    /* スマートフォン幅では1行に収まらず画面外へはみ出すため、折り返しを許可する */
-    position: absolute;
-    bottom: 0;
+    /* スマートフォン幅では1行に収まらず画面外へはみ出すため、折り返しを許可する。
+       絶対配置のままだと折り返して高さが増えた分が本文に重なるため、通常配置にする。 */
+    position: static;
     width: 100%;
     padding: 1rem 0;
 }

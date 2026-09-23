@@ -5,7 +5,7 @@
     Layout = "_LayoutTailwind";
 }
 
-<div class="mx-auto max-w-7xl px-4 py-6">
+<div class="mx-auto max-w-6xl px-4 py-6">
     <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
             <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
@@ -187,25 +187,45 @@
             <strong class="font-semibold">「確定前」の試合はこのページに集計されません。</strong>
             試合一覧の「試合結果編集」から内容を確認し、画面下部の「確定」を押してください。
         </p>
-        <a class="mt-4 inline-flex items-center justify-center rounded-lg bg-amber-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-700" asp-page="/Game/Index" asp-route-teamID="@Model.SelectTeamID">
+        <a class="mt-4 inline-flex items-center justify-center rounded-lg bg-amber-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-800" asp-page="/Game/Index" asp-route-teamID="@Model.SelectTeamID">
             試合一覧へ
         </a>
     </div>
 }
 
-@if (!Model.GameScoreTeamList.Any())
+@{
+    @* 表示する種別によって埋まるリストが違うため、すべてを見て判定する *@
+    var hasAnyScore = Model.GameScoreTeamList.Any()
+                   || Model.GameScorePitcherList.Any()
+                   || Model.GameScoreFielderList.Any();
+}
+
+@if (!hasAnyScore)
 {
     @* 空状態。従来は何も描画されず、フィルタと「戻る」だけの白紙になっていた *@
     <div class="mt-8 rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
         <h2 class="text-lg font-bold text-slate-900">表示できる成績がありません</h2>
-        <p class="mx-auto mt-2 max-w-lg text-slate-600">
-            成績は<strong class="font-semibold text-slate-800">「確定」した試合のみ</strong>が集計されます。
-            絞り込み条件を変えるか、試合を登録してスコアを入力してください。
-        </p>
-        <div class="mt-6 flex flex-wrap justify-center gap-3">
-            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Game/Index" asp-route-teamID="@Model.SelectTeamID">試合一覧へ</a>
-            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">トップへ</a>
-        </div>
+        @if (Model.IsMyTeamScore)
+        {
+            <p class="mx-auto mt-2 max-w-lg text-slate-600">
+                成績は<strong class="font-semibold text-slate-800">「確定」した試合のみ</strong>が集計されます。
+                絞り込み条件を変えるか、試合を登録してスコアを入力してください。
+            </p>
+            <div class="mt-6 flex flex-wrap justify-center gap-3">
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Game/Index" asp-route-teamID="@Model.SelectTeamID">試合一覧へ</a>
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">トップへ</a>
+            </div>
+        }
+        else
+        {
+            <p class="mx-auto mt-2 max-w-lg text-slate-600">
+                条件に合う公開成績がありません。絞り込み条件を変えてお試しください。
+            </p>
+            <div class="mt-6 flex flex-wrap justify-center gap-3">
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Team/Index">公開チーム一覧へ</a>
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">トップへ</a>
+            </div>
+        }
     </div>
 }
 
@@ -651,10 +671,12 @@
           {
             var prevDisabled = !Model.GameScoreTeamList.HasPreviousPage ? "disabled" : "";
             var nextDisabled = !Model.GameScoreTeamList.HasNextPage ? "disabled" : "";
+            var prevClass = string.IsNullOrEmpty(prevDisabled) ? "" : "pointer-events-none opacity-40";
+            var nextClass = string.IsNullOrEmpty(nextDisabled) ? "" : "pointer-events-none opacity-40";
 
         <div class="mt-1">
             <ul class="mt-4 flex flex-wrap items-center gap-1">
-                <li>
+                <li class="@prevClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
@@ -711,7 +733,7 @@
                 </li>
                 }
 
-                <li>
+                <li class="@nextClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(Model.GameScoreTeamList.TotalPages)"
@@ -1020,12 +1042,12 @@
                                 </td>
                                 @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                <td class="col-fix-left align-middle">
+                                <td class="align-middle">
                                     <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
                                     @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
                                 </td>
                                             }
-                                <td class="col-fix-left align-middle">
+                                <td class="align-middle">
                                     <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                                 </td>
                                 <td class="text-center align-middle">
@@ -1080,12 +1102,12 @@
                                 </td>
                                 @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                <td class="col-fix-left align-middle">
+                                <td class="align-middle">
                                     <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
                                     @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
                                 </td>
                                             }
-                                <td class="col-fix-left align-middle">
+                                <td class="align-middle">
                                     <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                                 </td>
                                 <td class="text-center align-middle">
@@ -1354,10 +1376,12 @@
          {
             var prevDisabled = !Model.GameScorePitcherList.HasPreviousPage ? "disabled" : "";
             var nextDisabled = !Model.GameScorePitcherList.HasNextPage ? "disabled" : "";
+            var prevClass = string.IsNullOrEmpty(prevDisabled) ? "" : "pointer-events-none opacity-40";
+            var nextClass = string.IsNullOrEmpty(nextDisabled) ? "" : "pointer-events-none opacity-40";
 
         <div class="mt-1">
             <ul class="mt-4 flex flex-wrap items-center gap-1">
-                <li>
+                <li class="@prevClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
@@ -1414,7 +1438,7 @@
                 </li>
                 }
 
-                <li>
+                <li class="@nextClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(Model.GameScorePitcherList.TotalPages)"
@@ -1517,7 +1541,7 @@
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].TeamID)
                                 </th>
                                         }
-                                <th class="col-fix-left">
+                                <th>
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
                                 </th>
                                 <th class="text-center">
@@ -2072,10 +2096,12 @@
             {
             var prevDisabled = !Model.GameScoreFielderList.HasPreviousPage ? "disabled" : "";
             var nextDisabled = !Model.GameScoreFielderList.HasNextPage ? "disabled" : "";
+            var prevClass = string.IsNullOrEmpty(prevDisabled) ? "" : "pointer-events-none opacity-40";
+            var nextClass = string.IsNullOrEmpty(nextDisabled) ? "" : "pointer-events-none opacity-40";
 
         <div class="mt-1">
             <ul class="mt-4 flex flex-wrap items-center gap-1">
-                <li>
+                <li class="@prevClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
@@ -2132,7 +2158,7 @@
                 </li>
                 }
 
-                <li>
+                <li class="@nextClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(Model.GameScoreFielderList.TotalPages)"
