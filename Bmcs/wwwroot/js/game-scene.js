@@ -153,6 +153,75 @@
         }
     });
 
+    // ==========================================================================
+    // アウトカウントの案内
+    // ※打席前のアウトカウントだけで判定すると案内が1打席遅れ、
+    //   「3アウト目を入力してからチェンジ＝4アウトでチェンジ」になってしまう。
+    //   打者結果・ランナーの結果を含めた見込みアウト数で判定する。
+    //
+    //   サーバ側（GameScene/Edit.cshtml.cs の ResultOutCount）は
+    //     打席前のアウトカウント ＋ 打席後ランナーのうち結果が「アウト」の件数
+    //   で計算している。ここでも同じ数え方にする。
+    //   併殺やランナーがアウトになった場合も、該当ランナーの結果が「アウト」になるため
+    //   同じ計算で拾える。
+    // ==========================================================================
+    var RUNNER_RESULT_OUT = '1';   //RunnerResultClass.Out
+    var RESULT_CLASS_CHANGE = '91'; //ResultClass.Change（打者の打席が成立しない）
+
+    function UpdateOutCountNotice() {
+
+        var notice = $("#out-count-notice");
+
+        if (!notice.length) {
+            return;
+        }
+
+        var baseOutCount = Number(notice.data("base-outcount")) || 0;
+
+        //打者結果が「チェンジ」の場合、サーバ側は打者のランナー行を除外する
+        var isChange = $(".js-batter-result").val() === RESULT_CLASS_CHANGE;
+
+        var resultOutCount = 0;
+
+        $(".js-after-runner-result").each(function () {
+
+            if ($(this).val() !== RUNNER_RESULT_OUT) {
+                return true;
+            }
+
+            //打者行は、打者結果が「チェンジ」のときは数えない（サーバ側と合わせる）
+            if (isChange && $(this).data("runnerclass") === 'Batter') {
+                return true;
+            }
+
+            resultOutCount++;
+        });
+
+        var totalOutCount = baseOutCount + resultOutCount;
+
+        if (totalOutCount < 3) {
+            notice.addClass('hidden');
+            return;
+        }
+
+        //入力による増加が無い場合は現在のアウトカウントを、ある場合は結果を含めた数を示す
+        var title = resultOutCount === 0
+                    ? baseOutCount + 'アウトです'
+                    : 'この結果で' + totalOutCount + 'アウトになります';
+
+        notice.find(".js-out-count-title").text(title);
+        notice.removeClass('hidden');
+    }
+
+    //打者結果・ランナーの結果が変わるたびに再計算する
+    //※動的に追加される行にも効くよう、documentに委譲して受ける
+    $(document).on("change", ".js-batter-result, .js-after-runner-result, .js-before-runner-result", function () {
+        UpdateOutCountNotice();
+    });
+
+    //初期表示
+    UpdateOutCountNotice();
+
     //打者結果
     $(".js-batter-result").change(function () {
         var result = $(this).val();
