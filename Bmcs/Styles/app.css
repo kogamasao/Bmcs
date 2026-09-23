@@ -138,3 +138,26 @@
         display: none;
     }
 }
+
+/*
+ * リンクの既定スタイル。
+ * ※Tailwind の Preflight は <a> の色と下線を打ち消すため、
+ *   ユーティリティを付けていないリンクは本文と同じ見た目になり、
+ *   リンクだと気付けない（チーム名・メンバー名・成績表の並べ替えなど）。
+ *   旧UI（青字＋ホバーで下線）を踏襲して復活させる。
+ *   ボタン風のリンクには必ず class が付いているため :not([class]) で除外する。
+ *   ※通常時に text-decoration は指定しない。Preflight の既定（inherit）のままにしておくと
+ *     prose（ヘルプ本文）配下では typography プラグインの下線がそのまま残るため。
+ */
+@layer base {
+    a:not([class]) {
+        color: var(--color-sky-700);
+    }
+
+    a:not([class]):hover,
+    a:not([class]):focus-visible {
+        color: var(--color-sky-900);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+}
