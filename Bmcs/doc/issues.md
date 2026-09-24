@@ -38,7 +38,7 @@
 ## 2. 画面の移行
 
 ### 2.1 未移行の画面
-**2026-09-24 に全画面の移行を完了した。** 残りは旧レイアウト（`_Layout.cshtml`・`_Help.cshtml`）と Bootstrap・`site.css`・`customize.css` の削除。
+**2026-09-24 に全画面の移行を完了し、旧レイアウト（`_Layout.cshtml`・`_Help.cshtml`）と Bootstrap・`site.css`・`customize.css`・`site.js` も削除した。**
 
 | ID | 重要度 | 内容 |
 | --- | --- | --- |

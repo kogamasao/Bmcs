@@ -1,8 +1,8 @@
 ﻿@*
     ヘルプ（Tailwind版）。
 
-    旧 _Help.cshtml は Bootstrap の modal に依存しているため、移行済みページ用に用意する。
-    <dialog> を使い、Bootstrap JS も jQuery も使わない。
+    <dialog> を使い、jQuery に依存しない。
+    （旧 _Help.cshtml は Bootstrap の modal に依存していたため作り直した。旧版は削除済み）
 
     ※各項目の要点は画面内に直接書く方針とし、ここには操作手順などの詳しい説明を置く。
       モーダルはフォームを覆ってしまい、読みながら入力できないため。
@@ -32,7 +32,7 @@
             </button>
         </div>
         @* 管理者が登録したHTMLをそのまま表示する *@
-        <div class="prose prose-sm prose-slate max-h-[70vh] max-w-none overflow-y-auto px-5 py-4">
+        <div class="help-body prose prose-sm prose-slate max-h-[70vh] max-w-none overflow-y-auto px-5 py-4">
             @Html.Raw(Model.SystemAdmin.MessageDetail)
         </div>
         <div class="border-t border-slate-200 px-5 py-3 text-right">
@@ -54,6 +54,24 @@
 
             dialog.querySelectorAll(".js-help-close").forEach(function (button) {
                 button.addEventListener("click", function () { dialog.close(); });
+            });
+
+            //ヘルプ本文のアコーディオン（管理者が登録したHTMLの data-toggle による開閉）
+            //※以前は Bootstrap の JS が開閉していた。Bootstrap を外した後も動くよう、開閉だけをここで行う。
+            //  見た目は app.css の .help-body で定義している（本文の整理は課題 M-2）
+            dialog.querySelectorAll("[data-toggle][data-target]").forEach(function (button) {
+                var target = dialog.querySelector(button.getAttribute("data-target"));
+
+                if (!target) {
+                    return;
+                }
+
+                button.setAttribute("aria-expanded", target.classList.contains("show") ? "true" : "false");
+
+                button.addEventListener("click", function () {
+                    var isOpen = target.classList.toggle("show");
+                    button.setAttribute("aria-expanded", isOpen ? "true" : "false");
+                });
             });
 
             //背景をクリックしたら閉じる

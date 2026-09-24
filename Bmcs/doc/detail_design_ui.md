@@ -25,8 +25,8 @@ UIが .NET Core の初期生成テンプレート（Bootstrap 4.3.1）のまま�
 | `Bmcs/Styles/app.css` | Tailwind のソース。**配信されない** |
 | `Bmcs/wwwroot/css/app.css` | 生成物。**リポジトリにコミットする** |
 | `build-css.sh` | ビルドスクリプト（リポジトリ直下） |
-| `Bmcs/Pages/Shared/_LayoutTailwind.cshtml` | Tailwind のみを読み込むレイアウト |
-| `Bmcs/Pages/Shared/_HeadMeta.cshtml` | head内の共通タグ（旧レイアウトと共用） |
+| `Bmcs/Pages/Shared/_LayoutTailwind.cshtml` | 共通レイアウト（`_ViewStart.cshtml` の既定） |
+| `Bmcs/Pages/Shared/_HeadMeta.cshtml` | head内の共通タグ（移行期間中は旧レイアウトと共用していた） |
 | `Bmcs/Pages/Shared/_HelpTailwind.cshtml` | ヘルプ（`<dialog>`。Bootstrap JS 不要） |
 | `Bmcs/Pages/Shared/_PaginationTailwind.cshtml` | ページ送り。`PageHelper/PaginationInfo` を渡す |
 
@@ -81,6 +81,10 @@ curl -s -b cookie.jar http://localhost:15080/Game/Index | grep -oP '<a class="na
 11. メッセージ → チーム → ユーザ情報 → アカウント復旧 → 管理系 → …
    ※ランディングに載せるスクリーンショットは、スコア入力と成績の移行後に撮影する
 12. Bootstrap と `site.css` を削除
+
+> **2026-09-24 に全画面の移行が完了した。** 旧レイアウト（`_Layout.cshtml`・`_Help.cshtml`）、Bootstrap（`wwwroot/lib/bootstrap`）、
+> `site.css`・`customize.css`・`site.js` を削除し、`_ViewStart.cshtml` の既定を `_LayoutTailwind` にした。
+> 以下の 2.1〜2.3 は移行期間中の方針の記録。
 
 ### 2.3 移行完了時に対応が必要なもの
 - **ナビの開閉とモーダル**（`data-toggle` 4箇所）… Bootstrap の JS を外すと動かなくなる。
@@ -586,9 +590,9 @@ inningScores.DefaultIfEmpty().Max(r => r.Inning)
 入力エラー時にヘルプが消える画面。500にはならないが、
 **ユーザが最も困っている瞬間にヘルプが消える**。
 
-`Team/Edit`・`UserAccount/Edit`・`Message/Index`
-
-※`Team/Create`・`UserAccount/Create`・`Inquiry/Create` は対応済み。
+※全画面の移行完了（2026-09-24）までに、すべて対応した。
+`Team/Edit`・`UserAccount/Edit`・`Message/Index`・`Inquiry/Create` は移行時に対応（`Inquiry/Create` は入力エラーの場合だけ漏れていた）。
+※`Team/Create`・`UserAccount/Create` は対応済み。
 ※`Order/Edit`・`GameScene/Edit`・`GameScore/Edit` は移行時に対応漏れがあり、レビューで指摘を受けて対応した（2026-09-24）。
 
 ## 10. デザインの決めごと（移行時に守る）

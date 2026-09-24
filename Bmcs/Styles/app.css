@@ -104,7 +104,7 @@
 /*
  * jquery-validation-unobtrusive が動的に付与するクラス。
  * これらはHTMLに書かれないためTailwindの検出対象にならず、ここで定義する。
- * ※Bootstrapを外したページでも入力チェックの表示が崩れないようにするため
+ * ※以前は Bootstrap が定義していたため、Bootstrap を外した後も表示が崩れないようにここで定義する
  */
 @layer components {
     .field-validation-error {
@@ -164,5 +164,47 @@
         color: var(--color-sky-900);
         text-decoration: underline;
         text-underline-offset: 2px;
+    }
+}
+
+/*
+ * ヘルプ本文（管理者が登録したHTML）のアコーディオン。
+ * 本文は Bootstrap の accordion / card / collapse で書かれている（現在はスコア入力のヘルプのみ）。
+ * Bootstrap を外した後も開閉できるよう、_HelpTailwind.cshtml の JS と合わせて最低限の見た目を定義する。
+ * ※本文はDBにあり Tailwind の検出対象にならないため、ユーティリティではなくここで定義する。
+ * ※Tailwind にも collapse ユーティリティ（visibility: collapse）があるため、visibility を明示的に戻す。
+ */
+@layer components {
+    /* ※!important が必要。Tailwind の collapse ユーティリティは utilities レイヤのため、components レイヤでは詳細度に関係なく負ける */
+    .help-body .collapse {
+        visibility: visible !important;
+    }
+
+    .help-body .collapse:not(.show) {
+        display: none;
+    }
+
+    .help-body .card {
+        margin-top: 0.5rem;
+        border: 1px solid var(--color-slate-200);
+        border-radius: 0.5rem;
+    }
+
+    .help-body .card-header button {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+        font-weight: 600;
+        color: var(--color-sky-700);
+        cursor: pointer;
+    }
+
+    .help-body .card-header button:hover {
+        background-color: var(--color-slate-50);
+    }
+
+    .help-body .card-body {
+        padding: 0 0.75rem 0.5rem;
     }
 }

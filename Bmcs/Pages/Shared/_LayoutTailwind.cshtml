@@ -1,14 +1,14 @@
 ﻿@*
-    Tailwind CSS 用のレイアウト。
-    Bootstrap を読み込まないため、1ページ内でクラス名が衝突しない。
-    移行が済んだページから、_ViewStart ではなくページ側で Layout を指定して使う。
+    共通レイアウト（Tailwind CSS）。
+    ※2026-09-24 に全画面の移行が完了し、旧レイアウト（Bootstrap 版の _Layout.cshtml）は削除した。
+      _ViewStart の既定もこのレイアウトにしている。
 *@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    @* title・description・canonical・OGP・計測は旧レイアウトと共通 *@
+    @* title・description・canonical・OGP・計測 *@
     @{await Html.RenderPartialAsync("_HeadMeta");}
     <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
 </head>
@@ -21,7 +21,7 @@
             @*
                 PC用のメニュー。
                 リンクは PageModelBase.GetHeaderLinkList() に1本化している
-                （Bootstrap版と別々に書くと片方だけ写し漏れるため）。
+                （移行期間中、2つのレイアウトに別々に書いて片方だけ写し漏れたため）。
             *@
             <nav class="hidden flex-1 items-center gap-1 md:flex">
                 @foreach (var link in Model.GetHeaderLinkList())
