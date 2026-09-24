@@ -211,7 +211,7 @@ namespace Bmcs.Pages.UserAccount
                      + $"ユーザID：{MailBody.Escape(userAccount.UserAccountID)}<br />"
                      + $"日時：{DateTime.Now:yyyy/MM/dd HH:mm}<br /><br />"
                      + "※お心当たりがない場合は、チームパスワードが第三者に知られている可能性があります。<br />"
-                     + "　チーム編集画面からチームパスワードを変更し、お問い合わせページよりご連絡ください。<br />";
+                     + "　「チーム情報変更」からチームパスワードを変更し、お問い合わせページよりご連絡ください。<br />";
 
             try
             {
@@ -275,7 +275,10 @@ namespace Bmcs.Pages.UserAccount
                 return false;
             }
 
+            //※サンプルチームは対象外（チームパスワードが推測しやすく、参加しているユーザのパスワードを誰でも再設定できてしまう）。
+            //  チームの有無を判別できないよう、パスワード誤りと同じ扱いにする
             if (team == null
+                || IsSampleTeamID(team.TeamID)
                 || team.TeamPassword != TeamPassword.ChangeHashValue())
             {
                 //失敗時のみ回数を加算する

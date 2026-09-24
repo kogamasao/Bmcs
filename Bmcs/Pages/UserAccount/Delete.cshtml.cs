@@ -50,14 +50,15 @@ namespace Bmcs.Pages.UserAccount
                     return NotFound();
                 }
 
+                UserAccount = await Context.UserAccounts.FindAsync(id);
+
                 //体験用ユーザは削除できない（本人・管理者とも）
                 //※削除されると、トップの「サンプルチームで体験する」で誰もログインできなくなる
-                if (base.IsSampleUser() || IsSampleUserAccountID(id))
+                //※入力値ではなく DB の値で判定する（全角の「ＹＧＵｓｅｒ」等でのすり抜けを防ぐ）
+                if (base.IsSampleUser() || (UserAccount != null && IsSampleUserAccountID(UserAccount.UserAccountID)))
                 {
                     return NotFound();
                 }
-
-                UserAccount = await Context.UserAccounts.FindAsync(id);
 
 
                 //本人以外は削除できない（管理者は除く）

@@ -747,7 +747,7 @@ namespace Bmcs.Models
                 linkList.Add(PageHelper.NavigationLink.Create("/Score/Index", "成績",
                     new Dictionary<string, string> { { "scorePageClass", ScorePageClass.Index.ToString() }, { "isPublic", "false" } }));
                 linkList.Add(PageHelper.NavigationLink.Create("/Member/Index", "メンバー"));
-                linkList.Add(PageHelper.NavigationLink.Create("/Team/Edit", "チーム情報"));
+                linkList.Add(PageHelper.NavigationLink.Create("/Team/Edit", "チーム情報変更"));
                 linkList.Add(PageHelper.NavigationLink.Create("/UserAccount/Edit", "ユーザ情報"));
             }
 

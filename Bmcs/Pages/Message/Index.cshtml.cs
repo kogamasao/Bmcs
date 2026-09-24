@@ -62,6 +62,20 @@ namespace Bmcs.Pages.Message
             get { return MyTeam != null && (!MyTeam.PublicFLG || base.IsSampleUser()); }
         }
 
+        /// <summary>
+        /// 自チーム内のメッセージか（送信元・送信先とも自チームの非公開メッセージ）
+        /// ※以前は「非公開かつ自チーム発」で判定しており、自チームが他チームへ送ったダイレクトメッセージにも返信できた。
+        /// 　そのため体験用ユーザ・非公開チームでも、返信の経路で他チームとやり取りできてしまっていた
+        /// </summary>
+        private bool IsMyTeamInternal(Models.Message message)
+        {
+            //※TeamID は大文字小文字違いで保存されている場合があるため（DBの照合順序に合わせて）区別せずに比べる
+            return MyTeam != null
+                && !message.PublicFLG
+                && string.Equals(message.TeamID?.Trim(), MyTeam.TeamID, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(message.PrivateTeamID?.Trim(), MyTeam.TeamID, StringComparison.OrdinalIgnoreCase);
+        }
+
         public async Task<IActionResult> OnGetAsync(MessagePageClass messagePageClass, string teamID, int? messageID, string privateTeamID, int? pageIndex, bool posted = false)
         {
             IsPosted = posted;
@@ -204,11 +218,16 @@ namespace Bmcs.Pages.Message
             }
             else
             {
+                //※公開スレッドの返信も、返信したチームが非公開・削除済みの場合は、そのチーム以外には見せない（親メッセージと同じ判定）
+                var myTeamID = HttpContext.Session.GetString(SessionConstant.TeamID);
+                var isAdmin = base.IsAdmin();
+
                 messageList = await Context.Messages
                                     .Include(r => r.UserAccount)
                                     .Include(r => r.Team)
                                     .Include(r => r.PrivateTeam)
-                                    .Where(r => (r.MessageID == messageID || r.ParentMessageID == messageID) && !r.DeleteFLG)
+                                    .Where(r => (r.MessageID == messageID || r.ParentMessageID == messageID) && !r.DeleteFLG
+                                             && (r.MessageID == messageID || !r.PublicFLG || (r.Team.PublicFLG && !r.Team.DeleteFLG) || r.TeamID == myTeamID || isAdmin))
                                     .ToListAsync();
 
             }
@@ -224,7 +243,9 @@ namespace Bmcs.Pages.Message
                 {
                     //送信元は自チーム（管理者は URL で指定したチームでも投稿できる）
                     //※以前は URL の teamID をそのまま使っており、他チームを指定すると送信時に NotFound になっていた
-                    TeamID = base.IsAdmin() ? teamID : MyTeam.TeamID,
+                    //※DB の値（MyTeam.TeamID）ではなくセッションの値を使う。送信時の IsMyTeamData はセッションと完全一致で比べるため、
+                    //  過去に「yg」のように大文字小文字違いで参加したユーザ（セッションも「yg」）が送信できなくなる
+                    TeamID = base.IsAdmin() ? teamID : HttpContext.Session.GetString(SessionConstant.TeamID),
                     UserAccountID = UserAccount.UserAccountID,
                     MessageTitle = messageID == null ? null : "返信",
                 };
@@ -250,7 +271,7 @@ namespace Bmcs.Pages.Message
                 //親データ取得
                 var parentMessage = await Context.Messages.FindAsync(messageID);
 
-                if (IsTeamOnly && parentMessage != null && (parentMessage.PublicFLG || parentMessage.TeamID != MyTeam.TeamID))
+                if (IsTeamOnly && parentMessage != null && !IsMyTeamInternal(parentMessage))
                 {
                     IsEnablePostReply = false;
                 }
@@ -332,8 +353,8 @@ namespace Bmcs.Pages.Message
                         return NotFound();
                     }
 
-                    //非公開チーム・体験用ユーザが返信できるのは、自チームの非公開スレッドのみ（表示時の IsEnablePostReply と同じ判定）
-                    if (IsTeamOnly && (parentMessage.PublicFLG || parentMessage.TeamID != MyTeam.TeamID))
+                    //非公開チーム・体験用ユーザが返信できるのは、チーム内のスレッドのみ（表示時の IsEnablePostReply と同じ判定）
+                    if (IsTeamOnly && !IsMyTeamInternal(parentMessage))
                     {
                         return NotFound();
                     }

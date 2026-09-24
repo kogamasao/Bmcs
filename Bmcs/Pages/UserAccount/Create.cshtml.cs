@@ -96,16 +96,18 @@ namespace Bmcs.Pages.UserAccount
                 //チームパスワードチェック
                 if (!string.IsNullOrEmpty(UserAccount.TeamID))
                 { 
+                    //※削除済みのチームには参加できない（以前は削除済みでも参加できた）
+                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID && !r.DeleteFLG);
+
                     //サンプルチームには参加できない（管理者は除く）
-                    if (!base.IsAdmin() && IsSampleTeamID(UserAccount.TeamID))
+                    //※入力値ではなく DB の値で判定する。DBの照合順序は全角・半角も区別しないため、
+                    //  入力値で判定すると「ＹＧ」（全角）で判定をすり抜けてサンプルチームに一致してしまう
+                    if (!base.IsAdmin() && dbTeam != null && IsSampleTeamID(dbTeam.TeamID))
                     {
                         ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamID), "体験用のチームには参加できません。");
 
                         return Page();
                     }
-
-                    //※削除済みのチームには参加できない（以前は削除済みでも参加できた）
-                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID && !r.DeleteFLG);
 
                     if (dbTeam == null || dbTeam.TeamPassword != UserAccount.TeamPassword.NullToEmpty().ChangeHashValue())
                     {

@@ -150,7 +150,7 @@ namespace Bmcs.Pages.Team
             var subject = "【Bmcs】チームパスワードを変更しました";
             var body = $"チーム「{MailBody.Escape(team.TeamName)}」のチームパスワードを変更しました。<br />"
                      + $"日時：{DateTime.Now:yyyy/MM/dd HH:mm}<br /><br />"
-                     + "※お心当たりがない場合は、チーム編集画面からチームパスワードを変更し、お問い合わせページよりご連絡ください。<br />";
+                     + "※お心当たりがない場合は、「チーム情報変更」からチームパスワードを変更し、お問い合わせページよりご連絡ください。<br />";
 
             try
             {

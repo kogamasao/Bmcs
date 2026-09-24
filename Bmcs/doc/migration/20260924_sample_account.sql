@@ -12,7 +12,8 @@
  *   ForgotTeamPassword・ResetTeamPassword・RecoverByTeam）。本SQLは、DBに残っている値の後始末。
  *
  * 内容：
- *   1) 変更前の値を確認・退避する
+ *   0) 体験用アカウント・サンプルチームの状態を確認する（参照のみ。結果を見て、必要なら個別に対応する）
+ *   1) 変更前の値を退避する
  *   2) YGUser のメールアドレスを空（NULL）にする
  *   3) YGUser・サンプルチーム（YG）宛ての、未使用の再設定トークンを失効させる
  *
@@ -24,15 +25,47 @@
  */
 
 --------------------------------------------------------------------------------
--- 1) 変更前の確認と退避
+-- 0) 体験用アカウント・サンプルチームが書き換えられていないかの確認（参照のみ）
+--    修正前は、体験用ユーザで誰でもユーザ情報・チーム情報を変更できたため、デプロイ前に状態を確認する。
+--    ・パスワード「1」のハッシュと一致しない → 体験ログインが動かない。パスワードを戻す必要がある
+--    ・TeamID が YG でない、DeleteFLG が 1 → 同上
+--    ・チーム名・公開設定・チーム紹介が初期値と違う → 不適切な内容に書き換えられていないか確認する
+--    ・YGUser 以外に YG に所属しているユーザ → 推測しやすいチームパスワードで参加した可能性がある
+--      （今回の修正で新たな参加は禁止したが、既に参加しているユーザは残る）
 --------------------------------------------------------------------------------
-SELECT UserAccountID, EmailAddress, UpdateUserID, UpdateDatetime
+SELECT UserAccountID
+     , UserAccountName
+     , TeamID
+     , DeleteFLG
+     , パスワードが初期値 = CASE WHEN Password = N'ixKJKqaxdfvKD/ZsiWNfhH6xrBlgT7GpHvl8Pa32ciM=' THEN N'○' ELSE N'×（要対応）' END
+     , EmailAddress
+     , UpdateUserID
+     , UpdateDatetime
   FROM dbo.UserAccount
  WHERE UserAccountID = N'YGUser';
 
-SELECT TeamID, TeamEmailAddress, UpdateUserID, UpdateDatetime
+SELECT TeamID
+     , TeamName
+     , TeamAbbreviation
+     , PublicFLG
+     , DeleteFLG
+     , チームパスワードが初期値 = CASE WHEN TeamPassword = N'ixKJKqaxdfvKD/ZsiWNfhH6xrBlgT7GpHvl8Pa32ciM=' THEN N'○' ELSE N'×' END
+     , TeamEmailAddress
+     , MessageDetail
+     , UpdateUserID
+     , UpdateDatetime
   FROM dbo.Team
  WHERE TeamID = N'YG';
+
+SELECT UserAccountID, UserAccountName, EntryDatetime, LastLoginDatetime
+  FROM dbo.UserAccount
+ WHERE TeamID = N'YG'
+   AND UserAccountID <> N'YGUser'
+ ORDER BY EntryDatetime;
+
+--------------------------------------------------------------------------------
+-- 1) 退避
+--------------------------------------------------------------------------------
 
 IF OBJECT_ID('dbo.SampleAccountBackup_20260924') IS NULL
 BEGIN

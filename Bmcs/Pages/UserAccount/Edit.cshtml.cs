@@ -129,17 +129,19 @@ namespace Bmcs.Pages.UserAccount
                 if (userAccount.TeamID != UserAccount.TeamID
                     && !string.IsNullOrEmpty(UserAccount.TeamID))
                 {
+
+                    //※削除済みのチームには参加できない（以前は削除済みでも参加できた）。
+                    //  チームIDの有無を判別できないよう、存在しない場合もパスワード誤りと同じ文言にする
+                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID && !r.DeleteFLG);
+
                     //サンプルチームには参加できない（管理者は除く）
-                    if (!base.IsAdmin() && IsSampleTeamID(UserAccount.TeamID))
+                    //※入力値ではなく DB の値で判定する（全角の「ＹＧ」等でのすり抜けを防ぐ。UserAccount/Create と同じ）
+                    if (!base.IsAdmin() && dbTeam != null && IsSampleTeamID(dbTeam.TeamID))
                     {
                         ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "体験用のチームには参加できません。");
 
                         return await ShowErrorAsync();
                     }
-
-                    //※削除済みのチームには参加できない（以前は削除済みでも参加できた）。
-                    //  チームIDの有無を判別できないよう、存在しない場合もパスワード誤りと同じ文言にする
-                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID && !r.DeleteFLG);
 
                     if (dbTeam == null || dbTeam.TeamPassword != UserAccount.TeamPassword.NullToEmpty().ChangeHashValue())
                     {
