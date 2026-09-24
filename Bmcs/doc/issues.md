@@ -30,7 +30,7 @@
 **D-11 の検討事項（.NET 10 への更新）**
 - 対象：`Bmcs.csproj` の `TargetFramework`（`net8.0` → `net10.0`）と、パッケージ（`Microsoft.EntityFrameworkCore.SqlServer`・`Microsoft.Extensions.Caching.SqlServer`・`Microsoft.AspNetCore.Identity.EntityFrameworkCore`・`Microsoft.EntityFrameworkCore.Tools`・`Microsoft.VisualStudio.Web.CodeGeneration.Design`）を 10 系へ
 - **現在のパッケージは 8.0.0（初版）のまま**で、8.0.x のセキュリティ修正も取り込めていない。.NET 10 への更新までの間も、少なくとも 8.0 の最新パッチへ上げておくことが望ましい
-- Azure App Service のランタイム（スタック設定）を .NET 10 に切り替える
+- Azure App Service は、既存の Windows（F1）を切り替えるのではなく、**Linux の B1 を新規作成して .NET 10 で動かす**（P-6 の方針）。独自ドメインへの切り替えも同時に行う
 - ローカルのビルド・実行環境（Docker の `mcr.microsoft.com/dotnet/sdk:8.0`、コンテナ `bmcs-app`）を 10.0 に
 - EF Core 8 → 10 の破壊的変更の確認（特に `EnsureCreated`・生SQL（`ExecuteSqlRawAsync`）・LINQ の SQL 変換）、ASP.NET Core 9・10 の破壊的変更の確認
 - 更新後は全画面の表示と、スコア入力〜確定・成績集計の一連の流れを確認する（ローカルのブラウザ確認の手順は今回の移行と同じ）
@@ -151,8 +151,17 @@
 | P-6 | **高** | **独自ドメインの取得** | 現在は `bmcs.azurewebsites.net`。サービスの信頼感、検索・共有での見え方、広告（P-7）・GA4（P-3）の前提になる。検討事項は下記 | ユーザ要望（2026-09-24） |
 | P-7 | 中 | **広告の掲載** | 運営費の確保。**Google AdSense は自分で所有するドメインが必要**なため、P-6 の後。検討事項は下記 | ユーザ要望（2026-09-24） |
 
+**P-6 の方針（2026-09-24 決定）**
+- **現在の App Service は Windows の無料プラン（F1）で、独自ドメインを設定できない。** Windows の B1 は約10,300円/月と高いため、**Linux の B1（約2,200円/月、東日本）へ移行する**。DB は Azure SQL Basic（5 DTU、約850円/月）のまま
+  - Linux への移行理由：ASP.NET Core はそのまま動き、ローカルの開発環境（Docker）がすでに Linux。B1 で独自ドメイン・無料のSSL証明書・常時起動（Always On）が使え、F1 の「CPU 1日60分」の制限もなくなる
+  - DB の無料オファー（サーバーレス、月100,000 vCore秒）は採用しない：Bmcs はセッションも DB に保存しており毎リクエストで DB にアクセスするため、上限を超えやすい（超えると翌月まで停止か割高な課金）。停止明けの再開待ちも発生する
+  - 見込み：**合計 約3,200円/月**（App Service 約2,200円＋DB 約850円＋ドメイン 年額の月割り）
+- 既存の App Service の OS は変更できないため、Linux の App Service プランとアプリを新規作成し、アプリ設定（接続文字列・メール設定・Clarity 等）を移す。新しいアプリを azurewebsites.net の URL で確認してから独自ドメインを割り当てる
+- **.NET 10 への更新（D-11）と同時に行う**（新しい Linux のアプリを最初から .NET 10 で作る）
+- ドメイン候補（2026-09-24 の空き状況）：bmcs.com・.net・.org・.jp・.dev は取得済み。**第一候補 `bmcs.app`**（年2,000円前後の見込み。プレミアム価格でないか要確認。HTTPS 必須だが App Service の無料証明書で対応可）、第二候補 `bmcs-baseball.com`（年1,500円前後）。`.io` は高く、管理する地域の先行きも不透明なため避ける
+- 取得先：**Cloudflare Registrar**（仕入れ値のまま・更新料も同額・WHOIS 代理無料）。初年度の安さではなく更新料で比べる。DNS も Cloudflare で管理し、App Service の証明書発行のため中継（プロキシ）は切った「DNS のみ」にする
+
 **P-6 の検討事項（独自ドメイン）**
-- App Service のプランが独自ドメインと SSL 証明書（App Service マネージド証明書）に対応しているか確認する（無料・共有プランでは使えない場合がある）
 - 旧URL（`bmcs.azurewebsites.net`）からの 301 リダイレクト（検索エンジンの評価と、共有済みのリンクを引き継ぐ）
 - canonical・OGP の URL を新ドメインにする。Google Search Console への登録とサイトマップ
 - **パスワード再設定などのメールの送信元**を新ドメインにする場合は、SPF・DKIM・DMARC を設定する（迷惑メールに振り分けられないように）
