@@ -3,81 +3,85 @@
 @model Bmcs.Pages.Survey.AnswerModel
 @{
     ViewData[ViewDataConstant.Title] = Model.IsComplete ? "ご協力ありがとうございました" : Model.Survey?.SurveyTitle;
+    Layout = "_LayoutTailwind";
+
+    var inputClass = "mt-2 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500";
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+<div class="mx-auto max-w-2xl px-4 py-8">
+    <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
 
-<hr />
-<div class="row">
-    <div class="col-md-8">
-        @if (Model.IsComplete)
+    @if (Model.IsComplete)
+    {
+        <div class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-5" role="status">
+            <p class="text-sm text-emerald-900">
+                ご回答ありがとうございました。
+                <br />いただいたご意見は、今後の改善の参考にさせていただきます。
+            </p>
+        </div>
+        <div class="mt-6">
+            <a class="inline-flex items-center justify-center rounded-lg bg-sky-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-800" asp-page="/Top/Index">トップページへ</a>
+        </div>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(Model.Survey?.SurveyDetail))
         {
-            <div class="alert alert-success" role="alert">
-                <p>
-                    ご回答ありがとうございました。
-                    <br />いただいたご意見は、今後の改善の参考にさせていただきます。
-                </p>
-            </div>
-            <div class="form-group">
-                <a class="btn btn-primary" asp-page="/Top/Index">トップページへ</a>
+            <div class="mt-6 rounded-xl border border-sky-200 bg-sky-50 p-5">
+                @* 改行を保持して表示する（HTMLとして解釈させない） *@
+                <p class="whitespace-pre-line text-sm text-sky-900">@Model.Survey.SurveyDetail</p>
             </div>
         }
-        else
-        {
-            @if (!string.IsNullOrEmpty(Model.Survey?.SurveyDetail))
-            {
-                <div class="alert alert-primary" role="alert">
-                    @* 改行を保持して表示する（HTMLとして解釈させない） *@
-                    <p style="white-space: pre-line;">@Model.Survey.SurveyDetail</p>
-                </div>
-            }
 
-            <form method="post">
-                <div asp-validation-summary="All" class="text-danger"></div>
+        <form method="post" class="mt-6">
+            <div asp-validation-summary="All" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
 
+            <div class="space-y-4">
                 @for (var i = 0; i < Model.SurveyQuestionList.Count; i++)
                 {
                     var question = Model.SurveyQuestionList[i];
 
                     <input type="hidden" name="AnswerInputList[@i].SurveyQuestionID" value="@question.SurveyQuestionID" />
 
-                    <div class="card mb-3 js-survey-question" data-question-index="@i" data-max-select="@(question.MaxSelectCount?.ToString() ?? "")">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                @question.QuestionText
-                                @if (question.RequiredFLG)
-                                {
-                                    <span class="badge badge-danger">必須</span>
-                                }
-                                else
-                                {
-                                    <span class="badge badge-secondary">任意</span>
-                                }
-                            </h5>
-                            @if (!string.IsNullOrEmpty(question.QuestionNote))
+                    <fieldset class="js-survey-question rounded-xl border border-slate-200 bg-white p-5 shadow-sm" data-question-index="@i" data-max-select="@(question.MaxSelectCount?.ToString() ?? "")">
+                        <legend class="sr-only">@question.QuestionText</legend>
+                        <p class="flex flex-wrap items-center gap-2 font-semibold text-slate-900" aria-hidden="true">
+                            <span>@question.QuestionText</span>
+                            @if (question.RequiredFLG)
                             {
-                                <p class="text-muted small">@question.QuestionNote</p>
-                            }
-
-                            <span class="text-danger">@Html.ValidationMessage($"Q{question.SurveyQuestionID}")</span>
-
-                            @if (question.AnswerTypeClass == SurveyAnswerTypeClass.FreeText)
-                            {
-                                <textarea name="AnswerInputList[@i].FreeText" class="form-control" rows="4" maxlength="@Bmcs.Constans.SystemConstant.SurveyFreeTextMaxLength">@Model.GetFreeText(question.SurveyQuestionID)</textarea>
+                                <span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800">必須</span>
                             }
                             else
                             {
-                                foreach (var choice in question.SurveyChoices)
+                                <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700">任意</span>
+                            }
+                        </p>
+                        @if (!string.IsNullOrEmpty(question.QuestionNote))
+                        {
+                            <p class="mt-1 text-sm text-slate-600">@question.QuestionNote</p>
+                        }
+
+                        @* js-survey-error：入力エラー時に survey.js がここまでスクロールする *@
+                        <span class="js-survey-error mt-1 block text-sm text-red-600">@Html.ValidationMessage($"Q{question.SurveyQuestionID}")</span>
+
+                        @if (question.AnswerTypeClass == SurveyAnswerTypeClass.FreeText)
+                        {
+                            <textarea name="AnswerInputList[@i].FreeText" class="@inputClass" rows="4" maxlength="@Bmcs.Constans.SystemConstant.SurveyFreeTextMaxLength">@Model.GetFreeText(question.SurveyQuestionID)</textarea>
+                        }
+                        else
+                        {
+                            @* js-survey-choices：選択上限のある設問で、survey.js が残り選択数をこの直前に表示する *@
+                            <div class="js-survey-choices mt-3 space-y-1">
+                                @foreach (var choice in question.SurveyChoices)
                                 {
                                     var inputID = $"choice_{choice.SurveyChoiceID}";
                                     var isSelected = Model.IsSelected(question.SurveyQuestionID, choice.SurveyChoiceID);
 
-                                    <div class="form-check survey-choice">
+                                    @* 行全体を押せるようにする（以前は小さなボタンと文字だけが押せた） *@
+                                    <label for="@inputID" class="flex cursor-pointer items-start gap-3 rounded-lg border border-transparent px-3 py-2.5 hover:bg-slate-50 has-[:checked]:border-sky-200 has-[:checked]:bg-sky-50 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
                                         @if (question.AnswerTypeClass == SurveyAnswerTypeClass.SingleSelect)
                                         {
-                                            <input class="form-check-input js-survey-choice" type="radio"
+                                            <input class="js-survey-choice mt-0.5 size-4 shrink-0" type="radio"
                                                    id="@inputID"
                                                    name="AnswerInputList[@i].SelectedChoiceID"
                                                    value="@choice.SurveyChoiceID"
@@ -87,7 +91,7 @@
                                         }
                                         else
                                         {
-                                            <input class="form-check-input js-survey-choice" type="checkbox"
+                                            <input class="js-survey-choice mt-0.5 size-4 shrink-0" type="checkbox"
                                                    id="@inputID"
                                                    name="AnswerInputList[@i].SelectedChoiceIDList"
                                                    value="@choice.SurveyChoiceID"
@@ -95,31 +99,31 @@
                                                    data-free-text="@choice.FreeTextFLG.ToString().ToLower()"
                                                    checked="@isSelected" />
                                         }
-                                        <label class="form-check-label" for="@inputID">@choice.ChoiceText</label>
-                                    </div>
+                                        <span class="text-slate-800">@choice.ChoiceText</span>
+                                    </label>
                                 }
+                            </div>
 
-                                @* 「その他」を選択したときだけ表示する自由入力欄 *@
-                                @if (question.SurveyChoices.Any(r => r.FreeTextFLG))
-                                {
-                                    <div class="form-group mt-2 js-survey-freetext" id="freetext_@i" style="display:none;">
-                                        <input type="text" name="AnswerInputList[@i].FreeText" class="form-control" value="@Model.GetFreeText(question.SurveyQuestionID)" maxlength="@Bmcs.Constans.SystemConstant.SurveyFreeTextMaxLength" placeholder="「その他」の内容をご記入ください" />
-                                    </div>
-                                }
+                            @* 「その他」を選択したときだけ表示する自由入力欄 *@
+                            @if (question.SurveyChoices.Any(r => r.FreeTextFLG))
+                            {
+                                <div class="js-survey-freetext mt-2" id="freetext_@i" style="display:none;">
+                                    <input type="text" name="AnswerInputList[@i].FreeText" class="@inputClass" value="@Model.GetFreeText(question.SurveyQuestionID)" maxlength="@Bmcs.Constans.SystemConstant.SurveyFreeTextMaxLength" placeholder="「その他」の内容をご記入ください" />
+                                </div>
                             }
-                        </div>
-                    </div>
+                        }
+                    </fieldset>
                 }
+            </div>
 
-                <div class="form-group">
-                    <input type="submit" value="回答を送信する" class="btn btn-primary btn-lg btn-block" />
-                    <div class="text-center mt-2">
-                        <button type="submit" asp-page-handler="Skip" class="btn btn-link text-muted" formnovalidate>あとで回答する</button>
-                    </div>
+            <div class="mt-8">
+                <input type="submit" value="回答を送信する" class="w-full rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" />
+                <div class="mt-3 text-center">
+                    <button type="submit" asp-page-handler="Skip" class="text-sm text-slate-600 underline underline-offset-2 hover:text-slate-800" formnovalidate>あとで回答する</button>
                 </div>
-            </form>
-        }
-    </div>
+            </div>
+        </form>
+    }
 </div>
 
 @section Scripts {

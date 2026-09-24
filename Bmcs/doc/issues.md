@@ -38,14 +38,11 @@
 ## 2. 画面の移行
 
 ### 2.1 未移行の画面
-移行が終わったら Bootstrap と `site.css`（`_Layout.cshtml`・`_Help.cshtml` 等）を削除する。
-※2026-09-24 に試合まわりの残り（`Game/Edit`・`Game/Details`・`Game/Delete`・`InningScore/Index`）・メッセージ（`Message/Index`）・チーム（`Team/Index`・`Details`・`Edit`・`Delete`）・ユーザ情報（`UserAccount/Edit`）・アカウント復旧（6画面）を移行済み。
+**2026-09-24 に全画面の移行を完了した。** 残りは旧レイアウト（`_Layout.cshtml`・`_Help.cshtml`）と Bootstrap・`site.css`・`customize.css` の削除。
 
-| 区分 | 画面 | 移行時にあわせて対応すること |
+| ID | 重要度 | 内容 |
 | --- | --- | --- |
-| お問い合わせ・アンケート | `Inquiry/Create`・`Survey/Answer` | — |
-| 規約・その他 | `Term`・`Privacy`・`Error` | — |
-| 管理者のみ | `UserAccount/Index`・`Details`・`Delete`、`Inquiry/Index`・`Details`・`Delete`、`Survey/Result` | 利用者の目に触れないため最後でよい |
+| M-13 | 中 | **管理者向けの7画面（ユーザ・お問い合わせ・アンケート集計）と、アンケート回答画面をブラウザで確認する**。ローカルでは管理者のパスワードが分からず、回答可能なアンケートも無いため、ビルドのみ確認している |
 
 ### 2.2 移行済みの画面に残っている課題
 

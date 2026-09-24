@@ -2,10 +2,13 @@
 @model TermModel
 @{
     ViewData[ViewDataConstant.Title] = "利用規約";
+    Layout = "_LayoutTailwind";
 }
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
-<div>
+@* 文章だけの画面のため、typography プラグイン（prose）で見出し・段落・リストを整える *@
+<div class="mx-auto max-w-3xl px-4 py-8">
+<h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+<div class="prose prose-slate mt-6 max-w-none rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
     <p>この利用規約（以下，「本規約」といいます。）は，Bmcs（以下，「当社」といいます。）がこのウェブサイト上で提供するサービス（以下，「本サービス」といいます。）の利用条件を定めるものです。登録ユーザーの皆さま（以下，「ユーザー」といいます。）には，本規約に従って，本サービスをご利用いただきます。</p>
 
     <h2>第1条（適用）</h2>
@@ -31,7 +34,7 @@
     <ol>
         <li>ユーザーは，本サービスの有料部分の対価として，当社が別途定め，本ウェブサイトに表示する利用料金を，当社が指定する方法により支払うものとします。</li>
         <li>ユーザーが利用料金の支払を遅滞した場合には，ユーザーは年14．6％の割合による遅延損害金を支払うものとします。</li>
-        <li class="text-danger">現時点で本サービスに有料サービスは存在しないため，利用料金の請求を行うことはありません。</li>
+        <li class="rounded-md bg-amber-50 px-3 py-2 font-semibold text-amber-900">現時点で本サービスに有料サービスは存在しないため，利用料金の請求を行うことはありません。</li>
     </ol>
 
     <h2>第5条（禁止事項）</h2>
@@ -119,4 +122,5 @@
     <p>以上</p>
 
 
+</div>
 </div>

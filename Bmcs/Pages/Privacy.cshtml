@@ -2,10 +2,13 @@
 @model PrivacyModel
 @{
     ViewData[ViewDataConstant.Title] = "プライバシーポリシー";
+    Layout = "_LayoutTailwind";
 }
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
-<div>
+@* 文章だけの画面のため、typography プラグイン（prose）で見出し・段落・リストを整える *@
+<div class="mx-auto max-w-3xl px-4 py-8">
+<h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+<div class="prose prose-slate mt-6 max-w-none rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
     <p>Bmcs（以下，「当社」といいます。）は，本ウェブサイト上で提供するサービス（以下,「本サービス」といいます。）における，ユーザーの個人情報の取扱いについて，以下のとおりプライバシーポリシー（以下，「本ポリシー」といいます。）を定めます。</p>
 
     <h2>第1条（個人情報）</h2>
@@ -13,7 +16,7 @@
 
     <h2>第2条（個人情報の収集方法）</h2>
     <p>当社は，ユーザーが利用登録をする際に氏名，生年月日，住所，電話番号，メールアドレス，銀行口座番号，クレジットカード番号，運転免許証番号などの個人情報をお尋ねすることがあります。また，ユーザーと提携先などとの間でなされたユーザーの個人情報を含む取引記録や決済に関する情報を,当社の提携先（情報提供元，広告主，広告配信先などを含みます。以下，｢提携先｣といいます。）などから収集することがあります。</p>
-    <p class="text-danger">本サービスが現時点で利用する個人情報は氏名(アカウント名、メンバー名など)、メールアドレスのみです。メールアドレスはアカウントの復旧およびサイト管理者からのご連絡に使用します。</p>
+    <p class="rounded-md bg-amber-50 px-3 py-2 font-semibold text-amber-900">本サービスが現時点で利用する個人情報は氏名(アカウント名、メンバー名など)、メールアドレスのみです。メールアドレスはアカウントの復旧およびサイト管理者からのご連絡に使用します。</p>
 
     <h2>第3条（個人情報を収集・利用する目的）</h2>
     <p>当社が個人情報を収集・利用する目的は，以下のとおりです。</p>
@@ -114,4 +117,5 @@
     <p>以上</p>
 
 
+</div>
 </div>

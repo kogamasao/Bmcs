@@ -2,51 +2,44 @@
 @model Bmcs.Pages.UserAccount.DeleteModel
 
 @{
+    Layout = "_LayoutTailwind";
     ViewData[ViewDataConstant.Title] = "ユーザ削除(管理者)";
 }
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
+<div class="mx-auto max-w-3xl px-4 py-8">
+<h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
 
-<h6 class="text-danger">ユーザを削除します。よろしいですか？</h6>
+<div class="mt-6 rounded-xl border border-red-200 bg-red-50 p-5">
+    <h2 class="font-bold text-red-900">ユーザを削除します。よろしいですか？</h2>
+</div>
 <div>
-    <h4></h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.UserAccountID)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.UserAccountID)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.UserAccountName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.UserAccountName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.EmailAddress)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.EmailAddress)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.TeamID)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.Team.TeamID)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.Team.TeamName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.Team.TeamName)
-        </dd>
+    <dl class="mt-6 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.UserAccountID)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.UserAccountID)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.UserAccountName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.UserAccountName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.EmailAddress)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.EmailAddress)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.TeamID)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.Team.TeamID)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.Team.TeamName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.Team.TeamName)</dd>
+        </div>
     </dl>
     
-    <form method="post">
+    <form method="post" class="mt-8 flex flex-wrap gap-3">
         <input type="hidden" asp-for="UserAccount.UserAccountID" />
-        <input type="submit" value="削除" class="btn btn-danger" />
-        <a class="btn btn-secondary" asp-page="./Index">戻る</a>
+        <input type="submit" value="削除する" class="rounded-lg bg-red-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2" />
+        <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="./Index">一覧へ</a>
     </form>
+</div>
 </div>

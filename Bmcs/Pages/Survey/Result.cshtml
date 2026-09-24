@@ -3,45 +3,46 @@
 @model Bmcs.Pages.Survey.ResultModel
 @{
     ViewData[ViewDataConstant.Title] = "アンケート集計";
+    Layout = "_LayoutTailwind";
+
+    var selectClass = "mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500";
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+<div class="mx-auto max-w-4xl px-4 py-8">
+<h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
 
-<hr />
 @if (Model.Survey == null)
 {
-    <div class="alert alert-primary" role="alert">
-        <p>アンケートが登録されていません。</p>
+    <div class="mt-6 rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+        <p class="font-bold text-slate-900">アンケートが登録されていません。</p>
     </div>
 }
 else
 {
-    <form method="get" class="form-inline mb-3">
-        <div class="form-group mr-2 mb-2">
-            <label asp-for="SurveyID" class="mr-2">アンケート</label>
-            <select asp-for="SurveyID" asp-items="Model.SurveyIDList" class="form-control"></select>
+    <form method="get" class="mt-6 grid gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-3">
+        <div>
+            <label asp-for="SurveyID" class="block text-sm font-semibold text-slate-800">アンケート</label>
+            <select asp-for="SurveyID" asp-items="Model.SurveyIDList" class="@selectClass"></select>
         </div>
-        <div class="form-group mr-2 mb-2">
-            <label asp-for="TeamCategoryClass" class="mr-2">カテゴリ</label>
-            <select asp-for="TeamCategoryClass" asp-items="Html.GetEnumSelectList<TeamCategoryClass>()" class="form-control">
+        <div>
+            <label asp-for="TeamCategoryClass" class="block text-sm font-semibold text-slate-800">カテゴリ</label>
+            <select asp-for="TeamCategoryClass" asp-items="Html.GetEnumSelectList<TeamCategoryClass>()" class="@selectClass">
                 <option value="">全て</option>
             </select>
         </div>
-        <div class="form-group mr-2 mb-2">
-            <label asp-for="FilterChoiceID" class="mr-2">回答で絞り込み</label>
-            <select asp-for="FilterChoiceID" asp-items="Model.FilterChoiceIDList" class="form-control">
+        <div>
+            <label asp-for="FilterChoiceID" class="block text-sm font-semibold text-slate-800">回答で絞り込み</label>
+            <select asp-for="FilterChoiceID" asp-items="Model.FilterChoiceIDList" class="@selectClass">
                 <option value="">絞り込まない</option>
             </select>
         </div>
-        <div class="form-group mb-2">
-            <input type="submit" value="表示" class="btn btn-primary" />
-            <a class="btn btn-secondary ml-2" asp-page="./Result" asp-route-SurveyID="@Model.SurveyID">絞り込み解除</a>
+        <div class="flex flex-wrap gap-3 sm:col-span-3">
+            <input type="submit" value="表示" class="cursor-pointer rounded-lg bg-sky-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-800" />
+            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="./Result" asp-route-SurveyID="@Model.SurveyID">絞り込み解除</a>
         </div>
     </form>
 
-    <div class="alert alert-primary" role="alert">
+    <div class="mt-6 rounded-xl border border-sky-200 bg-sky-50 p-5 text-sm text-sky-900">
         <strong>@Model.Survey.SurveyTitle</strong>
         <br />状態：@Model.Survey.StatusClassName
         <br />
@@ -55,18 +56,18 @@ else
         @if (Model.TeamCategoryClass != null)
         {
             <br />
-            <span class="text-muted small">※カテゴリで絞り込んでいるため、チーム未所属のユーザの回答は含まれません。</span>
+            <span class="text-xs text-sky-900/80">※カテゴリで絞り込んでいるため、チーム未所属のユーザの回答は含まれません。</span>
         }
     </div>
 
     @foreach (var questionResult in Model.QuestionResultList)
     {
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">
+        <div class="mt-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div>
+                <h2 class="font-bold text-slate-900">
                     Q@(questionResult.SurveyQuestion.DisplayOrder). @questionResult.SurveyQuestion.QuestionText
-                </h5>
-                <p class="text-muted small mb-2">
+                </h2>
+                <p class="mt-1 text-sm text-slate-600">
                     この設問への回答：@questionResult.AnsweredCount 名
                     @if (questionResult.NoAnswerCount > 0)
                     {
@@ -82,16 +83,15 @@ else
                 {
                     @if (!questionResult.FreeTextList.Any())
                     {
-                        <p class="text-muted">回答なし</p>
+                        <p class="mt-3 text-sm text-slate-600">回答なし</p>
                     }
                     else
                     {
-                        <ul class="list-unstyled">
+                        <ul class="mt-3 space-y-2 text-sm">
                             @foreach (var freeText in questionResult.FreeTextList)
                             {
-                                <li class="mb-2">
-                                    ・@freeText.AnswerText
-                                    <br /><span class="text-muted small">［@freeText.AnswererNote］</span>
+                                <li class="whitespace-pre-line break-words rounded-md bg-slate-50 px-3 py-2 text-slate-800">@freeText.AnswerText
+                                    <span class="mt-1 block text-xs text-slate-600">［@freeText.AnswererNote］</span>
                                 </li>
                             }
                         </ul>
@@ -99,12 +99,13 @@ else
                 }
                 else
                 {
-                    <table class="table table-sm">
+                    <div class="mt-3 overflow-x-auto">
+                    <table class="stat-table">
                         <thead>
                             <tr>
-                                <th style="width:55%">選択肢</th>
-                                <th style="width:10%" class="text-right">件数</th>
-                                <th style="width:35%">割合（設問の回答者比）</th>
+                                <th class="w-[55%]">選択肢</th>
+                                <th class="w-[10%] text-right">件数</th>
+                                <th class="w-[35%]">割合（設問の回答者比）</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -117,11 +118,11 @@ else
                             @foreach (var choiceResult in choiceResultList)
                             {
                                 <tr>
-                                    <td>
+                                    <td class="whitespace-normal">
                                         @choiceResult.ChoiceText
                                         @if (choiceResult.FreeTextList.Any())
                                         {
-                                            <ul class="small text-muted mb-0">
+                                            <ul class="mt-1 list-disc pl-5 text-xs text-slate-600">
                                                 @foreach (var freeText in choiceResult.FreeTextList)
                                                 {
                                                     <li>@freeText.AnswerText ［@freeText.AnswererNote］</li>
@@ -131,18 +132,22 @@ else
                                     </td>
                                     <td class="text-right">@choiceResult.Count</td>
                                     <td>
-                                        <div class="progress" style="height:18px;">
-                                            <div class="progress-bar" role="progressbar" style="width:@choiceResult.Rate.ToString("#0.0")%">
-                                                @choiceResult.Rate.ToString("#0.0")%
+                                        @* 割合の数字はバーの外に出す（バーが短いと白文字が読めないため） *@
+                                        <div class="flex items-center gap-2">
+                                            <div class="h-3 flex-1 overflow-hidden rounded-full bg-slate-100" role="progressbar" aria-valuenow="@choiceResult.Rate.ToString("#0.0")" aria-valuemin="0" aria-valuemax="100">
+                                                <div class="h-full rounded-full bg-sky-700" style="width:@choiceResult.Rate.ToString("#0.0")%"></div>
                                             </div>
+                                            <span class="w-12 text-right text-xs tabular-nums text-slate-700">@choiceResult.Rate.ToString("#0.0")%</span>
                                         </div>
                                     </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
+                    </div>
                 }
             </div>
         </div>
     }
 }
+</div>

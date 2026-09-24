@@ -37,8 +37,9 @@ $(function () {
         var $count = $question.find('.js-survey-count');
 
         if ($count.length === 0) {
-            $count = $('<p class="js-survey-count text-muted small mb-1"></p>');
-            $question.find('.form-check').first().before($count);
+            //※Tailwind はソース中の完全なクラス名しか生成しないため、クラス名は分割せずに書くこと
+            $count = $('<p class="js-survey-count mt-2 text-sm text-slate-600"></p>');
+            $question.find('.js-survey-choices').first().before($count);
         }
 
         if (selected >= max) {
@@ -66,7 +67,7 @@ $(function () {
     });
 
     // 入力エラーがある場合は、該当箇所までスクロールする
-    var $error = $('.text-danger:not(:empty)').filter(function () {
+    var $error = $('.js-survey-error').filter(function () {
         return $.trim($(this).text()) !== '';
     }).first();
 

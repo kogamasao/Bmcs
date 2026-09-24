@@ -2,84 +2,63 @@
 @model Bmcs.Pages.UserAccount.DetailsModel
 
 @{
+    Layout = "_LayoutTailwind";
     ViewData[ViewDataConstant.Title] = "ユーザ情報(管理者)";
 }
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
+<div class="mx-auto max-w-3xl px-4 py-8">
+<h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
 
 <div>
-    <h4></h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.UserAccountID)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.UserAccountID)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.UserAccountName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.UserAccountName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.Password)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.Password)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.EmailAddress)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.EmailAddress)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.DeleteFLG)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.DeleteFLG)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.TeamID)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.TeamID)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.Team.TeamName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.Team.TeamName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.EntryUserID)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.EntryUserID)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.EntryDatetime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.EntryDatetime)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.UpdateUserID)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.UpdateUserID)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.UserAccount.UpdateDatetime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.UserAccount.UpdateDatetime)
-        </dd>
+    <dl class="mt-6 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.UserAccountID)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.UserAccountID)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.UserAccountName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.UserAccountName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.Password)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.Password)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.EmailAddress)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.EmailAddress)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.DeleteFLG)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.DeleteFLG)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.TeamID)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.TeamID)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.Team.TeamName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.Team.TeamName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.EntryUserID)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.EntryUserID)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.EntryDatetime)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.EntryDatetime)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.UpdateUserID)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.UpdateUserID)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.UserAccount.UpdateDatetime)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.UserAccount.UpdateDatetime)</dd>
+        </div>
     </dl>
 </div>
-<div class="form-group">
-    <a class="btn btn-primary" asp-page="./Edit" asp-route-id="@Model.UserAccount.UserAccountID">編集</a>
-    <a class="btn btn-secondary" asp-page="./Index">戻る</a>
+<div class="mt-6 flex flex-wrap gap-3">
+    <a class="inline-flex items-center justify-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800" asp-page="./Edit" asp-route-id="@Model.UserAccount.UserAccountID">編集</a>
+    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="./Index">一覧へ</a>
+</div>
 </div>
