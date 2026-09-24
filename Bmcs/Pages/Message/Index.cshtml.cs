@@ -45,6 +45,52 @@ namespace Bmcs.Pages.Message
 
         public async Task<IActionResult> OnGetAsync(MessagePageClass messagePageClass, string teamID, int? messageID, string privateTeamID, int? pageIndex)
         {
+            return await LoadAsync(messagePageClass, teamID, messageID, privateTeamID, pageIndex);
+        }
+
+        /// <summary>
+        /// スレッド（親メッセージ）を閲覧できるか
+        /// ※非公開メッセージ（ダイレクトメッセージ・チーム内）は、送信元チームと送信先チームのみ閲覧できる
+        /// </summary>
+        private bool CanViewThread(Models.Message rootMessage)
+        {
+            if (rootMessage == null || rootMessage.DeleteFLG)
+            {
+                return false;
+            }
+
+            if (base.IsAdmin() || rootMessage.PublicFLG)
+            {
+                return true;
+            }
+
+            var myTeamID = HttpContext.Session.GetString(SessionConstant.TeamID);
+
+            return !string.IsNullOrEmpty(myTeamID)
+                && (rootMessage.TeamID == myTeamID || rootMessage.PrivateTeamID == myTeamID);
+        }
+
+        /// <summary>
+        /// 指定されたメッセージが属するスレッドの親メッセージを取得する
+        /// ※返信のIDを指定された場合も、親メッセージで閲覧権限を判定するため
+        /// </summary>
+        private async Task<Models.Message> FindRootMessageAsync(int? messageID)
+        {
+            var message = await Context.Messages.FindAsync(messageID);
+
+            if (message?.ParentMessageID != null)
+            {
+                message = await Context.Messages.FindAsync(message.ParentMessageID);
+            }
+
+            return message;
+        }
+
+        /// <summary>
+        /// 画面の表示に必要なデータを取得する（入力エラーでの再表示にも使用する）
+        /// </summary>
+        private async Task<IActionResult> LoadAsync(MessagePageClass messagePageClass, string teamID, int? messageID, string privateTeamID, int? pageIndex)
+        {
             if (string.IsNullOrEmpty(teamID))
             {
                 teamID = HttpContext.Session.GetString(SessionConstant.TeamID);
@@ -72,6 +118,20 @@ namespace Bmcs.Pages.Message
             //メッセージリスト
             var messageList = new List<Models.Message>();
 
+            //スレッド表示の場合は閲覧権限を確認する
+            //※以前は確認しておらず、メッセージIDを指定すれば未ログインでも他チーム同士のダイレクトメッセージを読めた
+            if (messageID != null)
+            {
+                var rootMessage = await FindRootMessageAsync(messageID);
+
+                if (!CanViewThread(rootMessage))
+                {
+                    return NotFound();
+                }
+
+                messageID = rootMessage.MessageID;
+            }
+
             if(messageID == null)
             { 
                 var tempMessageList = await Context.Messages
@@ -82,6 +142,7 @@ namespace Bmcs.Pages.Message
                                                 || ((messagePageClass == MessagePageClass.RelatedTeam) && (r.TeamID == HttpContext.Session.GetString(SessionConstant.TeamID) || r.PrivateTeamID == HttpContext.Session.GetString(SessionConstant.TeamID)))
                                                 || ((messagePageClass == MessagePageClass.Private) && (!r.PublicFLG) && (r.TeamID == HttpContext.Session.GetString(SessionConstant.TeamID) || r.PrivateTeamID == HttpContext.Session.GetString(SessionConstant.TeamID)))
                                         )
+                                        .Where(r => !r.DeleteFLG)
                                         .ToListAsync();
 
                 if(messagePageClass == MessagePageClass.PublicTeam)
@@ -95,7 +156,7 @@ namespace Bmcs.Pages.Message
                     messageList = await Context.Messages
                                             .Include(r => r.UserAccount)
                                             .Include(r => r.Team)
-                                            .Where(r => messageIDList.Contains(r.MessageID)).ToListAsync();
+                                            .Where(r => messageIDList.Contains(r.MessageID) && !r.DeleteFLG).ToListAsync();
                 }
             }
             else
@@ -103,12 +164,13 @@ namespace Bmcs.Pages.Message
                 messageList = await Context.Messages
                                     .Include(r => r.UserAccount)
                                     .Include(r => r.Team)
-                                    .Where(r => r.MessageID == messageID || r.ParentMessageID == messageID)
+                                    .Where(r => (r.MessageID == messageID || r.ParentMessageID == messageID) && !r.DeleteFLG)
                                     .ToListAsync();
 
             }
 
-            if (base.IsLogin())
+            //チーム未所属（ユーザ登録直後など）は投稿できない
+            if (base.IsLogin() && MyTeam != null)
             { 
                 //ユーザアカウント
                 UserAccount = await Context.UserAccounts.FindAsync(HttpContext.Session.GetString(SessionConstant.UserAccountID));
@@ -201,19 +263,68 @@ namespace Bmcs.Pages.Message
                     return NotFound();
                 }
 
-                Team = await Context.Teams.FindAsync(Message.TeamID);
+                if (MyTeam == null)
+                {
+                    return NotFound();
+                }
 
-                UserAccount = await Context.UserAccounts.FindAsync(Message.UserAccountID);
+                //親データ取得
+                Models.Message parentMessage = null;
+
+                if (MessageID != null)
+                {
+                    //返信先は、閲覧できるスレッドに限る（返信への返信は親にぶら下げる）
+                    parentMessage = await FindRootMessageAsync(MessageID);
+
+                    if (!CanViewThread(parentMessage))
+                    {
+                        return NotFound();
+                    }
+
+                    //非公開チームが返信できるのは、自チームの非公開スレッドのみ（表示時の IsEnablePostReply と同じ判定）
+                    if (!MyTeam.PublicFLG && (parentMessage.PublicFLG || parentMessage.TeamID != MyTeam.TeamID))
+                    {
+                        return NotFound();
+                    }
+
+                    MessageID = parentMessage.MessageID;
+                }
+                else if (!MyTeam.PublicFLG)
+                {
+                    //非公開チームは、公開投稿や他チームへのメッセージを送れない（チーム内のみ）
+                    //※画面では hidden で自チームを送っているが、POST 値を信用しない
+                    Message.PrivateTeamID = MyTeam.TeamID;
+                }
+                else if (!string.IsNullOrEmpty(Message.PrivateTeamID))
+                {
+                    //送信先は、画面の選択肢と同じく公開チーム（と自チーム）に限る
+                    var privateTeam = await Context.Teams.FindAsync(Message.PrivateTeamID);
+
+                    if (privateTeam == null || privateTeam.DeleteFLG
+                        || (!privateTeam.PublicFLG && privateTeam.TeamID != MyTeam.TeamID))
+                    {
+                        ModelState.AddModelError(nameof(Models.Message) + "." + nameof(Models.Message.PrivateTeamID), "送信先のチームが見つかりません。");
+                    }
+                }
 
                 if (!ModelState.IsValid)
                 {
-                    return Page();
+                    //再表示に必要なデータ（一覧・タイトル・ヘルプ）を取り直す
+                    //※以前は取り直しておらず、一覧が無いため500になっていた
+                    var postedMessage = Message;
+                    var result = await LoadAsync(MessagePageClass, Message.TeamID, MessageID, Message.PrivateTeamID, null);
+
+                    if (Message != null)
+                    {
+                        Message.MessageTitle = postedMessage.MessageTitle;
+                        Message.MessageDetail = postedMessage.MessageDetail;
+                    }
+
+                    return result;
                 }
 
                 //データ作成
                 var message = new Models.Message();
-                //親データ取得
-                var parentMessage = await Context.Messages.FindAsync(MessageID);
 
                 //POST値セット
                 this.TryUpdateModel(message, parentMessage);

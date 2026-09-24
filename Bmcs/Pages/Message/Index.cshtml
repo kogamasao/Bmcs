@@ -1,291 +1,216 @@
 ﻿@page
 @model Bmcs.Pages.Message.IndexModel
+@using Bmcs.PageHelper
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+@{
+    Layout = "_LayoutTailwind";
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
+    var isThread = Model.MessageID != null;
+    var mode = ViewData[ViewDataConstant.MessageMode]?.ToString();
+    var inputClass = "mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500";
 
-@if (!string.IsNullOrEmpty(Model.SelectTeamID))
-{
-<h4>@Model.Team.TeamName</h4>
+    //投稿欄の入力エラーは、閉じたままだと気づけないため開いておく
+    var hasError = !ViewData.ModelState.IsValid;
+
+    //一覧の切り替え。区分名（公開・投稿・関連・非公開）だけでは何が表示されるか分からないため、説明を付ける
+    var tabList = new[]
+    {
+        new { PageClass = MessagePageClass.Public, Label = "公開", Description = "全チームの公開メッセージ" },
+        new { PageClass = MessagePageClass.PublicTeam, Label = "自チームの投稿", Description = "自チームが投稿した公開メッセージ" },
+        new { PageClass = MessagePageClass.RelatedTeam, Label = "自チームに関係", Description = "自チームが送った・受け取ったメッセージ（公開・非公開）" },
+        new { PageClass = MessagePageClass.Private, Label = "非公開", Description = "チーム内のメッセージと、ダイレクトメッセージ" },
+    };
 }
 
-<form method="post" asp-page="/Message/Index">
-    <input type="hidden" asp-for="MessagePageClass" name="messagePageClass" />
-    <input type="hidden" asp-for="MessageID" name="messageID" />
-    <input type="hidden" asp-for="Message.TeamID" />
-    <input type="hidden" asp-for="Message.UserAccountID" />
-    <div class="row">
-        @if (Model.IsEnablePostReply)
-        {
-        <div class="col-md-6">
-            <div class="box">
-                <div class="box-title">
-                    @ViewData[ViewDataConstant.MessageMode]
-                </div>
-                <div class="box-inner">
-                    <div class="form-group">
-                        <p>@Model.UserAccount.UserAccountName</p>
-                    </div>
-                    @if (Model.MessageID == null)
-                        {
-                    <div class="form-group">
-                        <label asp-for="Message.MessageTitle" class="control-label"></label>
-                        <input asp-for="Message.MessageTitle" class="form-control">
-                        <span asp-validation-for="Message.MessageTitle" class="text-danger"></span>
-                    </div>
-                        }
-                        else
-                        {
-                    <input type="hidden" asp-for="Message.MessageTitle" />
-                        }
-                    <div class="form-group">
-                        <label asp-for="Message.MessageDetail" class="control-label"></label>
-                        <textarea asp-for="Message.MessageDetail" class="form-control"></textarea>
-                        <span asp-validation-for="Message.MessageDetail" class="text-danger"></span>
-                    </div>
-                    @if (Model.MessageID == null && Model.MyTeam.PublicFLG)
-                        {
-                    <div class="form-group">
-                        <label asp-for="Message.PrivateTeamID" class="control-label"></label>
-                        <select asp-for="Message.PrivateTeamID" class="form-control" asp-items="Model.TeamIDList"></select>
-                        <p class="text-danger pt-2">
-                            送信先を指定するとダイレクト(非公開)メッセージになります。<br />
-                            全チームに対する公開メッセージにしたい場合は指定不要です。
-                        </p>
-                    </div>
-                        }
-                        else
-                        {
-                    @if (!Model.MyTeam.PublicFLG)
-                            {
-                    <p class="text-danger pt-2">
-                        非公開チームの場合、公開投稿や他チームへのメッセージは送信できません。
-                    </p>
-                            }
-                    <input type="hidden" asp-for="Message.PrivateTeamID" />
-                        }
-                    <div class="form-group">
-                        <input type="submit" value="@ViewData[ViewDataConstant.MessageMode]" class="btn btn-primary btn-block" />
-                    </div>
-                </div>
-            </div>
+@{
+    //投稿・返信欄。一覧表示では一覧の上（20件の下までスクロールしないと投稿できなかったため）、
+    //スレッド表示ではスレッドの下（読んでから返信するため）に出す
+    async Task RenderPostForm(string marginClass)
+    {
+    @if (Model.IsEnablePostReply)
+    {
+        <form method="post" asp-page="/Message/Index" class="@marginClass">
+            <input type="hidden" asp-for="MessagePageClass" name="messagePageClass" />
+            <input type="hidden" asp-for="MessageID" name="messageID" />
+            <input type="hidden" asp-for="Message.TeamID" />
+            <input type="hidden" asp-for="Message.UserAccountID" />
 
-            <div class="form-group">
-                @if (Model.MessageID == null)
+            @*
+                返信はスレッドの下に常に表示する。
+                投稿は一覧の閲覧が主のため折りたたむ（入力エラーの場合は開いておく）。
+            *@
+            <details class="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm" open="@(isThread || hasError)">
+                <summary class="flex cursor-pointer items-center justify-between gap-4 px-6 py-4 font-semibold text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+                    <span>@(isThread ? "このメッセージに返信する" : "メッセージを投稿する")</span>
+                    <svg class="size-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                </summary>
+
+                <div class="space-y-5 border-t border-slate-200 px-6 py-6">
+                    <div asp-validation-summary="All" class="rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
+
+                    <p class="text-sm text-slate-600">投稿者：<span class="font-semibold text-slate-800">@Model.UserAccount.UserAccountName</span></p>
+
+                    @if (!isThread)
                     {
-                <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
+                        <div>
+                            <label asp-for="Message.MessageTitle" class="block text-sm font-semibold text-slate-800"></label>
+                            <input asp-for="Message.MessageTitle" class="@inputClass" />
+                            <span asp-validation-for="Message.MessageTitle" class="mt-1 block text-sm text-red-600"></span>
+                        </div>
                     }
                     else
                     {
-                <a class="btn btn-secondary" asp-page="/Message/Index" asp-route-messagePageClass="@Model.MessagePageClass" asp-route-teamID="@Model.SelectTeamID">戻る</a>
+                        <input type="hidden" asp-for="Message.MessageTitle" />
                     }
-            </div>
-        </div>
-        }
 
-        <div class="col-md-6">
-            @if (!Model.IsEnablePostReply)
-        {
-            <div class="form-group">
-                @if (Model.MessageID == null)
-                {
-                <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
-                }
-                else
-                {
-                <a class="btn btn-secondary" asp-page="/Message/Index" asp-route-messagePageClass="@Model.MessagePageClass" asp-route-teamID="@Model.SelectTeamID">戻る</a>
-                }
-            </div>
-        }
-
-            <div class="box">
-                @if (Model.MessageID == null)
-            {
-                <div class="box-title">
-                    メッセージ
-                </div>
-                <div class="box-inner">
-                    @if (Model.IsLogin())
-                    {
-                    <table class="table table-sm table-borderless">
-                        <tbody>
-                            <tr>
-                                <td style="width:25%">
-                                    <a class="btn btn-outline-primary btn-block Public" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.Public.GetEnumName()</a>
-                                </td>
-                                <td style="width:25%">
-                                    <a class="btn btn-outline-primary btn-block PublicTeam" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.PublicTeam" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.PublicTeam.GetEnumName()</a>
-                                </td>
-                                <td style="width:25%">
-                                    <a class="btn btn-outline-primary btn-block RelatedTeam" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.RelatedTeam" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.RelatedTeam.GetEnumName()</a>
-                                </td>
-                                <td style="width:25%">
-                                    <a class="btn btn-outline-primary btn-block Private" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Private" asp-route-teamID="@Model.SelectTeamID">@MessagePageClass.Private.GetEnumName()</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    }
-                    @foreach (var item in Model.MessageList.OrderByDescending(r => r.UpdateDatetime))
-                    {
-                    <div class="form-group border-bottom">
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <div class="card-title font-weight-bold">
-                                    @item.MessageTitle
-                                </div>
-                                <div class="card-subtitle text-muted">
-                                    <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Team.TeamName</a>
-                                    <span>：</span>
-                                    <span>@item.UserAccount.UserAccountName</span>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                @Html.Raw(item.MessageDetail.ReplaceNewLineForHtml())
-                            </div>
-                            <div class="card-footer">
-                                <span>更新日時：@item.UpdateDatetimeFormat</span>
-                                <span>&nbsp;</span>
-                                <span>返信件数：@item.ReplyCount 件</span>
-                                <span>&nbsp;</span>
-                                <a class="btn btn-primary btn-sm" asp-page="/Message/Index" asp-route-messagePageClass="@Model.MessagePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-messageID="@item.MessageID">確認＆返信</a>
-                            </div>
-                        </div>
+                    <div>
+                        <label asp-for="Message.MessageDetail" class="block text-sm font-semibold text-slate-800"></label>
+                        <textarea asp-for="Message.MessageDetail" rows="5" class="@inputClass"></textarea>
+                        <span asp-validation-for="Message.MessageDetail" class="mt-1 block text-sm text-red-600"></span>
                     </div>
-                    }
-                </div>
-            }
-            else
-            {
-                <div class="box-title">
-                    メッセージ履歴
-                </div>
-                <div class="box-inner">
-                    @foreach (var item in Model.MessageList.OrderBy(r => r.EntryDatetime))
+
+                    @if (!isThread && Model.MyTeam.PublicFLG)
                     {
-                        var messageClass = "form-group";
-
-                        if (item.MessageClass == MessageClass.Post)
-                        {
-                            messageClass += " border-bottom";
-                        }
-                        else
-                        {
-                            messageClass += " ml-5";
-                        }
-
-                    <div class="@messageClass">
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                @if (item.MessageClass == MessageClass.Post)
-                                    {
-                                <div class="card-title font-weight-bold">
-                                    @item.MessageTitle
-                                </div>
-                                    }
-                                <div class="card-subtitle text-muted">
-                                    <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Team.TeamName</a>
-                                    <span>：</span>
-                                    <span>@item.UserAccount.UserAccountName</span>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                @Html.Raw(item.MessageDetail.ReplaceNewLineForHtml())
-                            </div>
-                            <div class="card-footer">
-                                <span>投稿日時：@item.EntryDatetimeFormat</span>
-                                <span>&nbsp;</span>
-                            </div>
+                        <div>
+                            <label asp-for="Message.PrivateTeamID" class="block text-sm font-semibold text-slate-800"></label>
+                            <p class="mt-0.5 text-sm text-slate-500">
+                                空のままにすると、全チームに向けた<strong class="font-semibold text-slate-700">公開メッセージ</strong>になります。
+                                チームを選ぶと、そのチームだけに届く<strong class="font-semibold text-slate-700">ダイレクトメッセージ（非公開）</strong>になります。
+                            </p>
+                            <select asp-for="Message.PrivateTeamID" class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="Model.TeamIDList"></select>
+                            <span asp-validation-for="Message.PrivateTeamID" class="mt-1 block text-sm text-red-600"></span>
                         </div>
-                    </div>
-                    }
-                </div>
-            }
-            </div>
-
-            @{
-            var prevDisabled = !Model.MessageList.HasPreviousPage ? "disabled" : "";
-            var nextDisabled = !Model.MessageList.HasNextPage ? "disabled" : "";
-            }
-
-            <div class="mt-1">
-                <ul class="pagination">
-                    <li class="page-item @prevDisabled">
-                        <a asp-page="/Message/Index"
-                           asp-route-messagePageClass="@Model.MessagePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-messageID="@Model.MessageID"
-                           class="page-link">
-                            <<
-                        </a>
-                    </li>
-
-                    @if (Model.MessageList.PageIndex >= 4)
-                {
-                    <li class="page-item disabled">
-                        <span class="page-link">
-                            …
-                        </span>
-                    </li>
-                }
-
-                    @for (var i = Model.MessageList.PageIndex - 2; i <= Model.MessageList.PageIndex + 2; i++)
-                {
-                    @if (i < 1 || i > Model.MessageList.TotalPages)
-                    {
-                        continue;
-                    }
-
-                    @if (Model.MessageList.PageIndex == i)
-                    {
-                    <li class="page-item active">
-                        <a asp-page="/Message/Index"
-                           asp-route-messagePageClass="@Model.MessagePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-messageID="@Model.MessageID"
-                           asp-route-pageIndex="@(i)"
-                           class="page-link">
-                            @(i)
-                        </a>
-                    </li>
                     }
                     else
                     {
-                    <li class="page-item">
-                        <a asp-page="/Message/Index"
-                           asp-route-messagePageClass="@Model.MessagePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-messageID="@Model.MessageID"
-                           asp-route-pageIndex="@(i)"
-                           class="page-link">
-                            @(i)
-                        </a>
-                    </li>
+                        @if (!Model.MyTeam.PublicFLG)
+                        {
+                            <p class="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                                非公開チームのため、メッセージはチーム内にだけ届きます（公開投稿や他チームへのメッセージは送れません）。
+                            </p>
+                        }
+                        <input type="hidden" asp-for="Message.PrivateTeamID" />
                     }
-                }
 
-                    @if (Model.MessageList.TotalPages - Model.MessageList.PageIndex >= 3)
-                {
-                    <li class="page-item disabled">
-                        <span class="page-link">
-                            …
-                        </span>
-                    </li>
-                }
+                    <div>
+                        <input type="submit" value="@(mode == "返信" ? "返信する" : "投稿する")" class="rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" />
+                    </div>
+                </div>
+            </details>
+        </form>
+    }
+    else if (isThread && Model.IsLogin() && Model.MyTeam != null && !Model.MyTeam.PublicFLG)
+    {
+        @* 非公開チームは、公開メッセージや他チームのスレッドに返信できない（IsEnablePostReply） *@
+        <p class="@marginClass rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            非公開チームのため、このメッセージには返信できません。
+        </p>
+    }
+    }
+}
 
-                    <li class="page-item @nextDisabled">
-                        <a asp-page="/Message/Index"
-                           asp-route-messagePageClass="@Model.MessagePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-messageID="@Model.MessageID"
-                           asp-route-pageIndex="@(Model.MessageList.TotalPages)"
-                           class="page-link">
-                            >>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
+<div class="mx-auto max-w-4xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            @if (!string.IsNullOrEmpty(Model.SelectTeamID) && Model.Team != null)
+            {
+                <p class="mt-1 text-sm text-slate-500">@Model.Team.TeamName</p>
+            }
         </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
     </div>
-</form>
+
+    @if (isThread)
+    {
+        <div class="mt-4">
+            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Message/Index" asp-route-messagePageClass="@Model.MessagePageClass" asp-route-teamID="@Model.SelectTeamID">メッセージ一覧へ</a>
+        </div>
+    }
+    else if (Model.IsLogin())
+    {
+        @* 一覧の切り替え。以前は message.js で選択中のボタンに色を付けていたが、サーバ側で出し分ける *@
+        <nav class="mt-6 flex flex-wrap gap-2" aria-label="メッセージの表示切り替え">
+            @foreach (var tab in tabList)
+            {
+                var isActive = tab.PageClass == Model.MessagePageClass;
+                <a class="@(isActive ? "border-sky-700 bg-sky-700 text-white" : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50") rounded-lg border px-4 py-2 text-sm font-semibold transition"
+                   aria-current="@(isActive ? "page" : null)"
+                   asp-page="/Message/Index" asp-route-messagePageClass="@tab.PageClass" asp-route-teamID="@Model.SelectTeamID">@tab.Label</a>
+            }
+        </nav>
+        <p class="mt-2 text-sm text-slate-500">@tabList.FirstOrDefault(r => r.PageClass == Model.MessagePageClass)?.Description</p>
+    }
+
+    @if (!isThread)
+    {
+        await RenderPostForm("mt-6");
+    }
+
+    @* メッセージ一覧（スレッド表示の場合は、投稿と返信） *@
+    <div class="mt-6 space-y-4">
+        @if (!Model.MessageList.Any())
+        {
+            <div class="rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+                <p class="font-bold text-slate-900">表示できるメッセージはありません</p>
+            </div>
+        }
+
+        @foreach (var item in isThread ? Model.MessageList.OrderBy(r => r.EntryDatetime) : Model.MessageList.OrderByDescending(r => r.UpdateDatetime))
+        {
+            var isReply = item.MessageClass == MessageClass.Reply;
+
+            <article class="@(isReply ? "ml-6 sm:ml-12" : "") overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                <div class="border-b border-slate-100 px-5 py-3">
+                    @if (!isReply)
+                    {
+                        <h2 class="flex flex-wrap items-center gap-2 font-bold text-slate-900">
+                            @if (!item.PublicFLG)
+                            {
+                                <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700">非公開</span>
+                            }
+                            <span>@item.MessageTitle</span>
+                        </h2>
+                    }
+                    <p class="@(isReply ? "" : "mt-1") text-sm text-slate-600">
+                        <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Team.TeamName</a>
+                        <span>：@item.UserAccount.UserAccountName</span>
+                    </p>
+                </div>
+                <div class="break-words px-5 py-4 text-slate-800">
+                    @Html.Raw(item.MessageDetail.ReplaceNewLineForHtml())
+                </div>
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-100 bg-slate-50 px-5 py-2.5 text-xs text-slate-600">
+                    @if (isThread)
+                    {
+                        <span>投稿日時：@item.EntryDatetimeFormat</span>
+                    }
+                    else
+                    {
+                        <span>更新日時：@item.UpdateDatetimeFormat</span>
+                        <span>返信件数：@item.ReplyCount 件</span>
+                        <a class="ml-auto inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="/Message/Index" asp-route-messagePageClass="@Model.MessagePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-messageID="@item.MessageID">確認＆返信</a>
+                    }
+                </div>
+            </article>
+        }
+    </div>
+
+    @await Html.PartialAsync("~/Pages/Shared/_PaginationTailwind.cshtml",
+        PaginationInfo.Create(Model.MessageList.PageIndex, Model.MessageList.TotalPages, "/Message/Index",
+            new Dictionary<string, string>
+            {
+                { "messagePageClass", Model.MessagePageClass.ToString() },
+                { "teamID", Model.SelectTeamID ?? string.Empty },
+                { "messageID", Model.MessageID?.ToString() ?? string.Empty },
+            }))
+
+    @if (isThread)
+    {
+        await RenderPostForm("mt-8");
+    }
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/js/message.js" asp-append-version="true"></script>
 }

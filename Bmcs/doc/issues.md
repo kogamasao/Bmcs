@@ -38,11 +38,10 @@
 
 ### 2.1 未移行の画面
 移行が終わったら Bootstrap と `site.css`（`_Layout.cshtml`・`_Help.cshtml` 等）を削除する。
-※2026-09-24 に試合まわりの残り（`Game/Edit`・`Game/Details`・`Game/Delete`・`InningScore/Index`）を移行済み。
+※2026-09-24 に試合まわりの残り（`Game/Edit`・`Game/Details`・`Game/Delete`・`InningScore/Index`）とメッセージ（`Message/Index`）を移行済み。
 
 | 区分 | 画面 | 移行時にあわせて対応すること |
 | --- | --- | --- |
-| メッセージ | `Message/Index`（公開・チーム内・返信を1画面で切り替え） | 入力エラー時にヘルプが消える。非公開チームは他チームとやり取りできない旨の表示 |
 | チーム | `Team/Index`・`Team/Details`・`Team/Edit`・`Team/Delete` | 入力エラー時にヘルプが消える（`Team/Edit`）。公開チーム一覧の「戻る」がトップへ戻る。チームIDの確認手段（M-6） |
 | ユーザ情報 | `UserAccount/Edit` | 入力エラー時にヘルプが消える。**チーム参加がプルダウン（公開チームのみ）で、非公開チームに参加し直せない**。新規登録と同じくチームIDとチームパスワードの入力にする |
 | アカウント復旧 | `UserAccount/ForgotPassword`・`ForgotUserAccountID`・`ResetPassword`・`RecoverByTeam`、`Team/ForgotTeamPassword`・`ResetTeamPassword` | — |
