@@ -52,7 +52,10 @@ namespace Bmcs.Pages.Member
 
             Member = new Models.Member
             {
-                Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID)
+                Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID),
+                //「名前だけで登録できます」と案内しているため、区分は空ではなく「選手」を既定にする。
+                //※空のままだと、初回の打順自動割当（選手・選手兼監督が対象）から外れてしまう
+                MemberClass = MemberClass.Player,
             };
 
             if (Member.Team == null)
@@ -88,6 +91,14 @@ namespace Bmcs.Pages.Member
         {
             try
             {
+                //自チーム以外にはメンバーを登録できない（管理者は除く）
+                //※入力エラーでの再表示より先に確認する。後だと、POST する TeamID を書き換えることで
+                //  再表示の画面に他チーム（非公開を含む）のチーム名を表示できてしまう
+                if (!base.IsMyTeamData(Member.TeamID))
+                {
+                    return NotFound();
+                }
+
                 if (!ModelState.IsValid)
                 {
                     //再表示に必要なデータを取り直す
@@ -95,12 +106,6 @@ namespace Bmcs.Pages.Member
                     await SetPageDataAsync();
 
                     return Page();
-                }
-
-                //自チーム以外にはメンバーを登録できない（管理者は除く）
-                if (!base.IsMyTeamData(Member.TeamID))
-                {
-                    return NotFound();
                 }
 
                 //データ作成

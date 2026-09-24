@@ -803,6 +803,19 @@ namespace Bmcs.Pages.GameScene
                 Game.TieBreakStartRunnerSceneClass = RunnerSceneClass.FirstSecond;
             }
 
+            //タイトル・ヘルプ
+            await SetPageDataAsync(gameSceneID != null);
+
+            return Page();
+        }
+
+        /// <summary>
+        /// 画面表示に必要なデータ（タイトル・ヘルプ）をセットする
+        /// ※入力エラーで return Page() する場合も、これを呼ばないと見出しとヘルプが消える
+        /// </summary>
+        /// <param name="isModify">登録済みの打席の修正か</param>
+        private async Task SetPageDataAsync(bool isModify)
+        {
             //タイトル
             ViewData[ViewDataConstant.Title] = GameScene.Inning.ToString() + "回"
                 + GameScene.TopButtomClass.GetEnumName()
@@ -810,15 +823,13 @@ namespace Bmcs.Pages.GameScene
                 + GameScene.OutCount.ToString() + "アウト";
 
             //修正
-            if (gameSceneID != null)
+            if (isModify)
             {
                 ViewData[ViewDataConstant.Title] += "(修正)";
             }
 
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameScene);
-
-            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -845,6 +856,7 @@ namespace Bmcs.Pages.GameScene
 
                 if (!ModelState.IsValid)
                 {
+                    await SetPageDataAsync(GameScene.GameSceneID.ZeroToNull() != null);
                     return Page();
                 }
 

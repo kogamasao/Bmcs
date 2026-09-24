@@ -28,7 +28,9 @@
     //※「チェンジ」と隣接しており、押すと試合が終了して修正には戻り操作が必要になる。
     //  確認を入れる（jsのsubmit処理より先に実行されるよう、先頭でバインドする）
     $(".js-confirm-gameset").on("click", function (event) {
-        if (!window.confirm("試合を終了します。よろしいですか？\n（イニングを進める場合は「チェンジ」を押してください）")) {
+        //※「試合終了」も表示中の打者の結果を登録してから終了するため、最後の打者を入力済みなら「打席なし(チェンジ)」を選んでもらう。
+        //  また、終了しただけでは成績に集計されない（確定が必要）ことも伝える
+        if (!window.confirm("この打者の結果を登録して、試合を終了します。よろしいですか？\n\n・最後の打者をすでに登録している場合は、打者の結果を「打席なし(チェンジ)」にしてから押してください。\n・イニングを進める場合は「チェンジ」を押してください。\n・終了後、試合結果の画面で「確定する」を押すと成績に集計されます。")) {
             event.stopImmediatePropagation();
             event.preventDefault();
         }
@@ -204,12 +206,26 @@
             return;
         }
 
-        //入力による増加が無い場合は現在のアウトカウントを、ある場合は結果を含めた数を示す
-        var title = resultOutCount === 0
-                    ? baseOutCount + 'アウトです'
-                    : 'この結果で' + totalOutCount + 'アウトになります';
+        var title;
+        var body;
+
+        if (baseOutCount >= 3) {
+            //打席前にすでに3アウト（案内を無視して「次の打者へ」を押した後など）
+            //※「チェンジ」ボタンは表示中の打者の結果も登録してから攻守交代するため、
+            //  打者結果が三振等のまま押すと4アウト目が付く。打席を記録しない選択肢を選んでもらう
+            title = 'すでに' + baseOutCount + 'アウトです';
+            body = isChange
+                   ? '下の<strong class="font-semibold">「チェンジ」</strong>を押すとイニングが進みます（この打者の打席は記録されません）。'
+                   : 'この打者の打席は記録せずにイニングを進めるため、打者の結果を<strong class="font-semibold">「打席なし(チェンジ)」</strong>にしてから、下の<strong class="font-semibold">「チェンジ」</strong>を押してください。';
+        }
+        else {
+            //この打席の結果で3アウトになる
+            title = 'この結果で' + totalOutCount + 'アウトになります';
+            body = 'イニングを進める場合は下の<strong class="font-semibold">「チェンジ」</strong>を押してください。（このまま打者を進めることもできます）';
+        }
 
         notice.find(".js-out-count-title").text(title);
+        notice.find(".js-out-count-body").html(body);
         notice.removeClass('hidden');
     }
 

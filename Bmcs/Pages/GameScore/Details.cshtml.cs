@@ -103,7 +103,7 @@ namespace Bmcs.Pages.GameScore
                       .ToListAsync();
 
             //タイトル
-            ViewData[ViewDataConstant.Title] = "試合結果詳細";
+            ViewData[ViewDataConstant.Title] = "試合結果";
 
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameScoreDetails);

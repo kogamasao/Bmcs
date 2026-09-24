@@ -655,6 +655,14 @@ namespace Bmcs.Models
             {
                 var userAccountID = HttpContext.Session.GetString(SessionConstant.UserAccountID);
 
+                //サンプルチームの体験ユーザは対象外
+                //※体験のためにログインした直後にアンケートへ送られてしまう。また、体験者全員で1ユーザを共有しているため、
+                //  誰か1人が回答すると全員が回答済みになり、回答も利用者の声として扱えない
+                if (userAccountID == SystemConstant.SampleUserAccountID)
+                {
+                    return null;
+                }
+
                 var surveyList = await Context.Surveys
                     .Where(r => r.DeleteFLG == false
                              && r.StatusClass == SurveyStatusClass.Open)

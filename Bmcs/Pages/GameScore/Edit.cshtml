@@ -19,8 +19,15 @@
 
     @if (Model.Game.GameInputTypeClass == GameInputTypeClass.ByPlay)
     {
-        <div class="mt-4">
-            <input type="button" value="再集計する" class="js-submit inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" data-submitclass="@GameScoreSubmitClass.ReCount" />
+        @*
+            再集計は GameSet() を呼び、プレーの記録から投手・野手の成績を作り直して StatusClass = 確定前 に戻す。
+            確定済みの試合で押すと、成績ページから外れ、この画面で手直しした内容も上書きされるため、説明と確認を出す。
+        *@
+        <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+            <input type="button" value="再集計する" class="js-submit js-confirm-recount inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" data-submitclass="@GameScoreSubmitClass.ReCount" />
+            <p class="text-sm text-slate-500">
+                プレーの記録から成績を集計し直します。この画面で手直しした内容は元に戻り、試合は「確定前」に戻ります。
+            </p>
         </div>
         <div class="mt-4">
             <a class="inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID">イニング詳細</a>
@@ -101,7 +108,7 @@
     </div>
     <div class="mt-4">
         <input type="button" value="イニング追加" class="cursor-pointer rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" id="add-inning" />
-        <input type="button" value="イニング削除" class="cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" id="delete-inning" />
+        <input type="button" value="イニング削除" class="cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300" id="delete-inning" />
     </div>
 
 
@@ -256,7 +263,7 @@
                                     <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].Balk" min="0" />
                                 </td>
                                 <td class="col-fix-right">
-                                    <input type="button" value="削除" class="js-pitcher-delete cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" />
+                                    <input type="button" value="削除" class="js-pitcher-delete cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300" />
                                 </td>
                             </tr>
                         }
@@ -468,7 +475,7 @@
                                 <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].PassBall" min="0" />
                             </td>
                             <td class="col-fix-right">
-                                <input type="button" value="削除" class="js-fielder-delete cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" />
+                                <input type="button" value="削除" class="js-fielder-delete cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300" />
                             </td>
                         </tr>
                         }
@@ -486,18 +493,37 @@
     @*
         確定の位置づけを明示する。
         「試合終了」を押しただけでは StatusClass = 確定前 となり、成績ページには
-        集計されない（Score/Index は 試合終了・試合終了ロック のみを対象とする）。
+        集計されない（Score/Index は 確定済み（EndGame・EndGameLock）のみを対象とする）。
         本番では1試合を完走したまま2試合目が無いチームが23あり、入力した成果が
         見えないことが原因と考えられる。
     *@
+    @*
+        この画面の送信は「確定する」だけで、押すまで入力内容は保存されない（OnPostAsync は Fix の時のみ保存する）。
+        「成績に反映されません」だと「保存はされている」と読めるため、保存されないことを明記する。
+        確定済みの試合を修正しに来た場合は、確定を促す文言だと「まだ確定していないのか」と誤解されるため出し分ける。
+    *@
+    @{
+        var isFixed = Model.Game.StatusClass == StatusClass.EndGame || Model.Game.StatusClass == StatusClass.EndGameLock;
+    }
     <div class="mt-6 rounded-xl border border-sky-200 bg-sky-50 p-5">
-        <h2 class="font-bold text-sky-900">入力が終わったら「確定」を押してください</h2>
-        <p class="mt-1 text-sm text-sky-900/80">
-            <strong class="font-semibold">確定すると、この試合が成績ページに集計されます。</strong>
-            確定するまでは成績に反映されません。確定後も、この画面から修正できます。
-        </p>
+        @if (isFixed)
+        {
+            <h2 class="font-bold text-sky-900">この試合は確定済みです</h2>
+            <p class="mt-1 text-sm text-sky-900/80">
+                修正した場合は<strong class="font-semibold">「修正を保存する」を押すまで保存されません。</strong>
+                保存すると、成績ページの集計にも反映されます。
+            </p>
+        }
+        else
+        {
+            <h2 class="font-bold text-sky-900">入力が終わったら「確定する」を押してください</h2>
+            <p class="mt-1 text-sm text-sky-900/80">
+                <strong class="font-semibold">入力内容は「確定する」を押すまで保存されません。</strong>
+                確定すると、この試合が成績ページに集計されます。確定後も、この画面から修正できます。
+            </p>
+        }
         <div class="mt-4">
-            <input type="button" value="確定する" class="js-submit w-full cursor-pointer rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800 sm:w-auto" data-submitclass="@GameScoreSubmitClass.Fix" />
+            <input type="button" value="@(isFixed ? "修正を保存する" : "確定する")" class="js-submit w-full cursor-pointer rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800 sm:w-auto" data-submitclass="@GameScoreSubmitClass.Fix" />
         </div>
     </div>
 </form>

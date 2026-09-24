@@ -47,6 +47,12 @@ namespace Bmcs.Constans
         public static readonly string AdminUserAccountID = "ADMIN";
 
         /// <summary>
+        /// サンプルチーム体験用のユーザID（トップの「サンプルチームで体験する」でログインする）
+        /// ※wwwroot/js/index.js・DbInitializer と同じ値
+        /// </summary>
+        public static readonly string SampleUserAccountID = "YGUser";
+
+        /// <summary>
         /// 再設定トークンの有効時間（時間）
         /// </summary>
         public static readonly int ResetTokenExpireHour = 1;

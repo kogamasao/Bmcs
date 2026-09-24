@@ -23,7 +23,15 @@
         @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
     </div>
 
-    <p class="mt-2 text-slate-600">無料です。登録後、続けてチームを作成できます。</p>
+    @*
+        「チームを作る」前提の一文だけだと、代表者に誘われたチームメイトが閉じている「参加する」欄に気づかず、
+        別のチームを作ってしまう（入力が2チームに分散する）。参加する場合の入口を冒頭で案内する。
+    *@
+    <p class="mt-2 text-slate-600">無料です。新しくチームを作る方は、登録後にチーム作成へ進みます。</p>
+    <p class="mt-2 rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
+        <strong class="font-semibold">チームに誘われた方へ：</strong>
+        下の「既にあるチームに参加する」を開き、代表者から聞いたチームIDとチームパスワードを入力してください。
+    </p>
 
     <form method="post" class="mt-8">
         @* 項目のエラーも先頭にまとめて出す（折りたたみの中のエラーに気づけるようにするため） *@

@@ -68,7 +68,7 @@
             <input type="hidden" asp-for="InterruptBattingOrder" id="interrupt-batting-order" />
             <input type="hidden" asp-for="IsTieBreak" />
 
-            @* スコアボード。試合結果詳細と同じくカードに入れる（以前は枠も余白も無く、上のボタンと接していた） *@
+            @* スコアボード。試合結果（GameScore/Details）と同じくカードに入れる（以前は枠も余白も無く、上のボタンと接していた） *@
             <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                 <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700">
                     スコア
@@ -222,7 +222,7 @@
                                         <th>
                                             結果
                                         </th>
-                                        <th>
+                                        <th class="col-fix-right">
 
                                         </th>
                                     </tr>
@@ -238,7 +238,7 @@
                                                 <select asp-for="@Model.BeforeGameSceneDetailList[i].DetailResultClass" class="js-result js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.BeforeDetailResultClassList"></select>
                                             </td>
                                             <td class="col-fix-right">
-                                                <input type="button" value="削除" class="js-before-delete js-rename cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" />
+                                                <input type="button" value="削除" class="js-before-delete js-rename cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300" />
                                             </td>
                                         </tr>
                                     }
@@ -401,7 +401,7 @@
                                     <th>
                                         結果
                                     </th>
-                                    <th>
+                                    <th class="col-fix-right">
 
                                     </th>
                                 </tr>
@@ -426,7 +426,7 @@
                                             <select asp-for="@Model.AfterGameSceneDetailList[i].DetailResultClass" class="js-result js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.AfterDetailResultClassList"></select>
                                         </td>
                                         <td class="col-fix-right">
-                                            <input type="button" value="削除" class="js-after-delete js-rename cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" />
+                                            <input type="button" value="削除" class="js-after-delete js-rename cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300" />
                                         </td>
                                     </tr>
                                 }
@@ -515,15 +515,23 @@
             <div id="out-count-notice" class="mt-4 hidden rounded-xl border border-amber-200 bg-amber-50 p-4"
                  data-base-outcount="@Model.GameScene.OutCount">
                 <p class="js-out-count-title font-bold text-amber-900"></p>
-                <p class="mt-1 text-sm text-amber-900/80">
-                    イニングを進める場合は下の<strong class="font-semibold">「チェンジ」</strong>を押してください。
-                    （このまま打者を進めることもできます）
-                </p>
+                @* 本文は状況（打席前にすでに3アウトか）で game-scene.js が切り替える *@
+                <p class="js-out-count-body mt-1 text-sm text-amber-900/80"></p>
             </div>
 
             <div class="mt-4">
-                <input type="button" value="次の打者へ" class="js-submit w-full sm:w-auto cursor-pointer rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800" data-submitclass="@GameSceneSubmitClass.NextBatter" />
-                <p class="mt-2 text-sm text-slate-500">打者の結果を選んで押します。凡打ならそのまま押すだけです。</p>
+                <input type="button" value="次の打者へ" class="js-submit w-full sm:w-auto cursor-pointer rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-50" data-submitclass="@GameSceneSubmitClass.NextBatter" />
+                @*
+                    打者結果の選択肢は空欄が無く、新しい打席では先頭の「空三振」が選ばれている。
+                    そのまま押すと三振で記録されるため、選んでから押すよう案内する（修正時は登録済みの結果が入っている）。
+                *@
+                <p class="mt-2 text-sm text-slate-500">
+                    打者の結果を選んでから押してください。
+                    @if (Model.GameScene.GameSceneID.ZeroToNull() == null)
+                    {
+                        <text>（最初は「空三振」が選ばれています）</text>
+                    }
+                </p>
             </div>
             <div class="mt-6 flex flex-wrap items-center gap-2 border-t border-slate-200 pt-4">
                 <input type="button" value="チェンジ" class="js-submit cursor-pointer rounded-lg bg-amber-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-amber-800" data-submitclass="@GameSceneSubmitClass.ThisBatterChange" />

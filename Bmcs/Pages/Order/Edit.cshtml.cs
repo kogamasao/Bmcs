@@ -118,11 +118,14 @@ namespace Bmcs.Pages.Order
                 {
                     //初回は前回オーダーが無いため、登録済みの選手を背番号順に割り当てる。
                     //※9枠すべてを空で出すと、9回分の選択を求めることになる。
-                    //  並べ替えるだけで済むようにしておき、画面に「あとから変更できる」旨を表示する。
+                    //  並べ替えるだけで済むようにしておき、画面に「変更できる」旨を表示する。
+                    //※区分が空のメンバーも対象にする。以前は区分が任意項目で既定が空だったため、
+                    //  名前だけで登録した選手が割当から外れていた（現在は既定を「選手」にしている）
                     var memberList = await Context.Members
                         .Where(r => r.TeamID == Game.TeamID
                                  && r.DeleteFLG == false
-                                 && (r.MemberClass == MemberClass.Player
+                                 && (r.MemberClass == null
+                                  || r.MemberClass == MemberClass.Player
                                   || r.MemberClass == MemberClass.PlayingManager))
                         .ToListAsync();
 
@@ -170,16 +173,6 @@ namespace Bmcs.Pages.Order
             //チームID
             base.TeamID = Game.TeamID;
 
-            //タイトル
-            if(!isDuringGame)
-            {
-                ViewData[ViewDataConstant.Title] = "スターティングオーダー";
-            }
-            else
-            {
-                ViewData[ViewDataConstant.Title] = "選手交代";
-            }
-
             //守備のみ
             OnlyDefenseList = new List<Models.Order>();
 
@@ -189,29 +182,33 @@ namespace Bmcs.Pages.Order
                 OrderList.Remove(order);
             }
 
-            //システム管理データ
-            if (isDuringGame)
-            {
-                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.OrderDuringGame);
-            }
-            else
-            {
-                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.OrderBeforeGame);
-            }
+            //タイトル・ヘルプ
+            await SetPageDataAsync();
 
             return Page();
+        }
+
+        /// <summary>
+        /// 画面表示に必要なデータ（タイトル・ヘルプ）をセットする
+        /// ※入力エラーで return Page() する場合も、これを呼ばないと見出しとヘルプが消える
+        /// </summary>
+        private async Task SetPageDataAsync()
+        {
+            //タイトル
+            ViewData[ViewDataConstant.Title] = IsDuringGame ? "選手交代" : "スターティングオーダー";
+
+            //システム管理データ
+            SystemAdmin = await Context.SystemAdmins.FindAsync(IsDuringGame
+                                                                ? SystemAdminClass.OrderDuringGame
+                                                                : SystemAdminClass.OrderBeforeGame);
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return Page();
-                }
-
                 //再取得
+                //※入力エラーで再表示する場合も画面にチーム名等が必要なため、入力チェックより先に取得する
                 Game = await Context.Games
                     .Include(m => m.Team).FirstOrDefaultAsync(m => m.GameID == Game.GameID);
 
@@ -224,12 +221,19 @@ namespace Bmcs.Pages.Order
                 //チームID
                 base.TeamID = Game.TeamID;
 
+                if (!ModelState.IsValid)
+                {
+                    await SetPageDataAsync();
+                    return Page();
+                }
+
                 //未入力チェック
                 if (OrderList.Any(r => r.MemberID == null || r.PositionClass == null)
                     || OnlyDefenseList.Any(r => r.MemberID == null || r.PositionClass == null))
                 {
                     ModelState.AddModelError(nameof(Models.Game) + "." + nameof(Models.Game.GameID), "未指定の行があります。不要であれば行削除してください。");
 
+                    await SetPageDataAsync();
                     return Page();
                 }
 
@@ -239,6 +243,7 @@ namespace Bmcs.Pages.Order
                 {
                     ModelState.AddModelError(nameof(Models.Game) + "." + nameof(Models.Game.GameID), "投手は必ず一人指定してください。");
 
+                    await SetPageDataAsync();
                     return Page();
                 }
 
@@ -248,6 +253,7 @@ namespace Bmcs.Pages.Order
                 {
                     ModelState.AddModelError(nameof(Models.Game) + "." + nameof(Models.Game.GameID), "捕手は必ず一人指定してください。");
 
+                    await SetPageDataAsync();
                     return Page();
 
                 }

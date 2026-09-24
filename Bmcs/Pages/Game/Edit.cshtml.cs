@@ -77,6 +77,21 @@ namespace Bmcs.Pages.Game
             {
                 if (!ModelState.IsValid)
                 {
+                    //再表示に使うチームは、POST 値ではなく DB の TeamID から取得する
+                    //※TeamID は画面から送っていないが、POST に追加されればそのまま結び付けられるため、
+                    //  書き換えで他チーム（非公開を含む）のチーム名を表示できてしまう
+                    var dbTeamID = await Context.Games
+                                        .Where(r => r.GameID == Game.GameID)
+                                        .Select(r => r.TeamID)
+                                        .FirstOrDefaultAsync();
+
+                    if (!base.IsMyTeamData(dbTeamID))
+                    {
+                        return NotFound();
+                    }
+
+                    Game.TeamID = dbTeamID;
+
                     //再表示に必要なデータを取り直す
                     //※取り直さないと、画面でチーム名を参照している箇所で例外となる
                     await SetPageDataAsync();

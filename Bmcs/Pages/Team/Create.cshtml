@@ -88,10 +88,15 @@
             <label class="flex cursor-pointer items-start gap-3">
                 <input class="mt-0.5 size-5 shrink-0 rounded border-slate-300 text-sky-700 focus:ring-sky-500" asp-for="Team.PublicFLG" />
                 <span>
-                    <span class="block font-semibold text-slate-800">@Html.DisplayNameFor(model => model.Team.PublicFLG)（おすすめ）</span>
+                    @*
+                        ラベルは DisplayNameFor だと「公開フラグ」というシステム用語になるため直接書く。
+                        公開範囲は「他チーム」ではなく、ログインしていない人を含む誰でも（Team/Index・Score/Index 等は未ログインで閲覧可）。
+                        非公開チームは他チームとのメッセージのやり取りができない（Message/Index）。
+                    *@
+                    <span class="block font-semibold text-slate-800">チームを公開する（おすすめ）</span>
                     <span class="mt-1 block text-sm text-slate-600">
-                        公開すると、他チームとメッセージのやり取りができ、成績を比較できます。試合結果とメンバーも他チームから見えるようになります。
-                        <br />公開しても機能が制限されることはありません。あとから変更できます。
+                        公開すると、成績・試合結果・メンバーを<strong class="font-semibold text-slate-800">誰でも（ログインしていない人も）</strong>見られるようになり、他チームとメッセージのやり取りができます。
+                        <br />非公開の場合、他チームとのメッセージのやり取りはできません。あとから変更できます。
                     </span>
                 </span>
             </label>
@@ -109,7 +114,7 @@
 
             <div class="space-y-6 border-t border-slate-200 px-6 py-6">
                 <p class="text-sm text-slate-500">
-                    以下は、公開チームとした場合に他チームから見える情報です。対戦相手を募集するときの参考情報になります。
+                    メールアドレス以外は、公開チームにした場合に誰でも見られる情報です。対戦相手を募集するときの参考情報になります。
                 </p>
 
                 <div>
@@ -154,7 +159,7 @@
                     <label asp-for="Team.TeamEmailAddress" class="block text-sm font-semibold text-slate-800"></label>
                     <p class="mt-0.5 text-sm text-slate-500">
                         <strong class="font-semibold text-slate-700">チームパスワードを忘れたときの再設定に使用します。</strong>
-                        非公開チームの場合も、他チームには公開されません。
+                        公開チームにした場合も、他チームには表示されません。
                     </p>
                     <input asp-for="Team.TeamEmailAddress" class="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" />
                     <span asp-validation-for="Team.TeamEmailAddress" class="mt-1 block text-sm text-red-600"></span>

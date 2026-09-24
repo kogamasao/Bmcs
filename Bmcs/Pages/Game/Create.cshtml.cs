@@ -95,6 +95,14 @@ namespace Bmcs.Pages.Game
             int gameID;
             try
             {
+                //自チーム以外には試合を登録できない（管理者は除く）
+                //※入力エラーでの再表示より先に確認する。後だと、POST する TeamID を書き換えることで
+                //  再表示の画面に他チーム（非公開を含む）のチーム名を表示できてしまう
+                if (!base.IsMyTeamData(Game.TeamID))
+                {
+                    return NotFound();
+                }
+
                 if (!ModelState.IsValid)
                 {
                     //再表示に必要なデータを取り直す
@@ -102,12 +110,6 @@ namespace Bmcs.Pages.Game
                     await SetPageDataAsync();
 
                     return Page();
-                }
-
-                //自チーム以外には試合を登録できない（管理者は除く）
-                if (!base.IsMyTeamData(Game.TeamID))
-                {
-                    return NotFound();
                 }
 
                 //データ作成

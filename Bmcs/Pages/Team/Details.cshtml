@@ -57,7 +57,8 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Team.TeamNumber)
         </dd>
-        @if (Model.IsLogin())
+        @* メールアドレスは自チーム（と管理者）にだけ表示する。他チームには公開しない *@
+        @if (Model.IsMyTeamData(Model.Team.TeamID))
         {
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Team.TeamEmailAddress)

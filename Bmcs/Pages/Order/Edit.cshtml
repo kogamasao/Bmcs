@@ -30,7 +30,7 @@
     }
 
     <form method="post" class="mt-6">
-        <span asp-validation-for="Game.GameID" class="mb-2 block text-sm text-red-600"></span>
+        @* エラーはすべて一覧にまとめて出す（Game.GameID 単体の表示も置くと、同じ文言が2回並ぶため置かない） *@
         <div asp-validation-summary="All" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
         <input type="hidden" asp-for="Game.GameID" />
         <input type="hidden" asp-for="GameSceneID" />

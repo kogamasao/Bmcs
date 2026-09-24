@@ -30,10 +30,7 @@
                     メンバーを追加する
                 </a>
             }
-            else
-            {
-                <p class="mt-2 text-slate-600">このチームはまだメンバーを公開していません。</p>
-            }
+            @* 他チームの場合は見出しのみ。非公開チームはページ自体を表示しない（NotFound）ため「公開していません」は出さない *@
 
             @* 空状態でも必ず脱出口を出す（以前はヘッダ以外に戻る手段が無かった） *@
             <div class="mt-6 flex flex-wrap justify-center gap-3">
@@ -51,7 +48,7 @@
             @if (Model.IsMyTeam)
             {
                 <a class="inline-flex items-center justify-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800" asp-page="Create">
-                    メンバーを追加
+                    メンバーを追加する
                 </a>
 
                 @*

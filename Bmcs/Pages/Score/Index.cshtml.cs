@@ -96,6 +96,14 @@ namespace Bmcs.Pages.Score
                 }
 
                 teamID = HttpContext.Session.GetString(SessionConstant.TeamID);
+
+                //チーム未所属（ユーザ登録直後など）の場合、teamID が空のまま下の絞り込みに進むと
+                //「PublicFLG == false の全チーム」＝非公開チームの成績がすべて表示されてしまう。
+                //非公開の全体集計は管理者のみ許可する。
+                if (string.IsNullOrEmpty(teamID) && !base.IsAdmin())
+                {
+                    return RedirectToPage("/Team/Create");
+                }
             }
 
             if (!string.IsNullOrEmpty(teamID))

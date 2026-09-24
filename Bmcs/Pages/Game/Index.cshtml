@@ -32,10 +32,7 @@
                     試合を登録する
                 </a>
             }
-            else
-            {
-                <p class="mt-2 text-slate-600">このチームはまだ試合を公開していません。</p>
-            }
+            @* 他チームの場合は見出しのみ。非公開チームはページ自体を表示しない（NotFound）ため「公開していません」は出さない *@
 
             @* 空状態でも必ず脱出口を出す *@
             <div class="mt-6 flex flex-wrap justify-center gap-3">
@@ -67,16 +64,14 @@
             </a>
         </div>
 
-        //確定していない試合は成績に反映されないため、件数を数えて案内する
-        var beforeFixCount = Model.Game.Count(r => r.StatusClass == StatusClass.BeforeFix);
-
-        @if (Model.IsMyTeam && beforeFixCount > 0)
+        //確定していない試合は成績に反映されないため、件数（全ページ分）を案内する
+        @if (Model.IsMyTeam && Model.BeforeFixGameCount > 0)
         {
             <div class="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-5">
-                <h2 class="font-bold text-amber-900">確定していない試合が@(beforeFixCount)件あります</h2>
+                <h2 class="font-bold text-amber-900">確定していない試合が@(Model.BeforeFixGameCount)件あります</h2>
                 <p class="mt-1 text-sm text-amber-900/80">
                     <strong class="font-semibold">「確定前」の試合は成績ページに集計されません。</strong>
-                    下の「試合結果編集」から内容を確認し、画面下部の「確定」を押してください。
+                    一覧の「試合結果編集」を開き、一番下の「確定する」を押してください。
                 </p>
             </div>
         }

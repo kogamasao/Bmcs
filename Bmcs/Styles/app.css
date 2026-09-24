@@ -114,9 +114,14 @@
         color: var(--color-red-600);
     }
 
+    /*
+     * ※!important が必要。各入力欄には border-slate-300（utilities レイヤ）が付いており、
+     *   components レイヤのこの指定より優先されて赤枠が出なかった。
+     *   outline もフォーカス中は focus:outline-none で消されるため同様に指定する。
+     */
     .input-validation-error {
-        border-color: var(--color-red-500);
-        outline: 1px solid var(--color-red-500);
+        border-color: var(--color-red-500) !important;
+        outline: 1px solid var(--color-red-500) !important;
     }
 
     .validation-summary-errors {

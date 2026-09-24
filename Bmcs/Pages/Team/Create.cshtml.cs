@@ -53,6 +53,20 @@ namespace Bmcs.Pages.Team
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!base.IsLogin())
+            {
+                return ReLogin();
+            }
+
+            //既にチームに所属している場合は作成させない（OnGet と同じ判定）
+            //※作成直後のブラウザバックでフォームを再送信すると、2つ目のチームが作られて
+            //  所属がそちらへ移り、元のチームが所属ユーザ0になってしまう
+            if (!base.IsAdmin()
+                && !string.IsNullOrEmpty(HttpContext.Session.GetString(SessionConstant.TeamID)))
+            {
+                return RedirectToPage("./Edit");
+            }
+
             //入力エラーでの再表示でもヘルプを表示できるようにする
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamCreate);
 

@@ -52,7 +52,8 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Team[0].TeamNumber)
                 </th>
-                @if (Model.IsLogin())
+                @* メールアドレスは他チームに公開しない（パスワード再設定用であり、連絡にはメッセージ機能を使う） *@
+                @if (Model.IsAdmin())
                 {
                     <th>
                         @Html.DisplayNameFor(model => model.Team[0].TeamEmailAddress)
@@ -116,7 +117,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.TeamNumber)
                 </td>
-                @if (Model.IsLogin())
+                @if (Model.IsAdmin())
                 {
                     <td>
                         @Html.DisplayFor(modelItem => item.TeamEmailAddress)

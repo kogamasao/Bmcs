@@ -123,11 +123,11 @@ namespace Bmcs.Models
             }
         }
 
-        [Display(Name = "試合入力タイプ")]
+        [Display(Name = "入力方式")]
         public GameInputTypeClass? GameInputTypeClass { get; set; }
 
         [NotMapped]
-        [Display(Name = "試合入力タイプ")]
+        [Display(Name = "入力方式")]
         public string GameInputTypeClassName
         {
             get

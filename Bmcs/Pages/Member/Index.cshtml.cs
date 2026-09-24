@@ -79,7 +79,9 @@ namespace Bmcs.Pages.Member
 
             Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID);
 
-            if (Team == null)
+            //非公開・削除済みの他チームは、チーム名も表示しない（URL直接指定での確認を防ぐ）
+            if (Team == null
+                || (!base.IsAdmin() && !IsMyTeam && (Team.DeleteFLG || !Team.PublicFLG)))
             {
                 return NotFound();
             }
