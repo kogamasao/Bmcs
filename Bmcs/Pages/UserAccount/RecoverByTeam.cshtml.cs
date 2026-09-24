@@ -291,11 +291,14 @@ namespace Bmcs.Pages.UserAccount
             //※IP単位はリセットしない（正規の認証を混ぜてIP制限を消せてしまうため）
             RateLimiter.Reset(teamKey);
 
-            //復旧対象はメールアドレス未登録のユーザのみとする（管理者は除外）
+            //復旧対象はメールアドレス未登録のユーザのみとする（管理者・体験用ユーザは除外）
+            //※体験用ユーザは誰でもログインできる共有アカウント。サンプルチームのチームパスワードは推測しやすく、
+            //  パスワードを再設定されると「サンプルチームで体験する」が全員に対して動かなくなる
             UserAccountList = await Context.UserAccounts
                 .Where(r => r.TeamID == team.TeamID
                          && r.DeleteFLG == false
                          && r.UserAccountID != SystemConstant.AdminUserAccountID
+                         && r.UserAccountID != SystemConstant.SampleUserAccountID
                          //空白のみのメールアドレスも未登録として扱う（編集画面の判定と揃える）
                          && (r.EmailAddress == null || r.EmailAddress.Trim() == ""))
                 .OrderBy(r => r.UserAccountID)

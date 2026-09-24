@@ -39,11 +39,10 @@
 
 ### 2.1 未移行の画面
 移行が終わったら Bootstrap と `site.css`（`_Layout.cshtml`・`_Help.cshtml` 等）を削除する。
-※2026-09-24 に試合まわりの残り（`Game/Edit`・`Game/Details`・`Game/Delete`・`InningScore/Index`）・メッセージ（`Message/Index`）・チーム（`Team/Index`・`Details`・`Edit`・`Delete`）・ユーザ情報（`UserAccount/Edit`）を移行済み。
+※2026-09-24 に試合まわりの残り（`Game/Edit`・`Game/Details`・`Game/Delete`・`InningScore/Index`）・メッセージ（`Message/Index`）・チーム（`Team/Index`・`Details`・`Edit`・`Delete`）・ユーザ情報（`UserAccount/Edit`）・アカウント復旧（6画面）を移行済み。
 
 | 区分 | 画面 | 移行時にあわせて対応すること |
 | --- | --- | --- |
-| アカウント復旧 | `UserAccount/ForgotPassword`・`ForgotUserAccountID`・`ResetPassword`・`RecoverByTeam`、`Team/ForgotTeamPassword`・`ResetTeamPassword` | — |
 | お問い合わせ・アンケート | `Inquiry/Create`・`Survey/Answer` | — |
 | 規約・その他 | `Term`・`Privacy`・`Error` | — |
 | 管理者のみ | `UserAccount/Index`・`Details`・`Delete`、`Inquiry/Index`・`Details`・`Delete`、`Survey/Result` | 利用者の目に触れないため最後でよい |
