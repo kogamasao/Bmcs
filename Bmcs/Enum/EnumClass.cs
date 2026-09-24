@@ -607,13 +607,14 @@ namespace Bmcs.Enum
         TopInformation = 1,
         [Display(Name = "ユーザ作成")]
         UserAccountCreate = 2,
-        [Display(Name = "ユーザ情報編集")]
+        //※ヘルプの見出しに使うため、画面のタイトルに合わせる
+        [Display(Name = "ユーザ情報")]
         UserAccountEdit = 3,
         [Display(Name = "チーム一覧")]
         TeamIndex = 4,
         [Display(Name = "チーム作成")]
         TeamCreate = 5,
-        [Display(Name = "チーム情報編集")]
+        [Display(Name = "チーム情報変更")]
         TeamEdit = 6,
         [Display(Name = "チーム情報")]
         TeamDetails = 7,
@@ -658,7 +659,7 @@ namespace Bmcs.Enum
         MyTeamTeamScore = 26,
         [Display(Name = "公開チーム成績")]
         PublicTeamScore = 27,
-        [Display(Name = "メッセージ(投稿)")]
+        [Display(Name = "メッセージ")]
         PostMessage= 28,
         [Display(Name = "メッセージ(返信)")]
         ReplyMessage = 29,

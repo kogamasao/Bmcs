@@ -38,8 +38,9 @@ namespace Bmcs.Pages.Top
 
             int? messageID = null;
 
+            //※送信元チームが非公開・削除済みの公開メッセージと、削除済みのメッセージは出さない（Message/Index と同じ判定）
             var tempMessageList = await Context.Messages
-                                    .Where(r => r.PublicFLG)
+                                    .Where(r => r.PublicFLG && !r.DeleteFLG && r.Team.PublicFLG && !r.Team.DeleteFLG)
                                     .ToListAsync();
 
             var messageIDList = tempMessageList.Select(r => new { MessageID = r.ParentMessageID == null ? r.MessageID : r.ParentMessageID.NullToZero() })
@@ -49,14 +50,14 @@ namespace Bmcs.Pages.Top
             PublicMessage = await Context.Messages
                                     .Include(r => r.UserAccount)
                                     .Include(r => r.Team)
-                                    .Where(r => messageIDList.Contains(r.MessageID))
+                                    .Where(r => messageIDList.Contains(r.MessageID) && !r.DeleteFLG && r.Team.PublicFLG && !r.Team.DeleteFLG)
                                     .OrderByDescending(r => r.UpdateDatetime)
                                     .FirstOrDefaultAsync();
 
             if(base.IsLogin())
             { 
                 tempMessageList = await Context.Messages
-                                        .Where(r => (!r.PublicFLG) && (r.TeamID == HttpContext.Session.GetString(SessionConstant.TeamID) || r.PrivateTeamID == HttpContext.Session.GetString(SessionConstant.TeamID)))
+                                        .Where(r => (!r.PublicFLG) && !r.DeleteFLG && (r.TeamID == HttpContext.Session.GetString(SessionConstant.TeamID) || r.PrivateTeamID == HttpContext.Session.GetString(SessionConstant.TeamID)))
                                         .ToListAsync();
 
                 messageIDList = tempMessageList.Select(r => new { MessageID = r.ParentMessageID == null ? r.MessageID : r.ParentMessageID.NullToZero() }).GroupBy(r => r.MessageID).Select(r => messageID = r.Key);

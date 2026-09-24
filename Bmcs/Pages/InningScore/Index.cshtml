@@ -147,7 +147,8 @@
     @if (!hasScene)
     {
         <div class="mt-6 rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
-            <p class="font-bold text-slate-900">まだプレーが記録されていません</p>
+            @* 絞り込み中は「このイニングに無い」、そうでなければ「記録が無い」（「まだ」は今後記録されるように読めるため使わない） *@
+            <p class="font-bold text-slate-900">@(isFiltered ? "このイニングのプレーの記録はありません" : "プレーの記録はありません")</p>
         </div>
     }
 

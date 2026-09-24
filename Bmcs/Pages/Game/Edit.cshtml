@@ -98,11 +98,11 @@
                 <dl class="grid gap-4 sm:grid-cols-2">
                     <div>
                         <dt class="text-sm font-semibold text-slate-800">@Html.DisplayNameFor(model => model.Game.BatFirstBatSecondClass)</dt>
-                        <dd class="mt-1 text-slate-700">@Model.Game.BatFirstBatSecondClassName</dd>
+                        <dd class="mt-1 text-slate-700">@(string.IsNullOrEmpty(Model.Game.BatFirstBatSecondClassName) ? "未設定" : Model.Game.BatFirstBatSecondClassName)</dd>
                     </div>
                     <div>
                         <dt class="text-sm font-semibold text-slate-800">@Html.DisplayNameFor(model => model.Game.GameInputTypeClass)</dt>
-                        <dd class="mt-1 text-slate-700">@Model.Game.GameInputTypeClassName</dd>
+                        <dd class="mt-1 text-slate-700">@(string.IsNullOrEmpty(Model.Game.GameInputTypeClassName) ? "未設定" : Model.Game.GameInputTypeClassName)</dd>
                     </div>
                 </dl>
                 <p class="mt-4 text-sm text-slate-500">試合の入力を開始したため、先攻・後攻と入力方式は変更できません。</p>

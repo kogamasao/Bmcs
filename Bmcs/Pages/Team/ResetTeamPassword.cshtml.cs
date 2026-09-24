@@ -95,7 +95,8 @@ namespace Bmcs.Pages.Team
                                        && r.DeleteFLG == false
                                        && r.SystemDataFLG == false);
 
-            if (team == null)
+            //サンプルチームは再設定できない（修正前に発行されたトークンも拒否する）
+            if (team == null || IsSampleTeamID(team.TeamID))
             {
                 IsValidToken = false;
 

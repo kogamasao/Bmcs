@@ -78,8 +78,9 @@ namespace Bmcs.Models
         [Display(Name = "メールアドレス")]
         public string TeamEmailAddress { get; set; }
 
+        //※以前は「メッセージ」で、チーム情報の「メッセージを送る」ボタンの近くに出ると、届いたメッセージのように読めた
         [DataType(DataType.MultilineText)]
-        [Display(Name = "メッセージ")]
+        [Display(Name = "チーム紹介")]
         public string MessageDetail { get; set; }
 
         /// <summary>

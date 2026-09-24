@@ -70,8 +70,9 @@ namespace Bmcs.Models
 
         /// <summary>
         /// システム管理表示用
+        /// ※POST の値を結び付けない（以前は [BindProperty] で、送信した値がヘルプに HTML のまま表示された。
+        /// 　ヘルプは Html.Raw で表示するため、画面を編集するフォームは無く、結び付ける必要も無い）
         /// </summary>
-        [BindProperty]
         public Models.SystemAdmin SystemAdmin { get; set; }
 
         /// <summary>
@@ -646,7 +647,34 @@ namespace Bmcs.Models
         /// </summary>
         public bool IsSampleUser()
         {
-            return HttpContext.Session.GetString(SessionConstant.UserAccountID) == SystemConstant.SampleUserAccountID;
+            return IsSampleUserAccountID(HttpContext.Session.GetString(SessionConstant.UserAccountID));
+        }
+
+        /// <summary>
+        /// 体験用ユーザのユーザIDか
+        /// ※DBの照合順序は大文字小文字・末尾空白を区別しないため、同じ扱いで比較する
+        /// </summary>
+        public static bool IsSampleUserAccountID(string userAccountID)
+        {
+            return string.Equals(userAccountID?.Trim(), SystemConstant.SampleUserAccountID, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// サンプルチームのチームIDか
+        /// ※サンプルチームのチームパスワードは推測しやすく、参加されるとチーム情報を書き換えられるため、
+        /// 　参加・チーム情報の変更・チームパスワードの再設定を禁止する（管理者は除く）
+        /// </summary>
+        public static bool IsSampleTeamID(string teamID)
+        {
+            return string.Equals(teamID?.Trim(), SystemConstant.SampleTeamID, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// サンプルチームか（ビューから呼ぶ用）
+        /// </summary>
+        public bool IsSampleTeam(string teamID)
+        {
+            return IsSampleTeamID(teamID);
         }
 
         /// <summary>
@@ -705,7 +733,7 @@ namespace Bmcs.Models
 
         /// <summary>
         /// ヘッダメニューのリンク一覧を取得する
-        /// ※Bootstrap版・Tailwind版の両レイアウトから使用する。
+        /// ※レイアウト（_LayoutTailwind.cshtml）から使用する。
         ///   レイアウトごとにリンクを書くと片方だけ写し漏れるため、ここに1本化する。
         /// </summary>
         /// <returns></returns>

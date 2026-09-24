@@ -8,8 +8,8 @@
     var inputClass = "mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500";
     var selectClass = "mt-1 block w-full self-start rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500";
 
-    //体験用ユーザはサンプルチームの設定を変更できない（EditModel.OnPostAsync でも拒否している）
-    var isSample = Model.IsSampleUser();
+    //サンプルチームの設定は変更できない（EditModel.OnPostAsync でも拒否している。管理者は除く）
+    var isSample = Model.IsSampleUser() || (!Model.IsAdmin() && Model.IsSampleTeam(Model.Team.TeamID));
 }
 
 <div class="mx-auto max-w-3xl px-4 py-8">
@@ -35,6 +35,9 @@
             チームIDは作成後に変更できず、以前は作成後に確認できる画面が無かった（代表者が控え忘れると、
             チームメイトに伝えられない）。チームメイトの参加に使うため、ここで確認できるようにする。
         *@
+        @* サンプルチームでは表示しない（チームIDとチームパスワードを伝えて参加を促す案内になってしまうため） *@
+        @if (!isSample)
+        {
         <div class="rounded-xl border border-sky-200 bg-sky-50 p-5">
             <p class="text-sm font-semibold text-sky-900">@Html.DisplayNameFor(model => model.Team.TeamID)</p>
             <p class="mt-1 font-mono text-lg font-bold text-slate-900">@Model.Team.TeamID</p>
@@ -43,6 +46,7 @@
                 チームパスワードと一緒に伝えてください。
             </p>
         </div>
+        }
 
         <fieldset disabled="@isSample">
         <div class="mt-6 space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -93,7 +97,7 @@
                     @* チーム作成（Team/Create）と同じ説明。「公開フラグ」というシステム用語は出さない *@
                     <span class="block font-semibold text-slate-800">チームを公開する（おすすめ）</span>
                     <span class="mt-1 block text-sm text-slate-600">
-                        公開すると、成績・試合結果・メンバーを<strong class="font-semibold text-slate-800">誰でも（ログインしていない人も）</strong>見られるようになり、他チームとメッセージのやり取りができます。
+                        公開すると、成績・試合結果・メンバー・チーム情報（代表者名・活動拠点・チーム紹介など）を<strong class="font-semibold text-slate-800">誰でも（ログインしていない人も）</strong>見られるようになり、他チームとメッセージのやり取りができます。
                         <br />非公開の場合、他チームとのメッセージのやり取りはできません。
                     </span>
                 </span>

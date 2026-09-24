@@ -60,9 +60,11 @@ namespace Bmcs.Pages.Team
 
         public async Task<IActionResult> OnPostAsync()
         {
-            //体験用ユーザはサンプルチームの設定を変更できない
-            //（誰でもログインできるため、チーム名や公開設定を書き換えられると公開一覧にそのまま出る）
-            if (base.IsSampleUser())
+            //サンプルチームの設定は変更できない（管理者は除く）
+            //（体験用ユーザは誰でもログインでき、チーム名や公開設定を書き換えられると公開一覧にそのまま出る。
+            //  体験用ユーザ以外でも、推測しやすいチームパスワードで参加すれば変更できたため、チームでも判定する）
+            if (base.IsSampleUser()
+                || (!base.IsAdmin() && IsSampleTeamID(HttpContext.Session.GetString(SessionConstant.TeamID))))
             {
                 return NotFound();
             }

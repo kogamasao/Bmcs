@@ -60,7 +60,15 @@
             //※以前は Bootstrap の JS が開閉していた。Bootstrap を外した後も動くよう、開閉だけをここで行う。
             //  見た目は app.css の .help-body で定義している（本文の整理は課題 M-2）
             dialog.querySelectorAll("[data-toggle][data-target]").forEach(function (button) {
-                var target = dialog.querySelector(button.getAttribute("data-target"));
+                var target;
+
+                //本文はDBの管理者入力のため、セレクタとして不正な値でも他の処理（閉じる操作）を止めない
+                try {
+                    target = dialog.querySelector(button.getAttribute("data-target"));
+                }
+                catch (e) {
+                    return;
+                }
 
                 if (!target) {
                     return;

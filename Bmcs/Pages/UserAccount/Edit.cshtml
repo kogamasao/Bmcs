@@ -101,18 +101,24 @@
             {
                 <details class="group mt-4 rounded-lg border border-slate-200" open="@hasTeamError">
                     <summary class="flex cursor-pointer items-center justify-between gap-4 px-4 py-3 text-sm font-semibold text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
-                        <span>別のチームに移る</span>
+                        <span>@(Model.UserAccount.Team != null ? "別のチームに移る" : "チームに参加する")</span>
                         <svg class="size-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
                     </summary>
                     <div class="space-y-5 border-t border-slate-200 px-4 py-4">
                         <p class="text-sm text-slate-600">
-                            移り先のチームの代表者から、チームIDとチームパスワードを聞いて入力してください。
-                            移ると、<strong class="font-semibold text-slate-800">今のチームのデータは編集できなくなります</strong>。
+                            チームの代表者から、チームIDとチームパスワードを聞いて入力してください。
+                            @if (Model.UserAccount.Team != null)
+                            {
+                                <text>移ると、<strong class="font-semibold text-slate-800">今のチームのデータは編集できなくなります</strong>。</text>
+                            }
                         </p>
                         <div>
                             <label asp-for="UserAccount.TeamID" class="block text-sm font-semibold text-slate-800"></label>
                             <input asp-for="UserAccount.TeamID" class="@inputClass" autocomplete="off" />
-                            <p class="mt-1 text-sm text-slate-500">空にして保存すると、チームから抜けます。</p>
+                            @if (Model.UserAccount.Team != null)
+                            {
+                                <p class="mt-1 text-sm text-slate-500">空にして保存すると、チームから抜けます。</p>
+                            }
                         </div>
                         <div>
                             <label asp-for="UserAccount.TeamPassword" class="block text-sm font-semibold text-slate-800"></label>

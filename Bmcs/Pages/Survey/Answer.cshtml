@@ -15,12 +15,11 @@
     {
         <div class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-5" role="status">
             <p class="text-sm text-emerald-900">
-                ご回答ありがとうございました。
-                <br />いただいたご意見は、今後の改善の参考にさせていただきます。
+                いただいたご意見は、今後の改善の参考にさせていただきます。
             </p>
         </div>
         <div class="mt-6">
-            <a class="inline-flex items-center justify-center rounded-lg bg-sky-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-800" asp-page="/Top/Index">トップページへ</a>
+            <a class="inline-flex items-center justify-center rounded-lg bg-sky-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-800" asp-page="/Top/Index">トップへ</a>
         </div>
     }
     else
@@ -44,7 +43,8 @@
                     <input type="hidden" name="AnswerInputList[@i].SurveyQuestionID" value="@question.SurveyQuestionID" />
 
                     <fieldset class="js-survey-question rounded-xl border border-slate-200 bg-white p-5 shadow-sm" data-question-index="@i" data-max-select="@(question.MaxSelectCount?.ToString() ?? "")">
-                        <legend class="sr-only">@question.QuestionText</legend>
+                        @* 必須・任意も読み上げられるよう legend に含める（下の見出しは画面表示用で aria-hidden） *@
+                        <legend class="sr-only">@question.QuestionText（@(question.RequiredFLG ? "必須" : "任意")）</legend>
                         <p class="flex flex-wrap items-center gap-2 font-semibold text-slate-900" aria-hidden="true">
                             <span>@question.QuestionText</span>
                             @if (question.RequiredFLG)

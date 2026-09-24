@@ -15,11 +15,11 @@
     <dl class="mt-6 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
             <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.GameDate)</dt>
-            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.GameDate)</dd>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Model.Game.GameDateFormat</dd>
         </div>
         <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
             <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.GameClass)</dt>
-            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.GameClass)</dd>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Model.Game.GameClassName</dd>
         </div>
         <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
             <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.OpponentTeamName)</dt>

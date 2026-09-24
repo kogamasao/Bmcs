@@ -22,13 +22,25 @@
         }
         else if (Model.IsAuthenticated)
         {
-            <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900" role="status">
+            @* 案内のため青（完了を表す緑ではない。7.15 の色分け） *@
+            <div class="rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-900" role="status">
                 <p>
                     チーム「@Model.RecoverTeamName」のうち、メールアドレスを登録していないユーザの一覧です。
                     <br />ご自身のユーザIDを選び、新しいパスワードを設定してください。
-                    <br />一覧に無い場合はメールアドレスが登録済みですので、「パスワードをお忘れの場合」からお手続きください。
+                    <br />一覧に無い場合は、メールアドレスを登録済みか、このチームに所属していない可能性があります。
+                    メールアドレスを登録済みの場合は、<a asp-page="./ForgotPassword">「パスワードをお忘れの場合」</a>からお手続きください。
                 </p>
             </div>
+            @* 対象のユーザがいない場合は、再設定の入力欄を出さない（以前は0人でも入力欄とボタンが出ていた） *@
+            @if (!Model.UserAccountList.Any())
+            {
+                <p class="rounded-xl border border-slate-200 bg-white p-5 text-sm text-slate-700">このチームには、メールアドレスを登録していないユーザはいません。</p>
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Index">ログイン画面へ</a>
+                </div>
+            }
+            else
+            {
             <form method="post" class="space-y-5" asp-page-handler="Reset">
                 <div asp-validation-summary="ModelOnly" class="rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
                 <input type="hidden" asp-for="RecoverTeamID" />
@@ -50,10 +62,6 @@
                                 <span class="text-slate-600">@userAccount.UserAccountName</span>
                             </label>
                         }
-                        @if (!Model.UserAccountList.Any())
-                        {
-                            <p class="px-4 py-3 text-sm text-slate-600">このチームには、メールアドレスを登録していないユーザはいません。</p>
-                        }
                     </div>
                     <span asp-validation-for="SelectedUserAccountID" class="mt-1 block text-sm text-red-600"></span>
                 </div>
@@ -72,6 +80,7 @@
                     <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Index">戻る</a>
                 </div>
             </form>
+            }
         }
         else
         {
@@ -86,7 +95,7 @@
                 <p>
                     ※チームパスワードを知っている方は、同じチームのメールアドレス未登録ユーザのパスワードも再設定できます。
                     <br />チームパスワードはチーム内で慎重に管理してください。
-                    <br />※今後の復旧のために、ログイン後はユーザ編集画面からメールアドレスのご登録をおすすめします。
+                    <br />※今後の復旧のために、ログイン後は「ユーザ情報」からメールアドレスのご登録をおすすめします。
                 </p>
             </div>
             <form method="post" class="space-y-5" asp-page-handler="Authenticate">

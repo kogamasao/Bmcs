@@ -83,6 +83,15 @@ namespace Bmcs.Pages.UserAccount
                 return NotFound();
             }
 
+            //本人以外のユーザは更新できない（管理者は除く）
+            //※入力エラーでの再表示（ShowErrorAsync）は POST されたユーザIDの所属チームを表示するため、その前に確認する。
+            //  後だと、ユーザIDを書き換えて入力エラーを起こすことで、他人の所属チーム（非公開を含む）が見えてしまう
+            if (!base.IsAdmin()
+                && UserAccount?.UserAccountID != HttpContext.Session.GetString(SessionConstant.UserAccountID))
+            {
+                return NotFound();
+            }
+
             if (!ModelState.IsValid)
             {
                 return await ShowErrorAsync();
@@ -120,6 +129,14 @@ namespace Bmcs.Pages.UserAccount
                 if (userAccount.TeamID != UserAccount.TeamID
                     && !string.IsNullOrEmpty(UserAccount.TeamID))
                 {
+                    //サンプルチームには参加できない（管理者は除く）
+                    if (!base.IsAdmin() && IsSampleTeamID(UserAccount.TeamID))
+                    {
+                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "体験用のチームには参加できません。");
+
+                        return await ShowErrorAsync();
+                    }
+
                     //※削除済みのチームには参加できない（以前は削除済みでも参加できた）。
                     //  チームIDの有無を判別できないよう、存在しない場合もパスワード誤りと同じ文言にする
                     var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID && !r.DeleteFLG);
@@ -130,6 +147,9 @@ namespace Bmcs.Pages.UserAccount
 
                         return await ShowErrorAsync();
                     }
+
+                    //チームIDは DB の値で保存する（UserAccount/Create と同じ理由）
+                    UserAccount.TeamID = dbTeam.TeamID;
                 }
 
                 //POST値セット

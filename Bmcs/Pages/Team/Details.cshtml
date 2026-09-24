@@ -22,7 +22,8 @@
         <a class="@secondaryButton" asp-page="/Game/Index" asp-route-teamID="@Model.Team.TeamID">試合</a>
         <a class="@secondaryButton" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@Model.Team.TeamID" asp-route-isPublic="@true" asp-route-teamCategoryClass="@TeamCategoryClass.All" asp-route-useBallClass="@UseBallClass.All">成績</a>
         <a class="@secondaryButton" asp-page="/Member/Index" asp-route-teamID="@Model.Team.TeamID">メンバー</a>
-        @if (Model.MyTeam != null && Model.MyTeam.PublicFLG && Model.MyTeam.TeamID != Model.Team.TeamID)
+        @* 体験用ユーザは実在のチームへメッセージを送れない（Message/Index の IsTeamOnly） *@
+        @if (Model.MyTeam != null && Model.MyTeam.PublicFLG && Model.MyTeam.TeamID != Model.Team.TeamID && !Model.IsSampleUser())
         {
             <a class="@secondaryButton" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-privateTeamID="@Model.Team.TeamID">メッセージを送る</a>
         }

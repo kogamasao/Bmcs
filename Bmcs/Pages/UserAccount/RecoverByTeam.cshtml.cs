@@ -282,7 +282,7 @@ namespace Bmcs.Pages.UserAccount
                 RateLimiter.AddFailure(ipKey, SystemConstant.RecoverLimitMinute);
                 RateLimiter.AddFailure(teamKey, SystemConstant.RecoverLimitMinute);
 
-                ModelState.AddModelError(nameof(TeamPassword), "チームID、またはチームパスワードが間違っています。");
+                ModelState.AddModelError(nameof(TeamPassword), "チームIDまたはチームパスワードが間違っています。");
 
                 return false;
             }

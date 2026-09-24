@@ -50,7 +50,8 @@ namespace Bmcs.Pages.Inquiry
 
             Inquiry = new Models.Inquiry();
             
-            if(base.IsLogin())
+            //※体験用ユーザは共有アカウントのため、登録されているメールアドレスを出さない（返信が本人に届かない）
+            if(base.IsLogin() && !base.IsSampleUser())
             {
                 var userAccount = await Context.UserAccounts.FindAsync(HttpContext.Session.GetString(SessionConstant.UserAccountID));
 
