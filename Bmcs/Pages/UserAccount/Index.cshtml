@@ -2,22 +2,24 @@
 @model Bmcs.Pages.UserAccount.IndexModel
 
 @{
+    Layout = "_LayoutTailwind";
     ViewData[ViewDataConstant.Title] = "ユーザ一覧(管理者)";
 }
 
-<h1>@ViewData[ViewDataConstant.Title]</h1>
+<div class="mx-auto max-w-6xl px-4 py-8">
+<h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
 
-<div class="form-group">
+<div class="mt-6 flex flex-wrap gap-3">
     @if (Model.IsMyTeam)
     {
-    <a class="btn btn-primary" asp-page="Create">ユーザ作成</a>
+    <a class="inline-flex items-center justify-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800" asp-page="Create">ユーザ作成</a>
     }
-    <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
+    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">トップへ</a>
 </div>
 
-<div class="table-responsive">
-    <table class="table table-hover table-sm table-bordered">
-        <thead class="thead-light">
+<div class="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+    <table class="stat-table">
+        <thead>
             <tr>
                 <th>
                     @Html.DisplayNameFor(model => model.UserAccount[0].UserAccountID)
@@ -52,7 +54,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.UserAccount[0].UpdateDatetime)
                 </th>
-                <th></th>
+                <th class="col-fix-right"></th>
             </tr>
         </thead>
         <tbody>
@@ -91,15 +93,16 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.UpdateDatetime)
                 </td>
-                <td>
-                    <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.UserAccountID">編集</a>
-                    <span>&nbsp;</span>
-                    <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.UserAccountID">詳細</a>
-                    <span>&nbsp;</span>
-                    <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.UserAccountID">削除</a>
+                <td class="col-fix-right">
+                    <div class="flex gap-1">
+                    <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="./Edit" asp-route-id="@item.UserAccountID">編集</a>
+                    <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="./Details" asp-route-id="@item.UserAccountID">詳細</a>
+                    <a class="inline-flex items-center justify-center rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" asp-page="./Delete" asp-route-id="@item.UserAccountID">削除</a>
+                    </div>
                 </td>
             </tr>
 }
         </tbody>
     </table>
+</div>
 </div>

@@ -94,7 +94,8 @@ namespace Bmcs.Pages.UserAccount
                 .FirstOrDefaultAsync(r => r.UserAccountID == resetToken.TargetID
                                        && r.DeleteFLG == false);
 
-            if (userAccount == null)
+            //体験用ユーザは再設定できない（ForgotPassword で発行しないが、修正前に発行されたトークンも拒否する）
+            if (userAccount == null || IsSampleUserAccountID(userAccount.UserAccountID))
             {
                 IsValidToken = false;
 

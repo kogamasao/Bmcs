@@ -89,7 +89,9 @@ namespace Bmcs.Pages.Team
             //チームIDとチーム登録メールアドレスの両方が一致した場合のみ再設定用URLを送信する
             //※チームの有無を画面上で判別できないよう、一致しない場合も同じ完了メッセージを表示する
             //※この時点ではチームパスワードを変更しない（第三者による一方的な変更を防ぐため）
+            //※サンプルチームは対象外（チーム情報を誰でも書き換えられた時期があり、メールアドレスが第三者のものになっている可能性がある）
             if (team != null
+                && !IsSampleTeamID(team.TeamID)
                 && !string.IsNullOrWhiteSpace(team.TeamEmailAddress)
                 && string.Equals(team.TeamEmailAddress.Trim(), TeamEmailAddress.Trim(), StringComparison.OrdinalIgnoreCase))
             {

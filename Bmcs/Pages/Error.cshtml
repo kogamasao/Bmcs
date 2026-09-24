@@ -1,26 +1,31 @@
 ﻿@page
 @model ErrorModel
 @{
-    ViewData[ViewDataConstant.Title] = "Error";
+    ViewData[ViewDataConstant.Title] = "エラーが発生しました";
+    Layout = "_LayoutTailwind";
 }
 
-<h1 class="text-danger">エラーが発生しました。</h1>
-<h2 class="text-danger">サービス利用に支障がある場合は、管理者にアカウントID、エラーが発生した事象を、画面下のお問い合わせリンクよりご連絡ください。</h2>
+@*
+    以前はテンプレートのままで、開発者向けの英語の説明（Development Mode）が本番の利用者にも表示されていた。
+    利用者向けの案内だけにする。
+*@
+<div class="mx-auto max-w-2xl px-4 py-12">
+    <div class="rounded-xl border border-red-200 bg-red-50 p-6">
+        <h1 class="text-xl font-bold text-red-900">@ViewData[ViewDataConstant.Title]</h1>
+        <p class="mt-2 text-sm text-red-900/80">
+            お手数ですが、もう一度お試しください。
+            <br />続けて発生する場合は、お問い合わせから<strong class="font-semibold">ユーザID</strong>と<strong class="font-semibold">行った操作</strong>をお知らせください。
+        </p>
+        @if (Model.ShowRequestId)
+        {
+            <p class="mt-3 text-xs text-red-900/70">
+                エラーID：<code class="font-mono">@Model.RequestId</code>（お問い合わせの際にお知らせいただくと、調査が早くなります）
+            </p>
+        }
+    </div>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
-
-<h3>Development Mode</h3>
-<p>
-    Swapping to the <strong>Development</strong> environment displays detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+    <div class="mt-6 flex flex-wrap gap-3">
+        <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">トップへ</a>
+        <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Inquiry/Create">お問い合わせ</a>
+    </div>
+</div>

@@ -59,7 +59,7 @@
             </p>
 
             <p class="mt-6 text-sm text-slate-500">
-                <a class="font-medium text-sky-700 underline decoration-sky-300 underline-offset-2 hover:text-sky-800" asp-page="./Top/Index">ログインせずに公開チームの成績を見る</a>
+                <a class="font-medium text-sky-700 underline decoration-sky-300 underline-offset-2 hover:text-sky-800" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-isPublic="true">ログインせずに公開チームの成績を見る</a>
             </p>
         </div>
 
@@ -84,7 +84,7 @@
                         <span asp-validation-for="UserAccount.Password" class="mt-1 block text-sm text-red-600"></span>
                     </div>
 
-                    <button type="submit" class="w-full rounded-lg bg-sky-700 px-4 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-sky-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2">
+                    <button type="submit" class="w-full rounded-lg bg-sky-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-sky-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2">
                         ログイン
                     </button>
 
@@ -214,7 +214,7 @@
                 <svg class="size-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
             </summary>
             <div class="px-5 pb-5 text-slate-600">
-                各ページにヘルプボタン「？」があります。こちらを押すと操作説明をご覧いただけます。
+                主なページの右上にある「この画面の使い方」（一部の画面では「？」）を押すと、操作説明をご覧いただけます。
                 サービス紹介ページ（<a class="text-sky-700 underline underline-offset-2 hover:text-sky-800" href="https://alivetodayblog.com/bmcs/" target="_blank" rel="noopener">こちら</a>）もご参照ください。
             </div>
         </details>

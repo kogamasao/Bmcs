@@ -53,31 +53,58 @@
         background-color: var(--color-slate-50);
     }
 
-    /* 横スクロール時に左端の列を固定する（どの行か分からなくなるため） */
-    .stat-table .col-fix-left {
+}
+
+/*
+ * 横スクロールする表の端の列を固定する。
+ * ※旧 customize.css の .column-fix-left / .column-fix-right に相当。
+ *   左端＝どの行か分からなくなるため、右端＝操作ボタンが画面外になるため。
+ */
+@layer components {
+    .col-fix-left,
+    .col-fix-right {
         position: sticky;
-        left: 0;
         z-index: 10;
         background-color: var(--color-white);
+    }
+
+    .col-fix-left {
+        left: 0;
+        border-right: 1px solid var(--color-slate-200);
+    }
+
+    .col-fix-right {
+        right: 0;
+        border-left: 1px solid var(--color-slate-200);
+    }
+
+    thead .col-fix-left,
+    thead .col-fix-right {
+        z-index: 20;
+        background-color: var(--color-slate-50);
+    }
+
+    tbody tr:hover .col-fix-left,
+    tbody tr:hover .col-fix-right {
+        background-color: var(--color-slate-50);
+    }
+
+    /* 成績表では左端が行の見出しになるため強調する */
+    .stat-table .col-fix-left {
         font-weight: 600;
         color: var(--color-slate-900);
-        border-right: 1px solid var(--color-slate-200);
     }
 
     .stat-table thead th.col-fix-left {
         z-index: 30;
         background-color: var(--color-slate-100);
     }
-
-    .stat-table tbody tr:hover td.col-fix-left {
-        background-color: var(--color-slate-50);
-    }
 }
 
 /*
  * jquery-validation-unobtrusive が動的に付与するクラス。
  * これらはHTMLに書かれないためTailwindの検出対象にならず、ここで定義する。
- * ※Bootstrapを外したページでも入力チェックの表示が崩れないようにするため
+ * ※以前は Bootstrap が定義していたため、Bootstrap を外した後も表示が崩れないようにここで定義する
  */
 @layer components {
     .field-validation-error {
@@ -87,9 +114,14 @@
         color: var(--color-red-600);
     }
 
+    /*
+     * ※!important が必要。各入力欄には border-slate-300（utilities レイヤ）が付いており、
+     *   components レイヤのこの指定より優先されて赤枠が出なかった。
+     *   outline もフォーカス中は focus:outline-none で消されるため同様に指定する。
+     */
     .input-validation-error {
-        border-color: var(--color-red-500);
-        outline: 1px solid var(--color-red-500);
+        border-color: var(--color-red-500) !important;
+        outline: 1px solid var(--color-red-500) !important;
     }
 
     .validation-summary-errors {
@@ -109,5 +141,70 @@
 
     .validation-summary-valid {
         display: none;
+    }
+}
+
+/*
+ * リンクの既定スタイル。
+ * ※Tailwind の Preflight は <a> の色と下線を打ち消すため、
+ *   ユーティリティを付けていないリンクは本文と同じ見た目になり、
+ *   リンクだと気付けない（チーム名・メンバー名・成績表の並べ替えなど）。
+ *   旧UI（青字＋ホバーで下線）を踏襲して復活させる。
+ *   ボタン風のリンクには必ず class が付いているため :not([class]) で除外する。
+ *   ※通常時に text-decoration は指定しない。Preflight の既定（inherit）のままにしておくと
+ *     prose（ヘルプ本文）配下では typography プラグインの下線がそのまま残るため。
+ */
+@layer base {
+    a:not([class]) {
+        color: var(--color-sky-700);
+    }
+
+    a:not([class]):hover,
+    a:not([class]):focus-visible {
+        color: var(--color-sky-900);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+}
+
+/*
+ * ヘルプ本文（管理者が登録したHTML）のアコーディオン。
+ * 本文は Bootstrap の accordion / card / collapse で書かれている（現在はスコア入力のヘルプのみ）。
+ * Bootstrap を外した後も開閉できるよう、_HelpTailwind.cshtml の JS と合わせて最低限の見た目を定義する。
+ * ※本文はDBにあり Tailwind の検出対象にならないため、ユーティリティではなくここで定義する。
+ * ※Tailwind にも collapse ユーティリティ（visibility: collapse）があるため、visibility を明示的に戻す。
+ */
+@layer components {
+    /* ※!important が必要。Tailwind の collapse ユーティリティは utilities レイヤのため、components レイヤでは詳細度に関係なく負ける */
+    .help-body .collapse {
+        visibility: visible !important;
+    }
+
+    .help-body .collapse:not(.show) {
+        display: none;
+    }
+
+    .help-body .card {
+        margin-top: 0.5rem;
+        border: 1px solid var(--color-slate-200);
+        border-radius: 0.5rem;
+    }
+
+    .help-body .card-header button {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+        font-weight: 600;
+        color: var(--color-sky-700);
+        cursor: pointer;
+    }
+
+    .help-body .card-header button:hover {
+        background-color: var(--color-slate-50);
+    }
+
+    .help-body .card-body {
+        padding: 0 0.75rem 0.5rem;
     }
 }

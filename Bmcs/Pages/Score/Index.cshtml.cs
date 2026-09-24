@@ -71,6 +71,17 @@ namespace Bmcs.Pages.Score
 
         public PaginatedList<Models.GameScoreTeam> GameScoreTeamList { get; set; }
 
+        /// <summary>
+        /// 確定前の試合件数（自チーム表示のときのみ）
+        /// ※確定するまで成績に集計されないため、その旨を案内するために数える
+        /// </summary>
+        public int BeforeFixGameCount { get; set; }
+
+        /// <summary>
+        /// 自チームの成績を表示しているか（空状態の文言の出し分けに使用する）
+        /// </summary>
+        public bool IsMyTeamScore { get; set; }
+
         public PaginatedList<Models.GameScorePitcher> GameScorePitcherList { get; set; }
 
         public PaginatedList<Models.GameScoreFielder> GameScoreFielderList { get; set; }
@@ -85,6 +96,14 @@ namespace Bmcs.Pages.Score
                 }
 
                 teamID = HttpContext.Session.GetString(SessionConstant.TeamID);
+
+                //チーム未所属（ユーザ登録直後など）の場合、teamID が空のまま下の絞り込みに進むと
+                //「PublicFLG == false の全チーム」＝非公開チームの成績がすべて表示されてしまう。
+                //非公開の全体集計は管理者のみ許可する。
+                if (string.IsNullOrEmpty(teamID) && !base.IsAdmin())
+                {
+                    return RedirectToPage("/Team/Create");
+                }
             }
 
             if (!string.IsNullOrEmpty(teamID))
@@ -116,9 +135,10 @@ namespace Bmcs.Pages.Score
             GameScoreFielderList = new PaginatedList<GameScoreFielder>();
 
             //試合データ
+            //※全チームの集計では、削除したチームを除く（以前は除いておらず、削除後もランキングに残っていた）
             var gameList = await Context.Games
                       .Include(r => r.Team)
-                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic)) && (r.StatusClass == StatusClass.EndGame || r.StatusClass == StatusClass.EndGameLock) && r.DeleteFLG == false)
+                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic && !r.Team.DeleteFLG)) && (r.StatusClass == StatusClass.EndGame || r.StatusClass == StatusClass.EndGameLock) && r.DeleteFLG == false)
                       .ToListAsync();
 
             //投手スコアデータ
@@ -126,7 +146,7 @@ namespace Bmcs.Pages.Score
                       .Include(r => r.Game)
                       .Include(r => r.Team)
                       .Include(r => r.Member)
-                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic)) && (r.Game.StatusClass == StatusClass.EndGame || r.Game.StatusClass == StatusClass.EndGameLock) && r.Game.DeleteFLG == false)
+                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic && !r.Team.DeleteFLG)) && (r.Game.StatusClass == StatusClass.EndGame || r.Game.StatusClass == StatusClass.EndGameLock) && r.Game.DeleteFLG == false)
                       .ToListAsync();
 
             //野手スコアデータ
@@ -134,7 +154,7 @@ namespace Bmcs.Pages.Score
                       .Include(r => r.Game)
                       .Include(r => r.Team)
                       .Include(r => r.Member)
-                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic)) && (r.Game.StatusClass == StatusClass.EndGame || r.Game.StatusClass == StatusClass.EndGameLock) && r.Game.DeleteFLG == false)
+                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic && !r.Team.DeleteFLG)) && (r.Game.StatusClass == StatusClass.EndGame || r.Game.StatusClass == StatusClass.EndGameLock) && r.Game.DeleteFLG == false)
                       .ToListAsync();
 
             //年初期値
@@ -345,6 +365,21 @@ namespace Bmcs.Pages.Score
             {
                 SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.MyTeamTeamScore);
             }
+
+            //確定前の試合件数
+            //※確定するまで成績に集計されないため、集計が0件・少ない理由として案内する
+            //※自チームのときのみ。他チームの公開成績を見ている訪問者に
+            //  「確定してください」と表示しても操作できない
+            if (!string.IsNullOrEmpty(teamID) && base.IsMyTeamData(teamID))
+            {
+                BeforeFixGameCount = await Context.Games
+                    .CountAsync(r => r.TeamID == teamID
+                                  && r.StatusClass == StatusClass.BeforeFix
+                                  && r.DeleteFLG == false);
+            }
+
+            //空状態の文言を自チーム／他チームで出し分けるために保持する
+            IsMyTeamScore = !string.IsNullOrEmpty(teamID) && base.IsMyTeamData(teamID);
 
             //インデックス
             IsIndex = true;

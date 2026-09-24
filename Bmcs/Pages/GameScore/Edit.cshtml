@@ -2,35 +2,47 @@
 @model Bmcs.Pages.GameScore.EditModel
 
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+@{
+    Layout = "_LayoutTailwind";
+}
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-
-<h4>@Model.Game.Team.TeamName</h4>
+<div class="mx-auto max-w-6xl px-4 py-6">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Game.Team.TeamName</p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 <hr />
 <form method="post">
 
     @if (Model.Game.GameInputTypeClass == GameInputTypeClass.ByPlay)
     {
-        <div class="form-group">
-            <input type="button" value="再集計する" class="btn btn-danger js-submit" data-submitclass="@GameScoreSubmitClass.ReCount" />
+        @*
+            再集計は GameSet() を呼び、プレーの記録から投手・野手の成績を作り直して StatusClass = 確定前 に戻す。
+            確定済みの試合で押すと、成績ページから外れ、この画面で手直しした内容も上書きされるため、説明と確認を出す。
+        *@
+        <div class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+            <input type="button" value="再集計する" class="js-submit js-confirm-recount inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" data-submitclass="@GameScoreSubmitClass.ReCount" />
+            <p class="text-sm text-slate-500">
+                プレーの記録から成績を集計し直します。この画面で手直しした内容は元に戻り、試合は「確定前」に戻ります。
+            </p>
         </div>
-        <div class="form-group">
-            <a class="btn btn-primary" asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID">イニング詳細</a>
+        <div class="mt-4">
+            <a class="inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID">イニング詳細</a>
         </div>
     }
 
-    <span asp-validation-for="Game.GameID" class="text-danger"></span>
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <span asp-validation-for="Game.GameID" class="mt-1 block text-sm text-red-600"></span>
+    <div asp-validation-summary="ModelOnly" class="mt-1 block text-sm text-red-600"></div>
     <input type="hidden" asp-for="Game.GameID" />
 
-    <div class="table-responsive">
-        <table id="inning-score" class="table table-sm table-bordered" style="table-layout:fixed">
-            <thead class="thead-light">
+    <div class="overflow-x-auto">
+        <table id="inning-score" class="stat-table" style="table-layout:fixed">
+            <thead>
                 <tr>
-                    <th style="width: 100px;" class="align-middle column-fix-left">
+                    <th style="width: 100px;" class="col-fix-left align-middle">
                         チーム名
                     </th>
                     @foreach (var inning in Model.InningScoreTopList)
@@ -39,14 +51,14 @@
                             @inning.Inning
                         </th>
                     }
-                    <th style="width: 60px;" class="text-center align-middle column-fix-right">
+                    <th style="width: 60px;" class="col-fix-right text-center align-middle">
                         計
                     </th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td class="align-middle column-fix-left">
+                    <td class="col-fix-left align-middle">
                         @if (Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
                         {
                             @Html.DisplayFor(model => Model.Game.Team.TeamAbbreviation)
@@ -59,17 +71,17 @@
                     @for (int i = 0; i < Model.InningScoreTopList.Count; i++)
                     {
                         <td id="@("InningScoreTopList_" + i.ToString())" class="text-center align-middle js-top-score-td">
-                            <input class="form-control js-rename js-top-score" asp-for="@Model.InningScoreTopList[i].Score" min="0" />
+                            <input class="js-rename js-top-score block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.InningScoreTopList[i].Score" min="0" />
                         </td>
                     }
-                    <td class="text-center align-middle column-fix-right">
+                    <td class="col-fix-right text-center align-middle">
                         <span class="js-top-sum">
                             @Model.InningScoreTopList.Select(r => r.Score).Sum()
                         </span>
                     </td>
                 </tr>
                 <tr>
-                    <td class="align-middle column-fix-left">
+                    <td class="col-fix-left align-middle">
                         @if (Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
                         {
                             @Model.Game.OpponentTeamAbbreviation
@@ -82,10 +94,10 @@
                     @for (int i = 0; i < Model.InningScoreButtomList.Count; i++)
                     {
                         <td id="@("InningScoreButtomList_" + i.ToString())" class="text-center align-middle js-buttom-score-td">
-                            <input class="form-control js-rename js-buttom-score" asp-for="@Model.InningScoreButtomList[i].Score" min="0" />
+                            <input class="js-rename js-buttom-score block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.InningScoreButtomList[i].Score" min="0" />
                         </td>
                     }
-                    <td class="text-center align-middle column-fix-right">
+                    <td class="col-fix-right text-center align-middle">
                         <span class="js-buttom-sum">
                             @Model.InningScoreButtomList.Select(r => r.Score).Sum()
                         </span>
@@ -94,22 +106,22 @@
             </tbody>
         </table>
     </div>
-    <div class="form-group">
-        <input type="button" value="イニング追加" class="btn btn-success" id="add-inning" />
-        <input type="button" value="イニング削除" class="btn btn-danger" id="delete-inning" />
+    <div class="mt-4">
+        <input type="button" value="イニング追加" class="cursor-pointer rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" id="add-inning" />
+        <input type="button" value="イニング削除" class="cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300" id="delete-inning" />
     </div>
 
 
-    <div class="box">
-        <div class="box-title">
+    <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700">
             投手成績
         </div>
-        <div class="box-inner">
-            <div class="table-responsive">
-                <table id="pitcher-score" class="table table-sm table-bordered" style="table-layout:fixed">
-                    <thead class="thead-light">
+        <div class="px-4 py-3">
+            <div class="overflow-x-auto">
+                <table id="pitcher-score" class="stat-table" style="table-layout:fixed">
+                    <thead>
                         <tr>
-                            <th style="width: 150px;" class="column-fix-left">
+                            <th style="width: 150px;" class="col-fix-left">
                                 投手名
                             </th>
                             <th style="width: 80px;">
@@ -175,7 +187,7 @@
                             <th style="width: 60px;">
                                 ボーク
                             </th>
-                            <th style="width: 70px;" class="column-fix-right">
+                            <th style="width: 70px;" class="col-fix-right">
 
                             </th>
                         </tr>
@@ -184,99 +196,99 @@
                         @for (int i = 0; i < Model.GameScorePitcherList.Count; i++)
                         {
                             <tr id="@("GameScorePitcherList_" + i.ToString())">
-                                <td class="column-fix-left">
-                                    <select asp-for="@Model.GameScorePitcherList[i].MemberID" class="form-control js-rename" asp-items="@Model.MemberIDList"></select>
+                                <td class="col-fix-left">
+                                    <select asp-for="@Model.GameScorePitcherList[i].MemberID" class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.MemberIDList"></select>
                                 </td>
                                 <td>
-                                    <select asp-for="@Model.GameScorePitcherList[i].GameScorePitcherClass" class="form-control js-rename" asp-items="@Model.GameScorePicherClassList"></select>
+                                    <select asp-for="@Model.GameScorePitcherList[i].GameScorePitcherClass" class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.GameScorePicherClassList"></select>
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].Starter" min="0" max="1" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].Starter" min="0" max="1" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].QualityStart" min="0" max="1" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].QualityStart" min="0" max="1" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].CompleteGame" min="0" max="1" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].CompleteGame" min="0" max="1" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].ShutOutGame" min="0" max="1" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].ShutOutGame" min="0" max="1" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].Inning" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].Inning" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].PlateAppearance" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].PlateAppearance" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].AtBat" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].AtBat" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].Hit" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].Hit" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].HomeRun" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].HomeRun" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].Run" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].Run" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].EarnedRun" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].EarnedRun" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].FourBall" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].FourBall" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].DeadBall" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].DeadBall" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].ScoringPositionPlateAppearance" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].ScoringPositionPlateAppearance" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].ScoringPositionAtBat" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].ScoringPositionAtBat" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].ScoringPositionHit" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].ScoringPositionHit" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].StrikeOut" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].StrikeOut" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].PickOffBallOut" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].PickOffBallOut" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].WildPitch" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].WildPitch" min="0" />
                                 </td>
                                 <td class="text-center align-middle">
-                                    <input class="form-control js-rename" asp-for="@Model.GameScorePitcherList[i].Balk" min="0" />
+                                    <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScorePitcherList[i].Balk" min="0" />
                                 </td>
-                                <td class="column-fix-right">
-                                    <input type="button" value="削除" class="btn btn-danger js-pitcher-delete" />
+                                <td class="col-fix-right">
+                                    <input type="button" value="削除" class="js-pitcher-delete cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300" />
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
-            <div class="form-group">
-                <input type="button" value="追加" class="btn btn-success" id="add-pitcher-score" />
+            <div class="mt-4">
+                <input type="button" value="追加" class="cursor-pointer rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" id="add-pitcher-score" />
             </div>
         </div>
     </div>
 
-    <div class="box">
-        <div class="box-title">
+    <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700">
             野手成績
         </div>
-        <div class="box-inner">
-            <div class="table-responsive">
-                <table id="fielder-score" class="table table-sm table-bordered" style="table-layout:fixed">
-                    <thead class="thead-light">
+        <div class="px-4 py-3">
+            <div class="overflow-x-auto">
+                <table id="fielder-score" class="stat-table" style="table-layout:fixed">
+                    <thead>
                         <tr>
                             <th style="width: 80px;">
                                 打順
                             </th>
-                            <th style="width: 150px;" class="column-fix-left">
+                            <th style="width: 150px;" class="col-fix-left">
                                 野手名
                             </th>
                             <th style="width: 100px;">
@@ -363,7 +375,7 @@
                             <th style="width: 60px;">
                                 PB
                             </th>
-                            <th style="width: 70px;" class="column-fix-right">
+                            <th style="width: 70px;" class="col-fix-right">
 
                             </th>
                         </tr>
@@ -373,118 +385,152 @@
                         {
                         <tr id="@("GameScoreFielderList_" + i.ToString())">
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].BattingOrder" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].BattingOrder" min="0" />
                             </td>
-                            <td class="column-fix-left">
-                                <select asp-for="@Model.GameScoreFielderList[i].MemberID" class="form-control js-rename" asp-items="@Model.MemberIDList"></select>
-                            </td>
-                            <td>
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].PositionDetail" />
+                            <td class="col-fix-left">
+                                <select asp-for="@Model.GameScoreFielderList[i].MemberID" class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.MemberIDList"></select>
                             </td>
                             <td>
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].BattingDetail" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].PositionDetail" />
+                            </td>
+                            <td>
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].BattingDetail" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].PlateAppearance" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].PlateAppearance" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].AtBat" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].AtBat" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Hit" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].Hit" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].DoubleHit" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].DoubleHit" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].TripleHit" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].TripleHit" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].HomeRun" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].HomeRun" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].RBI" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].RBI" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Run" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].Run" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StolenBasePlan" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].StolenBasePlan" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StolenBase" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].StolenBase" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].FourBall" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].FourBall" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].DeadBall" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].DeadBall" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Sacrifice" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].Sacrifice" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].SacrificeFly" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].SacrificeFly" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].LeftOnBase" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].LeftOnBase" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].ScoringPositionPlateAppearance" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].ScoringPositionPlateAppearance" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].ScoringPositionAtBat" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].ScoringPositionAtBat" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].ScoringPositionHit" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].ScoringPositionHit" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StrikeOut" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].StrikeOut" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].DoublePlay" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].DoublePlay" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Error" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].Error" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StolenBasePlaned" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].StolenBasePlaned" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].StopStolenBase" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].StopStolenBase" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].Assist" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].Assist" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].OwnError" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].OwnError" min="0" />
                             </td>
                             <td class="text-center align-middle">
-                                <input class="form-control js-rename" asp-for="@Model.GameScoreFielderList[i].PassBall" min="0" />
+                                <input class="js-rename block w-full rounded-md border border-slate-300 bg-white px-1.5 py-1.5 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-for="@Model.GameScoreFielderList[i].PassBall" min="0" />
                             </td>
-                            <td class="column-fix-right">
-                                <input type="button" value="削除" class="btn btn-danger js-fielder-delete" />
+                            <td class="col-fix-right">
+                                <input type="button" value="削除" class="js-fielder-delete cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300" />
                             </td>
                         </tr>
                         }
                     </tbody>
                 </table>
             </div>
-            <div class="form-group">
-                <input type="button" value="追加" class="btn btn-success" id="add-fielder-score" />
+            <div class="mt-4">
+                <input type="button" value="追加" class="cursor-pointer rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" id="add-fielder-score" />
             </div>
 
             <input id="game-score-submit-class" type="hidden" asp-for="@Model.GameScoreSubmitClass" />
         </div>
     </div>
 
-    <div class="form-group">
-        <input type="button" value="確定" class="btn btn-primary js-submit" data-submitclass="@GameScoreSubmitClass.Fix" />
+    @*
+        確定の位置づけを明示する。
+        「試合終了」を押しただけでは StatusClass = 確定前 となり、成績ページには
+        集計されない（Score/Index は 確定済み（EndGame・EndGameLock）のみを対象とする）。
+        本番では1試合を完走したまま2試合目が無いチームが23あり、入力した成果が
+        見えないことが原因と考えられる。
+    *@
+    @*
+        この画面の送信は「確定する」だけで、押すまで入力内容は保存されない（OnPostAsync は Fix の時のみ保存する）。
+        「成績に反映されません」だと「保存はされている」と読めるため、保存されないことを明記する。
+        確定済みの試合を修正しに来た場合は、確定を促す文言だと「まだ確定していないのか」と誤解されるため出し分ける。
+    *@
+    @{
+        var isFixed = Model.Game.StatusClass == StatusClass.EndGame || Model.Game.StatusClass == StatusClass.EndGameLock;
+    }
+    <div class="mt-6 rounded-xl border border-sky-200 bg-sky-50 p-5">
+        @if (isFixed)
+        {
+            <h2 class="font-bold text-sky-900">この試合は確定済みです</h2>
+            <p class="mt-1 text-sm text-sky-900/80">
+                修正した場合は<strong class="font-semibold">「修正を保存する」を押すまで保存されません。</strong>
+                保存すると、成績ページの集計にも反映されます。
+            </p>
+        }
+        else
+        {
+            <h2 class="font-bold text-sky-900">入力が終わったら「確定する」を押してください</h2>
+            <p class="mt-1 text-sm text-sky-900/80">
+                <strong class="font-semibold">入力内容は「確定する」を押すまで保存されません。</strong>
+                確定すると、この試合が成績ページに集計されます。確定後も、この画面から修正できます。
+            </p>
+        }
+        <div class="mt-4">
+            <input type="button" value="@(isFixed ? "修正を保存する" : "確定する")" class="js-submit w-full cursor-pointer rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800 sm:w-auto" data-submitclass="@GameScoreSubmitClass.Fix" />
+        </div>
     </div>
 </form>
 
-<div class="form-group">
-    <a class="btn btn-secondary" asp-page="/Game/Index" asp-route-teamID="@Model.Game.TeamID">試合一覧へ戻る</a>
+    <div class="mt-6">
+        <a class="inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Game/Index" asp-route-teamID="@Model.Game.TeamID">試合一覧へ戻る</a>
+    </div>
 </div>
 
 @section Scripts {

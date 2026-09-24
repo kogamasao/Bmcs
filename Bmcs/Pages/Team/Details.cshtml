@@ -3,89 +3,86 @@
 
 @{
     ViewData[ViewDataConstant.Title] = "チーム情報";
+    Layout = "_LayoutTailwind";
+
+    var secondaryButton = "inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50";
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+<div class="mx-auto max-w-6xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Team.TeamName</p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-
-<div>
-    <h4></h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.TeamName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.TeamName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.TeamAbbreviation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.TeamAbbreviation)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.RepresentativeName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.RepresentativeName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.TeamCategoryClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.TeamCategoryClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.UseBallClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.UseBallClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.ActivityBase)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.ActivityBase)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.TeamNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.TeamNumber)
-        </dd>
-        @if (Model.IsLogin())
+    @* このチームの各ページへ。以前はページ最下部（成績表の下）にあった *@
+    <div class="mt-4 flex flex-wrap gap-2">
+        <a class="@secondaryButton" asp-page="/Game/Index" asp-route-teamID="@Model.Team.TeamID">試合</a>
+        <a class="@secondaryButton" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@Model.Team.TeamID" asp-route-isPublic="@true" asp-route-teamCategoryClass="@TeamCategoryClass.All" asp-route-useBallClass="@UseBallClass.All">成績</a>
+        <a class="@secondaryButton" asp-page="/Member/Index" asp-route-teamID="@Model.Team.TeamID">メンバー</a>
+        @* 体験用ユーザは実在のチームへメッセージを送れない（Message/Index の IsTeamOnly） *@
+        @if (Model.MyTeam != null && Model.MyTeam.PublicFLG && Model.MyTeam.TeamID != Model.Team.TeamID && !Model.IsSampleUser())
         {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Team.TeamEmailAddress)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Team.TeamEmailAddress)
-            </dd>
+            <a class="@secondaryButton" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-privateTeamID="@Model.Team.TeamID">メッセージを送る</a>
         }
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Team.MessageDetail)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Team.MessageDetail)
-        </dd>
+    </div>
+    <dl class="mt-6 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Team.TeamName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Team.TeamName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Team.TeamAbbreviation)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Team.TeamAbbreviation)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Team.RepresentativeName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Team.RepresentativeName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Team.TeamCategoryClassName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Team.TeamCategoryClassName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Team.UseBallClassName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Team.UseBallClassName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Team.ActivityBase)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Team.ActivityBase)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Team.TeamNumber)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Team.TeamNumber)</dd>
+        </div>
+        @* メールアドレスは自チーム（と管理者）にだけ表示する。他チームには公開しない *@
+        @if (Model.IsMyTeamData(Model.Team.TeamID))
+        {
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Team.TeamEmailAddress)</dt>
+                <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Team.TeamEmailAddress)</dd>
+            </div>
+        }
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Team.MessageDetail)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Team.MessageDetail)</dd>
+        </div>
     </dl>
 
     @if (Model.GameScoreTeamList.Any())
     {
-        <div class="box">
-            <div class="box-title">
+        <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700">
                 チーム成績
             </div>
-            <div class="box-inner">
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+            <div class="px-4 py-3">
+                <div class="overflow-x-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
-                                <th class="column-fix-left">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Year)
                                 </th>
                                 <th>
@@ -217,7 +214,7 @@
                             @foreach (var item in Model.GameScoreTeamList.OrderBy(r => r.Year))
                             {
                                 <tr>
-                                    <td class="column-fix-left">
+                                    <td class="col-fix-left">
                                         @Html.DisplayFor(modelItem => item.Year)
                                     </td>
                                     <td class="text-center align-middle">
@@ -352,14 +349,8 @@
         </div>
     }
 
-</div>
-<div class="form-group">
-    <a class="btn btn-primary" asp-page="/Game/Index" asp-route-teamID="@Model.Team.TeamID">試合</a>
-    <a class="btn btn-primary" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@Model.Team.TeamID" asp-route-isPublic="@true" asp-route-teamCategoryClass="@TeamCategoryClass.All" asp-route-useBallClass="@UseBallClass.All">成績</a>
-    <a class="btn btn-primary" asp-page="/Member/Index" asp-route-teamID="@Model.Team.TeamID">メンバー</a>
-    @if (Model.MyTeam != null && Model.MyTeam.PublicFLG)
-    {
-        <a class="btn btn-primary" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-privateTeamID="@Model.Team.TeamID">メッセージを送る</a>
-    }
-    <a class="btn btn-secondary" asp-page="./Index">戻る</a>
+
+    <div class="mt-6">
+        <a class="@secondaryButton" asp-page="./Index">チーム一覧へ</a>
+    </div>
 </div>

@@ -220,9 +220,11 @@ namespace Bmcs.Enum
         DuringGame = 2,
         [Display(Name = "確定前")]
         BeforeFix = 3,
-        [Display(Name = "試合終了")]
+        //※以前は「試合終了」と表示していたが、「試合終了」ボタンを押した直後の状態は「確定前」で、
+        //  「確定する」を押すとこの状態になる。ボタン名と状態名が交差していたため「確定済み」とする。
+        [Display(Name = "確定済み")]
         EndGame = 9,
-        [Display(Name = "試合終了")]
+        [Display(Name = "確定済み")]
         EndGameLock = 10,
     }
 
@@ -370,7 +372,9 @@ namespace Bmcs.Enum
         TripleHit = 33,
         [Display(Name = "本塁打")]
         HomeRun = 34,
-        [Display(Name = "ﾁｪﾝｼﾞ")]
+        //※以前は「ﾁｪﾝｼﾞ」だったが、「チェンジ」ボタン（この打者の結果を登録して攻守交代）と同じ言葉で
+        //  意味が違うため、打席が成立しないことが分かる名前にする
+        [Display(Name = "打席なし(チェンジ)")]
         Change = 91,
     }
 
@@ -603,13 +607,14 @@ namespace Bmcs.Enum
         TopInformation = 1,
         [Display(Name = "ユーザ作成")]
         UserAccountCreate = 2,
-        [Display(Name = "ユーザ情報編集")]
+        //※ヘルプの見出しに使うため、画面のタイトルに合わせる
+        [Display(Name = "ユーザ情報")]
         UserAccountEdit = 3,
         [Display(Name = "チーム一覧")]
         TeamIndex = 4,
         [Display(Name = "チーム作成")]
         TeamCreate = 5,
-        [Display(Name = "チーム情報編集")]
+        [Display(Name = "チーム情報変更")]
         TeamEdit = 6,
         [Display(Name = "チーム情報")]
         TeamDetails = 7,
@@ -645,15 +650,16 @@ namespace Bmcs.Enum
         MyTeamInningScore = 22,
         [Display(Name = "イニング詳細")]
         PublicInningScore = 23,
-        [Display(Name = "試合結果詳細")]
+        //※画面名と一覧のボタン名（「試合結果」「試合結果編集」）が交差していたため、画面のタイトルに合わせる
+        [Display(Name = "試合結果")]
         GameScoreDetails = 24,
-        [Display(Name = "試合結果編集")]
+        [Display(Name = "試合結果の入力・確定")]
         GameScoreEdit = 25,
         [Display(Name = "チーム成績")]
         MyTeamTeamScore = 26,
         [Display(Name = "公開チーム成績")]
         PublicTeamScore = 27,
-        [Display(Name = "メッセージ(投稿)")]
+        [Display(Name = "メッセージ")]
         PostMessage= 28,
         [Display(Name = "メッセージ(返信)")]
         ReplyMessage = 29,

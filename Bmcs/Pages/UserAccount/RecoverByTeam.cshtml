@@ -1,118 +1,120 @@
 ﻿@page
 @model Bmcs.Pages.UserAccount.RecoverByTeamModel
 @{
+    Layout = "_LayoutTailwind";
     ViewData[ViewDataConstant.Title] = "チーム情報でアカウントを確認する";
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
-
-<hr />
-<div class="row">
-    <div class="col-md-8">
+<div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
+    <div class="mt-6 space-y-5">
         @if (Model.IsComplete)
         {
-            <div class="alert alert-success" role="alert">
+            <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900" role="status">
                 <p>パスワードを再設定しました。新しいパスワードでログインしてください。</p>
             </div>
-            <div class="form-group">
-                <a class="btn btn-primary" asp-page="/Index">ログイン画面へ</a>
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <a class="rounded-lg bg-sky-700 px-6 py-3 text-center text-base font-semibold text-white shadow-sm transition hover:bg-sky-800" asp-page="/Index">ログイン画面へ</a>
             </div>
         }
         else if (Model.IsAuthenticated)
         {
-            <div class="alert alert-success" role="alert">
+            @* 案内のため青（完了を表す緑ではない。7.15 の色分け） *@
+            <div class="rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-900" role="status">
                 <p>
                     チーム「@Model.RecoverTeamName」のうち、メールアドレスを登録していないユーザの一覧です。
                     <br />ご自身のユーザIDを選び、新しいパスワードを設定してください。
-                    <br />一覧に無い場合はメールアドレスが登録済みですので、「パスワードをお忘れの場合」からお手続きください。
+                    <br />一覧に無い場合は、メールアドレスを登録済みか、このチームに所属していない可能性があります。
+                    メールアドレスを登録済みの場合は、<a asp-page="./ForgotPassword">「パスワードをお忘れの場合」</a>からお手続きください。
                 </p>
             </div>
-            <form method="post" asp-page-handler="Reset">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* 対象のユーザがいない場合は、再設定の入力欄を出さない（以前は0人でも入力欄とボタンが出ていた） *@
+            @if (!Model.UserAccountList.Any())
+            {
+                <p class="rounded-xl border border-slate-200 bg-white p-5 text-sm text-slate-700">このチームには、メールアドレスを登録していないユーザはいません。</p>
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Index">ログイン画面へ</a>
+                </div>
+            }
+            else
+            {
+            <form method="post" class="space-y-5" asp-page-handler="Reset">
+                <div asp-validation-summary="ModelOnly" class="rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
                 <input type="hidden" asp-for="RecoverTeamID" />
                 @* チームパスワードはHTMLに平文で残さないため、再設定時に再入力してもらう *@
-                <div class="form-group">
-                    <label asp-for="TeamPassword" class="control-label">チームパスワード（確認のため再入力）</label>
-                    <input asp-for="TeamPassword" type="password" class="form-control" autocomplete="off" />
-                    <span asp-validation-for="TeamPassword" class="text-danger"></span>
+                <div>
+                    <label asp-for="TeamPassword" class="block text-sm font-semibold text-slate-800">チームパスワード（確認のため再入力）</label>
+                    <input asp-for="TeamPassword" type="password" class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" autocomplete="off" />
+                    <span asp-validation-for="TeamPassword" class="mt-1 block text-sm text-red-600"></span>
                 </div>
-                <div class="form-group">
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>ユーザID</th>
-                                <th>ユーザ名</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var userAccount in Model.UserAccountList)
-                            {
-                                <tr>
-                                    <td>
-                                        <input type="radio" asp-for="SelectedUserAccountID" value="@userAccount.UserAccountID" />
-                                    </td>
-                                    <td>@userAccount.UserAccountID</td>
-                                    <td>@userAccount.UserAccountName</td>
-
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                    <span asp-validation-for="SelectedUserAccountID" class="text-danger"></span>
+                <div>
+                    @* ユーザを選ぶ一覧。行全体を押せるようにする（以前はラジオボタンだけが押せた） *@
+                    <p class="block text-sm font-semibold text-slate-800">パスワードを再設定するユーザ</p>
+                    <div class="mt-1 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
+                        @foreach (var userAccount in Model.UserAccountList)
+                        {
+                            <label class="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-slate-50 has-[:checked]:bg-sky-50">
+                                <input type="radio" asp-for="SelectedUserAccountID" value="@userAccount.UserAccountID" class="size-4 shrink-0" />
+                                <span class="font-mono text-slate-900">@userAccount.UserAccountID</span>
+                                <span class="text-slate-600">@userAccount.UserAccountName</span>
+                            </label>
+                        }
+                    </div>
+                    <span asp-validation-for="SelectedUserAccountID" class="mt-1 block text-sm text-red-600"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Password" class="control-label">新しいパスワード</label>
-                    <input asp-for="Password" type="password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
+                <div>
+                    <label asp-for="Password" class="block text-sm font-semibold text-slate-800">新しいパスワード</label>
+                    <input asp-for="Password" type="password" class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" />
+                    <span asp-validation-for="Password" class="mt-1 block text-sm text-red-600"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="ConfirmPassword" class="control-label">確認用パスワード</label>
-                    <input asp-for="ConfirmPassword" type="password" class="form-control" />
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                <div>
+                    <label asp-for="ConfirmPassword" class="block text-sm font-semibold text-slate-800">確認用パスワード</label>
+                    <input asp-for="ConfirmPassword" type="password" class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" />
+                    <span asp-validation-for="ConfirmPassword" class="mt-1 block text-sm text-red-600"></span>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="パスワードを再設定" class="btn btn-primary" />
-                    <a class="btn btn-secondary" asp-page="/Index">戻る</a>
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <input type="submit" value="パスワードを再設定" class="rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" />
+                    <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Index">戻る</a>
                 </div>
             </form>
+            }
         }
         else
         {
-            <div class="alert alert-primary" role="alert">
+            <div class="rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-900" role="status">
                 <p>
                     メールアドレスを登録していない場合は、チームIDとチームパスワードでご本人の確認を行います。
                     <br />一致した場合、そのチームのユーザのうち<strong>メールアドレス未登録のもの</strong>について、
                     ユーザIDの確認とパスワードの再設定ができます。
                 </p>
             </div>
-            <div class="alert alert-warning" role="alert">
+            <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900" role="status">
                 <p>
                     ※チームパスワードを知っている方は、同じチームのメールアドレス未登録ユーザのパスワードも再設定できます。
                     <br />チームパスワードはチーム内で慎重に管理してください。
-                    <br />※今後の復旧のために、ログイン後はユーザ編集画面からメールアドレスのご登録をおすすめします。
+                    <br />※今後の復旧のために、ログイン後は「ユーザ情報」からメールアドレスのご登録をおすすめします。
                 </p>
             </div>
-            <form method="post" asp-page-handler="Authenticate">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="RecoverTeamID" class="control-label">チームID</label>
-                    <input asp-for="RecoverTeamID" class="form-control" />
-                    <span asp-validation-for="RecoverTeamID" class="text-danger"></span>
+            <form method="post" class="space-y-5" asp-page-handler="Authenticate">
+                <div asp-validation-summary="ModelOnly" class="rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
+                <div>
+                    <label asp-for="RecoverTeamID" class="block text-sm font-semibold text-slate-800">チームID</label>
+                    <input asp-for="RecoverTeamID" class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" />
+                    <span asp-validation-for="RecoverTeamID" class="mt-1 block text-sm text-red-600"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="TeamPassword" class="control-label">チームパスワード</label>
-                    <input asp-for="TeamPassword" type="password" class="form-control" />
-                    <span asp-validation-for="TeamPassword" class="text-danger"></span>
+                <div>
+                    <label asp-for="TeamPassword" class="block text-sm font-semibold text-slate-800">チームパスワード</label>
+                    <input asp-for="TeamPassword" type="password" class="mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" />
+                    <span asp-validation-for="TeamPassword" class="mt-1 block text-sm text-red-600"></span>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="ユーザを確認する" class="btn btn-primary" />
-                    <a class="btn btn-secondary" asp-page="/Index">戻る</a>
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <input type="submit" value="ユーザを確認する" class="rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" />
+                    <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Index">戻る</a>
                 </div>
-                <div class="form-group">
+                <div>
                     <a asp-page="/Team/ForgotTeamPassword">チームパスワードがわからない場合</a>
                     <br />
                     <a asp-page="./ForgotPassword">メールアドレスを登録している場合（メールで再設定）</a>

@@ -38,16 +38,25 @@ namespace Bmcs.Pages.Inquiry
             get { return true; }
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        /// <summary>
+        /// 送信完了フラグ
+        /// ※以前は送信後に何も表示せずトップへ戻しており、送れたかどうかが分からなかった
+        /// </summary>
+        public bool IsComplete { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(bool isComplete = false)
         {
+            IsComplete = isComplete;
+
             Inquiry = new Models.Inquiry();
             
-            if(base.IsLogin())
+            //※体験用ユーザは共有アカウントのため、登録されているメールアドレスを出さない（返信が本人に届かない）
+            if(base.IsLogin() && !base.IsSampleUser())
             {
                 var userAccount = await Context.UserAccounts.FindAsync(HttpContext.Session.GetString(SessionConstant.UserAccountID));
 
                 //メールアドレス
-                Inquiry.EmailAddress = userAccount.EmailAddress;
+                Inquiry.EmailAddress = userAccount?.EmailAddress;
             }
 
             //システム管理データ
@@ -65,6 +74,11 @@ namespace Bmcs.Pages.Inquiry
         {
             if (!ModelState.IsValid)
             {
+                //入力エラーでの再表示でもヘルプを表示できるようにする
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.Inquiry);
+                //インデックス
+                IsIndex = true;
+
                 return Page();
             }
 
@@ -95,7 +109,8 @@ namespace Bmcs.Pages.Inquiry
             //管理者へ通知
             await SendAdminNotificationAsync(inquiry);
 
-            return RedirectToPage("/Top/Index");
+            //完了表示へ（再読み込みで二重に送信されないよう、リダイレクトする）
+            return RedirectToPage("./Create", new { isComplete = true });
         }
 
         /// <summary>

@@ -1,56 +1,68 @@
 ﻿@page
 @model Bmcs.Pages.Order.EditModel
 
+@{
+    Layout = "_LayoutTailwind";
+}
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+<div class="mx-auto max-w-4xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Game.Team.TeamName</p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
+    @if (!Model.IsDuringGame)
+    {
+        <p class="mt-2 text-slate-600">
+            打順と守備位置を設定します。<strong class="font-semibold text-slate-900">試合の入力を開始するまでは変更できます。</strong>
+        </p>
 
-<h4>@Model.Game.Team.TeamName</h4>
-<hr />
-<div class="row">
-    <div class="col-md-8">
-        <form method="post">
-            <span asp-validation-for="Game.GameID" class="text-danger"></span>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Game.GameID" />
-            <input type="hidden" asp-for="GameSceneID" />
-            <input type="hidden" asp-for="IsDuringGame" />
-            <div class="table-responsive">
-                <table class="table table-hover table-sm table-bordered" id="order">
-                    <thead class="thead-light">
-                        <tr>
-                            <th style="width: 10%;">
-                                @Html.DisplayNameFor(model => model.OrderList[0].BattingOrder)
-                            </th>
-                            <th style="width: 50%;">
-                                @Html.DisplayNameFor(model => model.OrderList[0].MemberID)
-                            </th>
-                            <th style="width: 20%;">
-                                @Html.DisplayNameFor(model => model.OrderList[0].PositionClass)
-                            </th>
-                            <th style="width: 20%;">
+        @if (Model.IsPreset)
+        {
+            @* 初回は9枠すべてを空で出すと9回の選択が必要になるため、背番号順に割り当てている *@
+            <div class="mt-4 rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm text-sky-900">
+                登録済みの選手を<strong class="font-semibold">背番号順に割り当てました</strong>。必要なところだけ変更してください。
+            </div>
+        }
+    }
 
-                            </th>
+    <form method="post" class="mt-6">
+        @* エラーはすべて一覧にまとめて出す（Game.GameID 単体の表示も置くと、同じ文言が2回並ぶため置かない） *@
+        <div asp-validation-summary="All" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
+        <input type="hidden" asp-for="Game.GameID" />
+        <input type="hidden" asp-for="GameSceneID" />
+        <input type="hidden" asp-for="IsDuringGame" />
+
+        <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <h2 class="border-b border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-700">スターティングオーダー</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200 text-sm" id="order">
+                    <thead class="bg-slate-50">
+                        <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            <th class="w-16 px-3 py-2">@Html.DisplayNameFor(model => model.OrderList[0].BattingOrder)</th>
+                            <th class="px-3 py-2">@Html.DisplayNameFor(model => model.OrderList[0].MemberID)</th>
+                            <th class="w-40 px-3 py-2">@Html.DisplayNameFor(model => model.OrderList[0].PositionClass)</th>
+                            <th class="col-fix-right w-24 px-3 py-2"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-slate-100">
                         @for (int i = 0; i < Model.OrderList.Count; i++)
                         {
                             <tr id="@("OrderList_" + i.ToString())">
-                                <td class="text-center align-middle js-displaybattingorder">
+                                <td class="js-displaybattingorder px-3 py-2 text-center font-semibold text-slate-900">
                                     @Model.OrderList[i].BattingOrder.DisplayDecimal()
                                 </td>
-                                <td>
-                                    <select asp-for="@Model.OrderList[i].MemberID" class="form-control js-memberid js-rename" asp-items="@Model.MemberIDList"></select>
+                                <td class="px-3 py-2">
+                                    <select asp-for="@Model.OrderList[i].MemberID" class="js-memberid js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.MemberIDList"></select>
                                 </td>
-                                <td>
-                                    <select asp-for="@Model.OrderList[i].PositionClass" class="form-control js-positionclass js-rename" asp-items="@Model.PositionClassList"></select>
+                                <td class="px-3 py-2">
+                                    <select asp-for="@Model.OrderList[i].PositionClass" class="js-positionclass js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.PositionClassList"></select>
                                 </td>
-                                <td>
-                                    <input type="button" value="削除" class="btn btn-danger js-order-delete" />
+                                <td class="col-fix-right px-3 py-2 text-right">
+                                    <input type="button" value="削除" class="js-order-delete cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300" />
                                     <input class="js-battingorder js-rename" type="hidden" asp-for="@Model.OrderList[i].BattingOrder" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.OrderList[i].GameID" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.OrderList[i].TeamID" />
@@ -64,73 +76,71 @@
                     </tbody>
                 </table>
             </div>
-            <div class="form-group">
+            <div class="border-t border-slate-200 px-4 py-3">
                 @if (!Model.IsDuringGame)
                 {
-                    <input type="button" value="オーダー追加" class="btn btn-success" id="add-order" />
+                    <input type="button" value="打順を追加" class="cursor-pointer rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" id="add-order" />
                 }
                 else
                 {
-                    <input type="button" value="オーダー追加" class="btn btn-success" data-toggle="modal" data-target="#interrupt-order" />
+                    <input type="button" value="打順を追加" class="js-interrupt-open cursor-pointer rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" />
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="interrupt-order" tabindex="-1" role="dialog" aria-labelledby="interrupt-order-title" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="interrupt-order-title">オーダー追加</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>追加する打順を入力してください。<br />打順間に割り込みたい場合は小数を含めた打順指定が可能です。</p>
-                                    <input id="interrupt-batting-order" class="form-control" type="number" step="0.1" min="0" />
-                                    <p class="text-danger interrupt-order-input-error d-none">打順を入力してください。</p>
-                                    <p class="text-danger interrupt-order-decimal-error d-none">小数は第一位のみ有効です。</p>
-                                    <p class="text-danger interrupt-order-exist-error d-none">既に存在する打順を指定することはできません。</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button id="add-order-modal" type="button" class="btn btn-success">追加</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">戻る</button>
-                                </div>
-                            </div>
+                    @*
+                        試合中の打順追加。
+                        Bootstrap のモーダルに依存していたため <dialog> に置き換えている。
+                        ※m-auto が無いと Tailwind のリセットで左上に表示される
+                    *@
+                    <dialog id="interrupt-order" aria-labelledby="interrupt-order-title" class="m-auto w-[min(28rem,calc(100vw-2rem))] rounded-xl border border-slate-200 bg-white p-0 shadow-2xl backdrop:bg-slate-900/50">
+                        <div class="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-4">
+                            <h2 id="interrupt-order-title" class="text-base font-bold text-slate-900">打順を追加</h2>
+                            <button type="button" class="js-interrupt-close rounded-md p-1.5 text-slate-500 transition hover:bg-slate-100" aria-label="閉じる">
+                                <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" /></svg>
+                            </button>
                         </div>
-                    </div>
+                        <div class="px-5 py-4">
+                            <p class="text-sm text-slate-600">
+                                追加する打順を入力してください。
+                                <br />打順の間に割り込みたい場合は、小数を含めた指定ができます（例：3.5）。
+                            </p>
+                            <input id="interrupt-batting-order" class="mt-3 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" type="number" step="0.1" min="0" />
+                            <p class="interrupt-order-input-error mt-2 hidden text-sm text-red-600">打順を入力してください。</p>
+                            <p class="interrupt-order-decimal-error mt-2 hidden text-sm text-red-600">小数は第一位のみ有効です。</p>
+                            <p class="interrupt-order-exist-error mt-2 hidden text-sm text-red-600">既に存在する打順を指定することはできません。</p>
+                        </div>
+                        <div class="flex justify-end gap-2 border-t border-slate-200 px-5 py-3">
+                            <button type="button" class="js-interrupt-close rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">やめる</button>
+                            <button id="add-order-modal" type="button" class="rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800">追加する</button>
+                        </div>
+                    </dialog>
                 }
             </div>
-            <div class="table-responsive">
-                <table class="table table-hover table-sm table-bordered" id="only-defense">
-                    <thead class="thead-light">
-                        <tr>
-                            <th style="width: 10%;">
+        </div>
 
-                            </th>
-                            <th style="width: 50%;">
-                                @Html.DisplayNameFor(model => model.OrderList[0].MemberID)
-                            </th>
-                            <th style="width: 20%;">
-                                @Html.DisplayNameFor(model => model.OrderList[0].PositionClass)
-                            </th>
-                            <th style="width: 20%;">
-
-                            </th>
+        <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <h2 class="border-b border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-700">守備のみ出場</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-200 text-sm" id="only-defense">
+                    <thead class="bg-slate-50">
+                        <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            <th class="w-16 px-3 py-2"></th>
+                            <th class="px-3 py-2">@Html.DisplayNameFor(model => model.OrderList[0].MemberID)</th>
+                            <th class="w-40 px-3 py-2">@Html.DisplayNameFor(model => model.OrderList[0].PositionClass)</th>
+                            <th class="col-fix-right w-24 px-3 py-2"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-slate-100">
                         @for (int i = 0; i < Model.OnlyDefenseList.Count; i++)
                         {
                             <tr id="@("OnlyDefenseList_" + i.ToString())">
-                                <td>
+                                <td class="px-3 py-2"></td>
+                                <td class="px-3 py-2">
+                                    <select asp-for="@Model.OnlyDefenseList[i].MemberID" class="js-memberid js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.MemberIDList"></select>
                                 </td>
-                                <td>
-                                    <select asp-for="@Model.OnlyDefenseList[i].MemberID" class="form-control js-memberid js-rename" asp-items="@Model.MemberIDList"></select>
+                                <td class="px-3 py-2">
+                                    <select asp-for="@Model.OnlyDefenseList[i].PositionClass" class="js-positionclass js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.PositionClassList"></select>
                                 </td>
-                                <td>
-                                    <select asp-for="@Model.OnlyDefenseList[i].PositionClass" class="form-control js-positionclass js-rename" asp-items="@Model.PositionClassList"></select>
-                                </td>
-                                <td>
-                                    <input type="button" value="削除" class="btn btn-danger js-only-defense-delete js-rename" />
+                                <td class="col-fix-right px-3 py-2 text-right">
+                                    <input type="button" value="削除" class="js-only-defense-delete js-rename cursor-pointer rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" />
                                     <input class="js-battingorder js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].BattingOrder" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].GameID" />
                                     <input class="js-rename" type="hidden" asp-for="@Model.OnlyDefenseList[i].TeamID" />
@@ -144,27 +154,26 @@
                     </tbody>
                 </table>
             </div>
-            <div class="form-group">
-                <input type="button" value="守備のみ追加" class="btn btn-success" id="add-only-defense" />
+            <div class="border-t border-slate-200 px-4 py-3">
+                <input type="button" value="守備のみ追加" class="cursor-pointer rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" id="add-only-defense" />
             </div>
-            <div class="form-group">
-                <input type="submit" value="登録" class="btn btn-primary" />
-                @if (!Model.IsDuringGame)
-                {
-                    <a class="btn btn-secondary" asp-page="/Game/Edit" asp-route-id="@Model.Game.GameID">戻る</a>
-                }
-                else
-                {
-                    <a class="btn btn-secondary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameSceneID" asp-route-isOrderChange="@true">戻る</a>
-                }
-            </div>
-        </form>
-    </div>
-</div>
+        </div>
 
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <input type="submit" value="@(Model.IsDuringGame ? "変更を保存する" : "この打順で始める")" class="rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" />
+            @if (!Model.IsDuringGame)
+            {
+                <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Game/Index">試合一覧へ</a>
+            }
+            else
+            {
+                <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameSceneID" asp-route-isOrderChange="@true">スコア入力へ戻る</a>
+            }
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/js/order.js" asp-append-version="true"></script>
 }
-

@@ -1,32 +1,43 @@
 ﻿@page
 @model Bmcs.Pages.GameScore.DetailsModel
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
-
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-
-<h4>@Model.Game.Team.TeamName</h4>
-<hr />
-
-@if (Model.Game.GameInputTypeClass == GameInputTypeClass.ByPlay)
-{
-    <div class="form-group">
-        <a class="btn btn-primary" asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID">イニング詳細</a>
-    </div>
+@{
+    Layout = "_LayoutTailwind";
 }
+
+<div class="mx-auto max-w-6xl px-4 py-6">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Game.Team.TeamName</p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
 @if (!string.IsNullOrEmpty(Model.Game.VideoCode))
 {
-<div class="embed-responsive embed-responsive-16by9">
+@* 管理者がDBに登録した埋め込みコードを表示する（一般ユーザには未開放） *@
+<div class="mt-4 aspect-video overflow-hidden rounded-xl [&>iframe]:size-full">
     @Html.Raw(Model.Game.VideoCode)
 </div>
 }
 
-<div class="table-responsive">
-    <table class="table table-sm table-bordered">
-        <thead class="thead-light">
+@*
+    スコアボード。他の表と同じくカードに入れる（以前は枠も余白も無く、上のボタンと接していた）。
+    イニング詳細はスコアボードに対する操作なので、カードの見出し行に置く。
+*@
+<div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="flex items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-4 py-2">
+        <span class="text-sm font-bold text-slate-700">スコア</span>
+        @if (Model.Game.GameInputTypeClass == GameInputTypeClass.ByPlay)
+        {
+            <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID">イニング詳細</a>
+        }
+    </div>
+    <div class="px-4 py-3">
+<div class="overflow-x-auto">
+    <table class="stat-table">
+        <thead>
             <tr>
                 <th>
                     チーム名
@@ -140,17 +151,19 @@
         </tbody>
     </table>
 </div>
+    </div>
+</div>
 
-<div class="box">
-    <div class="box-title">
+<div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700">
         投手成績
     </div>
-    <div class="box-inner">
-        <div class="table-responsive">
-            <table class="table table-sm table-hover table-bordered">
-                <thead class="thead-light">
+    <div class="px-4 py-3">
+        <div class="overflow-x-auto">
+            <table class="stat-table">
+                <thead>
                     <tr>
-                        <th class="column-fix-left">
+                        <th class="col-fix-left">
                             @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
                         </th>
                         <th>
@@ -222,7 +235,7 @@
                     @foreach (var item in Model.GameScorePitcherList)
                     {
                         <tr>
-                            <td class="column-fix-left">
+                            <td class="col-fix-left">
                                 @Html.DisplayFor(modelItem => item.Member.MemberName)
                             </td>
                             <td>
@@ -296,19 +309,19 @@
     </div>
 </div>
 
-<div class="box">
-    <div class="box-title">
+<div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700">
         野手成績
     </div>
-    <div class="box-inner">
-        <div class="table-responsive">
-            <table class="table table-sm table-hover table-bordered">
-                <thead class="thead-light">
+    <div class="px-4 py-3">
+        <div class="overflow-x-auto">
+            <table class="stat-table">
+                <thead>
                     <tr>
                         <th>
                             @Html.DisplayNameFor(model => model.GameScoreFielderList[0].BattingOrder)
                         </th>
-                        <th class="column-fix-left">
+                        <th class="col-fix-left">
                             @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
                         </th>
                         <th>
@@ -412,7 +425,7 @@
                                 }
                                 @{battingOrderValue = item.BattingOrder.NullToZero();}
                             </td>
-                            <td class="align-middle column-fix-left">
+                            <td class="col-fix-left align-middle">
                                 @Html.DisplayFor(modelItem => item.Member.MemberName)
                             </td>
                             <td>
@@ -507,8 +520,9 @@
     </div>
 </div>
 
-<div class="form-group">
-    <a class="btn btn-secondary" asp-page="/Game/Index" asp-route-teamID="@Model.Game.TeamID">試合一覧へ戻る</a>
+    <div class="mt-6">
+        <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Game/Index" asp-route-teamID="@Model.Game.TeamID">試合一覧へ戻る</a>
+    </div>
 </div>
 
 

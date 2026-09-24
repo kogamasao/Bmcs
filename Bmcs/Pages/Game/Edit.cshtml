@@ -3,74 +3,132 @@
 
 @{
     ViewData[ViewDataConstant.Title] = "試合情報編集";
+    Layout = "_LayoutTailwind";
+
+    var isBeforeGame = Model.Game.StatusClass == StatusClass.BeforeGame;
+    var inputClass = "mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500";
+    var selectClass = "mt-1 block w-full self-start rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500";
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+<div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Game.Team.TeamName</p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
+    <form method="post" class="mt-8">
+        <div asp-validation-summary="All" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
+        <input type="hidden" asp-for="Game.GameID" />
+        <input type="hidden" asp-for="Game.TimeStamp" />
+        <input type="hidden" asp-for="Game.StatusClass" />
 
-<h4>@Model.Game.Team.TeamName</h4>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Game.GameID" />
-            <input type="hidden" asp-for="Game.TimeStamp" />
-            <div class="form-group">
-                <label asp-for="Game.GameDate" class="control-label"></label>
-                <input asp-for="Game.GameDate" class="form-control" />
-                <span asp-validation-for="Game.GameDate" class="text-danger"></span>
+        <div class="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div>
+                <label asp-for="Game.GameDate" class="block text-sm font-semibold text-slate-800"></label>
+                <input asp-for="Game.GameDate" class="@inputClass sm:w-64" />
+                <span asp-validation-for="Game.GameDate" class="mt-1 block text-sm text-red-600"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Game.GameClass" class="control-label"></label>
-                <select asp-for="Game.GameClass" class="form-control" asp-items="Model.GameClassList"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Game.OpponentTeamName" class="control-label"></label>
-                <input asp-for="Game.OpponentTeamName" class="form-control" />
-                <span asp-validation-for="Game.OpponentTeamName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Game.OpponentTeamAbbreviation" class="control-label"></label>
-                <input asp-for="Game.OpponentTeamAbbreviation" class="form-control" />
-                <span asp-validation-for="Game.OpponentTeamAbbreviation" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Game.StadiumName" class="control-label"></label>
-                <input asp-for="Game.StadiumName" class="form-control" />
-                <span asp-validation-for="Game.StadiumName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Game.WeatherClass" class="control-label"></label>
-                <select asp-for="Game.WeatherClass" class="form-control" asp-items="Model.WeatherClassList"></select>
-            </div>
-            @if (Model.Game.StatusClass == StatusClass.BeforeGame)
-            {
-                <div class="form-group">
-                    <label asp-for="Game.BatFirstBatSecondClass" class="control-label"></label>
-                    <select asp-for="Game.BatFirstBatSecondClass" class="form-control" asp-items="Model.BatFirstBatSecondClassList"></select>
+
+            <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-y-0">
+                <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                    <label asp-for="Game.OpponentTeamName" class="block text-sm font-semibold text-slate-800"></label>
+                    <p class="mt-0.5 text-sm text-slate-500">試合一覧や試合結果に表示されます。</p>
+                    <div>
+                        <input asp-for="Game.OpponentTeamName" class="@inputClass" />
+                        <span asp-validation-for="Game.OpponentTeamName" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Game.GameInputTypeClass" class="control-label"></label>
-                    <select asp-for="Game.GameInputTypeClass" class="form-control" asp-items="Model.GameInputTypeClassList"></select>
+                <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                    <label asp-for="Game.OpponentTeamAbbreviation" class="block text-sm font-semibold text-slate-800"></label>
+                    <p class="mt-0.5 text-sm text-slate-500">スコアボードに表示されます。</p>
+                    <div>
+                        <input asp-for="Game.OpponentTeamAbbreviation" class="@inputClass" />
+                        <span asp-validation-for="Game.OpponentTeamAbbreviation" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label asp-for="Game.StadiumName" class="block text-sm font-semibold text-slate-800"></label>
+                <input asp-for="Game.StadiumName" class="@inputClass" />
+                <span asp-validation-for="Game.StadiumName" class="mt-1 block text-sm text-red-600"></span>
+            </div>
+
+            <div class="grid gap-6 sm:grid-cols-2">
+                <div>
+                    <label asp-for="Game.GameClass" class="block text-sm font-semibold text-slate-800"></label>
+                    <select asp-for="Game.GameClass" class="@selectClass" asp-items="Model.GameClassList"></select>
+                </div>
+                <div>
+                    <label asp-for="Game.WeatherClass" class="block text-sm font-semibold text-slate-800"></label>
+                    <select asp-for="Game.WeatherClass" class="@selectClass" asp-items="Model.WeatherClassList"></select>
+                </div>
+            </div>
+        </div>
+
+        @*
+            先攻後攻・入力方式は試合前のみ変更できる（サーバ側も DB の状態で判定している）。
+            以前は試合前以外では欄ごと消えており、なぜ変えられないのかが分からなかったため、値と理由を表示する。
+        *@
+        <div class="mt-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            @if (isBeforeGame)
+            {
+                <p class="text-sm text-slate-600">
+                    <strong class="font-semibold text-slate-800">先攻・後攻と入力方式は、試合の入力を開始すると変更できません。</strong>
+                </p>
+                <div class="mt-4 grid gap-6 sm:grid-cols-2">
+                    <div>
+                        <label asp-for="Game.BatFirstBatSecondClass" class="block text-sm font-semibold text-slate-800"></label>
+                        <select asp-for="Game.BatFirstBatSecondClass" class="@selectClass" asp-items="Model.BatFirstBatSecondClassList"></select>
+                    </div>
+                    <div>
+                        <label asp-for="Game.GameInputTypeClass" class="block text-sm font-semibold text-slate-800"></label>
+                        <select asp-for="Game.GameInputTypeClass" class="@selectClass" asp-items="Model.GameInputTypeClassList"></select>
+                    </div>
                 </div>
             }
             else
             {
                 <input type="hidden" asp-for="Game.BatFirstBatSecondClass" />
                 <input type="hidden" asp-for="Game.GameInputTypeClass" />
-            }
-            <input type="hidden" asp-for="Game.StatusClass" />
 
-            <div class="form-group">
-                <input type="submit" value="登録" class="btn btn-primary" />
-                <a class="btn btn-secondary" asp-page="Index" asp-route-teamID="@Model.Game.Team.TeamID">戻る</a>
-            </div>
-        </form>
-    </div>
+                <dl class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <dt class="text-sm font-semibold text-slate-800">@Html.DisplayNameFor(model => model.Game.BatFirstBatSecondClass)</dt>
+                        <dd class="mt-1 text-slate-700">@(string.IsNullOrEmpty(Model.Game.BatFirstBatSecondClassName) ? "未設定" : Model.Game.BatFirstBatSecondClassName)</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-semibold text-slate-800">@Html.DisplayNameFor(model => model.Game.GameInputTypeClass)</dt>
+                        <dd class="mt-1 text-slate-700">@(string.IsNullOrEmpty(Model.Game.GameInputTypeClassName) ? "未設定" : Model.Game.GameInputTypeClassName)</dd>
+                    </div>
+                </dl>
+                <p class="mt-4 text-sm text-slate-500">試合の入力を開始したため、先攻・後攻と入力方式は変更できません。</p>
+            }
+        </div>
+
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <input type="submit" value="変更を保存する" class="rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" />
+            <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="Index" asp-route-teamID="@Model.Game.Team.TeamID">試合一覧へ</a>
+        </div>
+        @* 保存後の遷移先（Edit.cshtml.cs の OnPostAsync と合わせる） *@
+        <p class="mt-3 text-sm text-slate-500">
+            @switch (Model.Game.StatusClass)
+            {
+                case StatusClass.BeforeGame:
+                    <text>保存すると、プレー毎は打順の設定へ、試合結果のみは試合結果の入力へ進みます。</text>
+                    break;
+                case StatusClass.DuringGame:
+                    <text>保存すると、スコア入力に戻ります。</text>
+                    break;
+                default:
+                    <text>保存すると、試合一覧に戻ります。</text>
+                    break;
+            }
+        </p>
+    </form>
 </div>
 
 @section Scripts {

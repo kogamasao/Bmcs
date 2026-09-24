@@ -1,8 +1,8 @@
 @*
     head内の共通タグ（title・description・canonical・OGP・計測）。
 
-    旧レイアウト（_Layout.cshtml）と Tailwind版（_LayoutTailwind.cshtml）の
-    両方から読み込む。レイアウトごとに書くと、片方だけ直す事故が起きるため。
+    _LayoutTailwind.cshtml から読み込む。
+    （移行期間中は旧レイアウトと共用するために切り出した。現在はレイアウトが1つのため、切り出したままにしている）
 *@
 @model dynamic
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration

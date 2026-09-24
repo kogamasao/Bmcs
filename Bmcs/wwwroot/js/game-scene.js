@@ -1,5 +1,42 @@
 ﻿$(function () {
 
+    //タイブレーク設定ダイアログの開閉
+    //※Bootstrapのモーダルに依存していたため <dialog> に置き換えている
+    var tieBreakDialog = document.getElementById("tie-break");
+
+    $(".js-tiebreak-open").on("click", function () {
+        if (tieBreakDialog) {
+            tieBreakDialog.showModal();
+        }
+    });
+
+    $(".js-tiebreak-close").on("click", function () {
+        if (tieBreakDialog) {
+            tieBreakDialog.close();
+        }
+    });
+
+    if (tieBreakDialog) {
+        tieBreakDialog.addEventListener("click", function (event) {
+            if (event.target === tieBreakDialog) {
+                tieBreakDialog.close();
+            }
+        });
+    }
+
+    //「試合終了」の誤操作対策
+    //※「チェンジ」と隣接しており、押すと試合が終了して修正には戻り操作が必要になる。
+    //  確認を入れる（jsのsubmit処理より先に実行されるよう、先頭でバインドする）
+    $(".js-confirm-gameset").on("click", function (event) {
+        //※「試合終了」も表示中の打者の結果を登録してから終了するため、最後の打者を入力済みなら「打席なし(チェンジ)」を選んでもらう。
+        //  また、終了しただけでは成績に集計されない（確定が必要）ことも伝える
+        if (!window.confirm("この打者の結果を登録して、試合を終了します。よろしいですか？\n\n・最後の打者をすでに登録している場合は、打者の結果を「打席なし(チェンジ)」にしてから押してください。\n・イニングを進める場合は「チェンジ」を押してください。\n・終了後、試合結果の画面で「確定する」を押すと成績に集計されます。")) {
+            event.stopImmediatePropagation();
+            event.preventDefault();
+        }
+    });
+
+
     //初期表示ボタン制御
     IsUseDeleteButton();
 
@@ -54,7 +91,7 @@
         $('#game-scene-submit-class').val(submitclass);
 
         //非表示
-        $('body').addClass('d-none');
+        $('body').addClass('hidden');
 
         //submit
         $('form').submit();
@@ -91,10 +128,10 @@
             if (result == 1
                 || (result >= 5
                     && result <= 8)) {
-                afterRunnerResult.parent().parent().addClass('d-none');
+                afterRunnerResult.parent().parent().addClass('hidden');
             }
             else {
-                afterRunnerResult.parent().parent().removeClass('d-none');
+                afterRunnerResult.parent().parent().removeClass('hidden');
             }
         }
 
@@ -117,6 +154,89 @@
             batterRunnerMember.val(memberID);
         }
     });
+
+    // ==========================================================================
+    // アウトカウントの案内
+    // ※打席前のアウトカウントだけで判定すると案内が1打席遅れ、
+    //   「3アウト目を入力してからチェンジ＝4アウトでチェンジ」になってしまう。
+    //   打者結果・ランナーの結果を含めた見込みアウト数で判定する。
+    //
+    //   サーバ側（GameScene/Edit.cshtml.cs の ResultOutCount）は
+    //     打席前のアウトカウント ＋ 打席後ランナーのうち結果が「アウト」の件数
+    //   で計算している。ここでも同じ数え方にする。
+    //   併殺やランナーがアウトになった場合も、該当ランナーの結果が「アウト」になるため
+    //   同じ計算で拾える。
+    // ==========================================================================
+    var RUNNER_RESULT_OUT = '1';   //RunnerResultClass.Out
+    var RESULT_CLASS_CHANGE = '91'; //ResultClass.Change（打者の打席が成立しない）
+
+    function UpdateOutCountNotice() {
+
+        var notice = $("#out-count-notice");
+
+        if (!notice.length) {
+            return;
+        }
+
+        var baseOutCount = Number(notice.data("base-outcount")) || 0;
+
+        //打者結果が「チェンジ」の場合、サーバ側は打者のランナー行を除外する
+        var isChange = $(".js-batter-result").val() === RESULT_CLASS_CHANGE;
+
+        var resultOutCount = 0;
+
+        $(".js-after-runner-result").each(function () {
+
+            if ($(this).val() !== RUNNER_RESULT_OUT) {
+                return true;
+            }
+
+            //打者行は、打者結果が「チェンジ」のときは数えない（サーバ側と合わせる）
+            if (isChange && $(this).data("runnerclass") === 'Batter') {
+                return true;
+            }
+
+            resultOutCount++;
+        });
+
+        var totalOutCount = baseOutCount + resultOutCount;
+
+        if (totalOutCount < 3) {
+            notice.addClass('hidden');
+            return;
+        }
+
+        var title;
+        var body;
+
+        if (baseOutCount >= 3) {
+            //打席前にすでに3アウト（案内を無視して「次の打者へ」を押した後など）
+            //※「チェンジ」ボタンは表示中の打者の結果も登録してから攻守交代するため、
+            //  打者結果が三振等のまま押すと4アウト目が付く。打席を記録しない選択肢を選んでもらう
+            title = 'すでに' + baseOutCount + 'アウトです';
+            body = isChange
+                   ? '下の<strong class="font-semibold">「チェンジ」</strong>を押すとイニングが進みます（この打者の打席は記録されません）。'
+                   : 'この打者の打席は記録せずにイニングを進めるため、打者の結果を<strong class="font-semibold">「打席なし(チェンジ)」</strong>にしてから、下の<strong class="font-semibold">「チェンジ」</strong>を押してください。';
+        }
+        else {
+            //この打席の結果で3アウトになる
+            title = 'この結果で' + totalOutCount + 'アウトになります';
+            body = 'イニングを進める場合は下の<strong class="font-semibold">「チェンジ」</strong>を押してください。（このまま打者を進めることもできます）';
+        }
+
+        notice.find(".js-out-count-title").text(title);
+        notice.find(".js-out-count-body").html(body);
+        notice.removeClass('hidden');
+    }
+
+    //打者結果・ランナーの結果が変わるたびに再計算する
+    //※動的に追加される行にも効くよう、documentに委譲して受ける
+    $(document).on("change", ".js-batter-result, .js-after-runner-result, .js-before-runner-result", function () {
+        UpdateOutCountNotice();
+    });
+
+    //初期表示
+    UpdateOutCountNotice();
 
     //打者結果
     $(".js-batter-result").change(function () {

@@ -26,6 +26,11 @@ namespace Bmcs.Pages.Game
 
         public Models.Team Team { get; set; }
 
+        /// <summary>
+        /// 確定前の試合の件数（全ページ分）
+        /// </summary>
+        public int BeforeFixGameCount { get; set; }
+
         public async Task<IActionResult> OnGetAsync(string teamID, int? pageIndex)
         {
             IsMyTeam = false;
@@ -70,9 +75,22 @@ namespace Bmcs.Pages.Game
             Game = PaginatedList<Models.Game>.Create(
                    gameList.AsQueryable().AsNoTracking(), pageIndex ?? 1, 20);
 
+            //存在しないページを指定された場合は1ページ目へ戻す（Member/Index と同じ）
+            //※そのまま表示すると「まだ試合が登録されていません」と誤表示され、ページ送りも描画されない
+            if (Game.TotalPages > 0 && Game.PageIndex > Game.TotalPages)
+            {
+                return RedirectToPage("./Index", new { teamID });
+            }
+
+            //確定前の試合の件数（全ページ分）
+            //※以前はビューで表示中の1ページ分だけを数えており、2ページ目以降の確定前の試合が案内されなかった
+            BeforeFixGameCount = gameList.Count(r => r.StatusClass == StatusClass.BeforeFix);
+
             Team = await Context.Teams.FirstOrDefaultAsync(m => m.TeamID == teamID);
 
-            if (Team == null)
+            //非公開・削除済みの他チームは、チーム名も表示しない（URL直接指定での確認を防ぐ）
+            if (Team == null
+                || (!base.IsAdmin() && !IsMyTeam && (Team.DeleteFLG || !Team.PublicFLG)))
             {
                 return NotFound();
             }

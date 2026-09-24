@@ -1,249 +1,164 @@
 ﻿@page
 @model Bmcs.Pages.Team.IndexModel
+@using Bmcs.PageHelper
 
 @{
     ViewData[ViewDataConstant.Title] = "チーム一覧";
+    Layout = "_LayoutTailwind";
+
+    var smallButton = "inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50";
+    //体験用ユーザは実在のチームへメッセージを送れない（Message/Index の IsTeamOnly）
+    var canSendMessage = Model.MyTeam != null && Model.MyTeam.PublicFLG && !Model.IsSampleUser();
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+<div class="mx-auto max-w-6xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">
+                @if (Model.IsAdmin())
+                {
+                    <text>すべてのチームを表示しています（管理者）</text>
+                }
+                else
+                {
+                    <text>公開しているチームを表示しています。試合結果・成績・メンバーを見ることができます。</text>
+                }
+            </p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-
-<div class="form-group">
     @if (Model.IsAdmin())
     {
-    <a class="btn btn-primary" asp-page="Create">チーム作成</a>
-    <p>※すべてのチームが表示対象です</p>
+        <div class="mt-4">
+            <a class="inline-flex items-center justify-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800" asp-page="Create">チーム作成</a>
+        </div>
+    }
+
+    @if (!Model.Team.Any())
+    {
+        <div class="mt-8 rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+            <p class="font-bold text-slate-900">表示できるチームがありません</p>
+        </div>
+    }
+    else if (!Model.IsAdmin())
+    {
+        @*
+            公開チーム一覧は、ランディングから新規訪問者が最初に見る画面の一つ。
+            以前は10列前後の横長の表で、紹介文が読みにくく、操作ボタンが画面外に出ていたため、チームごとのカードにする。
+        *@
+        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            @foreach (var item in Model.Team)
+            {
+                <article class="flex flex-col rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                    <h2 class="font-bold text-slate-900">
+                        <a asp-page="./Details" asp-route-id="@item.TeamID">@item.TeamName</a>
+                    </h2>
+
+                    <dl class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-600">
+                        @if (!string.IsNullOrEmpty(item.TeamCategoryClassName))
+                        {
+                            <div><dt class="sr-only">@Html.DisplayNameFor(model => model.Team[0].TeamCategoryClassName)</dt><dd>@item.TeamCategoryClassName</dd></div>
+                        }
+                        @if (!string.IsNullOrEmpty(item.UseBallClassName))
+                        {
+                            <div><dt class="sr-only">@Html.DisplayNameFor(model => model.Team[0].UseBallClassName)</dt><dd>@item.UseBallClassName</dd></div>
+                        }
+                        @if (!string.IsNullOrEmpty(item.ActivityBase))
+                        {
+                            <div><dt class="inline">活動拠点：</dt><dd class="inline">@item.ActivityBase</dd></div>
+                        }
+                        @if (item.TeamNumber != null)
+                        {
+                            <div><dt class="inline">人数：</dt><dd class="inline">@item.TeamNumber 人</dd></div>
+                        }
+                    </dl>
+
+                    @if (!string.IsNullOrEmpty(item.MessageDetail))
+                    {
+                        @* 紹介文は長文になり得るため、4行で切る（全文はチーム詳細で読める） *@
+                        <p class="mt-3 line-clamp-4 whitespace-pre-line break-words text-sm text-slate-700">@item.MessageDetail</p>
+                    }
+
+                    <div class="mt-auto flex flex-wrap gap-2 pt-4">
+                        <a class="@smallButton" asp-page="/Game/Index" asp-route-teamID="@item.TeamID">試合</a>
+                        <a class="@smallButton" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@true" asp-route-teamCategoryClass="@TeamCategoryClass.All" asp-route-useBallClass="@UseBallClass.All">成績</a>
+                        <a class="@smallButton" asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a>
+                        @if (canSendMessage && item.TeamID != Model.MyTeam.TeamID)
+                        {
+                            <a class="@smallButton" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-privateTeamID="@item.TeamID">メッセージを送る</a>
+                        }
+                    </div>
+                </article>
+            }
+        </div>
     }
     else
     {
-    <p>※公開チームのみ表示対象です</p>
-    }
-    <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
-</div>
-
-<div class="table-responsive">
-    <table class="table table-hover table-sm table-bordered">
-        <thead class="thead-light">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].TeamID)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].TeamName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].TeamAbbreviation)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].RepresentativeName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].TeamCategoryClassName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].UseBallClassName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].ActivityBase)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].TeamNumber)
-                </th>
-                @if (Model.IsLogin())
-                {
-                    <th>
-                        @Html.DisplayNameFor(model => model.Team[0].TeamEmailAddress)
-                    </th>
-                }
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].MessageDetail)
-                </th>
-                @if (Model.IsAdmin())
-                {
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].TeamPassword)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].PublicFLG)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].DeleteFLG)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].EntryUserID)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].EntryDatetime)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].UpdateUserID)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Team[0].UpdateDatetime)
-                </th>
-                }
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Team)
-            {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeamID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeamName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeamAbbreviation)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RepresentativeName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeamCategoryClassName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UseBallClassName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ActivityBase)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeamNumber)
-                </td>
-                @if (Model.IsLogin())
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TeamEmailAddress)
-                    </td>
-                }
-                <td>
-                    @Html.DisplayFor(modelItem => item.MessageDetail)
-                </td>
-                @if (Model.IsAdmin())
+        @* 管理者向け。項目が多いため表のまま（操作列は右端に固定） *@
+        <div class="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+            <table class="stat-table">
+                <thead>
+                    <tr>
+                        <th class="col-fix-left">@Html.DisplayNameFor(model => model.Team[0].TeamID)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].TeamName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].TeamAbbreviation)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].RepresentativeName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].TeamCategoryClassName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].UseBallClassName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].ActivityBase)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].TeamNumber)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].TeamEmailAddress)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].MessageDetail)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].TeamPassword)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].PublicFLG)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].DeleteFLG)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].EntryUserID)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].EntryDatetime)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].UpdateUserID)</th>
+                        <th>@Html.DisplayNameFor(model => model.Team[0].UpdateDatetime)</th>
+                        <th class="col-fix-right"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Team)
                     {
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeamPassword)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PublicFLG)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DeleteFLG)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EntryUserID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EntryDatetime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UpdateUserID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UpdateDatetime)
-                </td>
+                        <tr>
+                            <td class="col-fix-left">@Html.DisplayFor(modelItem => item.TeamID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TeamName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TeamAbbreviation)</td>
+                            <td>@Html.DisplayFor(modelItem => item.RepresentativeName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TeamCategoryClassName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.UseBallClassName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ActivityBase)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TeamNumber)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TeamEmailAddress)</td>
+                            <td class="max-w-64 truncate">@Html.DisplayFor(modelItem => item.MessageDetail)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TeamPassword)</td>
+                            <td>@Html.DisplayFor(modelItem => item.PublicFLG)</td>
+                            <td>@Html.DisplayFor(modelItem => item.DeleteFLG)</td>
+                            <td>@Html.DisplayFor(modelItem => item.EntryUserID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.EntryDatetime)</td>
+                            <td>@Html.DisplayFor(modelItem => item.UpdateUserID)</td>
+                            <td>@Html.DisplayFor(modelItem => item.UpdateDatetime)</td>
+                            <td class="col-fix-right">
+                                <div class="flex gap-1">
+                                    <a class="@smallButton" asp-page="/Game/Index" asp-route-teamID="@item.TeamID">試合</a>
+                                    <a class="@smallButton" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@true" asp-route-teamCategoryClass="@TeamCategoryClass.All" asp-route-useBallClass="@UseBallClass.All">成績</a>
+                                    <a class="@smallButton" asp-page="./Details" asp-route-id="@item.TeamID">詳細</a>
+                                    <a class="@smallButton" asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a>
+                                    <a class="@smallButton" asp-page="./Edit" asp-route-id="@item.TeamID">編集</a>
+                                    <a class="inline-flex items-center justify-center rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" asp-page="./Delete" asp-route-id="@item.TeamID">削除</a>
+                                </div>
+                            </td>
+                        </tr>
                     }
+                </tbody>
+            </table>
+        </div>
+    }
 
-                <td>
-                    <a class="btn btn-primary btn-sm" asp-page="/Game/Index" asp-route-teamID="@item.TeamID">試合</a>
-                    <span>&nbsp;</span>
-                    <a class="btn btn-primary btn-sm" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@item.TeamID" asp-route-isPublic="@true" asp-route-teamCategoryClass="@TeamCategoryClass.All" asp-route-useBallClass="@UseBallClass.All">成績</a>
-                    <span>&nbsp;</span>
-                    <a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.TeamID">詳細</a>
-                    <span>&nbsp;</span>
-                    <a class="btn btn-primary btn-sm" asp-page="/Member/Index" asp-route-teamID="@item.TeamID">メンバー</a>
-                    @if (Model.IsAdmin())
-                        {
-                    <span>&nbsp;</span>
-                    <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.TeamID">編集</a>
-                    <span>&nbsp;</span>
-                    <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.TeamID">削除</a>
-                        }
-                    @if (Model.MyTeam != null && Model.MyTeam.PublicFLG)
-                        {
-                    <span>&nbsp;</span>
-                    <a class="btn btn-primary btn-sm" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-privateTeamID="@item.TeamID">メッセージを送る</a>
-                        }
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-@{
-    var prevDisabled = !Model.Team.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.Team.HasNextPage ? "disabled" : "";
-}
-
-<div class="mt-1">
-    <ul class="pagination">
-        <li class="page-item @prevDisabled">
-            <a asp-page="/Team/Index"
-               class="page-link">
-                <<
-            </a>
-        </li>
-
-        @if(Model.Team.PageIndex >= 4)
-        {
-        <li class="page-item disabled">
-            <span class="page-link">
-                …
-            </span>
-        </li>
-        }
-
-        @for(var i = Model.Team.PageIndex - 2; i <= Model.Team.PageIndex + 2; i++)
-        {
-        @if(i < 1 || i > Model.Team.TotalPages)
-            {
-                continue;
-            }
-
-        @if(Model.Team.PageIndex == i)
-            {
-        <li class="page-item active">
-            <a asp-page="/Team/Index"
-               asp-route-pageIndex="@(i)"
-               class="page-link">
-                @(i)
-            </a>
-        </li>
-            }
-            else
-            {
-        <li class="page-item">
-            <a asp-page="/Team/Index"
-               asp-route-pageIndex="@(i)"
-               class="page-link">
-                @(i)
-            </a>
-        </li>
-            }
-        }
-
-        @if(Model.Team.TotalPages - Model.Team.PageIndex >= 3)
-        {
-    <li class="page-item disabled">
-        <span class="page-link">
-            …
-        </span>
-    </li>
-        }
-
-        <li class="page-item @nextDisabled">
-            <a asp-page="/Team/Index"
-               asp-route-pageIndex="@(Model.Team.TotalPages)"
-               class="page-link">
-                >>
-            </a>
-        </li>
-    </ul>
+    @await Html.PartialAsync("~/Pages/Shared/_PaginationTailwind.cshtml",
+        PaginationInfo.Create(Model.Team.PageIndex, Model.Team.TotalPages, "/Team/Index"))
 </div>

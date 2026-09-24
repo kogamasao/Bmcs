@@ -60,8 +60,20 @@ namespace Bmcs.Pages.Team
 
         public async Task<IActionResult> OnPostAsync()
         {
+            //サンプルチームの設定は変更できない（管理者は除く）
+            //（体験用ユーザは誰でもログインでき、チーム名や公開設定を書き換えられると公開一覧にそのまま出る。
+            //  体験用ユーザ以外でも、推測しやすいチームパスワードで参加すれば変更できたため、チームでも判定する）
+            if (base.IsSampleUser()
+                || (!base.IsAdmin() && IsSampleTeamID(HttpContext.Session.GetString(SessionConstant.TeamID))))
+            {
+                return NotFound();
+            }
+
             if (!ModelState.IsValid)
             {
+                //入力エラーでの再表示でもヘルプを表示できるようにする
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamEdit);
+
                 return Page();
             }
 

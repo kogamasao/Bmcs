@@ -1,25 +1,30 @@
 ﻿@page
 @model Bmcs.Pages.Score.IndexModel
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
-
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-
-@if (!string.IsNullOrEmpty(Model.SelectTeamID))
-{
-<h4>@Model.Team.TeamName</h4>
+@{
+    Layout = "_LayoutTailwind";
 }
+
+<div class="mx-auto max-w-6xl px-4 py-6">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            @if (!string.IsNullOrEmpty(Model.SelectTeamID) && Model.Team != null)
+            {
+                <p class="mt-1 text-sm text-slate-500">@Model.Team.TeamName</p>
+            }
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
 <form method="get" asp-page="/Score/Index">
     <input type="hidden" asp-for="ScorePageClass" name="scorePageClass" />
     <input type="hidden" asp-for="SelectTeamID" name="teamID" />
     <input type="hidden" asp-for="IsPublic" name="isPublic" />
     <input type="hidden" asp-for="SortItem" name="sortItem" />
-    <div class="row">
-        <div class="col-md-3">
-            <table class="table table-sm table-borderless">
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+            <table class="w-full text-sm">
                 <thead>
                     <tr>
                         <th>
@@ -30,14 +35,14 @@
                 <tbody>
                     <tr>
                         <td>
-                            <select asp-for="@Model.Year" class="form-control" asp-items="@Model.YearList"></select>
+                            <select asp-for="@Model.Year" class="block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.YearList"></select>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="col-md-3">
-            <table class="table table-sm table-borderless">
+        <div>
+            <table class="w-full text-sm">
                 <thead>
                     <tr>
                         <th>
@@ -48,7 +53,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <select asp-for="@Model.GameClass" class="form-control" asp-items="@Model.GameClassIncludeAllList"></select>
+                            <select asp-for="@Model.GameClass" class="block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.GameClassIncludeAllList"></select>
                         </td>
                     </tr>
                 </tbody>
@@ -56,8 +61,8 @@
         </div>
         @if (string.IsNullOrEmpty(Model.SelectTeamID))
         {
-        <div class="col-md-3">
-            <table class="table table-sm table-borderless">
+        <div>
+            <table class="w-full text-sm">
                 <thead>
                     <tr>
                         <th>
@@ -68,14 +73,14 @@
                 <tbody>
                     <tr>
                         <td>
-                            <select asp-for="@Model.TeamCategoryClass" class="form-control" asp-items="@Model.TeamCategoryClassIncludeAllList"></select>
+                            <select asp-for="@Model.TeamCategoryClass" class="block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.TeamCategoryClassIncludeAllList"></select>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div class="col-md-3">
-            <table class="table table-sm table-borderless">
+        <div>
+            <table class="w-full text-sm">
                 <thead>
                     <tr>
                         <th>
@@ -86,7 +91,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <select asp-for="@Model.UseBallClass" class="form-control" asp-items="@Model.UseBallClassIncludeAllList"></select>
+                            <select asp-for="@Model.UseBallClass" class="block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.UseBallClassIncludeAllList"></select>
                         </td>
                     </tr>
                 </tbody>
@@ -98,8 +103,8 @@
               || Model.ScorePageClass == ScorePageClass.Team)
           && string.IsNullOrEmpty(Model.SelectTeamID))
         {
-        <div class="col-md-3">
-            <table class="table table-sm table-borderless">
+        <div>
+            <table class="w-full text-sm">
                 <thead>
                     <tr>
                         <th>
@@ -110,7 +115,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <select asp-for="@Model.IsIgnoreRegulationGames" class="form-control" asp-items="@Model.IgnoreRegulationList"></select>
+                            <select asp-for="@Model.IsIgnoreRegulationGames" class="block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.IgnoreRegulationList"></select>
                         </td>
                     </tr>
                 </tbody>
@@ -121,8 +126,8 @@
         @if (Model.ScorePageClass == ScorePageClass.Index
         || Model.ScorePageClass == ScorePageClass.Pitcher)
         {
-        <div class="col-md-3">
-            <table class="table table-sm table-borderless">
+        <div>
+            <table class="w-full text-sm">
                 <thead>
                     <tr>
                         <th>
@@ -133,7 +138,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <select asp-for="@Model.IsIgnoreRegulationInnings" class="form-control" asp-items="@Model.IgnoreRegulationList"></select>
+                            <select asp-for="@Model.IsIgnoreRegulationInnings" class="block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.IgnoreRegulationList"></select>
                         </td>
                     </tr>
                 </tbody>
@@ -144,8 +149,8 @@
         @if (Model.ScorePageClass == ScorePageClass.Index
         || Model.ScorePageClass == ScorePageClass.Fielder)
         {
-        <div class="col-md-3">
-            <table class="table table-sm table-borderless">
+        <div>
+            <table class="w-full text-sm">
                 <thead>
                     <tr>
                         <th>
@@ -156,7 +161,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <select asp-for="@Model.IsIgnoreRegulationAtBatting" class="form-control" asp-items="@Model.IgnoreRegulationList"></select>
+                            <select asp-for="@Model.IsIgnoreRegulationAtBatting" class="block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.IgnoreRegulationList"></select>
                         </td>
                     </tr>
                 </tbody>
@@ -165,33 +170,87 @@
         }
     </div>
 
-    <div class="form-group">
-        <input type="submit" value="表示" class="btn btn-primary" />
+    <div class="mt-4">
+        <input type="submit" value="表示" class="cursor-pointer rounded-lg bg-sky-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-800" />
     </div>
 </form>
 
+@*
+    確定前の試合がある場合の案内。
+    「試合終了」ボタンを押しただけでは成績に集計されないため、集計が0件・少ない理由になる。
+*@
+@if (Model.BeforeFixGameCount > 0)
+{
+    <div class="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-5">
+        <h2 class="font-bold text-amber-900">確定していない試合が@(Model.BeforeFixGameCount)件あります<span class="ml-1 text-sm font-normal">（絞り込みに関係なく、すべての期間）</span></h2>
+        <p class="mt-1 text-sm text-amber-900/80">
+            <strong class="font-semibold">「確定前」の試合はこのページに集計されません。</strong>
+            試合一覧の「試合結果編集」を開き、一番下の「確定する」を押してください。
+        </p>
+        <a class="mt-4 inline-flex items-center justify-center rounded-lg bg-amber-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-800" asp-page="/Game/Index" asp-route-teamID="@Model.SelectTeamID">
+            試合一覧へ
+        </a>
+    </div>
+}
+
+@{
+    @* 表示する種別によって埋まるリストが違うため、すべてを見て判定する *@
+    var hasAnyScore = Model.GameScoreTeamList.Any()
+                   || Model.GameScorePitcherList.Any()
+                   || Model.GameScoreFielderList.Any();
+}
+
+@if (!hasAnyScore)
+{
+    @* 空状態。従来は何も描画されず、フィルタと「戻る」だけの白紙になっていた *@
+    <div class="mt-8 rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+        <h2 class="text-lg font-bold text-slate-900">表示できる成績がありません</h2>
+        @if (Model.IsMyTeamScore)
+        {
+            <p class="mx-auto mt-2 max-w-lg text-slate-600">
+                成績は<strong class="font-semibold text-slate-800">「確定」した試合のみ</strong>が集計されます。
+                絞り込み条件を変えるか、試合を登録してスコアを入力してください。
+            </p>
+            <div class="mt-6 flex flex-wrap justify-center gap-3">
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Game/Index" asp-route-teamID="@Model.SelectTeamID">試合一覧へ</a>
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">トップへ</a>
+            </div>
+        }
+        else
+        {
+            <p class="mx-auto mt-2 max-w-lg text-slate-600">
+                条件に合う公開成績がありません。絞り込み条件を変えてお試しください。
+            </p>
+            <div class="mt-6 flex flex-wrap justify-center gap-3">
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Team/Index">公開チーム一覧へ</a>
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">トップへ</a>
+            </div>
+        }
+    </div>
+}
+
 @if (Model.GameScoreTeamList.Any())
 {
-<div class="box">
-    <div class="box-title">
+<div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="border-b border-slate-200 bg-slate-800 px-4 py-2 text-sm font-bold text-white">
         チーム成績
     </div>
-    <div class="box-inner">
+    <div class="px-4 py-3">
         @if (Model.ScorePageClass == ScorePageClass.Index)
             {
-        <div class="table-responsive">
-            <table class="table table-sm table-hover table-bordered">
-                <thead class="thead-light">
+        <div class="max-h-[70vh] overflow-auto">
+            <table class="stat-table">
+                <thead>
                     <tr>
                         @if (!string.IsNullOrEmpty(Model.SelectTeamID))
                                 {
-                        <th class="column-fix-left">
+                        <th class="col-fix-left">
                             @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Team.TeamName)
                         </th>
                                 }
                                 else
                                 {
-                        <th class="text-center column-fix-left">
+                        <th class="col-fix-left text-center">
                             @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Rank)
                         </th>
                         <th>
@@ -244,14 +303,14 @@
                     <tr>
                         @if (!string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                        <td class="align-middle column-fix-left">
+                        <td class="col-fix-left align-middle">
                             <a asp-page="/Team/Details" asp-route-id="@item.Team.TeamID">@item.Team.TeamName</a>
                             @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>*@
                         </td>
                                     }
                                     else
                                     {
-                        <td class="text-center align-middle column-fix-left">
+                        <td class="col-fix-left text-center align-middle">
                             @if (teamRankValue != item.WinRate.NullToZero())
                                             {
                                                 teamRank += 1;
@@ -302,25 +361,25 @@
                 </tbody>
             </table>
         </div>
-        <div class="form-group">
-            <a class="btn btn-primary" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Team" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="WinRate">チーム成績詳細</a>
+        <div class="mt-4">
+            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Team" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="WinRate">チーム成績詳細</a>
         </div>
             }
             else
             {
-        <div class="table-responsive">
-            <table class="table table-sm table-hover table-bordered">
-                <thead class="thead-light">
+        <div class="max-h-[70vh] overflow-auto">
+            <table class="stat-table">
+                <thead>
                     <tr>
                         @if (!string.IsNullOrEmpty(Model.SelectTeamID))
                                 {
-                        <th class="column-fix-left">
+                        <th class="col-fix-left">
                             @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Team.TeamName)
                         </th>
                                 }
                                 else
                                 {
-                        <th class="text-center column-fix-left">
+                        <th class="col-fix-left text-center">
                             @Html.DisplayNameFor(model => model.GameScoreTeamList[0].Rank)
                         </th>
                         <th>
@@ -462,14 +521,14 @@
                     <tr>
                         @if (!string.IsNullOrEmpty(Model.SelectTeamID))
                                     {
-                        <td class="align-middle column-fix-left">
+                        <td class="col-fix-left align-middle">
                             <a asp-page="/Team/Details" asp-route-id="@item.Team.TeamID">@item.Team.TeamName</a>
                             @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.Team.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Team.TeamName</a>*@
                         </td>
                                     }
                                     else
                                     {
-                        <td class="text-center align-middle column-fix-left">
+                        <td class="col-fix-left text-center align-middle">
                             @if (teamRank != item.Rank)
                                             {
                             @item.Rank
@@ -612,21 +671,23 @@
           {
             var prevDisabled = !Model.GameScoreTeamList.HasPreviousPage ? "disabled" : "";
             var nextDisabled = !Model.GameScoreTeamList.HasNextPage ? "disabled" : "";
+            var prevClass = string.IsNullOrEmpty(prevDisabled) ? "" : "pointer-events-none opacity-40";
+            var nextClass = string.IsNullOrEmpty(nextDisabled) ? "" : "pointer-events-none opacity-40";
 
         <div class="mt-1">
-            <ul class="pagination">
-                <li class="page-item @prevDisabled">
+            <ul class="mt-4 flex flex-wrap items-center gap-1">
+                <li class="@prevClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
-                       class="page-link">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @("<<")
                     </a>
                 </li>
 
                 @if (Model.GameScoreTeamList.PageIndex >= 4)
                 {
-                <li class="page-item disabled">
-                    <span class="page-link">
+                <li class="pointer-events-none opacity-40">
+                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         …
                     </span>
                 </li>
@@ -641,22 +702,22 @@
 
                 @if (Model.GameScoreTeamList.PageIndex == i)
                     {
-                <li class="page-item active">
+                <li>
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(i)"
-                       class="page-link">
+                       class="inline-flex items-center rounded-md border border-sky-700 bg-sky-700 px-3.5 py-2 text-sm font-semibold text-white" aria-current="page">
                         @(i)
                     </a>
                 </li>
                     }
                     else
                     {
-                <li class="page-item">
+                <li>
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(i)"
-                       class="page-link">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(i)
                     </a>
                 </li>
@@ -665,18 +726,18 @@
 
                 @if (Model.GameScoreTeamList.TotalPages - Model.GameScoreTeamList.PageIndex >= 3)
                 {
-                <li class="page-item disabled">
-                    <span class="page-link">
+                <li class="pointer-events-none opacity-40">
+                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         …
                     </span>
                 </li>
                 }
 
-                <li class="page-item @nextDisabled">
+                <li class="@nextClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(Model.GameScoreTeamList.TotalPages)"
-                       class="page-link">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(">>")
                     </a>
                 </li>
@@ -690,21 +751,21 @@
 
 @if (Model.GameScorePitcherList.Any())
 {
-<div class="box">
-    <div class="box-title">
+<div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="border-b border-slate-200 bg-slate-800 px-4 py-2 text-sm font-bold text-white">
         投手成績
     </div>
-    <div class="box-inner">
+    <div class="px-4 py-3">
         @if (Model.ScorePageClass == ScorePageClass.Index)
             {
-        <div class="row">
-            <div class="col-md-4">
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
                 <h6>勝利</h6>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
-                                <th class="text-center column-fix-left">
+                                <th class="col-fix-left text-center">
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Rank)
                                 </th>
 
@@ -731,7 +792,7 @@
                             @foreach (var item in Model.GameScorePitcherList.OrderByDescending(r => r.Win).Take(10))
                                     {
                             <tr>
-                                <td class="text-center align-middle column-fix-left">
+                                <td class="col-fix-left text-center align-middle">
                                     @if (winRankValue != item.Win.NullToZero())
                                                 {
                                                     winRank += 1;
@@ -758,11 +819,11 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div>
                 <h6>防御率</h6>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
                                 <th class="text-center">
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Rank)
@@ -774,7 +835,7 @@
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].TeamID)
                                 </th>
                                         }
-                                <th class="column-fix-left">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
                                 </th>
                                 <th class="text-center">
@@ -806,7 +867,7 @@
                                     @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
                                 </td>
                                             }
-                                <td class="align-middle column-fix-left">
+                                <td class="col-fix-left align-middle">
                                     <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                                 </td>
                                 <td class="text-center align-middle">
@@ -818,11 +879,11 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div>
                 <h6>奪三振</h6>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
                                 <th class="text-center">
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Rank)
@@ -834,7 +895,7 @@
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].TeamID)
                                 </th>
                                         }
-                                <th class="column-fix-left">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
                                 </th>
                                 <th class="text-center">
@@ -866,7 +927,7 @@
                                     @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
                                 </td>
                                             }
-                                <td class="align-middle column-fix-left">
+                                <td class="col-fix-left align-middle">
                                     <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                                 </td>
                                 <td class="text-center align-middle">
@@ -878,11 +939,11 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div>
                 <h6>勝率</h6>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
                                 <th class="text-center">
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Rank)
@@ -894,7 +955,7 @@
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].TeamID)
                                 </th>
                                         }
-                                <th class="column-fix-left">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
                                 </th>
                                 <th class="text-center">
@@ -926,7 +987,7 @@
                                     @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
                                 </td>
                                             }
-                                <td class="align-middle column-fix-left">
+                                <td class="col-fix-left align-middle">
                                     <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                                 </td>
                                 <td class="text-center align-middle">
@@ -938,11 +999,11 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div>
                 <h6>ホールド</h6>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
                                 <th class="text-center">
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Rank)
@@ -954,7 +1015,7 @@
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].TeamID)
                                 </th>
                                         }
-                                <th class="column-fix-left">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
                                 </th>
                                 <th class="text-center">
@@ -971,7 +1032,7 @@
                             @foreach (var item in Model.GameScorePitcherList.OrderByDescending(r => r.Hold).Take(10))
                                     {
                             <tr>
-                                <td class="text-center align-middle column-fix-left">
+                                <td class="text-center align-middle">
                                     @if (holdRankValue != item.Hold.NullToZero())
                                                 {
                                                     holdRank += 1;
@@ -981,12 +1042,12 @@
                                 </td>
                                 @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                <td class="align-middle column-fix-team">
+                                <td class="align-middle">
                                     <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
                                     @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
                                 </td>
                                             }
-                                <td class="align-middle column-fix-member">
+                                <td class="col-fix-left align-middle">
                                     <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                                 </td>
                                 <td class="text-center align-middle">
@@ -998,11 +1059,11 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div>
                 <h6>セーブ</h6>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
                                 <th class="text-center">
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Rank)
@@ -1014,7 +1075,7 @@
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].TeamID)
                                 </th>
                                         }
-                                <th class="column-fix-left">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
                                 </th>
                                 <th class="text-center">
@@ -1031,7 +1092,7 @@
                             @foreach (var item in Model.GameScorePitcherList.OrderByDescending(r => r.Save).Take(10))
                                     {
                             <tr>
-                                <td class="text-center align-middle column-fix-left">
+                                <td class="text-center align-middle">
                                     @if (saveRankValue != item.Save.NullToZero())
                                                 {
                                                     saveRank += 1;
@@ -1041,12 +1102,12 @@
                                 </td>
                                 @if (string.IsNullOrEmpty(Model.SelectTeamID))
                                             {
-                                <td class="align-middle column-fix-team">
+                                <td class="align-middle">
                                     <a asp-page="/Team/Details" asp-route-id="@item.TeamID">@item.Member.Team.TeamAbbreviation</a>
                                     @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
                                 </td>
                                             }
-                                <td class="align-middle column-fix-member">
+                                <td class="col-fix-left align-middle">
                                     <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                                 </td>
                                 <td class="text-center align-middle">
@@ -1059,15 +1120,15 @@
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <a class="btn btn-primary" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Pitcher" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="EarnedRunAverage">投手成績詳細</a>
+        <div class="mt-4">
+            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Pitcher" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="EarnedRunAverage">投手成績詳細</a>
         </div>
             }
             else
             {
-        <div class="table-responsive">
-            <table class="table table-sm table-hover table-bordered">
-                <thead class="thead-light">
+        <div class="max-h-[70vh] overflow-auto">
+            <table class="stat-table">
+                <thead>
                     <tr>
                         <th class="text-center">
                             @Html.DisplayNameFor(model => model.GameScorePitcherList[0].Rank)
@@ -1079,7 +1140,7 @@
                             @Html.DisplayNameFor(model => model.GameScorePitcherList[0].TeamID)
                         </th>
                                 }
-                        <th class="column-fix-left">
+                        <th class="col-fix-left">
                             @Html.DisplayNameFor(model => model.GameScorePitcherList[0].MemberID)
                         </th>
                         <th class="GameCount">
@@ -1205,7 +1266,7 @@
                             @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem">@item.Member.Team.TeamName</a>*@
                         </td>
                                     }
-                        <td class="align-middle column-fix-left">
+                        <td class="col-fix-left align-middle">
                             <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                         </td>
                         <td class="GameCount text-center align-middle">
@@ -1315,21 +1376,23 @@
          {
             var prevDisabled = !Model.GameScorePitcherList.HasPreviousPage ? "disabled" : "";
             var nextDisabled = !Model.GameScorePitcherList.HasNextPage ? "disabled" : "";
+            var prevClass = string.IsNullOrEmpty(prevDisabled) ? "" : "pointer-events-none opacity-40";
+            var nextClass = string.IsNullOrEmpty(nextDisabled) ? "" : "pointer-events-none opacity-40";
 
         <div class="mt-1">
-            <ul class="pagination">
-                <li class="page-item @prevDisabled">
+            <ul class="mt-4 flex flex-wrap items-center gap-1">
+                <li class="@prevClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
-                       class="page-link">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @("<<")
                     </a>
                 </li>
 
                 @if (Model.GameScorePitcherList.PageIndex >= 4)
                 {
-                <li class="page-item disabled">
-                    <span class="page-link">
+                <li class="pointer-events-none opacity-40">
+                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         …
                     </span>
                 </li>
@@ -1344,22 +1407,22 @@
 
                 @if (Model.GameScorePitcherList.PageIndex == i)
                     {
-                <li class="page-item active">
+                <li>
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(i)"
-                       class="page-link">
+                       class="inline-flex items-center rounded-md border border-sky-700 bg-sky-700 px-3.5 py-2 text-sm font-semibold text-white" aria-current="page">
                         @(i)
                     </a>
                 </li>
                     }
                     else
                     {
-                <li class="page-item">
+                <li>
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(i)"
-                       class="page-link">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(i)
                     </a>
                 </li>
@@ -1368,18 +1431,18 @@
 
                 @if (Model.GameScorePitcherList.TotalPages - Model.GameScorePitcherList.PageIndex >= 3)
                 {
-                <li class="page-item disabled">
-                    <span class="page-link">
+                <li class="pointer-events-none opacity-40">
+                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         …
                     </span>
                 </li>
                 }
 
-                <li class="page-item @nextDisabled">
+                <li class="@nextClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(Model.GameScorePitcherList.TotalPages)"
-                       class="page-link">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(">>")
                     </a>
                 </li>
@@ -1393,19 +1456,19 @@
 
 @if (Model.GameScoreFielderList.Any())
 {
-<div class="box">
-    <div class="box-title">
+<div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="border-b border-slate-200 bg-slate-800 px-4 py-2 text-sm font-bold text-white">
         野手成績
     </div>
-    <div class="box-inner">
+    <div class="px-4 py-3">
         @if (Model.ScorePageClass == ScorePageClass.Index)
             {
-        <div class="row">
-            <div class="col-md-4">
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
                 <h6>打率</h6>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
                                 <th class="text-center">
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Rank)
@@ -1417,7 +1480,7 @@
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].TeamID)
                                 </th>
                                         }
-                                <th class="column-fix-left">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
                                 </th>
                                 <th class="text-center">
@@ -1450,7 +1513,7 @@
                                     @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
                                 </td>
                                             }
-                                <td class="align-middle column-fix-left">
+                                <td class="col-fix-left align-middle">
                                     <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                                 </td>
                                 <td class="text-center align-middle">
@@ -1462,11 +1525,11 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div>
                 <h6>本塁打</h6>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
                                 <th class="text-center">
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Rank)
@@ -1478,7 +1541,7 @@
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].TeamID)
                                 </th>
                                         }
-                                <th class="column-fix-member">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
                                 </th>
                                 <th class="text-center">
@@ -1510,7 +1573,7 @@
                                     @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
                                 </td>
                                             }
-                                <td class="align-middle column-fix-left">
+                                <td class="col-fix-left align-middle">
                                     <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                                 </td>
                                 <td class="text-center align-middle">
@@ -1522,11 +1585,11 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div>
                 <h6>打点</h6>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
                                 <th class="text-center">
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Rank)
@@ -1538,7 +1601,7 @@
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].TeamID)
                                 </th>
                                         }
-                                <th class="column-fix-left">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
                                 </th>
                                 <th class="text-center">
@@ -1570,7 +1633,7 @@
                                     @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
                                 </td>
                                             }
-                                <td class="align-middle column-fix-left">
+                                <td class="col-fix-left align-middle">
                                     <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                                 </td>
                                 <td class="text-center align-middle">
@@ -1582,11 +1645,11 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div>
                 <h6>出塁率</h6>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
                                 <th class="text-center">
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Rank)
@@ -1598,7 +1661,7 @@
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].TeamID)
                                 </th>
                                         }
-                                <th class="column-fix-left">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
                                 </th>
                                 <th class="text-center">
@@ -1631,7 +1694,7 @@
                                     @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
                                 </td>
                                             }
-                                <td class="align-middle column-fix-left">
+                                <td class="col-fix-left align-middle">
                                     <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                                 </td>
                                 <td class="text-center align-middle">
@@ -1643,11 +1706,11 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div>
                 <h6>安打</h6>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
                                 <th class="text-center">
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Rank)
@@ -1659,7 +1722,7 @@
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].TeamID)
                                 </th>
                                         }
-                                <th class="column-fix-left">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
                                 </th>
                                 <th class="text-center">
@@ -1691,7 +1754,7 @@
                                     @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
                                 </td>
                                             }
-                                <td class="align-middle column-fix-left">
+                                <td class="col-fix-left align-middle">
                                     <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                                 </td>
                                 <td class="text-center align-middle">
@@ -1703,11 +1766,11 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div>
                 <h6>盗塁</h6>
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover table-bordered">
-                        <thead class="thead-light">
+                <div class="max-h-[70vh] overflow-auto">
+                    <table class="stat-table">
+                        <thead>
                             <tr>
                                 <th class="text-center">
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Rank)
@@ -1719,7 +1782,7 @@
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].TeamID)
                                 </th>
                                         }
-                                <th class="column-fix-left">
+                                <th class="col-fix-left">
                                     @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
                                 </th>
                                 <th class="text-center">
@@ -1751,7 +1814,7 @@
                                     @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">@item.Member.Team.TeamAbbreviation</a>*@
                                 </td>
                                             }
-                                <td class="align-middle column-fix-left">
+                                <td class="col-fix-left align-middle">
                                     <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                                 </td>
                                 <td class="text-center align-middle">
@@ -1764,15 +1827,15 @@
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <a class="btn btn-primary" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Fielder" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="BattingAverage">野手成績詳細</a>
+        <div class="mt-4">
+            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Fielder" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="BattingAverage">野手成績詳細</a>
         </div>
             }
             else
                  {
-            <div class="table-responsive">
-                <table class="table table-sm table-hover table-bordered">
-                    <thead class="thead-light">
+            <div class="max-h-[70vh] overflow-auto">
+                <table class="stat-table">
+                    <thead>
                         <tr>
                             <th class="text-center">
                                 @Html.DisplayNameFor(model => model.GameScoreFielderList[0].Rank)
@@ -1784,7 +1847,7 @@
                                 @Html.DisplayNameFor(model => model.GameScoreFielderList[0].TeamID)
                             </th>
                                     }
-                            <th class="column-fix-left">
+                            <th class="col-fix-left">
                             @Html.DisplayNameFor(model => model.GameScoreFielderList[0].MemberID)
                         </th>
                         <th class="GameCount">
@@ -1916,7 +1979,7 @@
                             @*<a asp-page="/Score/Index" asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@item.TeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem">@item.Member.Team.TeamName</a>*@
                         </td>
                                     }
-                        <td class="align-middle column-fix-left">
+                        <td class="col-fix-left align-middle">
                             <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
                         </td>
                         <td class="GameCount text-center align-middle">
@@ -2033,21 +2096,23 @@
             {
             var prevDisabled = !Model.GameScoreFielderList.HasPreviousPage ? "disabled" : "";
             var nextDisabled = !Model.GameScoreFielderList.HasNextPage ? "disabled" : "";
+            var prevClass = string.IsNullOrEmpty(prevDisabled) ? "" : "pointer-events-none opacity-40";
+            var nextClass = string.IsNullOrEmpty(nextDisabled) ? "" : "pointer-events-none opacity-40";
 
         <div class="mt-1">
-            <ul class="pagination">
-                <li class="page-item @prevDisabled">
+            <ul class="mt-4 flex flex-wrap items-center gap-1">
+                <li class="@prevClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
-                       class="page-link">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @("<<")
                     </a>
                 </li>
 
                 @if (Model.GameScoreFielderList.PageIndex >= 4)
                 {
-                <li class="page-item disabled">
-                    <span class="page-link">
+                <li class="pointer-events-none opacity-40">
+                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         …
                     </span>
                 </li>
@@ -2062,22 +2127,22 @@
 
                 @if (Model.GameScoreFielderList.PageIndex == i)
                     {
-                <li class="page-item active">
+                <li>
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(i)"
-                       class="page-link">
+                       class="inline-flex items-center rounded-md border border-sky-700 bg-sky-700 px-3.5 py-2 text-sm font-semibold text-white" aria-current="page">
                         @(i)
                     </a>
                 </li>
                     }
                     else
                     {
-                <li class="page-item">
+                <li>
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(i)"
-                       class="page-link">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(i)
                     </a>
                 </li>
@@ -2086,18 +2151,18 @@
 
                 @if (Model.GameScoreFielderList.TotalPages - Model.GameScoreFielderList.PageIndex >= 3)
                 {
-                <li class="page-item disabled">
-                    <span class="page-link">
+                <li class="pointer-events-none opacity-40">
+                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         …
                     </span>
                 </li>
                 }
 
-                <li class="page-item @nextDisabled">
+                <li class="@nextClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(Model.GameScoreFielderList.TotalPages)"
-                       class="page-link">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(">>")
                     </a>
                 </li>
@@ -2108,31 +2173,33 @@
     </div>
 </div>
 }
-<div class="form-group">
+<div class="mt-4">
     @if (Model.ScorePageClass == ScorePageClass.Index)
     {
-    <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
+    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">戻る</a>
     }
     else
     {
 
     @if (Model.ScorePageClass != ScorePageClass.Team)
         {
-    <a class="btn btn-primary" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Team" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="WinRate">チーム成績</a>
+    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Team" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="WinRate">チーム成績</a>
         }
 
     @if (Model.ScorePageClass != ScorePageClass.Pitcher)
         {
-    <a class="btn btn-primary" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Pitcher" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="EarnedRunAverage">投手成績</a>
+    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Pitcher" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="EarnedRunAverage">投手成績</a>
         }
 
     @if (Model.ScorePageClass != ScorePageClass.Fielder)
         {
-    <a class="btn btn-primary" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Fielder" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="BattingAverage">野手成績</a>
+    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Fielder" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="BattingAverage">野手成績</a>
         }
 
-    <a class="btn btn-secondary" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">戻る</a>
+    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">戻る</a>
     }
+</div>
+
 </div>
 
 @section Scripts {

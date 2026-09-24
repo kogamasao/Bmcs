@@ -2,40 +2,59 @@
 @model Bmcs.Pages.Inquiry.CreateModel
 @{
     ViewData[ViewDataConstant.Title] = "お問い合わせ";
+    Layout = "_LayoutTailwind";
+
+    var inputClass = "mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500";
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+<div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
+    @if (Model.IsComplete)
+    {
+        <div class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-5" role="status">
+            <p class="font-bold text-emerald-900">お問い合わせを受け付けました</p>
+            <p class="mt-1 text-sm text-emerald-900/80">
+                内容を確認し、必要に応じてご入力のメールアドレス宛にご連絡します。
+            </p>
+        </div>
+        <div class="mt-6">
+            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">トップへ</a>
+        </div>
+    }
+    else
+    {
+        <form method="post" class="mt-6">
+            <div asp-validation-summary="All" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
 
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Inquiry.EmailAddress" class="control-label"></label>
-                <input asp-for="Inquiry.EmailAddress" class="form-control" />
-                <span asp-validation-for="Inquiry.EmailAddress" class="text-danger"></span>
+            <div class="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div>
+                    <label asp-for="Inquiry.EmailAddress" class="block text-sm font-semibold text-slate-800"></label>
+                    <p class="mt-0.5 text-sm text-slate-500">返信先になります。</p>
+                    <input asp-for="Inquiry.EmailAddress" class="@inputClass" />
+                    <span asp-validation-for="Inquiry.EmailAddress" class="mt-1 block text-sm text-red-600"></span>
+                </div>
+                <div>
+                    <label asp-for="Inquiry.InquiryTitle" class="block text-sm font-semibold text-slate-800"></label>
+                    <input asp-for="Inquiry.InquiryTitle" class="@inputClass" />
+                    <span asp-validation-for="Inquiry.InquiryTitle" class="mt-1 block text-sm text-red-600"></span>
+                </div>
+                <div>
+                    <label asp-for="Inquiry.InquiryDetail" class="block text-sm font-semibold text-slate-800"></label>
+                    <textarea asp-for="Inquiry.InquiryDetail" rows="6" class="@inputClass"></textarea>
+                    <span asp-validation-for="Inquiry.InquiryDetail" class="mt-1 block text-sm text-red-600"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Inquiry.InquiryTitle" class="control-label"></label>
-                <input asp-for="Inquiry.InquiryTitle" class="form-control" />
-                <span asp-validation-for="Inquiry.InquiryTitle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Inquiry.InquiryDetail" class="control-label"></label>
-                <textarea asp-for="Inquiry.InquiryDetail" class="form-control"></textarea>
-                <span asp-validation-for="Inquiry.InquiryDetail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="登録" class="btn btn-primary" />
-                <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
+
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <input type="submit" value="送信する" class="rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" />
+                <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">トップへ</a>
             </div>
         </form>
-    </div>
+    }
 </div>
 
 @section Scripts {

@@ -59,11 +59,42 @@ namespace Bmcs.Pages.UserAccount
             return Page();
         }
 
+        /// <summary>
+        /// 入力エラーでの再表示に必要なデータを取り直す
+        /// ※以前は取り直しておらず、ヘルプと現在の所属チームが表示されなかった
+        /// </summary>
+        private async Task<IActionResult> ShowErrorAsync()
+        {
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.UserAccountEdit);
+
+            var dbUserAccount = await Context.UserAccounts.Include(r => r.Team).AsNoTracking()
+                                    .FirstOrDefaultAsync(r => r.UserAccountID == UserAccount.UserAccountID);
+
+            UserAccount.Team = dbUserAccount?.Team;
+
+            return Page();
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
+            //体験用ユーザは変更できない（誰でもログインできるため、変更されると体験が全員に対して動かなくなる）
+            if (base.IsSampleUser())
+            {
+                return NotFound();
+            }
+
+            //本人以外のユーザは更新できない（管理者は除く）
+            //※入力エラーでの再表示（ShowErrorAsync）は POST されたユーザIDの所属チームを表示するため、その前に確認する。
+            //  後だと、ユーザIDを書き換えて入力エラーを起こすことで、他人の所属チーム（非公開を含む）が見えてしまう
+            if (!base.IsAdmin()
+                && UserAccount?.UserAccountID != HttpContext.Session.GetString(SessionConstant.UserAccountID))
+            {
+                return NotFound();
+            }
+
             if (!ModelState.IsValid)
             {
-                return Page();
+                return await ShowErrorAsync();
             }
 
             try
@@ -91,21 +122,36 @@ namespace Bmcs.Pages.UserAccount
                 {
                     ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.EmailAddress), "メールアドレスは削除できません。ユーザIDやパスワードを忘れた際の復旧に使用します。");
 
-                    return Page();
+                    return await ShowErrorAsync();
                 }
 
                 //チームパスワードチェック
                 if (userAccount.TeamID != UserAccount.TeamID
                     && !string.IsNullOrEmpty(UserAccount.TeamID))
                 {
-                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID);
+
+                    //※削除済みのチームには参加できない（以前は削除済みでも参加できた）。
+                    //  チームIDの有無を判別できないよう、存在しない場合もパスワード誤りと同じ文言にする
+                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID && !r.DeleteFLG);
+
+                    //サンプルチームには参加できない（管理者は除く）
+                    //※入力値ではなく DB の値で判定する（全角の「ＹＧ」等でのすり抜けを防ぐ。UserAccount/Create と同じ）
+                    if (!base.IsAdmin() && dbTeam != null && IsSampleTeamID(dbTeam.TeamID))
+                    {
+                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "体験用のチームには参加できません。");
+
+                        return await ShowErrorAsync();
+                    }
 
                     if (dbTeam == null || dbTeam.TeamPassword != UserAccount.TeamPassword.NullToEmpty().ChangeHashValue())
                     {
-                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "パスワードが間違っています。");
+                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "チームIDまたはチームパスワードが間違っています。");
 
-                        return Page();
+                        return await ShowErrorAsync();
                     }
+
+                    //チームIDは DB の値で保存する（UserAccount/Create と同じ理由）
+                    UserAccount.TeamID = dbTeam.TeamID;
                 }
 
                 //POST値セット
@@ -114,6 +160,13 @@ namespace Bmcs.Pages.UserAccount
                 base.SetUpdateInfo(userAccount);
 
                 await Context.SaveChangesAsync();
+
+                //本人の所属チームを変えた場合は、セッションのチームも切り替える
+                //※以前は切り替えておらず、チームを抜けてもログインし直すまで元のチームのデータを編集できた
+                if (userAccount.UserAccountID == HttpContext.Session.GetString(SessionConstant.UserAccountID))
+                {
+                    HttpContext.Session.SetString(SessionConstant.TeamID, userAccount.TeamID.NullToEmpty());
+                }
             }
             catch (DbUpdateConcurrencyException)
             {

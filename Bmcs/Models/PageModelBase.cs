@@ -70,8 +70,9 @@ namespace Bmcs.Models
 
         /// <summary>
         /// システム管理表示用
+        /// ※POST の値を結び付けない（以前は [BindProperty] で、送信した値がヘルプに HTML のまま表示された。
+        /// 　ヘルプは Html.Raw で表示するため、画面を編集するフォームは無く、結び付ける必要も無い）
         /// </summary>
-        [BindProperty]
         public Models.SystemAdmin SystemAdmin { get; set; }
 
         /// <summary>
@@ -640,6 +641,43 @@ namespace Bmcs.Models
         }
 
         /// <summary>
+        /// サンプルチームの体験用ユーザでログインしているか
+        /// ※体験用ユーザは誰でもログインできる共有アカウント。パスワードや所属チームを変更されると、
+        /// 　トップの「サンプルチームで体験する」が全員に対して動かなくなるため、アカウント・チームの設定変更を禁止する
+        /// </summary>
+        public bool IsSampleUser()
+        {
+            return IsSampleUserAccountID(HttpContext.Session.GetString(SessionConstant.UserAccountID));
+        }
+
+        /// <summary>
+        /// 体験用ユーザのユーザIDか
+        /// ※DBの照合順序は大文字小文字・末尾空白を区別しないため、同じ扱いで比較する
+        /// </summary>
+        public static bool IsSampleUserAccountID(string userAccountID)
+        {
+            return string.Equals(userAccountID?.Trim(), SystemConstant.SampleUserAccountID, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// サンプルチームのチームIDか
+        /// ※サンプルチームのチームパスワードは推測しやすく、参加されるとチーム情報を書き換えられるため、
+        /// 　参加・チーム情報の変更・チームパスワードの再設定を禁止する（管理者は除く）
+        /// </summary>
+        public static bool IsSampleTeamID(string teamID)
+        {
+            return string.Equals(teamID?.Trim(), SystemConstant.SampleTeamID, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// サンプルチームか（ビューから呼ぶ用）
+        /// </summary>
+        public bool IsSampleTeam(string teamID)
+        {
+            return IsSampleTeamID(teamID);
+        }
+
+        /// <summary>
         /// 未回答のアンケートを取得する（無い場合はnull）
         /// ※ログイン時の誘導と、トップページの案内表示で共用する
         /// </summary>
@@ -654,6 +692,14 @@ namespace Bmcs.Models
             try
             {
                 var userAccountID = HttpContext.Session.GetString(SessionConstant.UserAccountID);
+
+                //サンプルチームの体験ユーザは対象外
+                //※体験のためにログインした直後にアンケートへ送られてしまう。また、体験者全員で1ユーザを共有しているため、
+                //  誰か1人が回答すると全員が回答済みになり、回答も利用者の声として扱えない
+                if (userAccountID == SystemConstant.SampleUserAccountID)
+                {
+                    return null;
+                }
 
                 var surveyList = await Context.Surveys
                     .Where(r => r.DeleteFLG == false
@@ -687,7 +733,7 @@ namespace Bmcs.Models
 
         /// <summary>
         /// ヘッダメニューのリンク一覧を取得する
-        /// ※Bootstrap版・Tailwind版の両レイアウトから使用する。
+        /// ※レイアウト（_LayoutTailwind.cshtml）から使用する。
         ///   レイアウトごとにリンクを書くと片方だけ写し漏れるため、ここに1本化する。
         /// </summary>
         /// <returns></returns>
@@ -701,7 +747,7 @@ namespace Bmcs.Models
                 linkList.Add(PageHelper.NavigationLink.Create("/Score/Index", "成績",
                     new Dictionary<string, string> { { "scorePageClass", ScorePageClass.Index.ToString() }, { "isPublic", "false" } }));
                 linkList.Add(PageHelper.NavigationLink.Create("/Member/Index", "メンバー"));
-                linkList.Add(PageHelper.NavigationLink.Create("/Team/Edit", "チーム情報"));
+                linkList.Add(PageHelper.NavigationLink.Create("/Team/Edit", "チーム情報変更"));
                 linkList.Add(PageHelper.NavigationLink.Create("/UserAccount/Edit", "ユーザ情報"));
             }
 
@@ -873,7 +919,11 @@ namespace Bmcs.Models
             var inningScores = await Context.InningScores.Where(r => r.GameID == gameID).ToListAsync();
 
             //QS計算基準イニング
-            decimal baseInning = inningScores.DefaultIfEmpty().Max(r => r.Inning);
+            //※イニングスコアが無い場合は9回として扱う。
+            //  0にすると「0 >= 0 かつ 0 <= 0」が成立し、0イニングの投手にQSが付いてしまう。
+            decimal baseInning = inningScores.Select(r => r.Inning)
+                                             .DefaultIfEmpty((int)CalculateRegulationConstant.BaseInning)
+                                             .Max();
 
             if(baseInning > CalculateRegulationConstant.BaseInning)
             {
@@ -884,8 +934,8 @@ namespace Bmcs.Models
             var myTeamOffenceTopButtomClass = game.BatFirstBatSecondClass == BatFirstBatSecondClass.First ? TopButtomClass.Top : TopButtomClass.Buttom;
 
             //得点
-            game.Score = inningScores.Where(r => r.TopButtomClass == myTeamOffenceTopButtomClass).DefaultIfEmpty().Sum(r => r.Score);
-            game.OpponentTeamScore = inningScores.Where(r => r.TopButtomClass != myTeamOffenceTopButtomClass).DefaultIfEmpty().Sum(r => r.Score);
+            game.Score = inningScores.Where(r => r.TopButtomClass == myTeamOffenceTopButtomClass).Sum(r => r.Score);
+            game.OpponentTeamScore = inningScores.Where(r => r.TopButtomClass != myTeamOffenceTopButtomClass).Sum(r => r.Score);
 
             //勝敗
             if (game.Score > game.OpponentTeamScore)
@@ -993,9 +1043,9 @@ namespace Bmcs.Models
                 //被本塁打
                 gameScorePitcher.HomeRun = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass == ResultClass.HomeRun).Count();
                 //失点
-                gameScorePitcher.Run = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID).DefaultIfEmpty().Sum(r => r.Run);
+                gameScorePitcher.Run = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID).Sum(r => r.Run);
                 //自責点
-                gameScorePitcher.EarnedRun = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID).DefaultIfEmpty().Sum(r => r.EarnedRun);
+                gameScorePitcher.EarnedRun = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID).Sum(r => r.EarnedRun);
                 //与四球
                 gameScorePitcher.FourBall = gameScenes.Where(r => r.PitcherMemberID == pitcherMemberID && r.ResultClass == ResultClass.FourBalls).Count();
                 //与死球
@@ -1138,7 +1188,7 @@ namespace Bmcs.Models
                 //打点
                 if (gameScenes.Any(r => r.BatterMemberID == fielderMemberID))
                 {
-                    gameScoreFielder.RBI = gameScenes.Where(r => r.BatterMemberID == fielderMemberID).DefaultIfEmpty().Sum(r => r.RBI);
+                    gameScoreFielder.RBI = gameScenes.Where(r => r.BatterMemberID == fielderMemberID).Sum(r => r.RBI);
                 }
                 else
                 {
@@ -1807,7 +1857,7 @@ namespace Bmcs.Models
 
             foreach (var game in targetGameList)
             {
-                decimal maxInning = inningScoreList.Where(r => r.GameID == game.GameID).DefaultIfEmpty().Max(r => r.Inning);
+                decimal maxInning = inningScoreList.Where(r => r.GameID == game.GameID).Select(r => r.Inning).DefaultIfEmpty().Max();
 
                 //最大でも9
                 if(maxInning > CalculateRegulationConstant.BaseInning)

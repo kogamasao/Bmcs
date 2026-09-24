@@ -437,7 +437,7 @@ namespace Bmcs.Pages.GameScene
                             else
                             {
                                 //前回が最終打者
-                                if (orderList.DefaultIfEmpty().Max(r => r.BattingOrder) == lastBattingOrder)
+                                if (orderList.Select(r => r.BattingOrder).DefaultIfEmpty().Max() == lastBattingOrder)
                                 {
                                     Order = orderList.OrderBy(r => r.BattingOrder).Skip(skipCount).FirstOrDefault();
                                 }
@@ -803,6 +803,19 @@ namespace Bmcs.Pages.GameScene
                 Game.TieBreakStartRunnerSceneClass = RunnerSceneClass.FirstSecond;
             }
 
+            //タイトル・ヘルプ
+            await SetPageDataAsync(gameSceneID != null);
+
+            return Page();
+        }
+
+        /// <summary>
+        /// 画面表示に必要なデータ（タイトル・ヘルプ）をセットする
+        /// ※入力エラーで return Page() する場合も、これを呼ばないと見出しとヘルプが消える
+        /// </summary>
+        /// <param name="isModify">登録済みの打席の修正か</param>
+        private async Task SetPageDataAsync(bool isModify)
+        {
             //タイトル
             ViewData[ViewDataConstant.Title] = GameScene.Inning.ToString() + "回"
                 + GameScene.TopButtomClass.GetEnumName()
@@ -810,15 +823,13 @@ namespace Bmcs.Pages.GameScene
                 + GameScene.OutCount.ToString() + "アウト";
 
             //修正
-            if (gameSceneID != null)
+            if (isModify)
             {
                 ViewData[ViewDataConstant.Title] += "(修正)";
             }
 
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameScene);
-
-            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -845,6 +856,7 @@ namespace Bmcs.Pages.GameScene
 
                 if (!ModelState.IsValid)
                 {
+                    await SetPageDataAsync(GameScene.GameSceneID.ZeroToNull() != null);
                     return Page();
                 }
 
@@ -974,7 +986,7 @@ namespace Bmcs.Pages.GameScene
                                         && r.Inning == GameScene.Inning
                                         && r.TopButtomClass == GameScene.TopButtomClass);
 
-                var score = gameScenes.DefaultIfEmpty().Sum(r => r.Run);
+                var score = gameScenes.Sum(r => r.Run);
 
                 if (inningScore != null)
                 {
@@ -1406,7 +1418,7 @@ namespace Bmcs.Pages.GameScene
                 if (lastBattingOrder != null)
                 {
                     //前回が最終打者
-                    if (orderList.DefaultIfEmpty().Max(r => r.BattingOrder) == lastBattingOrder)
+                    if (orderList.Select(r => r.BattingOrder).DefaultIfEmpty().Max() == lastBattingOrder)
                     {
                         Order = orderList.OrderBy(r => r.BattingOrder).FirstOrDefault();
                     }
@@ -1588,9 +1600,9 @@ namespace Bmcs.Pages.GameScene
 
             if (selectGameSceneID == null)
             {
-                inning = gameScenes.DefaultIfEmpty().Max(r => r.Inning);
-                topButtomClass = gameScenes.Where(r => r.Inning == inning).DefaultIfEmpty().Max(r => r.TopButtomClass);
-                inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).DefaultIfEmpty().Max(r => r.InningIndex);
+                inning = gameScenes.Select(r => r.Inning).DefaultIfEmpty().Max();
+                topButtomClass = gameScenes.Where(r => r.Inning == inning).Select(r => r.TopButtomClass).DefaultIfEmpty().Max();
+                inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).Select(r => r.InningIndex).DefaultIfEmpty().Max();
             }
             else
             {
@@ -1606,21 +1618,21 @@ namespace Bmcs.Pages.GameScene
                 {
                     inning = selectGameScene.Inning;
                     topButtomClass = selectGameScene.TopButtomClass;
-                    inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass && r.InningIndex < selectGameScene.InningIndex).DefaultIfEmpty().Max(r => r.InningIndex);
+                    inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass && r.InningIndex < selectGameScene.InningIndex).Select(r => r.InningIndex).DefaultIfEmpty().Max();
                 }
                 //裏⇒表
                 else if (selectGameScene.TopButtomClass == TopButtomClass.Buttom)
                 {
                     inning = selectGameScene.Inning;
                     topButtomClass = TopButtomClass.Top;
-                    inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).DefaultIfEmpty().Max(r => r.InningIndex);
+                    inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).Select(r => r.InningIndex).DefaultIfEmpty().Max();
                 }
                 //表⇒前回の裏
                 else
                 {
                     inning = selectGameScene.Inning - 1;
                     topButtomClass = TopButtomClass.Buttom;
-                    inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).DefaultIfEmpty().Max(r => r.InningIndex);
+                    inningIndex = gameScenes.Where(r => r.Inning == inning && r.TopButtomClass == topButtomClass).Select(r => r.InningIndex).DefaultIfEmpty().Max();
                 }
             }
 

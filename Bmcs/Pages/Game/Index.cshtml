@@ -1,268 +1,191 @@
 ﻿@page
 @model Bmcs.Pages.Game.IndexModel
+@using Bmcs.Enum
+@using Bmcs.PageHelper
 
 @{
     ViewData[ViewDataConstant.Title] = "試合一覧";
+    Layout = "_LayoutTailwind";
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+<div class="mx-auto max-w-6xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Team.TeamName</p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-
-<h4>@Model.Team.TeamName</h4>
-
-<div class="form-group">
-    @if (Model.IsMyTeam)
+    @if (!Model.Game.Any())
     {
-        <a class="btn btn-primary" asp-page="Create">試合へ</a>
-    }
-    <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
-</div>
+        @* 空状態。従来は11列のヘッダだけが表示されていた *@
+        <div class="mt-8 rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+            <h2 class="text-lg font-bold text-slate-900">まだ試合が登録されていません</h2>
+            @if (Model.IsMyTeam)
+            {
+                <p class="mx-auto mt-2 max-w-md text-slate-600">
+                    試合を登録すると、スコアを入力できるようになります。
+                    <strong class="font-semibold text-slate-800">入力が必要なのは日付だけ</strong>です。
+                </p>
+                <a class="mt-6 inline-flex items-center justify-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800" asp-page="Create">
+                    試合を登録する
+                </a>
+            }
+            @* 他チームの場合は見出しのみ。非公開チームはページ自体を表示しない（NotFound）ため「公開していません」は出さない *@
 
-<div class="table-responsive">
-    <table class="table table-hover table-sm table-bordered">
-        <thead class="thead-light">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Game[0].GameDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Game[0].GameClassName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Game[0].OpponentTeamName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Game[0].OpponentTeamAbbreviation)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Game[0].StadiumName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Game[0].WeatherClassName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Game[0].WinLoseClassName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Game[0].GameScore)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Game[0].BatFirstBatSecondClassName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Game[0].GameInputTypeClassName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Game[0].StatusClassName)
-                </th>
-                @if (Model.IsAdmin())
+            @* 空状態でも必ず脱出口を出す *@
+            <div class="mt-6 flex flex-wrap justify-center gap-3">
+                @if (!Model.IsMyTeam)
                 {
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].EntryUserID)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].EntryDatetime)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].UpdateUserID)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Game[0].UpdateDatetime)
-                    </th>
+                    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Team/Index">公開チーム一覧へ</a>
                 }
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Game)
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">トップへ</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+            @if (Model.IsMyTeam)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.GameDateFormat)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.GameClassName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OpponentTeamName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OpponentTeamAbbreviation)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StadiumName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.WeatherClassName)
-                    </td>
-                    <td class="text-center">
-                        @Html.DisplayFor(modelItem => item.WinLoseClassName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.GameScore)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.BatFirstBatSecondClassName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.GameInputTypeClassName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StatusClassName)
-                    </td>
-                    @if (Model.IsAdmin())
-                    {
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EntryUserID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EntryDatetime)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UpdateUserID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.UpdateDatetime)
-                        </td>
-                    }
-                    @if (Model.IsMyTeam || Model.IsAdmin())
-                    {
-                <td>
-                    @*
-                        試合前は入力への導線が無く、試合を作った直後にその画面から離脱すると
-                        スコア入力に到達できなくなっていたため、ボタンを追加する。
-                        ※入力方式で遷移先を分ける。「試合結果のみ」の試合を打順設定へ送ると、
-                        　選んでいないプレー毎入力に入ってしまう。
-                    *@
-                    @if (item.StatusClass == StatusClass.BeforeGame)
-                    {
-                        @if (item.GameInputTypeClass == GameInputTypeClass.OnlyGame)
-                        {
-                            <a class="btn btn-primary btn-sm" asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果入力</a>
-                        }
-                        else
-                        {
-                            <a class="btn btn-primary btn-sm" asp-page="/Order/Edit" asp-route-gameID="@item.GameID">打順設定</a>
-                        }
-                        <span>&nbsp;</span>
-                    }
-                    @if (item.StatusClass == StatusClass.DuringGame)
-                    {
-                        <a class="btn btn-primary btn-sm" asp-page="/GameScene/Edit" asp-route-gameID="@item.GameID">試合入力</a>
-                        <span>&nbsp;</span>
-                    }
-                    @if (item.StatusClass == StatusClass.BeforeFix
-             || item.StatusClass == StatusClass.EndGame)
-                    {
-                        <a class="btn btn-primary btn-sm" asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果編集</a>
-                        <span>&nbsp;</span>
-                    }
-                    @if (item.StatusClass == StatusClass.EndGame
-               || item.StatusClass == StatusClass.EndGameLock)
-                    {
-                        <a class="btn btn-primary btn-sm" asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果</a>
-                        <span>&nbsp;</span>
-                    }
+                <a class="inline-flex items-center justify-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800" asp-page="Create">
+                    試合を登録する
+                </a>
+            }
+            @if (!Model.IsMyTeam)
+            {
+                <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Team/Index">
+                    公開チーム一覧へ
+                </a>
+            }
+            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">
+                トップへ
+            </a>
+        </div>
 
-                    @if (item.StatusClass != StatusClass.EndGameLock)
+        //確定していない試合は成績に反映されないため、件数（全ページ分）を案内する
+        @if (Model.IsMyTeam && Model.BeforeFixGameCount > 0)
+        {
+            <div class="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-5">
+                <h2 class="font-bold text-amber-900">確定していない試合が@(Model.BeforeFixGameCount)件あります</h2>
+                <p class="mt-1 text-sm text-amber-900/80">
+                    <strong class="font-semibold">「確定前」の試合は成績ページに集計されません。</strong>
+                    一覧の「試合結果編集」を開き、一番下の「確定する」を押してください。
+                </p>
+            </div>
+        }
+
+        <div class="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+            <table class="min-w-full divide-y divide-slate-200 text-sm">
+                <thead class="bg-slate-50">
+                    <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].GameDate)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].OpponentTeamName)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].WinLoseClassName)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].GameScore)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].StatusClassName)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].GameInputTypeClassName)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].BatFirstBatSecondClassName)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].GameClassName)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].StadiumName)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].WeatherClassName)</th>
+                        <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].OpponentTeamAbbreviation)</th>
+                        @if (Model.IsAdmin())
+                        {
+                            <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].EntryUserID)</th>
+                            <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].EntryDatetime)</th>
+                            <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].UpdateUserID)</th>
+                            <th class="whitespace-nowrap px-4 py-3">@Html.DisplayNameFor(model => model.Game[0].UpdateDatetime)</th>
+                        }
+                        <th class="col-fix-right px-4 py-3"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @foreach (var item in Model.Game)
                     {
-                        <a class="btn btn-primary btn-sm" asp-page="./Edit" asp-route-id="@item.GameID">試合情報編集</a>
-                        <span>&nbsp;</span>
-                        @*<a class="btn btn-primary" asp-page="./Details" asp-route-id="@item.GameID">詳細</a> |*@
-                        <a class="btn btn-danger btn-sm" asp-page="./Delete" asp-route-id="@item.GameID">削除</a>
-                    }
-                    </td>
-                    }
-                    else
-                    {
-                        <td>
-                            @if (item.StatusClass == StatusClass.EndGame || item.StatusClass == StatusClass.EndGameLock)
+                        <tr class="transition hover:bg-slate-50">
+                            <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-900">@Html.DisplayFor(modelItem => item.GameDateFormat)</td>
+                            <td class="whitespace-nowrap px-4 py-3 text-slate-700">@Html.DisplayFor(modelItem => item.OpponentTeamName)</td>
+                            <td class="whitespace-nowrap px-4 py-3 text-center text-slate-700">@Html.DisplayFor(modelItem => item.WinLoseClassName)</td>
+                            <td class="whitespace-nowrap px-4 py-3 text-slate-700">@Html.DisplayFor(modelItem => item.GameScore)</td>
+                            <td class="whitespace-nowrap px-4 py-3">
+                                @if (item.StatusClass == StatusClass.BeforeFix)
+                                {
+                                    <span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">@item.StatusClassName</span>
+                                }
+                                else
+                                {
+                                    <span class="text-slate-600">@Html.DisplayFor(modelItem => item.StatusClassName)</span>
+                                }
+                            </td>
+                            <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.GameInputTypeClassName)</td>
+                            <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.BatFirstBatSecondClassName)</td>
+                            <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.GameClassName)</td>
+                            <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.StadiumName)</td>
+                            <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.WeatherClassName)</td>
+                            <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.OpponentTeamAbbreviation)</td>
+                            @if (Model.IsAdmin())
                             {
-                                <a class="btn btn-primary btn-sm" asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果</a>
+                                <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.EntryUserID)</td>
+                                <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.EntryDatetime)</td>
+                                <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.UpdateUserID)</td>
+                                <td class="whitespace-nowrap px-4 py-3 text-slate-600">@Html.DisplayFor(modelItem => item.UpdateDatetime)</td>
                             }
-                            @*<a class="btn btn-primary btn-sm" asp-page="./Details" asp-route-id="@item.GameID">詳細</a>*@
-                        </td>
+                            <td class="col-fix-right whitespace-nowrap px-4 py-3 text-right">
+                                @if (Model.IsMyTeam || Model.IsAdmin())
+                                {
+                                    @*
+                                        試合前は入力への導線が無く、試合を作った直後にその画面から離脱すると
+                                        スコア入力に到達できなくなっていたため、ボタンを出す。
+                                        ※入力方式で遷移先を分ける。「試合結果のみ」の試合を打順設定へ送ると、
+                                        　選んでいないプレー毎入力に入ってしまう。
+                                    *@
+                                    @if (item.StatusClass == StatusClass.BeforeGame)
+                                    {
+                                        if (item.GameInputTypeClass == GameInputTypeClass.OnlyGame)
+                                        {
+                                            <a class="rounded-md bg-sky-700 px-3 py-2 text-xs font-semibold text-white transition hover:bg-sky-800" asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果入力</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="rounded-md bg-sky-700 px-3 py-2 text-xs font-semibold text-white transition hover:bg-sky-800" asp-page="/Order/Edit" asp-route-gameID="@item.GameID">打順設定</a>
+                                        }
+                                    }
+                                    @if (item.StatusClass == StatusClass.DuringGame)
+                                    {
+                                        <a class="rounded-md bg-sky-700 px-3 py-2 text-xs font-semibold text-white transition hover:bg-sky-800" asp-page="/GameScene/Edit" asp-route-gameID="@item.GameID">試合入力</a>
+                                    }
+                                    @if (item.StatusClass == StatusClass.BeforeFix || item.StatusClass == StatusClass.EndGame)
+                                    {
+                                        <a class="ml-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="/GameScore/Edit" asp-route-gameID="@item.GameID">試合結果編集</a>
+                                    }
+                                    @if (item.StatusClass == StatusClass.EndGame || item.StatusClass == StatusClass.EndGameLock)
+                                    {
+                                        <a class="ml-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果</a>
+                                    }
+                                    @if (item.StatusClass != StatusClass.EndGameLock)
+                                    {
+                                        <a class="ml-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="./Edit" asp-route-id="@item.GameID">試合情報編集</a>
+                                        <a class="ml-1 rounded-md border border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-700 transition hover:bg-red-50" asp-page="./Delete" asp-route-id="@item.GameID">削除</a>
+                                    }
+                                }
+                                else
+                                {
+                                    @if (item.StatusClass == StatusClass.EndGame || item.StatusClass == StatusClass.EndGameLock)
+                                    {
+                                        <a class="rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="/GameScore/Details" asp-route-gameID="@item.GameID">試合結果</a>
+                                    }
+                                }
+                            </td>
+                        </tr>
                     }
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+                </tbody>
+            </table>
+        </div>
 
-@{
-    var prevDisabled = !Model.Game.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.Game.HasNextPage ? "disabled" : "";
-}
-
-<div class="mt-1">
-    <ul class="pagination">
-        <li class="page-item @prevDisabled">
-            <a asp-page="/Game/Index"
-               asp-route-teamID="@Model.Team.TeamID"
-               class="page-link">
-                <<
-            </a>
-        </li>
-
-        @if (Model.Game.PageIndex >= 4)
-        {
-            <li class="page-item disabled">
-                <span class="page-link">
-                    …
-                </span>
-            </li>
-        }
-
-        @for (var i = Model.Game.PageIndex - 2; i <= Model.Game.PageIndex + 2; i++)
-        {
-            @if (i < 1 || i > Model.Game.TotalPages)
-            {
-                continue;
-            }
-
-            @if (Model.Game.PageIndex == i)
-            {
-                <li class="page-item active">
-                    <a asp-page="/Game/Index"
-                       asp-route-teamID="@Model.Team.TeamID"
-                       asp-route-pageIndex="@(i)"
-                       class="page-link">
-                        @(i)
-                    </a>
-                </li>
-            }
-            else
-            {
-                <li class="page-item">
-                    <a asp-page="/Game/Index"
-                       asp-route-teamID="@Model.Team.TeamID"
-                       asp-route-pageIndex="@(i)"
-                       class="page-link">
-                        @(i)
-                    </a>
-                </li>
-            }
-        }
-
-        @if (Model.Game.TotalPages - Model.Game.PageIndex >= 3)
-        {
-            <li class="page-item disabled">
-                <span class="page-link">
-                    …
-                </span>
-            </li>
-        }
-
-        <li class="page-item @nextDisabled">
-            <a asp-page="/Game/Index"
-               asp-route-teamID="@Model.Team.TeamID"
-               asp-route-pageIndex="@(Model.Game.TotalPages)"
-               class="page-link">
-                >>
-            </a>
-        </li>
-    </ul>
+        @await Html.PartialAsync("~/Pages/Shared/_PaginationTailwind.cshtml",
+            PaginationInfo.Create(Model.Game.PageIndex, Model.Game.TotalPages, "/Game/Index",
+                new Dictionary<string, string> { { "teamID", Model.Team.TeamID } }))
+    }
 </div>

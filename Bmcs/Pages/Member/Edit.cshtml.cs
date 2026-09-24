@@ -80,6 +80,21 @@ namespace Bmcs.Pages.Member
             {
                 if (!ModelState.IsValid)
                 {
+                    //再表示に使うチームは、POST 値ではなく DB の TeamID から取得する
+                    //※TeamID は画面から送っていないが、POST に追加されればそのまま結び付けられるため、
+                    //  書き換えで他チーム（非公開を含む）のチーム名を表示できてしまう
+                    var dbTeamID = await Context.Members
+                                        .Where(r => r.MemberID == Member.MemberID)
+                                        .Select(r => r.TeamID)
+                                        .FirstOrDefaultAsync();
+
+                    if (!base.IsMyTeamData(dbTeamID))
+                    {
+                        return NotFound();
+                    }
+
+                    Member.TeamID = dbTeamID;
+
                     //再表示に必要なデータを取り直す
                     //※取り直さないと、画面でチーム名を参照している箇所で例外となる
                     await SetPageDataAsync();

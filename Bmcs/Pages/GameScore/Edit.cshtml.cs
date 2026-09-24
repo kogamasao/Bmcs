@@ -170,13 +170,23 @@ namespace Bmcs.Pages.GameScore
                 GameScoreFielderList.Add(new GameScoreFielder());
             }
 
+            //タイトル・ヘルプ
+            await SetPageDataAsync();
+
+            return Page();
+        }
+
+        /// <summary>
+        /// 画面表示に必要なデータ（タイトル・ヘルプ）をセットする
+        /// ※入力エラーで return Page() する場合も、これを呼ばないと見出しとヘルプが消える
+        /// </summary>
+        private async Task SetPageDataAsync()
+        {
             //タイトル
-            ViewData[ViewDataConstant.Title] = "試合結果";
+            ViewData[ViewDataConstant.Title] = "試合結果の入力・確定";
 
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameScoreEdit);
-
-            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -202,6 +212,7 @@ namespace Bmcs.Pages.GameScore
 
                     if (!ModelState.IsValid)
                     {
+                        await SetPageDataAsync();
                         return Page();
                     }
 
@@ -300,7 +311,7 @@ namespace Bmcs.Pages.GameScore
             }
 
             //最終イニング
-            var maxInning = inningScores.DefaultIfEmpty().Max(r => r.Inning);
+            var maxInning = inningScores.Select(r => r.Inning).DefaultIfEmpty().Max();
 
             foreach (var inningScore in inningScores)
             {
@@ -327,8 +338,8 @@ namespace Bmcs.Pages.GameScore
             var myTeamOffenceTopButtomClass = game.BatFirstBatSecondClass == BatFirstBatSecondClass.First ? TopButtomClass.Top : TopButtomClass.Buttom;
 
             //得点
-            game.Score = inningScores.Where(r => r.TopButtomClass == myTeamOffenceTopButtomClass).DefaultIfEmpty().Sum(r => r.Score);
-            game.OpponentTeamScore = inningScores.Where(r => r.TopButtomClass != myTeamOffenceTopButtomClass).DefaultIfEmpty().Sum(r => r.Score);
+            game.Score = inningScores.Where(r => r.TopButtomClass == myTeamOffenceTopButtomClass).Sum(r => r.Score);
+            game.OpponentTeamScore = inningScores.Where(r => r.TopButtomClass != myTeamOffenceTopButtomClass).Sum(r => r.Score);
 
             //勝敗
             if (game.Score > game.OpponentTeamScore)

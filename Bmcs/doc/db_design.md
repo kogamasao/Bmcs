@@ -180,7 +180,7 @@ erDiagram
 | WinLoseClass | 勝敗 | enum | No | |
 | Score | 得点 | int | No | |
 | OpponentTeamScore | 失点 | int | No | |
-| StatusClass | ステータス | enum | No | 試合前、試合中、試合終了 |
+| StatusClass | ステータス | enum | No | 試合前、試合中、確定前、確定済み（EndGame・EndGameLock） |
 
 ### GameScene (試合経過)
 | カラム名 | 論理名 | 型 | 必須 | 説明 |

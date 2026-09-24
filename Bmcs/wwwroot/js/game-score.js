@@ -12,6 +12,16 @@
         window.alert('試合中にブラウザバックは使用できません。');
     });
 
+    //「再集計する」の確認
+    //※プレーの記録から作り直すため、この画面での手直しが消え、確定済みの試合も「確定前」に戻る。
+    //  ボタン自体に先にバインドし、body に委譲した submit 処理まで伝播させない
+    $(".js-confirm-recount").on("click", function (event) {
+        if (!window.confirm("プレーの記録から成績を集計し直します。\nこの画面で手直しした内容は元に戻り、試合は「確定前」に戻ります（成績ページに集計するには、もう一度「確定する」を押してください）。\nよろしいですか？")) {
+            event.stopImmediatePropagation();
+            event.preventDefault();
+        }
+    });
+
     //submitボタン
     $("body").on("click", ".js-submit", function () {
         //区分取得

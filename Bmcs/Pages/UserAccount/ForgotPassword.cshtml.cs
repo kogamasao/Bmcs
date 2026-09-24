@@ -87,7 +87,9 @@ namespace Bmcs.Pages.UserAccount
 
             //ユーザIDとメールアドレスの両方が一致した場合のみ再設定用URLを送信する
             //※アカウントの有無を画面上で判別できないよう、一致しない場合も同じ完了メッセージを表示する
+            //※体験用ユーザは対象外（共有アカウントのため、メールアドレスを書き換えた第三者が再設定できてしまう）
             if (userAccount != null
+                && !IsSampleUserAccountID(userAccount.UserAccountID)
                 && userAccount.UserAccountID == UserAccountID
                 && !string.IsNullOrWhiteSpace(userAccount.EmailAddress)
                 && string.Equals(userAccount.EmailAddress.Trim(), EmailAddress.Trim(), StringComparison.OrdinalIgnoreCase))

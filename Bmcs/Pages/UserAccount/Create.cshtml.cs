@@ -96,15 +96,31 @@ namespace Bmcs.Pages.UserAccount
                 //チームパスワードチェック
                 if (!string.IsNullOrEmpty(UserAccount.TeamID))
                 { 
-                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID);
+                    //※削除済みのチームには参加できない（以前は削除済みでも参加できた）
+                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID && !r.DeleteFLG);
+
+                    //サンプルチームには参加できない（管理者は除く）
+                    //※入力値ではなく DB の値で判定する。DBの照合順序は全角・半角も区別しないため、
+                    //  入力値で判定すると「ＹＧ」（全角）で判定をすり抜けてサンプルチームに一致してしまう
+                    if (!base.IsAdmin() && dbTeam != null && IsSampleTeamID(dbTeam.TeamID))
+                    {
+                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamID), "体験用のチームには参加できません。");
+
+                        return Page();
+                    }
 
                     if (dbTeam == null || dbTeam.TeamPassword != UserAccount.TeamPassword.NullToEmpty().ChangeHashValue())
                     {
                         //チームが存在しない場合も同じ文言とする（チームの有無を判別させないため）
-                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "チームID、またはチームパスワードが間違っています。");
+                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "チームIDまたはチームパスワードが間違っています。");
 
                         return Page();
                     }
+
+                    //チームIDは DB の値で保存する
+                    //※DBの照合順序は大文字小文字・末尾空白を区別しないため「yg」でも照合は通るが、
+                    //  入力値のまま保存すると、セッションと試合等の TeamID の比較（完全一致）が合わず、自チームのデータを開けなくなる
+                    UserAccount.TeamID = dbTeam.TeamID;
                 }
 
                 //データ作成

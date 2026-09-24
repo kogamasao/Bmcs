@@ -3,120 +3,96 @@
 
 @{
     ViewData[ViewDataConstant.Title] = "試合削除";
+    Layout = "_LayoutTailwind";
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+<div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Game.Team.TeamName</p>
+        </div>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-
-<h6 class="text-danger">試合情報を削除します。よろしいですか？</h6>
-<div>
-    <h4>@Model.Game.Team.TeamName</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game.GameDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game.GameDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game.GameClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game.GameClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game.OpponentTeamName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game.OpponentTeamName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game.OpponentTeamAbbreviation)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game.OpponentTeamAbbreviation)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game.StadiumName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game.StadiumName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game.WeatherClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game.WeatherClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game.WinLoseClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game.WinLoseClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game.GameScore)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game.GameScore)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game.BatFirstBatSecondClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game.BatFirstBatSecondClassName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game.GameInputTypeClassName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game.GameInputTypeClassName)
-        </dd>
+    <div class="mt-6 rounded-xl border border-red-200 bg-red-50 p-5">
+        <h2 class="font-bold text-red-900">この試合を削除します。よろしいですか？</h2>
+        <p class="mt-1 text-sm text-red-900/80">
+            @* 論理削除（DeleteFLG）。成績の集計は Game.DeleteFLG == false を条件にしているため外れる。画面から戻す手段は無い *@
+            削除すると、試合一覧から消え、<strong class="font-semibold">この試合の記録は成績ページの集計から外れます。</strong>
+            <br />画面から元に戻すことはできません。
+        </p>
+    </div>
+    <dl class="mt-6 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.GameDate)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Model.Game.GameDateFormat</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.GameClassName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.GameClassName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.OpponentTeamName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.OpponentTeamName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.OpponentTeamAbbreviation)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.OpponentTeamAbbreviation)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.StadiumName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.StadiumName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.WeatherClassName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.WeatherClassName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.WinLoseClassName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.WinLoseClassName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.GameScore)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.GameScore)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.BatFirstBatSecondClassName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.BatFirstBatSecondClassName)</dd>
+        </div>
+        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.GameInputTypeClassName)</dt>
+            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.GameInputTypeClassName)</dd>
+        </div>
         @if (Model.IsAdmin())
         {
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Game.StatusClass)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Game.StatusClass)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Game.EntryUserID)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Game.EntryUserID)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Game.EntryDatetime)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Game.EntryDatetime)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Game.UpdateUserID)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Game.UpdateUserID)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Game.UpdateDatetime)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Game.UpdateDatetime)
-            </dd>
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.StatusClass)</dt>
+                <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.StatusClass)</dd>
+            </div>
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.EntryUserID)</dt>
+                <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.EntryUserID)</dd>
+            </div>
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.EntryDatetime)</dt>
+                <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.EntryDatetime)</dd>
+            </div>
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.UpdateUserID)</dt>
+                <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.UpdateUserID)</dd>
+            </div>
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Game.UpdateDatetime)</dt>
+                <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Game.UpdateDatetime)</dd>
+            </div>
         }
     </dl>
 
-    <form method="post">
+    <form method="post" class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
         <input type="hidden" asp-for="Game.TeamID" />
         <input type="hidden" asp-for="Game.GameID" />
-        <div class="form-group">
-            <input type="submit" value="削除" class="btn btn-danger" />
-            <a class="btn btn-secondary" asp-page="./Index" asp-route-teamID="@Model.Game.Team.TeamID">戻る</a>
-        </div>
+        <input type="submit" value="削除する" class="rounded-lg bg-red-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2" />
+        <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="./Index" asp-route-teamID="@Model.Game.Team.TeamID">やめる</a>
     </form>
 </div>

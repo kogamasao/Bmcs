@@ -3,6 +3,35 @@
     //初期表示ボタン制御
     IsUserDeleteButton();
 
+    //打順追加ダイアログの開閉
+    //※Bootstrapのモーダルに依存していたため <dialog> に置き換えている
+    var interruptDialog = document.getElementById("interrupt-order");
+
+    $(".js-interrupt-open").on("click", function () {
+        if (interruptDialog) {
+            interruptDialog.showModal();
+        }
+    });
+
+    $(".js-interrupt-close").on("click", function () {
+        CloseInterruptDialog();
+    });
+
+    //背景クリックで閉じる
+    if (interruptDialog) {
+        interruptDialog.addEventListener("click", function (event) {
+            if (event.target === interruptDialog) {
+                CloseInterruptDialog();
+            }
+        });
+    }
+
+    function CloseInterruptDialog() {
+        if (interruptDialog) {
+            interruptDialog.close();
+        }
+    }
+
     // 行追加
     $("#add-order").on("click", function () {
         //最終行のコピーを取得
@@ -28,23 +57,23 @@
     // 割り込み行追加
     $("#add-order-modal").on("click", function () {
 
-        $('.interrupt-order-input-error').addClass('d-none');
-        $('.interrupt-order-decimal-error').addClass('d-none');
-        $('.interrupt-order-exist-error').addClass('d-none');
+        $('.interrupt-order-input-error').addClass('hidden');
+        $('.interrupt-order-decimal-error').addClass('hidden');
+        $('.interrupt-order-exist-error').addClass('hidden');
 
         //指定打順取得
         var interruptBattingOrder = $("#interrupt-batting-order");
 
         if (interruptBattingOrder.val() == ""
             || interruptBattingOrder.val() == null) {
-            $('.interrupt-order-input-error').removeClass('d-none');
+            $('.interrupt-order-input-error').removeClass('hidden');
             return false;
         }
 
         //小数チェック
         if (interruptBattingOrder.val().indexOf('.') != -1) {
             if (interruptBattingOrder.val().split('.')[1].length > 1) {
-                $('.interrupt-order-decimal-error').removeClass('d-none');
+                $('.interrupt-order-decimal-error').removeClass('hidden');
                 return false;
             }
         }
@@ -70,7 +99,7 @@
 
             if (battingOrder[0].innerText != ''
                 && battingOrder[0].innerText == interruptBattingOrder.val()) {
-                $('.interrupt-order-exist-error').removeClass('d-none');
+                $('.interrupt-order-exist-error').removeClass('hidden');
                 isError = true;
                 return false;
             }
@@ -109,7 +138,7 @@
         interruptBattingOrder.val(null);
 
         //モーダル閉じる
-        $('#interrupt-order').modal('hide');
+        CloseInterruptDialog();
     });
 
     // 行追加
