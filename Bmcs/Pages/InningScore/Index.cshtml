@@ -3,227 +3,211 @@
 
 @{
     ViewData[ViewDataConstant.Title] = "イニング詳細";
+    Layout = "_LayoutTailwind";
+
+    var secondaryButton = "inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50";
+    var isFiltered = Model.SelectInning != null || Model.SelectTopButtomClass != null;
+    var hasScene = Model.GameSceneList.Any();
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
-
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
-
-<h4>@Model.Game.Team.TeamName</h4>
-
-@if (Model.Game.StatusClass == StatusClass.DuringGame)
-{
-    <div class="form-group">
-        <a class="btn btn-primary" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID">試合に戻る</a>
-    </div>
-}
-<div class="form-group">
-    <a class="btn btn-primary" asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID">全イニング詳細</a>
-    @if ((Model.Game.StatusClass == StatusClass.BeforeFix
-      || Model.Game.StatusClass == StatusClass.EndGame)
-      && (Model.IsMyTeam || Model.IsAdmin()))
-    {
-        <a class="btn btn-primary" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果編集</a>
-    }
-    @if (Model.Game.StatusClass == StatusClass.EndGame || Model.Game.StatusClass == StatusClass.EndGameLock)
-    {
-        <a class="btn btn-primary" asp-page="/GameScore/Details" asp-route-gameID="@Model.Game.GameID">試合結果</a>
-    }
-</div>
-
-
-<div class="table-responsive">
-    <table class="table table-sm table-bordered">
-        <thead class="thead-light">
-            <tr>
-                <th>
-                    チーム名
-                </th>
-                @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top))
-                {
-                    <th class="text-center">
-                        @inning.Inning
-                    </th>
-                }
-                @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count(); i < 9; i++)
-                {
-                    <th class="text-center">
-                        @(i + 1)
-                    </th>
-                }
-                <th class="text-center">
-                    計
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    @if (Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
-                    {
-                        @Model.Game.Team.TeamAbbreviation
-                    }
-                    else
-                    {
-                        @Model.Game.OpponentTeamAbbreviation
-                    }
-                </td>
-                @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top))
-                {
-                    <td class="text-center">
-                        <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
-                    </td>
-                }
-                @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count(); i < 9; i++)
-                {
-                    <td class="text-center">
-                    </td>
-                }
-                <td class="text-center">
-                    @Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Select(r => r.Score).Sum()
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @if (Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
-                    {
-                        @Model.Game.OpponentTeamAbbreviation
-                    }
-                    else
-                    {
-                        @Model.Game.Team.TeamAbbreviation
-                    }
-                </td>
-                @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom))
-                {
-                    <td class="text-center">
-                        @if (inning.LastInningFLG && inning.Score == null)
-                        {
-                            @("X")
-                        }
-                        else
-                        {
-                            <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
-                        }
-                    </td>
-                }
-
-                @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count(); i < 9; i++)
-                {
-                    <td class="text-center">
-                    </td>
-                }
-
-                @if (Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() > 9
-                && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
-                {
-                    <td class="text-center">
-                    </td>
-                }
-                <td class="text-center">
-                    @Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Select(r => r.Score).Sum()
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-
-@foreach (var inningScore in Model.InningScoreList.Where(r => ((r.Inning == Model.SelectInning) || (Model.SelectInning == null))
-                                                 && ((r.TopButtomClass == Model.SelectTopButtomClass) || (Model.SelectTopButtomClass == null))))
-{
-    @if (!Model.GameSceneList.Any(r => r.Inning == inningScore.Inning && r.TopButtomClass == inningScore.TopButtomClass))
-    {
-        continue;
-    }
-
-    <div class="box">
-        <div class="box-title">
-            @(inningScore.Inning.ToString() + "回" + inningScore.TopButtomClass.GetEnumName())
+<div class="mx-auto max-w-6xl px-4 py-6">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+            <p class="mt-1 text-sm text-slate-500">@Model.Game.Team.TeamName</p>
         </div>
-        <div class="box-inner">
-            @if ((inningScore.TopButtomClass == TopButtomClass.Top
-            && Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
-            ||
-            (inningScore.TopButtomClass == TopButtomClass.Buttom
-            && Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.Second))
-            {
-                <p>@(Model.Game.Team.TeamName + "の攻撃")</p>
-            }
-            else
-            {
-                <p>@(Model.Game.OpponentTeamName + "の攻撃")</p>
-            }
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover table-sm table-bordered">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListOutCount)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListRunner)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListBattingOrder)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListDetail)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListGameScore)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.GameSceneList[0].Note)
-                            </th>
-                            @if (Model.IsMyTeam || Model.IsAdmin())
-                            {
-                                @if (Model.Game.StatusClass != StatusClass.EndGameLock)
-                                {
-                                    <th></th>
-                                }
-                            }
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.GameSceneList.Where(r => r.Inning == inningScore.Inning && r.TopButtomClass == inningScore.TopButtomClass))
+    <div class="mt-4 flex flex-wrap items-center gap-2">
+        @if (Model.Game.StatusClass == StatusClass.DuringGame && (Model.IsMyTeam || Model.IsAdmin()))
+        {
+            @* 試合中にスコア入力から見に来た場合の戻り先。以前は他チームの閲覧者にも表示されていた（押すと NotFound） *@
+            <a class="inline-flex items-center justify-center rounded-lg bg-sky-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-800" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID">スコア入力に戻る</a>
+        }
+        @if (isFiltered)
+        {
+            @* スコアボードのイニングを押すと、そのイニングだけに絞り込まれる *@
+            <a class="@secondaryButton" asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID">全イニングを表示</a>
+        }
+        @if ((Model.Game.StatusClass == StatusClass.BeforeFix
+          || Model.Game.StatusClass == StatusClass.EndGame)
+          && (Model.IsMyTeam || Model.IsAdmin()))
+        {
+            <a class="@secondaryButton" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果編集</a>
+        }
+        @if (Model.Game.StatusClass == StatusClass.EndGame || Model.Game.StatusClass == StatusClass.EndGameLock)
+        {
+            <a class="@secondaryButton" asp-page="/GameScore/Details" asp-route-gameID="@Model.Game.GameID">試合結果</a>
+        }
+    </div>
+
+    @* スコアボード。数字を押すと、そのイニングだけを表示する *@
+    <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700">スコア</div>
+        <div class="px-4 py-3">
+        <div class="overflow-x-auto">
+            <table class="stat-table">
+                <thead>
+                    <tr>
+                        <th>
+                            チーム名
+                        </th>
+                        @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top))
                         {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.InningScoreListOutCount)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.InningScoreListRunner)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.InningScoreListBattingOrder)
-                            </td>
-                            <td>
-                                @Html.Raw(item.InningScoreListDetail)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.InningScoreListGameScore)
-                            </td>
-                            <td>
-                                @Html.Raw(item.Note.ReplaceNewLineForHtml())
-                            </td>
-                            @if (Model.IsMyTeam || Model.IsAdmin())
-                            {
-                                @if ( Model.Game.StatusClass != StatusClass.EndGameLock)
-                                {
-                                    <td>
-                                        <a class="btn btn-primary btn-sm" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@item.GameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">修正</a>
-                                    </td>
-                                }
-                            }
-                        </tr>
+                            <th class="text-center">
+                                @inning.Inning
+                            </th>
                         }
-                    </tbody>
-                </table>
+                        @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count(); i < 9; i++)
+                        {
+                            <th class="text-center">
+                                @(i + 1)
+                            </th>
+                        }
+                        <th class="text-center">
+                            計
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            @if (Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
+                            {
+                                @Model.Game.Team.TeamAbbreviation
+                            }
+                            else
+                            {
+                                @Model.Game.OpponentTeamAbbreviation
+                            }
+                        </td>
+                        @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top))
+                        {
+                            <td class="text-center">
+                                <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
+                            </td>
+                        }
+                        @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count(); i < 9; i++)
+                        {
+                            <td class="text-center">
+                            </td>
+                        }
+                        <td class="text-center">
+                            @Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Select(r => r.Score).Sum()
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @if (Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
+                            {
+                                @Model.Game.OpponentTeamAbbreviation
+                            }
+                            else
+                            {
+                                @Model.Game.Team.TeamAbbreviation
+                            }
+                        </td>
+                        @foreach (var inning in Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom))
+                        {
+                            <td class="text-center">
+                                @if (inning.LastInningFLG && inning.Score == null)
+                                {
+                                    @("X")
+                                }
+                                else
+                                {
+                                    <a asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID" asp-route-inning="@inning.Inning" asp-route-topButtomClass="@inning.TopButtomClass">@inning.Score</a>
+                                }
+                            </td>
+                        }
+
+                        @for (int i = Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count(); i < 9; i++)
+                        {
+                            <td class="text-center">
+                            </td>
+                        }
+
+                        @if (Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() > 9
+                        && Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Top).Count() != Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Count())
+                        {
+                            <td class="text-center">
+                            </td>
+                        }
+                        <td class="text-center">
+                            @Model.InningScoreList.Where(r => r.TopButtomClass == TopButtomClass.Buttom).Select(r => r.Score).Sum()
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+
+    @if (!hasScene)
+    {
+        <div class="mt-6 rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+            <p class="font-bold text-slate-900">まだプレーが記録されていません</p>
+        </div>
+    }
+
+    @foreach (var inningScore in Model.InningScoreList.Where(r => ((r.Inning == Model.SelectInning) || (Model.SelectInning == null))
+                                                     && ((r.TopButtomClass == Model.SelectTopButtomClass) || (Model.SelectTopButtomClass == null))))
+    {
+        @if (!Model.GameSceneList.Any(r => r.Inning == inningScore.Inning && r.TopButtomClass == inningScore.TopButtomClass))
+        {
+            continue;
+        }
+
+        var isMyOffense = (inningScore.TopButtomClass == TopButtomClass.Top && Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.First)
+                       || (inningScore.TopButtomClass == TopButtomClass.Buttom && Model.Game.BatFirstBatSecondClass == BatFirstBatSecondClass.Second);
+        var canModify = (Model.IsMyTeam || Model.IsAdmin()) && Model.Game.StatusClass != StatusClass.EndGameLock;
+
+        <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div class="flex flex-wrap items-baseline gap-x-3 border-b border-slate-200 bg-slate-50 px-4 py-2">
+                <span class="text-sm font-bold text-slate-700">@(inningScore.Inning.ToString() + "回" + inningScore.TopButtomClass.GetEnumName())</span>
+                <span class="text-sm text-slate-600">@((isMyOffense ? Model.Game.Team.TeamName : Model.Game.OpponentTeamName) + "の攻撃")</span>
+            </div>
+            <div class="px-4 py-3">
+                <div class="overflow-x-auto">
+                    <table class="stat-table">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListOutCount)</th>
+                                <th>@Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListRunner)</th>
+                                <th>@Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListBattingOrder)</th>
+                                <th>@Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListDetail)</th>
+                                <th>@Html.DisplayNameFor(model => model.GameSceneList[0].InningScoreListGameScore)</th>
+                                <th>@Html.DisplayNameFor(model => model.GameSceneList[0].Note)</th>
+                                @if (canModify)
+                                {
+                                    <th class="col-fix-right"></th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.GameSceneList.Where(r => r.Inning == inningScore.Inning && r.TopButtomClass == inningScore.TopButtomClass))
+                            {
+                                <tr>
+                                    <td class="align-top">@Html.DisplayFor(modelItem => item.InningScoreListOutCount)</td>
+                                    <td class="align-top">@Html.DisplayFor(modelItem => item.InningScoreListRunner)</td>
+                                    <td class="align-top">@Html.DisplayFor(modelItem => item.InningScoreListBattingOrder)</td>
+                                    @* 内容・メモは長文になるため折り返す（stat-table は既定で折り返さない） *@
+                                    <td class="min-w-64 whitespace-normal align-top">@Html.Raw(item.InningScoreListDetail)</td>
+                                    <td class="align-top">@Html.DisplayFor(modelItem => item.InningScoreListGameScore)</td>
+                                    <td class="min-w-40 whitespace-normal align-top">@Html.Raw(item.Note.ReplaceNewLineForHtml())</td>
+                                    @if (canModify)
+                                    {
+                                        <td class="col-fix-right align-top">
+                                            <a class="rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@item.GameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">修正</a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-}
+    }
+</div>

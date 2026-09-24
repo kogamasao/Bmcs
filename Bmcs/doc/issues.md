@@ -37,15 +37,18 @@
 ## 2. 画面の移行
 
 ### 2.1 未移行の画面
-移行順は、メッセージ → チーム（作成以外）→ ユーザ情報 → アカウント復旧 → 管理系。移行が終わったら Bootstrap と `site.css` を削除する。
+移行が終わったら Bootstrap と `site.css`（`_Layout.cshtml`・`_Help.cshtml` 等）を削除する。
+※2026-09-24 に試合まわりの残り（`Game/Edit`・`Game/Details`・`Game/Delete`・`InningScore/Index`）を移行済み。
 
-| 画面 | 移行時にあわせて対応すること |
-| --- | --- |
-| メッセージ（3画面） | 入力エラー時にヘルプが消える（`Message/Index`）。非公開チームは他チームとやり取りできない旨の表示 |
-| チーム（一覧・詳細・編集・削除ほか） | 入力エラー時にヘルプが消える（`Team/Edit`）。公開チーム一覧の「戻る」がトップへ戻る |
-| ユーザ情報（`UserAccount/Edit`） | 入力エラー時にヘルプが消える。**チーム参加がプルダウン（公開チームのみ）で、非公開チームに参加し直せない**。新規登録と同じくチームIDとチームパスワードの入力にする |
-| アカウント復旧（6画面） | — |
-| 管理系（6画面） | — |
+| 区分 | 画面 | 移行時にあわせて対応すること |
+| --- | --- | --- |
+| メッセージ | `Message/Index`（公開・チーム内・返信を1画面で切り替え） | 入力エラー時にヘルプが消える。非公開チームは他チームとやり取りできない旨の表示 |
+| チーム | `Team/Index`・`Team/Details`・`Team/Edit`・`Team/Delete` | 入力エラー時にヘルプが消える（`Team/Edit`）。公開チーム一覧の「戻る」がトップへ戻る。チームIDの確認手段（M-6） |
+| ユーザ情報 | `UserAccount/Edit` | 入力エラー時にヘルプが消える。**チーム参加がプルダウン（公開チームのみ）で、非公開チームに参加し直せない**。新規登録と同じくチームIDとチームパスワードの入力にする |
+| アカウント復旧 | `UserAccount/ForgotPassword`・`ForgotUserAccountID`・`ResetPassword`・`RecoverByTeam`、`Team/ForgotTeamPassword`・`ResetTeamPassword` | — |
+| お問い合わせ・アンケート | `Inquiry/Create`・`Survey/Answer` | — |
+| 規約・その他 | `Term`・`Privacy`・`Error` | — |
+| 管理者のみ | `UserAccount/Index`・`Details`・`Delete`、`Inquiry/Index`・`Details`・`Delete`、`Survey/Result` | 利用者の目に触れないため最後でよい |
 
 ### 2.2 移行済みの画面に残っている課題
 

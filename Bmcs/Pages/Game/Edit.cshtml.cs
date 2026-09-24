@@ -71,7 +71,7 @@ namespace Bmcs.Pages.Game
 
         public async Task<IActionResult> OnPostAsync()
         {
-
+            Models.Game game;
 
             try
             {
@@ -100,7 +100,7 @@ namespace Bmcs.Pages.Game
                 }
 
                 //データ作成
-                var game = await Context.Games.FindAsync(Game.GameID);
+                game = await Context.Games.FindAsync(Game.GameID);
 
                 if (game == null)
                 {
@@ -125,21 +125,22 @@ namespace Bmcs.Pages.Game
                 throw;
             }
 
-            if (Game.StatusClass == StatusClass.BeforeFix
-                || Game.StatusClass == StatusClass.EndGame)
+            //遷移先は POST 値（hidden の StatusClass）ではなく DB の状態で決める
+            //※以前は試合中（プレー毎）でも打順設定へ送っており、打順設定は試合前以外 NotFound のため404になっていた
+            switch (game.StatusClass)
             {
-                return RedirectToPage("/Game/Index");
-            }
-            else
-            { 
-                if (Game.GameInputTypeClass == GameInputTypeClass.ByPlay)
-                {
-                    return RedirectToPage("/Order/Edit", new { gameID = Game.GameID });
-                }
-                else
-                {
-                    return RedirectToPage("/GameScore/Edit", new { gameID = Game.GameID });
-                }
+                case StatusClass.BeforeGame:
+                    //試合前は、続けて入力の準備へ進む
+                    return game.GameInputTypeClass == GameInputTypeClass.OnlyGame
+                           ? RedirectToPage("/GameScore/Edit", new { gameID = game.GameID })
+                           : RedirectToPage("/Order/Edit", new { gameID = game.GameID });
+
+                case StatusClass.DuringGame:
+                    //試合中は、スコア入力に戻る
+                    return RedirectToPage("/GameScene/Edit", new { gameID = game.GameID });
+
+                default:
+                    return RedirectToPage("/Game/Index");
             }
         }
 
@@ -155,8 +156,15 @@ namespace Bmcs.Pages.Game
             game.OpponentTeamAbbreviation = Game.OpponentTeamAbbreviation;
             game.StadiumName = Game.StadiumName;
             game.WeatherClass = Game.WeatherClass;
-            game.BatFirstBatSecondClass = Game.BatFirstBatSecondClass;
-            game.GameInputTypeClass = Game.GameInputTypeClass;
+
+            //先攻後攻・入力方式は試合前のみ変更できる
+            //※画面では試合前以外は hidden で送っているが、POST 値をそのまま使うと入力開始後でも書き換えられ、
+            //  記録済みのプレーと表裏・入力方式が食い違う。DB の状態で判定する
+            if (game.StatusClass == StatusClass.BeforeGame)
+            {
+                game.BatFirstBatSecondClass = Game.BatFirstBatSecondClass;
+                game.GameInputTypeClass = Game.GameInputTypeClass;
+            }
         }
     }
 }
