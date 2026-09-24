@@ -362,7 +362,7 @@
             </table>
         </div>
         <div class="mt-4">
-            <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Team" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="WinRate">チーム成績詳細</a>
+            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Team" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="WinRate">チーム成績詳細</a>
         </div>
             }
             else
@@ -679,7 +679,7 @@
                 <li class="@prevClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
-                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @("<<")
                     </a>
                 </li>
@@ -687,7 +687,7 @@
                 @if (Model.GameScoreTeamList.PageIndex >= 4)
                 {
                 <li class="pointer-events-none opacity-40">
-                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         …
                     </span>
                 </li>
@@ -706,7 +706,7 @@
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(i)"
-                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(i)
                     </a>
                 </li>
@@ -717,7 +717,7 @@
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(i)"
-                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(i)
                     </a>
                 </li>
@@ -727,7 +727,7 @@
                 @if (Model.GameScoreTeamList.TotalPages - Model.GameScoreTeamList.PageIndex >= 3)
                 {
                 <li class="pointer-events-none opacity-40">
-                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         …
                     </span>
                 </li>
@@ -737,7 +737,7 @@
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(Model.GameScoreTeamList.TotalPages)"
-                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(">>")
                     </a>
                 </li>
@@ -1121,7 +1121,7 @@
             </div>
         </div>
         <div class="mt-4">
-            <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Pitcher" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="EarnedRunAverage">投手成績詳細</a>
+            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Pitcher" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="EarnedRunAverage">投手成績詳細</a>
         </div>
             }
             else
@@ -1384,7 +1384,7 @@
                 <li class="@prevClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
-                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @("<<")
                     </a>
                 </li>
@@ -1392,7 +1392,7 @@
                 @if (Model.GameScorePitcherList.PageIndex >= 4)
                 {
                 <li class="pointer-events-none opacity-40">
-                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         …
                     </span>
                 </li>
@@ -1411,7 +1411,7 @@
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(i)"
-                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(i)
                     </a>
                 </li>
@@ -1422,7 +1422,7 @@
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(i)"
-                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(i)
                     </a>
                 </li>
@@ -1432,7 +1432,7 @@
                 @if (Model.GameScorePitcherList.TotalPages - Model.GameScorePitcherList.PageIndex >= 3)
                 {
                 <li class="pointer-events-none opacity-40">
-                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         …
                     </span>
                 </li>
@@ -1442,7 +1442,7 @@
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(Model.GameScorePitcherList.TotalPages)"
-                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(">>")
                     </a>
                 </li>
@@ -1828,7 +1828,7 @@
             </div>
         </div>
         <div class="mt-4">
-            <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Fielder" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="BattingAverage">野手成績詳細</a>
+            <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Fielder" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="BattingAverage">野手成績詳細</a>
         </div>
             }
             else
@@ -2104,7 +2104,7 @@
                 <li class="@prevClass">
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
-                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @("<<")
                     </a>
                 </li>
@@ -2112,7 +2112,7 @@
                 @if (Model.GameScoreFielderList.PageIndex >= 4)
                 {
                 <li class="pointer-events-none opacity-40">
-                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         …
                     </span>
                 </li>
@@ -2131,7 +2131,7 @@
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(i)"
-                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(i)
                     </a>
                 </li>
@@ -2142,7 +2142,7 @@
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(i)"
-                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(i)
                     </a>
                 </li>
@@ -2152,7 +2152,7 @@
                 @if (Model.GameScoreFielderList.TotalPages - Model.GameScoreFielderList.PageIndex >= 3)
                 {
                 <li class="pointer-events-none opacity-40">
-                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                    <span class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         …
                     </span>
                 </li>
@@ -2162,7 +2162,7 @@
                     <a asp-page="/Score/Index"
                        asp-route-scorePageClass="@Model.ScorePageClass" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="@Model.SortItem"
                        asp-route-pageIndex="@(Model.GameScoreFielderList.TotalPages)"
-                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                       class="inline-flex items-center rounded-md border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
                         @(">>")
                     </a>
                 </li>
@@ -2176,27 +2176,27 @@
 <div class="mt-4">
     @if (Model.ScorePageClass == ScorePageClass.Index)
     {
-    <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">戻る</a>
+    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">戻る</a>
     }
     else
     {
 
     @if (Model.ScorePageClass != ScorePageClass.Team)
         {
-    <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Team" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="WinRate">チーム成績</a>
+    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Team" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="WinRate">チーム成績</a>
         }
 
     @if (Model.ScorePageClass != ScorePageClass.Pitcher)
         {
-    <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Pitcher" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="EarnedRunAverage">投手成績</a>
+    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Pitcher" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="EarnedRunAverage">投手成績</a>
         }
 
     @if (Model.ScorePageClass != ScorePageClass.Fielder)
         {
-    <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Fielder" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="BattingAverage">野手成績</a>
+    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Fielder" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting" asp-route-sortItem="BattingAverage">野手成績</a>
         }
 
-    <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">戻る</a>
+    <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@Model.SelectTeamID" asp-route-isPublic="@Model.IsPublic" asp-route-year="@Model.Year" asp-route-gameClass="@Model.GameClass" asp-route-teamCategoryClass="@Model.TeamCategoryClass" asp-route-useBallClass="@Model.UseBallClass" asp-route-isIgnoreRegulationGames="@Model.IsIgnoreRegulationGames" asp-route-isIgnoreRegulationInnings="@Model.IsIgnoreRegulationInnings" asp-route-isIgnoreRegulationAtBatting="@Model.IsIgnoreRegulationAtBatting">戻る</a>
     }
 </div>
 

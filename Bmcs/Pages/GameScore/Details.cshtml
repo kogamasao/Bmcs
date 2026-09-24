@@ -14,13 +14,6 @@
         @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
     </div>
 
-@if (Model.Game.GameInputTypeClass == GameInputTypeClass.ByPlay)
-{
-    <div class="mt-4">
-        <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID">イニング詳細</a>
-    </div>
-}
-
 @if (!string.IsNullOrEmpty(Model.Game.VideoCode))
 {
 @* 管理者がDBに登録した埋め込みコードを表示する（一般ユーザには未開放） *@
@@ -29,6 +22,19 @@
 </div>
 }
 
+@*
+    スコアボード。他の表と同じくカードに入れる（以前は枠も余白も無く、上のボタンと接していた）。
+    イニング詳細はスコアボードに対する操作なので、カードの見出し行に置く。
+*@
+<div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div class="flex items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-4 py-2">
+        <span class="text-sm font-bold text-slate-700">スコア</span>
+        @if (Model.Game.GameInputTypeClass == GameInputTypeClass.ByPlay)
+        {
+            <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/InningScore/Index" asp-route-gameID="@Model.Game.GameID">イニング詳細</a>
+        }
+    </div>
+    <div class="px-4 py-3">
 <div class="overflow-x-auto">
     <table class="stat-table">
         <thead>
@@ -144,6 +150,8 @@
             </tr>
         </tbody>
     </table>
+</div>
+    </div>
 </div>
 
 <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -513,7 +521,7 @@
 </div>
 
     <div class="mt-6">
-        <a class="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Game/Index" asp-route-teamID="@Model.Game.TeamID">試合一覧へ戻る</a>
+        <a class="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Game/Index" asp-route-teamID="@Model.Game.TeamID">試合一覧へ戻る</a>
     </div>
 </div>
 

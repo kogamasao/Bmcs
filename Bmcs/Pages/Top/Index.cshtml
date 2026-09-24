@@ -161,7 +161,7 @@
                             <div><dt class="inline">更新日時：</dt><dd class="inline">@Model.PublicMessage.UpdateDatetimeFormat</dd></div>
                             <div><dt class="inline">返信件数：</dt><dd class="inline">@Model.PublicMessage.ReplyCount 件</dd></div>
                         </dl>
-                        <a class="mt-4 inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-messageID="@Model.PublicMessage.MessageID">
+                        <a class="mt-4 inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Public" asp-route-messageID="@Model.PublicMessage.MessageID">
                             確認＆返信
                         </a>
                     </div>
@@ -186,7 +186,7 @@
                             <div><dt class="inline">更新日時：</dt><dd class="inline">@Model.PrivateMessage.UpdateDatetimeFormat</dd></div>
                             <div><dt class="inline">返信件数：</dt><dd class="inline">@Model.PrivateMessage.ReplyCount 件</dd></div>
                         </dl>
-                        <a class="mt-4 inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Private" asp-route-messageID="@Model.PrivateMessage.MessageID">
+                        <a class="mt-4 inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Message/Index" asp-route-messagePageClass="@MessagePageClass.Private" asp-route-messageID="@Model.PrivateMessage.MessageID">
                             確認＆返信
                         </a>
                     </div>

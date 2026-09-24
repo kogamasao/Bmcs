@@ -20,27 +20,27 @@
             <div class="mt-4">
                 @if (Model.LastGameSceneID != null)
                 {
-                    <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.LastGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">戻る</a>
+                    <a class="inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.LastGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">戻る</a>
                 }
 
                 @if (Model.NextGameSceneID != null || Model.GameScene.GameSceneID.ZeroToNull() != null)
                 {
-                    <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.NextGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">次へ</a>
-                    <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">最新へ</a>
+                    <a class="inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.NextGameSceneID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">次へ</a>
+                    <a class="inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-isOrderChange="@false" asp-route-isInitialize="@false">最新へ</a>
                 }
 
                 @if (Model.Game.StatusClass == StatusClass.BeforeFix
            || Model.Game.StatusClass == StatusClass.EndGame
            || Model.Game.StatusClass == StatusClass.EndGameLock)
                 {
-                    <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果へ</a>
+                    <a class="inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScore/Edit" asp-route-gameID="@Model.Game.GameID">試合結果へ</a>
                 }
             </div>
 
 
             <div class="mt-4">
-                <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isOrderChange="@false" asp-route-isInitialize="@true">元に戻す</a>
-                <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isOrderChange="@false" asp-route-isInitialize="@true" asp-route-skipCount="@(Model.SkipCount + 1)">スキップ</a>
+                <a class="inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isOrderChange="@false" asp-route-isInitialize="@true">元に戻す</a>
+                <a class="inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/GameScene/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isOrderChange="@false" asp-route-isInitialize="@true" asp-route-skipCount="@(Model.SkipCount + 1)">スキップ</a>
 
                 @if (Model.GameScene.InningIndex != 1)
                 {
@@ -68,9 +68,15 @@
             <input type="hidden" asp-for="InterruptBattingOrder" id="interrupt-batting-order" />
             <input type="hidden" asp-for="IsTieBreak" />
 
+            @* スコアボード。試合結果詳細と同じくカードに入れる（以前は枠も余白も無く、上のボタンと接していた） *@
+            <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700">
+                    スコア
+                </div>
+                <div class="px-4 py-3">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-slate-200 text-sm">
-                    <thead class="bg-slate-50 text-left text-xs font-semibold text-slate-500">
+                <table class="stat-table">
+                    <thead>
                         <tr>
                             <th>
                                 チーム名
@@ -156,6 +162,8 @@
                     </tbody>
                 </table>
             </div>
+                </div>
+            </div>
 
             <div class="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
                 <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700">
@@ -165,7 +173,7 @@
                     @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Defense)
                     {
                         <div class="mt-4">
-                            <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Order/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isDuringGame="@true">守備変更</a>
+                            <a class="inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Order/Edit" asp-route-gameID="@Model.Game.GameID" asp-route-gameSceneID="@Model.GameScene.GameSceneID.ZeroToNull()" asp-route-isDuringGame="@true">守備変更</a>
                         </div>
                     }
                     <div class="overflow-x-auto">
@@ -514,15 +522,15 @@
             </div>
 
             <div class="mt-4">
-                <input type="button" value="次の打者へ" class="js-submit w-full sm:w-auto cursor-pointer rounded-lg bg-sky-700 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-sky-800" data-submitclass="@GameSceneSubmitClass.NextBatter" />
+                <input type="button" value="次の打者へ" class="js-submit w-full sm:w-auto cursor-pointer rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800" data-submitclass="@GameSceneSubmitClass.NextBatter" />
                 <p class="mt-2 text-sm text-slate-500">打者の結果を選んで押します。凡打ならそのまま押すだけです。</p>
             </div>
             <div class="mt-6 flex flex-wrap items-center gap-2 border-t border-slate-200 pt-4">
-                <input type="button" value="チェンジ" class="js-submit cursor-pointer rounded-lg bg-amber-700 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-amber-800" data-submitclass="@GameSceneSubmitClass.ThisBatterChange" />
-                <input type="button" value="試合終了" class="js-submit js-confirm-gameset cursor-pointer rounded-lg bg-red-600 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-red-700" data-submitclass="@GameSceneSubmitClass.ThisBatterGameSet" />
+                <input type="button" value="チェンジ" class="js-submit cursor-pointer rounded-lg bg-amber-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-amber-800" data-submitclass="@GameSceneSubmitClass.ThisBatterChange" />
+                <input type="button" value="試合終了" class="js-submit js-confirm-gameset cursor-pointer rounded-lg bg-red-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-red-700" data-submitclass="@GameSceneSubmitClass.ThisBatterGameSet" />
                 @if (Model.GameScene.TopButtomClass == TopButtomClass.Buttom && !Model.IsTieBreak)
                 {
-                    <input type="button" value="タイブレーク" class="js-tiebreak-open cursor-pointer rounded-lg bg-amber-700 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-amber-800" />
+                    <input type="button" value="タイブレーク" class="js-tiebreak-open cursor-pointer rounded-lg bg-amber-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-amber-800" />
 
                     @*
                         タイブレーク設定。
@@ -552,8 +560,8 @@
                             </div>
                         </div>
                         <div class="flex justify-end gap-2 border-t border-slate-200 px-5 py-3">
-                            <button type="button" class="js-tiebreak-close rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">やめる</button>
-                            <button type="button" class="js-submit rounded-lg bg-amber-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-800" data-submitclass="@GameSceneSubmitClass.ThisBatterTieBreak">タイブレークへ</button>
+                            <button type="button" class="js-tiebreak-close rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50">やめる</button>
+                            <button type="button" class="js-submit rounded-lg bg-amber-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-800" data-submitclass="@GameSceneSubmitClass.ThisBatterTieBreak">タイブレークへ</button>
                         </div>
                     </dialog>
                 }
@@ -563,7 +571,7 @@
         </form>
 
     <div class="mt-6">
-        <a class="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Game/Index" asp-route-teamID="@Model.Game.TeamID">試合一覧へ戻る</a>
+        <a class="inline-flex cursor-pointer items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Game/Index" asp-route-teamID="@Model.Game.TeamID">試合一覧へ戻る</a>
     </div>
 </div>
 
