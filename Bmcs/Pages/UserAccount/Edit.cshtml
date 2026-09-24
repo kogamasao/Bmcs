@@ -3,67 +3,146 @@
 
 @{
     ViewData[ViewDataConstant.Title] = "ユーザ情報";
+    Layout = "_LayoutTailwind";
+
+    var inputClass = "mt-1 block w-full rounded-md border border-slate-300 px-3 py-2.5 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 disabled:bg-slate-100 disabled:text-slate-600";
+
+    //体験用ユーザは誰でもログインできる共有アカウントのため、設定を変更できない（EditModel.OnPostAsync でも拒否している）
+    var isSample = Model.IsSampleUser();
+
+    //チームの変更欄でエラーが出た場合は、閉じたままだと気づけないため開いておく
+    var hasTeamError = (ViewData.ModelState[nameof(Model.UserAccount) + "." + nameof(Model.UserAccount.TeamPassword)]?.Errors.Count ?? 0) > 0;
 }
 
-<h1 class="d-inline-block">
-    @ViewData[ViewDataConstant.Title]
-</h1>
+<div class="mx-auto max-w-2xl px-4 py-8">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
+        @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
+    </div>
 
-@await Html.PartialAsync("~/Pages/Shared/_Help.cshtml")
+    @if (isSample)
+    {
+        <div class="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-5">
+            <p class="font-bold text-amber-900">体験用のユーザのため、ユーザ情報は変更できません</p>
+            <p class="mt-1 text-sm text-amber-900/80">
+                自分のチームで使う場合は、ログアウトしてからユーザ登録してください（無料です）。
+            </p>
+        </div>
+    }
 
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="UserAccount.UserAccountID" />
-            <input type="hidden" asp-for="UserAccount.TimeStamp" />
-            <div class="form-group">
-                <label asp-for="UserAccount.UserAccountName" class="control-label"></label>
-                <input asp-for="UserAccount.UserAccountName" class="form-control" />
-                <span asp-validation-for="UserAccount.UserAccountName" class="text-danger"></span>
+    <form method="post" class="mt-8">
+        <div asp-validation-summary="All" class="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"></div>
+        <input type="hidden" asp-for="UserAccount.UserAccountID" />
+        <input type="hidden" asp-for="UserAccount.TimeStamp" />
+
+        <fieldset disabled="@isSample" class="space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div>
+                <p class="text-sm font-semibold text-slate-800">@Html.DisplayNameFor(model => model.UserAccount.UserAccountID)</p>
+                <p class="mt-1 font-mono text-slate-900">@Model.UserAccount.UserAccountID</p>
+                <p class="mt-0.5 text-sm text-slate-500">ログインに使用します（変更はできません）。</p>
             </div>
-            <div class="form-group">
-                <label asp-for="UserAccount.Password" class="control-label"></label>
-                <input asp-for="UserAccount.Password" class="form-control" />
-                <span asp-validation-for="UserAccount.Password" class="text-danger"></span>
+
+            <div>
+                <label asp-for="UserAccount.UserAccountName" class="block text-sm font-semibold text-slate-800"></label>
+                <input asp-for="UserAccount.UserAccountName" class="@inputClass" />
+                <span asp-validation-for="UserAccount.UserAccountName" class="mt-1 block text-sm text-red-600"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UserAccount.ConfirmPassword" class="control-label"></label>
-                <input asp-for="UserAccount.ConfirmPassword" class="form-control" />
-                <span asp-validation-for="UserAccount.ConfirmPassword" class="text-danger"></span>
+
+            @* パスワードは変更する場合のみ入力する（空なら変更しない。Edit.cshtml.cs の TryUpdateModel） *@
+            <div class="grid gap-6 sm:grid-cols-2 sm:grid-rows-[auto_auto_auto] sm:gap-y-0">
+                <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                    <label asp-for="UserAccount.Password" class="block text-sm font-semibold text-slate-800"></label>
+                    <p class="mt-0.5 text-sm text-slate-500">変更する場合のみ入力してください。空のままなら変わりません。</p>
+                    <div>
+                        <input asp-for="UserAccount.Password" class="@inputClass" autocomplete="new-password" />
+                        <span asp-validation-for="UserAccount.Password" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
+                </div>
+                <div class="sm:row-span-3 sm:grid sm:grid-rows-subgrid">
+                    <label asp-for="UserAccount.ConfirmPassword" class="block text-sm font-semibold text-slate-800"></label>
+                    <p class="mt-0.5 text-sm text-slate-500">確認のため、もう一度入力してください。</p>
+                    <div>
+                        <input asp-for="UserAccount.ConfirmPassword" class="@inputClass" autocomplete="new-password" />
+                        <span asp-validation-for="UserAccount.ConfirmPassword" class="mt-1 block text-sm text-red-600"></span>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="UserAccount.EmailAddress" class="control-label"></label>
-                <input asp-for="UserAccount.EmailAddress" class="form-control" />
-                <span asp-validation-for="UserAccount.EmailAddress" class="text-danger"></span>
-                <small class="form-text text-danger">
-                    ※ユーザIDやパスワードを忘れた際の復旧に使用します。登録を強くおすすめします。
-                    一度登録したメールアドレスは削除できません（変更は可能です）。
-                </small>
+
+            <div>
+                <label asp-for="UserAccount.EmailAddress" class="block text-sm font-semibold text-slate-800"></label>
+                <p class="mt-0.5 text-sm text-slate-500">
+                    ユーザIDやパスワードを忘れたときの復旧に使用します。
+                    <strong class="font-semibold text-slate-700">一度登録したメールアドレスは削除できません</strong>（変更はできます）。
+                </p>
+                <input asp-for="UserAccount.EmailAddress" class="@inputClass" />
+                <span asp-validation-for="UserAccount.EmailAddress" class="mt-1 block text-sm text-red-600"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UserAccount.TeamID" class="control-label"></label>
-                <select asp-for="UserAccount.TeamID" class="form-control" asp-items="Model.TeamIDList"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserAccount.TeamPassword" class="control-label"></label>
-                <input asp-for="UserAccount.TeamPassword" class="form-control" />
-                <span asp-validation-for="UserAccount.TeamPassword" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="登録" class="btn btn-primary" />
-                @if (Model.IsAdmin())
+        </fieldset>
+
+        @*
+            所属チーム。
+            以前はプルダウン（公開チーム＋自チームのみ）で選ぶ形で、非公開チームには参加し直せなかった。
+            新規登録（UserAccount/Create）と同じく、チームIDとチームパスワードを入力する形にする。
+        *@
+        <div class="mt-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <p class="text-sm font-semibold text-slate-800">所属チーム</p>
+            <p class="mt-1 text-slate-900">
+                @if (Model.UserAccount.Team != null)
                 {
-                <a class="btn btn-secondary" asp-page="./Index">戻る</a>
+                    @Model.UserAccount.Team.TeamName<span class="ml-2 font-mono text-sm text-slate-500">（@Model.UserAccount.Team.TeamID）</span>
                 }
                 else
                 {
-                <a class="btn btn-secondary" asp-page="/Top/Index">戻る</a>
+                    <span class="text-slate-600">所属していません</span>
                 }
-            </div>
-        </form>
-    </div>
+            </p>
+
+            @if (!isSample)
+            {
+                <details class="group mt-4 rounded-lg border border-slate-200" open="@hasTeamError">
+                    <summary class="flex cursor-pointer items-center justify-between gap-4 px-4 py-3 text-sm font-semibold text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+                        <span>別のチームに移る</span>
+                        <svg class="size-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </summary>
+                    <div class="space-y-5 border-t border-slate-200 px-4 py-4">
+                        <p class="text-sm text-slate-600">
+                            移り先のチームの代表者から、チームIDとチームパスワードを聞いて入力してください。
+                            移ると、<strong class="font-semibold text-slate-800">今のチームのデータは編集できなくなります</strong>。
+                        </p>
+                        <div>
+                            <label asp-for="UserAccount.TeamID" class="block text-sm font-semibold text-slate-800"></label>
+                            <input asp-for="UserAccount.TeamID" class="@inputClass" autocomplete="off" />
+                            <p class="mt-1 text-sm text-slate-500">空にして保存すると、チームから抜けます。</p>
+                        </div>
+                        <div>
+                            <label asp-for="UserAccount.TeamPassword" class="block text-sm font-semibold text-slate-800"></label>
+                            <input asp-for="UserAccount.TeamPassword" class="@inputClass" autocomplete="off" />
+                            <span asp-validation-for="UserAccount.TeamPassword" class="mt-1 block text-sm text-red-600"></span>
+                        </div>
+                    </div>
+                </details>
+            }
+            else
+            {
+                <input type="hidden" asp-for="UserAccount.TeamID" />
+            }
+        </div>
+
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            @if (!isSample)
+            {
+                <input type="submit" value="変更を保存する" class="rounded-lg bg-emerald-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2" />
+            }
+            @if (Model.IsAdmin())
+            {
+                <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="./Index">ユーザ一覧へ</a>
+            }
+            else
+            {
+                <a class="rounded-lg border border-slate-300 bg-white px-6 py-3 text-center text-base font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" asp-page="/Top/Index">トップへ</a>
+            }
+        </div>
+    </form>
 </div>
 
 @section Scripts {

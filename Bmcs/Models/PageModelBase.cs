@@ -640,6 +640,16 @@ namespace Bmcs.Models
         }
 
         /// <summary>
+        /// サンプルチームの体験用ユーザでログインしているか
+        /// ※体験用ユーザは誰でもログインできる共有アカウント。パスワードや所属チームを変更されると、
+        /// 　トップの「サンプルチームで体験する」が全員に対して動かなくなるため、アカウント・チームの設定変更を禁止する
+        /// </summary>
+        public bool IsSampleUser()
+        {
+            return HttpContext.Session.GetString(SessionConstant.UserAccountID) == SystemConstant.SampleUserAccountID;
+        }
+
+        /// <summary>
         /// 未回答のアンケートを取得する（無い場合はnull）
         /// ※ログイン時の誘導と、トップページの案内表示で共用する
         /// </summary>

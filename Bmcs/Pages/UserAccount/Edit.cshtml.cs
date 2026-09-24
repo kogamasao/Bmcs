@@ -59,11 +59,33 @@ namespace Bmcs.Pages.UserAccount
             return Page();
         }
 
+        /// <summary>
+        /// 入力エラーでの再表示に必要なデータを取り直す
+        /// ※以前は取り直しておらず、ヘルプと現在の所属チームが表示されなかった
+        /// </summary>
+        private async Task<IActionResult> ShowErrorAsync()
+        {
+            SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.UserAccountEdit);
+
+            var dbUserAccount = await Context.UserAccounts.Include(r => r.Team).AsNoTracking()
+                                    .FirstOrDefaultAsync(r => r.UserAccountID == UserAccount.UserAccountID);
+
+            UserAccount.Team = dbUserAccount?.Team;
+
+            return Page();
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
+            //体験用ユーザは変更できない（誰でもログインできるため、変更されると体験が全員に対して動かなくなる）
+            if (base.IsSampleUser())
+            {
+                return NotFound();
+            }
+
             if (!ModelState.IsValid)
             {
-                return Page();
+                return await ShowErrorAsync();
             }
 
             try
@@ -91,20 +113,22 @@ namespace Bmcs.Pages.UserAccount
                 {
                     ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.EmailAddress), "メールアドレスは削除できません。ユーザIDやパスワードを忘れた際の復旧に使用します。");
 
-                    return Page();
+                    return await ShowErrorAsync();
                 }
 
                 //チームパスワードチェック
                 if (userAccount.TeamID != UserAccount.TeamID
                     && !string.IsNullOrEmpty(UserAccount.TeamID))
                 {
-                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID);
+                    //※削除済みのチームには参加できない（以前は削除済みでも参加できた）。
+                    //  チームIDの有無を判別できないよう、存在しない場合もパスワード誤りと同じ文言にする
+                    var dbTeam = Context.Teams.FirstOrDefault(r => r.TeamID == UserAccount.TeamID && !r.DeleteFLG);
 
                     if (dbTeam == null || dbTeam.TeamPassword != UserAccount.TeamPassword.NullToEmpty().ChangeHashValue())
                     {
-                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "パスワードが間違っています。");
+                        ModelState.AddModelError(nameof(Models.UserAccount) + "." + nameof(Models.UserAccount.TeamPassword), "チームIDまたはチームパスワードが間違っています。");
 
-                        return Page();
+                        return await ShowErrorAsync();
                     }
                 }
 
@@ -114,6 +138,13 @@ namespace Bmcs.Pages.UserAccount
                 base.SetUpdateInfo(userAccount);
 
                 await Context.SaveChangesAsync();
+
+                //本人の所属チームを変えた場合は、セッションのチームも切り替える
+                //※以前は切り替えておらず、チームを抜けてもログインし直すまで元のチームのデータを編集できた
+                if (userAccount.UserAccountID == HttpContext.Session.GetString(SessionConstant.UserAccountID))
+                {
+                    HttpContext.Session.SetString(SessionConstant.TeamID, userAccount.TeamID.NullToEmpty());
+                }
             }
             catch (DbUpdateConcurrencyException)
             {

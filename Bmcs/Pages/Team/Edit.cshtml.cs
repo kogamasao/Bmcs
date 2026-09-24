@@ -60,6 +60,13 @@ namespace Bmcs.Pages.Team
 
         public async Task<IActionResult> OnPostAsync()
         {
+            //体験用ユーザはサンプルチームの設定を変更できない
+            //（誰でもログインできるため、チーム名や公開設定を書き換えられると公開一覧にそのまま出る）
+            if (base.IsSampleUser())
+            {
+                return NotFound();
+            }
+
             if (!ModelState.IsValid)
             {
                 //入力エラーでの再表示でもヘルプを表示できるようにする
