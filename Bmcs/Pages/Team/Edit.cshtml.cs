@@ -62,6 +62,9 @@ namespace Bmcs.Pages.Team
         {
             if (!ModelState.IsValid)
             {
+                //入力エラーでの再表示でもヘルプを表示できるようにする
+                SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamEdit);
+
                 return Page();
             }
 
