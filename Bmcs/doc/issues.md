@@ -221,7 +221,7 @@
 | R-3 | `doc/migration/20260924_sample_account.sql` の実行（体験用アカウント・サンプルチームの状態確認、メールアドレスを空にし、再設定トークンを失効）。**冒頭の確認結果で「×」が出たら個別に対応する** | 完了（2026-09-24 本番で実行） |
 | R-4 | `doc/query/20260924_teamid_case_check.sql` の実行（参照のみ。M-19 の確認） | 完了（2026-09-24 本番で実行） |
 | R-5 | **Linux（B1）・.NET 10・独自ドメイン（bmcs.app）への本番移行**。手順は `doc/deploy_linux_net10.md` | 完了（2026-09-25 に、独自ドメインの設定が終わったとユーザから連絡） |
-| R-6 | **Google Search Console への登録とサイトマップの送信**（P-8）。ドメイン プロパティ `bmcs.app` を Cloudflare の DNS（TXT レコード）で確認し、`https://bmcs.app/sitemap.xml` を送信する。手順と確認項目は `doc/detail_design_seo.md` 4章 | **未実施** |
+| R-6 | **Google Search Console への登録とサイトマップの送信**（P-8）。ドメイン プロパティ `bmcs.app` を Cloudflare の DNS（TXT レコード）で確認し、`https://bmcs.app/sitemap.xml` を送信する。手順と確認項目は `doc/detail_design_seo.md` 4章 | 完了（2026-09-25 にサイトマップを送信。リッチリザルト テストはトップ・試合結果・チーム情報の3画面ともエラーなし。トップの `aggregateRating`（任意）と試合のイベントの任意項目の警告のみで、対応不要） |
 
 ---
 
