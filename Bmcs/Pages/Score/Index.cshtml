@@ -241,7 +241,12 @@
     <div class="px-4 py-3">
         @if (Model.ScorePageClass == ScorePageClass.Index)
             {
-        <div class="max-h-[70vh] overflow-auto">
+        @*
+            表は横スクロールのみとし、高さは制限しない（この画面のすべての表で共通）。
+            ※以前は max-h-[70vh] overflow-auto で、1ページ20件の詳細表が画面の70%を超えると、表の中に縦スクロールバーが出ていた。
+              件数はページ送り（20件）で区切っているため、縦はページ全体のスクロールで見る
+        *@
+        <div class="overflow-x-auto">
             <table class="stat-table">
                 <thead>
                     <tr>
@@ -370,7 +375,7 @@
             }
             else
             {
-        <div class="max-h-[70vh] overflow-auto">
+        <div class="overflow-x-auto">
             <table class="stat-table">
                 <thead>
                     <tr>
@@ -764,7 +769,7 @@
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div>
                 <h6>勝利</h6>
-                <div class="max-h-[70vh] overflow-auto">
+                <div class="overflow-x-auto">
                     <table class="stat-table">
                         <thead>
                             <tr>
@@ -824,7 +829,7 @@
             </div>
             <div>
                 <h6>防御率</h6>
-                <div class="max-h-[70vh] overflow-auto">
+                <div class="overflow-x-auto">
                     <table class="stat-table">
                         <thead>
                             <tr>
@@ -884,7 +889,7 @@
             </div>
             <div>
                 <h6>奪三振</h6>
-                <div class="max-h-[70vh] overflow-auto">
+                <div class="overflow-x-auto">
                     <table class="stat-table">
                         <thead>
                             <tr>
@@ -944,7 +949,7 @@
             </div>
             <div>
                 <h6>勝率</h6>
-                <div class="max-h-[70vh] overflow-auto">
+                <div class="overflow-x-auto">
                     <table class="stat-table">
                         <thead>
                             <tr>
@@ -1004,7 +1009,7 @@
             </div>
             <div>
                 <h6>ホールド</h6>
-                <div class="max-h-[70vh] overflow-auto">
+                <div class="overflow-x-auto">
                     <table class="stat-table">
                         <thead>
                             <tr>
@@ -1064,7 +1069,7 @@
             </div>
             <div>
                 <h6>セーブ</h6>
-                <div class="max-h-[70vh] overflow-auto">
+                <div class="overflow-x-auto">
                     <table class="stat-table">
                         <thead>
                             <tr>
@@ -1129,7 +1134,7 @@
             }
             else
             {
-        <div class="max-h-[70vh] overflow-auto">
+        <div class="overflow-x-auto">
             <table class="stat-table">
                 <thead>
                     <tr>
@@ -1469,7 +1474,7 @@
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div>
                 <h6>打率</h6>
-                <div class="max-h-[70vh] overflow-auto">
+                <div class="overflow-x-auto">
                     <table class="stat-table">
                         <thead>
                             <tr>
@@ -1530,7 +1535,7 @@
             </div>
             <div>
                 <h6>本塁打</h6>
-                <div class="max-h-[70vh] overflow-auto">
+                <div class="overflow-x-auto">
                     <table class="stat-table">
                         <thead>
                             <tr>
@@ -1590,7 +1595,7 @@
             </div>
             <div>
                 <h6>打点</h6>
-                <div class="max-h-[70vh] overflow-auto">
+                <div class="overflow-x-auto">
                     <table class="stat-table">
                         <thead>
                             <tr>
@@ -1650,7 +1655,7 @@
             </div>
             <div>
                 <h6>出塁率</h6>
-                <div class="max-h-[70vh] overflow-auto">
+                <div class="overflow-x-auto">
                     <table class="stat-table">
                         <thead>
                             <tr>
@@ -1711,7 +1716,7 @@
             </div>
             <div>
                 <h6>安打</h6>
-                <div class="max-h-[70vh] overflow-auto">
+                <div class="overflow-x-auto">
                     <table class="stat-table">
                         <thead>
                             <tr>
@@ -1771,7 +1776,7 @@
             </div>
             <div>
                 <h6>盗塁</h6>
-                <div class="max-h-[70vh] overflow-auto">
+                <div class="overflow-x-auto">
                     <table class="stat-table">
                         <thead>
                             <tr>
@@ -1836,7 +1841,7 @@
             }
             else
                  {
-            <div class="max-h-[70vh] overflow-auto">
+            <div class="overflow-x-auto">
                 <table class="stat-table">
                     <thead>
                         <tr>

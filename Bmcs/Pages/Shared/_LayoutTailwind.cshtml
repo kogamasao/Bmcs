@@ -14,7 +14,13 @@
 </head>
 
 <body class="min-h-screen bg-slate-50 font-sans text-slate-800 antialiased">
-    <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+    @*
+        z-50：本文中の固定要素より必ず手前に出す。
+        ※以前は z-30 で、成績表の左端に固定した列の見出し（app.css の .stat-table thead th.col-fix-left も z-index: 30）と同じ値だった。
+          同じ値の場合は後に書かれた要素が手前になるため、スクロールすると表の見出しがメニューに重なっていた。
+          本文側の固定要素（表の見出し・固定列）は z-index 30 以下とする
+    *@
+    <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div class="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3">
             <a class="text-xl font-bold tracking-tight text-slate-900 transition hover:text-emerald-800" asp-page="/Top/Index">Bmcs</a>
 
