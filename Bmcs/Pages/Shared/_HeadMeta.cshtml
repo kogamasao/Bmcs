@@ -1,5 +1,5 @@
 @*
-    head内の共通タグ（title・description・canonical・noindex・OGP・構造化データ・計測）。
+    head内の共通タグ（title・description・canonical・noindex・OGP・構造化データ・計測（Clarity・Google Analytics））。
 
     _LayoutTailwind.cshtml から読み込む。
     （移行期間中は旧レイアウトと共用するために切り出した。現在はレイアウトが1つのため、切り出したままにしている）
@@ -36,6 +36,15 @@
     var ogImage = Configuration.GetSection("Site")["OgImage"];
 
     var clarityProjectID = Configuration.GetSection("Analytics")["ClarityProjectID"];
+
+    //Google Analytics（GA4）の測定ID。形式（G-英数字）が正しいときだけ使う（設定の誤りで script を壊さないため）
+    var googleAnalyticsMeasurementID = Configuration.GetSection("Analytics")["GoogleAnalyticsMeasurementID"]?.Trim();
+
+    if (!string.IsNullOrEmpty(googleAnalyticsMeasurementID)
+        && !System.Text.RegularExpressions.Regex.IsMatch(googleAnalyticsMeasurementID, "^G-[A-Z0-9]+$"))
+    {
+        googleAnalyticsMeasurementID = null;
+    }
 
     //構造化データ（JSON-LD）
     //※パンくずは画面の表示と同じ内容を BreadcrumbList として出す
@@ -113,5 +122,36 @@ else
             t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
             y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
         })(window, document, "clarity", "script", "@clarityProjectID");
+    </script>
+}
+
+@* 計測（Google Analytics）。Analytics:GoogleAnalyticsMeasurementID を設定したときだけ出力する *@
+@if (!string.IsNullOrEmpty(googleAnalyticsMeasurementID))
+{
+    <script async src="https://www.googletagmanager.com/gtag/js?id=@googleAnalyticsMeasurementID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag("js", new Date());
+
+        //パスワード再設定のURL（?token=...）を Google に送らない
+        //※メールで届く再設定用のトークンで、有効期限内は、知っていればパスワードを変更できる。
+        //  表示中のページの URL と、直前のページの URL（再設定後の遷移先で参照元になる）の両方から取り除く
+        (function () {
+            function removeToken(url) {
+                try {
+                    var parsed = new URL(url);
+                    parsed.searchParams.delete("token");
+                    return parsed.toString();
+                } catch (e) {
+                    return "";
+                }
+            }
+
+            gtag("config", "@googleAnalyticsMeasurementID", {
+                page_location: removeToken(location.href),
+                page_referrer: document.referrer ? removeToken(document.referrer) : ""
+            });
+        })();
     </script>
 }
