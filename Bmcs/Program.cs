@@ -1,5 +1,6 @@
 ﻿using Bmcs.Data;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -76,7 +77,7 @@ namespace Bmcs
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
                 //Azure App Serviceのフロントエンドを信頼するため、既定の制限を解除する
-                options.KnownNetworks.Clear();
+                options.KnownIPNetworks.Clear();
                 options.KnownProxies.Clear();
             });
 
@@ -84,6 +85,35 @@ namespace Bmcs
 
             //プロキシからのヘッダを反映する（他のミドルウェアより先に実行する）
             app.UseForwardedHeaders();
+
+            //正規のホスト名（独自ドメイン）への転送
+            //※旧URL（bmcs.azurewebsites.net）や App Service の既定のホスト名で来たアクセスを、独自ドメインへ恒久的に転送する。
+            //  検索エンジンの評価と、共有済みのリンクを引き継ぐため。設定（Site:CanonicalHost）が無い環境（ローカル等）では何もしない
+            var canonicalHost = builder.Configuration["Site:CanonicalHost"];
+
+            if (!string.IsNullOrWhiteSpace(canonicalHost))
+            {
+                app.Use(async (context, next) =>
+                {
+                    var host = context.Request.Host.Host;
+
+                    if (!string.Equals(host, canonicalHost, StringComparison.OrdinalIgnoreCase)
+                        && !string.Equals(host, "localhost", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var url = "https://" + canonicalHost + context.Request.PathBase + context.Request.Path + context.Request.QueryString;
+
+                        //GET・HEAD は 301、それ以外（フォームの送信など）は本文を保ったまま転送できる 308 にする
+                        context.Response.StatusCode = HttpMethods.IsGet(context.Request.Method) || HttpMethods.IsHead(context.Request.Method)
+                                                      ? StatusCodes.Status301MovedPermanently
+                                                      : StatusCodes.Status308PermanentRedirect;
+                        context.Response.Headers.Location = url;
+
+                        return;
+                    }
+
+                    await next();
+                });
+            }
 
             // Configure the HTTP request pipeline (旧Configure部分)
             if (app.Environment.IsDevelopment())

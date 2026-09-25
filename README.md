@@ -15,13 +15,12 @@ https://bmcs.azurewebsites.net/
 
 ## 使用技術
 ### 言語、フレームワーク等
-- ASP.NET Core 8.0 Razor Pages
+- ASP.NET Core 10.0 Razor Pages（.NET 10）
 - Entity Framework(O/R Mapper)
 - C#
 - Html
 - CSS
-- Bootstrap 4（既存画面。順次 Tailwind CSS へ移行中）
-- Tailwind CSS 4（新規・移行済み画面）
+- Tailwind CSS 4（2026-09 に Bootstrap 4 から全画面を移行）
 - Javascript
 - JQuery
 
@@ -37,9 +36,9 @@ https://bmcs.azurewebsites.net/
 - Azure App Service
 
 ## ローカル環境の実行方法(for Windows)
-- Visual Studioをインストールする(2019以上)
+- .NET 10 SDK と、.NET 10 に対応した Visual Studio をインストールする
 
-　https://docs.microsoft.com/ja-jp/visualstudio/install/install-visual-studio?view=vs-2019
+　https://learn.microsoft.com/ja-jp/visualstudio/install/install-visual-studio
  
 　Visual Studioにて「Bmcs.sln」を起動
 
