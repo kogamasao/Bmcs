@@ -59,6 +59,13 @@ namespace Bmcs.Constans
         public static readonly string SampleTeamID = "YG";
 
         /// <summary>
+        /// サンプルデータのチームID（体験用のサンプルチームと、その対戦相手のチーム）
+        /// ※実在の球団名を使っており、誰でも書き換えられるため、検索エンジンに登録しない（サイトマップ・noindex）
+        /// ※DbInitializer と同じ値
+        /// </summary>
+        public static readonly string[] SampleDataTeamIDList = { "YG", "HT" };
+
+        /// <summary>
         /// 再設定トークンの有効時間（時間）
         /// </summary>
         public static readonly int ResetTokenExpireHour = 1;

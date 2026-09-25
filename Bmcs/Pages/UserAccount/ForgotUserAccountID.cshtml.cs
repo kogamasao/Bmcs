@@ -44,15 +44,10 @@ namespace Bmcs.Pages.UserAccount
 
         public void OnGet()
         {
-            //インデックス
-            IsIndex = true;
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            //インデックス
-            IsIndex = true;
-
             if (string.IsNullOrWhiteSpace(EmailAddress))
             {
                 ModelState.AddModelError(nameof(EmailAddress), "メールアドレスは必須です。");

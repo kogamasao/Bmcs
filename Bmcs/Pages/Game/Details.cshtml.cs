@@ -48,6 +48,11 @@ namespace Bmcs.Pages.Game
                 return NotFound();
             }
 
+            //パンくず
+            //※検索エンジンには登録しない（同じ試合の内容は試合結果の画面にまとまっているため）
+            AddGameBreadcrumb(Game);
+            BreadcrumbList.Add(PageHelper.NavigationLink.Create("/Game/Details", "試合情報", new Dictionary<string, string> { { "id", Game.GameID.ToString() } }));
+
             return Page();
         }
     }

@@ -316,8 +316,14 @@ namespace Bmcs.Pages.Message
             SelectTeamID = teamID;
             MessageID = messageID;
 
-            //インデックス
-            IsIndex = true;
+            //検索エンジンに登録する（公開メッセージの一覧のみ）
+            //※返信（スレッド）・非公開・自チームの一覧は登録しない。送信後の表示（posted）などのクエリ違いは一覧にまとめる
+            if (messagePageClass == MessagePageClass.Public && messageID == null && string.IsNullOrEmpty(privateTeamID))
+            {
+                SetIndex("/Message/Index", new { messagePageClass = MessagePageClass.Public, pageIndex = MessageList.PageIndex > 1 ? MessageList.PageIndex : (int?)null });
+                MetaTitle = "公開メッセージ" + (MessageList.PageIndex > 1 ? "（" + MessageList.PageIndex + "ページ目）" : string.Empty);
+                MetaDescription = "草野球・ソフトボールのチームが公開しているメッセージの一覧です（対戦相手の募集・試合の連絡など）。";
+            }
 
             return Page();
 

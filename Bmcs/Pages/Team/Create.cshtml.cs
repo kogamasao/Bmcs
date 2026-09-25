@@ -42,9 +42,6 @@ namespace Bmcs.Pages.Team
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamCreate);
 
-            //このページ自身を正規URLとする（canonicalがトップを指すと個別ページとして扱われない）
-            IsIndex = true;
-
             return Page();
         }
 

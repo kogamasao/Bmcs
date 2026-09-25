@@ -61,8 +61,8 @@ namespace Bmcs.Pages.Inquiry
 
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.Inquiry);
-            //インデックス
-            IsIndex = true;
+            //検索エンジンに登録する（運営への連絡先が分かるように）
+            SetIndex("/Inquiry/Create");
 
             return Page();
         }
@@ -76,8 +76,8 @@ namespace Bmcs.Pages.Inquiry
             {
                 //入力エラーでの再表示でもヘルプを表示できるようにする
                 SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.Inquiry);
-                //インデックス
-                IsIndex = true;
+                //検索エンジンに登録する（運営への連絡先が分かるように）
+                SetIndex("/Inquiry/Create");
 
                 return Page();
             }
@@ -89,8 +89,8 @@ namespace Bmcs.Pages.Inquiry
 
                 //システム管理データ
                 SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.Inquiry);
-                //インデックス
-                IsIndex = true;
+                //検索エンジンに登録する（運営への連絡先が分かるように）
+                SetIndex("/Inquiry/Create");
 
                 return Page();
             }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Bmcs.Function;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
@@ -96,8 +97,18 @@ namespace Bmcs.Pages.Team
 
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamDetails);
-            //インデックス
-            IsIndex = true;
+            //パンくず
+            AddTeamBreadcrumb(Team);
+
+            //検索エンジンに登録する（公開チームのみ）
+            if (IsSearchTargetTeam(Team))
+            {
+                SetIndex("/Team/Details", new { id = Team.TeamID });
+                StructuredDataList.Add(SeoContent.SportsTeamData(Team, CreateSiteUrl("/Team/Details", new { id = Team.TeamID })));
+            }
+
+            MetaTitle = SeoContent.TeamTitle(Team);
+            MetaDescription = SeoContent.TeamDescription(Team);
 
             return Page();
         }

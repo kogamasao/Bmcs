@@ -76,8 +76,6 @@ namespace Bmcs.Pages.Top
                 }
             }
 
-            //インデックス
-            IsIndex = true;
 
             return Page();
         }

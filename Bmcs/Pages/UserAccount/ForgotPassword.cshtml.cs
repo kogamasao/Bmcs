@@ -48,15 +48,10 @@ namespace Bmcs.Pages.UserAccount
 
         public void OnGet()
         {
-            //インデックス
-            IsIndex = true;
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            //インデックス
-            IsIndex = true;
-
             if (string.IsNullOrWhiteSpace(UserAccountID))
             {
                 ModelState.AddModelError(nameof(UserAccountID), "ユーザIDは必須です。");

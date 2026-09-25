@@ -108,8 +108,18 @@ namespace Bmcs.Pages.GameScore
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.GameScoreDetails);
 
-            //インデックス
-            IsIndex = true;
+            //パンくず
+            AddGameBreadcrumb(Game);
+
+            //検索エンジンに登録する（公開チームの、確定済みの試合のみ）
+            if (IsSearchTargetGame(Game))
+            {
+                SetIndex("/GameScore/Details", new { gameID = Game.GameID });
+                StructuredDataList.Add(SeoContent.SportsEventData(Game, CreateSiteUrl("/GameScore/Details", new { gameID = Game.GameID }), CreateSiteUrl("/Team/Details", new { id = Game.TeamID })));
+            }
+
+            MetaTitle = SeoContent.GameTitle(Game) + " 試合結果";
+            MetaDescription = SeoContent.GameDescription(Game);
 
             return Page();
         }

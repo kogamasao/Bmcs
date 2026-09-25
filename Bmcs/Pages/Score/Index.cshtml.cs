@@ -381,8 +381,35 @@ namespace Bmcs.Pages.Score
             //空状態の文言を自チーム／他チームで出し分けるために保持する
             IsMyTeamScore = !string.IsNullOrEmpty(teamID) && base.IsMyTeamData(teamID);
 
-            //インデックス
-            IsIndex = true;
+            //検索エンジンに登録する（公開チームの成績と、公開チーム全体の成績）
+            //※年・試合種別などの絞り込み、並べ替え、ページ送りは、同じ成績の見え方の違いのため、正規URLには含めない
+            //  （組み合わせの数だけURLができ、同じような内容のページが大量に登録されるのを防ぐ）
+            var scorePageName = scorePageClass == ScorePageClass.Team ? "チーム"
+                                : scorePageClass == ScorePageClass.Pitcher ? "投手"
+                                : scorePageClass == ScorePageClass.Fielder ? "野手"
+                                : string.Empty;
+
+            if (Team != null)
+            {
+                //パンくず
+                AddTeamBreadcrumb(Team);
+                BreadcrumbList.Add(PageHelper.NavigationLink.Create("/Score/Index", "成績", new Dictionary<string, string> { { "scorePageClass", scorePageClass.ToString() }, { "teamID", Team.TeamID }, { "isPublic", "true" } }));
+
+                if (IsSearchTargetTeam(Team))
+                {
+                    SetIndex("/Score/Index", new { scorePageClass, teamID = Team.TeamID, isPublic = true });
+                }
+
+                MetaTitle = Team.TeamName + "の成績" + (scorePageName != string.Empty ? "（" + scorePageName + "）" : string.Empty);
+                MetaDescription = SeoContent.Truncate(SeoContent.TeamTitle(Team) + "のチーム成績と個人成績（打率・本塁打・打点・防御率・奪三振など）。年・試合種別ごとに集計できます。");
+            }
+            else if (isPublic)
+            {
+                SetIndex("/Score/Index", new { scorePageClass, isPublic = true });
+
+                MetaTitle = "公開チームの成績ランキング" + (scorePageName != string.Empty ? "（" + scorePageName + "）" : string.Empty);
+                MetaDescription = "Bmcs で成績を公開している草野球・ソフトボールのチームの、チーム成績と個人成績（打率・本塁打・防御率など）のランキングです。カテゴリ・使用球・年ごとに絞り込めます。";
+            }
 
             return Page();
 

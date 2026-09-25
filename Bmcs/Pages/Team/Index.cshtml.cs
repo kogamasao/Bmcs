@@ -42,11 +42,14 @@ namespace Bmcs.Pages.Team
 
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamIndex);
-            //インデックス
-            IsIndex = true;
-
             Team = await PaginatedList<Models.Team>.CreateAsync(
                 teamList.AsNoTracking(), pageIndex ?? 1, 20);
+
+            //検索エンジンに登録する
+            //※2ページ目以降も別の内容のため、それぞれを正規URLとする（1ページ目にまとめると、2ページ目以降のチームが見つからなくなる）
+            SetIndex("/Team/Index", new { pageIndex = Team.PageIndex > 1 ? Team.PageIndex : (int?)null });
+            MetaTitle = "公開チーム一覧" + (Team.PageIndex > 1 ? "（" + Team.PageIndex + "ページ目）" : string.Empty);
+            MetaDescription = "Bmcs で成績を公開している草野球・ソフトボールのチームの一覧です。各チームの試合結果・チーム成績・個人成績を見ることができます。";
 
             return Page();
         }

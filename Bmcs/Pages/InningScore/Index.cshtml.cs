@@ -228,8 +228,19 @@ namespace Bmcs.Pages.InningScore
                 SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.PublicInningScore);
             }
 
-            //インデックス
-            IsIndex = true;
+            //パンくず
+            AddGameBreadcrumb(Game);
+            BreadcrumbList.Add(PageHelper.NavigationLink.Create("/InningScore/Index", "イニング詳細", new Dictionary<string, string> { { "gameID", Game.GameID.ToString() } }));
+
+            //検索エンジンに登録する（公開チームの、確定済みの試合のみ）
+            //※イニング・表裏での絞り込みは全イニングの一部のため、試合単位のURLを正規URLとする
+            if (IsSearchTargetGame(Game))
+            {
+                SetIndex("/InningScore/Index", new { gameID = Game.GameID });
+            }
+
+            MetaTitle = SeoContent.GameTitle(Game) + " イニング詳細";
+            MetaDescription = SeoContent.Truncate(SeoContent.GameTitle(Game) + "の1打席ごとの経過（打者の結果・ランナーの動き・得点）です。");
 
             return Page();
 
