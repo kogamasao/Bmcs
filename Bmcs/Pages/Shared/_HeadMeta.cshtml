@@ -1,5 +1,5 @@
 @*
-    head内の共通タグ（title・description・canonical・OGP・計測）。
+    head内の共通タグ（title・description・canonical・noindex・OGP・構造化データ・計測）。
 
     _LayoutTailwind.cshtml から読み込む。
     （移行期間中は旧レイアウトと共用するために切り出した。現在はレイアウトが1つのため、切り出したままにしている）
@@ -7,37 +7,78 @@
 @model dynamic
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
-    var pageTitle = ViewData[ViewDataConstant.Title] != null && !string.IsNullOrEmpty(ViewData[ViewDataConstant.Title].ToString())
-                    ? ViewData[ViewDataConstant.Title].ToString() + " - Bmcs - 草野球・ソフトボールのスコア管理"
-                    : "Bmcs - 草野球・ソフトボールのスコア管理SNS";
+    //検索結果・共有時のタイトル。ページで MetaTitle を設定した場合はそれを優先する（見出しは短いまま、検索結果ではチーム名などで区別する）
+    var titleBase = !string.IsNullOrEmpty(Model.MetaTitle)
+                    ? (string)Model.MetaTitle
+                    : ViewData[ViewDataConstant.Title]?.ToString();
 
-    var pageDescription = ViewData[ViewDataConstant.Description] != null && !string.IsNullOrEmpty(ViewData[ViewDataConstant.Description].ToString())
-                          ? ViewData[ViewDataConstant.Description].ToString()
-                          : "野球、ソフトボールのスコア管理を行い、他チームの成績やメッセージのやり取りができる「スコア管理SNS」です。無料・登録後すぐに使えます。";
+    var pageTitle = !string.IsNullOrEmpty(titleBase)
+                    ? titleBase + " - Bmcs - 草野球・ソフトボールのスコア管理"
+                    : "Bmcs - 草野球・ソフトボールのスコア管理・成績集計（無料）";
 
-    //共有時のURL。Hostヘッダを書き換えられても不正なURLを出さないよう、設定値を優先する
-    var baseUrl = Configuration.GetSection("EmailSettings")["BaseUrl"];
+    var pageDescription = !string.IsNullOrEmpty(Model.MetaDescription)
+                          ? (string)Model.MetaDescription
+                          : ViewData[ViewDataConstant.Description] != null && !string.IsNullOrEmpty(ViewData[ViewDataConstant.Description].ToString())
+                            ? ViewData[ViewDataConstant.Description].ToString()
+                            : Bmcs.Function.SeoContent.SiteDescription;
 
-    if (string.IsNullOrEmpty(baseUrl))
-    {
-        baseUrl = Context.Request.Scheme + "://" + Context.Request.Host;
-    }
+    //共有時・canonical のURL。Hostヘッダを書き換えられても不正なURLを出さないよう、設定値を優先する
+    var baseUrl = Bmcs.Function.SiteUrl.GetBaseUrl(Configuration, Context.Request);
 
-    var pageUrl = baseUrl.TrimEnd('/') + Context.Request.Path + Context.Request.QueryString;
+    //検索エンジンに登録するページだけ canonical を出す（noindex のページに canonical を出すと、指示が矛盾する）
+    var canonicalUrl = Model.IsIndex
+                       ? baseUrl + "/" + ((string)(Model.CanonicalPath ?? Context.Request.Path.Value) ?? string.Empty).TrimStart('/')
+                       : null;
+
+    var pageUrl = canonicalUrl ?? baseUrl + Context.Request.Path + Context.Request.QueryString;
 
     //OGP画像。未設定の場合は画像なしのカードとして表示される
     var ogImage = Configuration.GetSection("Site")["OgImage"];
 
     var clarityProjectID = Configuration.GetSection("Analytics")["ClarityProjectID"];
 
-    var canonicalUrl = baseUrl.TrimEnd('/') + "/";
+    //構造化データ（JSON-LD）
+    //※パンくずは画面の表示と同じ内容を BreadcrumbList として出す
+    var structuredDataList = new List<object>((IEnumerable<object>)Model.StructuredDataList);
+    var breadcrumbList = (List<Bmcs.PageHelper.NavigationLink>)Model.BreadcrumbList;
+
+    if (Model.IsIndex && breadcrumbList.Count > 0)
+    {
+        structuredDataList.Add(new Dictionary<string, object>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = "BreadcrumbList",
+            ["itemListElement"] = breadcrumbList.Select((link, i) => new Dictionary<string, object>
+            {
+                ["@type"] = "ListItem",
+                ["position"] = i + 1,
+                ["name"] = link.Text,
+                //最後の要素（現在の画面）は、canonical と同じURLにする
+                ["item"] = i == breadcrumbList.Count - 1
+                           ? canonicalUrl
+                           : baseUrl + Url.Page(link.PageName, link.RouteValues.ToDictionary(r => r.Key, r => (object)r.Value)),
+            }).ToList(),
+        });
+    }
+
+    //※JavaScriptEncoder は「<」「>」「&」などを常にエスケープするため、利用者が入力したチーム名などに
+    //  「</script>」が含まれていても script タグを抜け出せない。日本語はそのまま出す（エスケープすると読みにくいため）
+    var jsonOptions = new System.Text.Json.JsonSerializerOptions
+    {
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(System.Text.Unicode.UnicodeRanges.All),
+    };
 }
 <title>@pageTitle</title>
 <meta name="description" content="@pageDescription" />
 
-@if (!Model.IsIndex)
+@if (Model.IsIndex)
 {
     <link rel="canonical" href="@canonicalUrl" />
+}
+else
+{
+    @* ログインが必要な画面・アカウント復旧・エラーなど。リンクはたどってよい（follow） *@
+    <meta name="robots" content="noindex" />
 }
 
 @* SNSやLINEにURLを貼ったときの表示（設定しないとタイトルも説明も出ない） *@
@@ -55,6 +96,12 @@
 else
 {
     <meta name="twitter:card" content="summary" />
+}
+
+@foreach (var structuredData in structuredDataList)
+{
+    @* 「!」でタグヘルパーの対象から外す（外さないと type の「+」が「&#x2B;」にエンコードされる） *@
+    <!script type="application/ld+json">@Html.Raw(System.Text.Json.JsonSerializer.Serialize(structuredData, jsonOptions))</!script>
 }
 
 @* 計測。Analytics:ClarityProjectID を設定したときだけ出力する *@

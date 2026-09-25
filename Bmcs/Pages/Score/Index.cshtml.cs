@@ -36,6 +36,16 @@ namespace Bmcs.Pages.Score
         [BindProperty]
         public bool IsPublic { get; set; }
 
+        /// <summary>
+        /// リンクに付ける公開フラグ（"true"/"false"）
+        /// ※bool のまま渡すと "True" になり、ヘッダーのリンク・正規URL（小文字）と表記が変わる。
+        /// 　検索エンジンはクエリの値の大文字小文字を区別するため、そろえる
+        /// </summary>
+        public string IsPublicRouteValue
+        {
+            get { return IsPublic ? "true" : "false"; }
+        }
+
         [BindProperty]
         public int? Year { get; set; }
 
@@ -136,9 +146,10 @@ namespace Bmcs.Pages.Score
 
             //試合データ
             //※全チームの集計では、削除したチームを除く（以前は除いておらず、削除後もランキングに残っていた）
+            //※サンプルデータのチームも除く（実在の球団名・選手名が、公開チームのランキングに載らないように）
             var gameList = await Context.Games
                       .Include(r => r.Team)
-                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic && !r.Team.DeleteFLG)) && (r.StatusClass == StatusClass.EndGame || r.StatusClass == StatusClass.EndGameLock) && r.DeleteFLG == false)
+                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic && !r.Team.DeleteFLG && !SystemConstant.SampleDataTeamIDList.Contains(r.TeamID))) && (r.StatusClass == StatusClass.EndGame || r.StatusClass == StatusClass.EndGameLock) && r.DeleteFLG == false)
                       .ToListAsync();
 
             //投手スコアデータ
@@ -146,7 +157,7 @@ namespace Bmcs.Pages.Score
                       .Include(r => r.Game)
                       .Include(r => r.Team)
                       .Include(r => r.Member)
-                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic && !r.Team.DeleteFLG)) && (r.Game.StatusClass == StatusClass.EndGame || r.Game.StatusClass == StatusClass.EndGameLock) && r.Game.DeleteFLG == false)
+                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic && !r.Team.DeleteFLG && !SystemConstant.SampleDataTeamIDList.Contains(r.TeamID))) && (r.Game.StatusClass == StatusClass.EndGame || r.Game.StatusClass == StatusClass.EndGameLock) && r.Game.DeleteFLG == false)
                       .ToListAsync();
 
             //野手スコアデータ
@@ -154,7 +165,7 @@ namespace Bmcs.Pages.Score
                       .Include(r => r.Game)
                       .Include(r => r.Team)
                       .Include(r => r.Member)
-                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic && !r.Team.DeleteFLG)) && (r.Game.StatusClass == StatusClass.EndGame || r.Game.StatusClass == StatusClass.EndGameLock) && r.Game.DeleteFLG == false)
+                      .Where(r => ((r.TeamID == teamID && !string.IsNullOrEmpty(teamID)) || (string.IsNullOrEmpty(teamID) && r.Team.PublicFLG == isPublic && !r.Team.DeleteFLG && !SystemConstant.SampleDataTeamIDList.Contains(r.TeamID))) && (r.Game.StatusClass == StatusClass.EndGame || r.Game.StatusClass == StatusClass.EndGameLock) && r.Game.DeleteFLG == false)
                       .ToListAsync();
 
             //年初期値
@@ -381,8 +392,36 @@ namespace Bmcs.Pages.Score
             //空状態の文言を自チーム／他チームで出し分けるために保持する
             IsMyTeamScore = !string.IsNullOrEmpty(teamID) && base.IsMyTeamData(teamID);
 
-            //インデックス
-            IsIndex = true;
+            //検索エンジンに登録する（公開チームの成績と、公開チーム全体の成績）
+            //※年・試合種別などの絞り込み、並べ替え、ページ送りは、同じ成績の見え方の違いのため、正規URLには含めない
+            //※isPublic は小文字の "true" にそろえる（bool のまま渡すと "True" になり、ヘッダーのリンクと表記が変わる）
+            //  （組み合わせの数だけURLができ、同じような内容のページが大量に登録されるのを防ぐ）
+            var scorePageName = scorePageClass == ScorePageClass.Team ? "チーム"
+                                : scorePageClass == ScorePageClass.Pitcher ? "投手"
+                                : scorePageClass == ScorePageClass.Fielder ? "野手"
+                                : string.Empty;
+
+            if (Team != null)
+            {
+                //パンくず
+                AddTeamBreadcrumb(Team);
+                BreadcrumbList.Add(PageHelper.NavigationLink.Create("/Score/Index", "成績", new Dictionary<string, string> { { "scorePageClass", scorePageClass.ToString() }, { "teamID", Team.TeamID }, { "isPublic", "true" } }));
+
+                if (IsSearchTargetTeam(Team))
+                {
+                    SetIndex("/Score/Index", new { scorePageClass, teamID = Team.TeamID, isPublic = "true" });
+                }
+
+                MetaTitle = Team.TeamName + "の成績" + (scorePageName != string.Empty ? "（" + scorePageName + "）" : string.Empty);
+                MetaDescription = SeoContent.Truncate(SeoContent.TeamTitle(Team) + "のチーム成績と個人成績（打率・本塁打・打点・防御率・奪三振など）。年・試合種別ごとに集計できます。");
+            }
+            else if (isPublic)
+            {
+                SetIndex("/Score/Index", new { scorePageClass, isPublic = "true" });
+
+                MetaTitle = "公開チームの成績ランキング" + (scorePageName != string.Empty ? "（" + scorePageName + "）" : string.Empty);
+                MetaDescription = "Bmcs で成績を公開している草野球・ソフトボールのチームの、チーム成績と個人成績（打率・本塁打・防御率など）のランキングです。カテゴリ・使用球・年ごとに絞り込めます。";
+            }
 
             return Page();
 

@@ -9,6 +9,9 @@
 }
 
 <div class="mx-auto max-w-6xl px-4 py-8">
+    @* パンくず（公開ページの位置関係。検索エンジン向けの構造化データも同じ内容から出力する） *@
+    @await Html.PartialAsync("~/Pages/Shared/_BreadcrumbTailwind.cshtml")
+
     <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
             <h1 class="text-2xl font-bold tracking-tight text-slate-900">@ViewData[ViewDataConstant.Title]</h1>
@@ -20,7 +23,7 @@
     @* このチームの各ページへ。以前はページ最下部（成績表の下）にあった *@
     <div class="mt-4 flex flex-wrap gap-2">
         <a class="@secondaryButton" asp-page="/Game/Index" asp-route-teamID="@Model.Team.TeamID">試合</a>
-        <a class="@secondaryButton" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@Model.Team.TeamID" asp-route-isPublic="@true" asp-route-teamCategoryClass="@TeamCategoryClass.All" asp-route-useBallClass="@UseBallClass.All">成績</a>
+        <a class="@secondaryButton" asp-page="/Score/Index" asp-route-scorePageClass="@ScorePageClass.Index" asp-route-teamID="@Model.Team.TeamID" asp-route-isPublic="true" asp-route-teamCategoryClass="@TeamCategoryClass.All" asp-route-useBallClass="@UseBallClass.All">成績</a>
         <a class="@secondaryButton" asp-page="/Member/Index" asp-route-teamID="@Model.Team.TeamID">メンバー</a>
         @* 体験用ユーザは実在のチームへメッセージを送れない（Message/Index の IsTeamOnly） *@
         @if (Model.MyTeam != null && Model.MyTeam.PublicFLG && Model.MyTeam.TeamID != Model.Team.TeamID && !Model.IsSampleUser())

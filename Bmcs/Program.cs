@@ -55,6 +55,14 @@ namespace Bmcs
                 options.Cookie.IsEssential = true;
             });
 
+            //日本語をそのまま出力する
+            //※既定では ASCII 以外の文字がすべて「&#x8349;」の形にエンコードされ、HTML が約2倍の大きさになる（表示速度・SEO に不利）。
+            //  「<」「>」「&」「"」などの HTML で意味を持つ文字は、この設定でも常にエンコードされる
+            builder.Services.Configure<Microsoft.Extensions.WebEncoders.WebEncoderOptions>(options =>
+            {
+                options.TextEncoderSettings = new System.Text.Encodings.Web.TextEncoderSettings(System.Text.Unicode.UnicodeRanges.All);
+            });
+
             builder.Services.AddRazorPages()
                 .AddRazorPagesOptions(options =>
                 {

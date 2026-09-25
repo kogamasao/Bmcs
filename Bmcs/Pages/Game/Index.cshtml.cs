@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Bmcs.Function;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
@@ -105,8 +106,19 @@ namespace Bmcs.Pages.Game
                 SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.PublicGameIndex);
             }
 
-            //インデックス
-            IsIndex = true;
+            //パンくず
+            AddTeamBreadcrumb(Team);
+            BreadcrumbList.Add(PageHelper.NavigationLink.Create("/Game/Index", "試合一覧", new Dictionary<string, string> { { "teamID", Team.TeamID } }));
+
+            //検索エンジンに登録する（公開チームのみ）
+            //※試合が0件のチームに2ページ目以降を指定した場合（上の転送の対象外）は、中身の無いページのため登録しない
+            if (IsSearchTargetTeam(Team) && Game.PageIndex <= Math.Max(1, Game.TotalPages))
+            {
+                SetIndex("/Game/Index", new { teamID = Team.TeamID, pageIndex = Game.PageIndex > 1 ? Game.PageIndex : (int?)null });
+            }
+
+            MetaTitle = Team.TeamName + "の試合一覧" + (Game.PageIndex > 1 ? "（" + Game.PageIndex + "ページ目）" : string.Empty);
+            MetaDescription = SeoContent.Truncate(SeoContent.TeamTitle(Team) + "の試合一覧。試合ごとのスコアボードと投手・打撃成績を見ることができます。");
 
             return Page();
         }

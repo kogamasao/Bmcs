@@ -64,9 +64,41 @@ namespace Bmcs.Models
         public Team MyTeam { get; set; }
 
         /// <summary>
-        /// Indexフラグ
+        /// 検索エンジンに登録するページか
+        /// ※false（既定）の場合は noindex を出力する（_HeadMeta.cshtml）。ログインが必要な画面・アカウント復旧・エラーなど、
+        /// 　検索結果に出す意味のない画面を既定で除外するため、登録するページだけが SetIndex で明示的に立てる。
+        /// 　以前は「IsIndex を立てていない画面は canonical がトップを指す」という形で除外しており、
+        /// 　試合情報詳細などの公開ページまでトップと同じページと扱われていた（issues.md P-4）
         /// </summary>
-        public bool IsIndex { get; set; }
+        public bool IsIndex { get; private set; }
+
+        /// <summary>
+        /// 正規URL（canonical）。サイト内の相対URL（クエリ文字列を含む）
+        /// ※並べ替え・絞り込み・送信後の表示などのクエリ違いを、1つのURLにまとめるために使う
+        /// </summary>
+        public string CanonicalPath { get; private set; }
+
+        /// <summary>
+        /// 検索結果・共有時のタイトル（未設定の場合は ViewData の Title を使う）
+        /// ※画面の見出し（h1）は「試合一覧」など短いままにし、検索結果ではチーム名などを含めて区別できるようにする
+        /// </summary>
+        public string MetaTitle { get; set; }
+
+        /// <summary>
+        /// 検索結果・共有時の説明文（未設定の場合は ViewData の Description、それも無ければサービス全体の説明文を使う）
+        /// </summary>
+        public string MetaDescription { get; set; }
+
+        /// <summary>
+        /// 構造化データ（JSON-LD）。_HeadMeta.cshtml で出力する
+        /// </summary>
+        public List<object> StructuredDataList { get; } = new List<object>();
+
+        /// <summary>
+        /// パンくず（最後の要素が現在の画面）
+        /// ※画面への表示（_BreadcrumbTailwind.cshtml）と構造化データ（BreadcrumbList）の両方に使う
+        /// </summary>
+        public List<PageHelper.NavigationLink> BreadcrumbList { get; } = new List<PageHelper.NavigationLink>();
 
         /// <summary>
         /// システム管理表示用
@@ -675,6 +707,77 @@ namespace Bmcs.Models
         public bool IsSampleTeam(string teamID)
         {
             return IsSampleTeamID(teamID);
+        }
+
+        /// <summary>
+        /// 検索エンジンに登録する（noindex を出さず、canonical を出力する）
+        /// </summary>
+        /// <param name="pageName">正規URLのページ名（例：/Team/Details）</param>
+        /// <param name="routeValues">正規URLに含めるクエリ（ページを区別するものだけを渡す。並べ替え・絞り込みは渡さない）</param>
+        public void SetIndex(string pageName, object routeValues = null)
+        {
+            IsIndex = true;
+            CanonicalPath = Url.Page(pageName, routeValues);
+        }
+
+        /// <summary>
+        /// サイトの絶対URL（canonical・構造化データ用）
+        /// ※メール用の CreateAbsoluteUrl と違い、正規のホスト名（Site:CanonicalHost）を優先する
+        /// </summary>
+        public string CreateSiteUrl(string pageName, object routeValues = null)
+        {
+            var configuration = HttpContext.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+
+            return SiteUrl.ToAbsolute(configuration, Request, Url.Page(pageName, routeValues));
+        }
+
+        /// <summary>
+        /// パンくずの試合部分（チーム一覧 ＞ チーム名 ＞ 試合一覧 ＞ 試合）
+        /// ※試合の要素は試合結果の画面を指す（試合の内容が最もまとまっている画面のため）
+        /// </summary>
+        public void AddGameBreadcrumb(Game game)
+        {
+            AddTeamBreadcrumb(game.Team);
+            //※チームIDはチーム側の値を使う（試合側の値と大文字小文字が違う場合に、遷移先の正規URLとずれないように）
+            BreadcrumbList.Add(PageHelper.NavigationLink.Create("/Game/Index", "試合一覧", new Dictionary<string, string> { { "teamID", game.Team.TeamID } }));
+            BreadcrumbList.Add(PageHelper.NavigationLink.Create("/GameScore/Details", game.GameDateFormat + " vs " + (string.IsNullOrWhiteSpace(game.OpponentTeamName) ? "相手チーム" : game.OpponentTeamName.Trim()), new Dictionary<string, string> { { "gameID", game.GameID.ToString() } }));
+        }
+
+        /// <summary>
+        /// 検索エンジンに登録する試合か（公開チームの、確定済みの試合）
+        /// ※試合中・確定前の試合は内容が変わり続け、成績にも集計されていないため登録しない
+        /// </summary>
+        public static bool IsSearchTargetGame(Game game)
+        {
+            return game != null
+                   && !game.DeleteFLG
+                   && (game.StatusClass == StatusClass.EndGame || game.StatusClass == StatusClass.EndGameLock)
+                   && IsSearchTargetTeam(game.Team);
+        }
+
+        /// <summary>
+        /// 検索エンジンに登録するチームか
+        /// ※非公開・削除済みのチームは、ログインしている本人には表示できても登録しない。
+        /// 　サンプルデータのチーム（誰でも書き換えられる体験用のチームと、その対戦相手）も、
+        /// 　実在の球団名を使っているため登録しない（issues.md P-1・D-10）
+        /// </summary>
+        public static bool IsSearchTargetTeam(Team team)
+        {
+            return team != null
+                   && team.PublicFLG
+                   && !team.DeleteFLG
+                   && !team.SystemDataFLG
+                   //※サイトマップ（SQL）の条件とそろえる。SQL Server の比較は大文字小文字と末尾の空白を区別しない（先頭の空白は区別する）
+                   && !SystemConstant.SampleDataTeamIDList.Any(r => string.Equals(r, team.TeamID?.TrimEnd(), StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// パンくずの先頭部分（チーム一覧 ＞ チーム名）
+        /// </summary>
+        public void AddTeamBreadcrumb(Team team)
+        {
+            BreadcrumbList.Add(PageHelper.NavigationLink.Create("/Team/Index", "チーム一覧"));
+            BreadcrumbList.Add(PageHelper.NavigationLink.Create("/Team/Details", team.TeamName, new Dictionary<string, string> { { "id", team.TeamID } }));
         }
 
         /// <summary>

@@ -68,6 +68,7 @@ https://bmcs.azurewebsites.net/
 | --- | --- |
 | `EmailSettings:*` | メール送信(SMTP)、メール本文に載せる絶対URL |
 | `Site:OgImage` | SNS共有時に表示する画像のパス。**未設定の場合は画像なしのカードになる** |
+| `Site:CanonicalHost` | 正規のホスト名（例：`bmcs.app`）。それ以外のホスト名へのアクセスを301で転送し、canonical・サイトマップ・robots.txt のURLにも使う。**未設定の場合は転送せず、URLは `EmailSettings:BaseUrl` から組み立てる** |
 | `Analytics:ClarityProjectID` | Microsoft Clarity のプロジェクトID。**未設定の場合は計測タグを出力しない** |
 
 ※計測タグを有効にする場合、プライバシーポリシー(`Pages/Privacy.cshtml` 第10条)の
@@ -114,6 +115,11 @@ chmod +x ~/.local/bin/tailwindcss
   `DbInitializer` が起動時に行うため、実行順序を誤ってもアプリは動作する
 
 ※移行SQLは、アプリのデプロイ「前」に実行してください。
+
+## 検索エンジン対策(SEO)
+検索結果に出すページは各画面で `SetIndex` を呼んで指定し、それ以外の画面は `noindex` になる。
+`/sitemap.xml`(公開チーム・試合結果などのURLを自動生成)と `/robots.txt` はアプリが出力する。
+詳細は `Bmcs/doc/detail_design_seo.md` を参照。
 
 ## その他
 - サービス紹介記事

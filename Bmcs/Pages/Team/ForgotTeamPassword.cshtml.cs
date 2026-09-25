@@ -48,15 +48,10 @@ namespace Bmcs.Pages.Team
 
         public void OnGet()
         {
-            //インデックス
-            IsIndex = true;
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            //インデックス
-            IsIndex = true;
-
             if (string.IsNullOrWhiteSpace(TeamID))
             {
                 ModelState.AddModelError(nameof(TeamID), "チームIDは必須です。");

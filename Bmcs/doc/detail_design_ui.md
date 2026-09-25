@@ -741,10 +741,9 @@ Tailwind の Preflight は `<a>` の色と下線を打ち消すため、ユー�
   「ログインせずに公開チームの成績を見る」で実物を見せる導線にしている
 - 全画面の移行は未完了（未移行の画面は `doc/issues.md` の 2.1 を参照）
 - Chart.js は未導入（グラフ機能を作る段階で追加する）
-- `<link rel="canonical">` が、`IsIndex = true` を立てていない画面でトップのURLを指している。
-  匿名で閲覧できる公開ページのうち、該当するのは **`/Game/Details`（試合情報詳細）** のみ
-  （`/Game/Index`・`/InningScore`・`/Team/*`・`/Score` は `IsIndex = true` で除外されている）。
-  試合詳細を検索エンジンに認識させたい場合は見直しが必要（今回は挙動を変えていない）
+- ~~`<link rel="canonical">` が、`IsIndex = true` を立てていない画面でトップのURLを指している~~
+  → **2026-09-25 に対応済み**。検索結果に出す画面だけが自分自身の URL を canonical とし、
+  それ以外の画面は `noindex` を出す形に改めた（`detail_design_seo.md`）
 - OGP・Twitter Card は `_HeadMeta.cshtml` で設定済み。ただし **共有用の画像（`Site:OgImage`）が未設定**
   （スクリーンショットの用意とあわせて設定する）
 - 計測は Microsoft Clarity を導入済み（`Analytics:ClarityProjectID`）。GA4 は独自ドメイン取得後に検討する

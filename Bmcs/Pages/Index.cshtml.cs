@@ -44,8 +44,9 @@ namespace Bmcs.Pages
             HttpContext.Session.SetString(SessionConstant.AdminFLG, string.Empty);
             //アンケートの「あとで回答する」の保留も解除する（次回ログイン時に再表示するため）
             HttpContext.Session.SetString(SessionConstant.SurveySkip, string.Empty);
-            //インデックス
-            IsIndex = true;
+            //検索エンジンに登録する（サイト全体の構造化データはトップにだけ出す）
+            SetIndex("/Index");
+            StructuredDataList.AddRange(SeoContent.SiteData(CreateSiteUrl("/Index").TrimEnd('/'), SeoContent.SiteDescription));
         }
 
         public async Task<IActionResult> OnPostAsync()

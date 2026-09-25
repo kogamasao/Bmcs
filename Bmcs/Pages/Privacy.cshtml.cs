@@ -19,6 +19,8 @@ namespace Bmcs.Pages
 
         public void OnGet()
         {
+            //検索エンジンに登録する（運営者・個人情報の取り扱いが分かるように）
+            SetIndex("/Privacy");
         }
     }
 }

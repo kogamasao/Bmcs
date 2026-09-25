@@ -81,8 +81,6 @@ namespace Bmcs.Pages.UserAccount
 
         public void OnGet()
         {
-            //インデックス
-            IsIndex = true;
         }
 
         /// <summary>
@@ -91,9 +89,6 @@ namespace Bmcs.Pages.UserAccount
         /// <returns></returns>
         public async Task<IActionResult> OnPostAuthenticateAsync()
         {
-            //インデックス
-            IsIndex = true;
-
             if (!ValidateTeamInput())
             {
                 return Page();
@@ -110,9 +105,6 @@ namespace Bmcs.Pages.UserAccount
         /// <returns></returns>
         public async Task<IActionResult> OnPostResetAsync()
         {
-            //インデックス
-            IsIndex = true;
-
             //入力チェックを先に行う（入力ミスで試行回数を消費しないため）
             var isValidInput = ValidateTeamInput();
 

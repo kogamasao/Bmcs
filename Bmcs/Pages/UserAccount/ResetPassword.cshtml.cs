@@ -51,9 +51,6 @@ namespace Bmcs.Pages.UserAccount
 
         public async Task<IActionResult> OnGetAsync()
         {
-            //インデックス
-            IsIndex = true;
-
             IsValidToken = await GetValidTokenAsync() != null;
 
             return Page();
@@ -61,9 +58,6 @@ namespace Bmcs.Pages.UserAccount
 
         public async Task<IActionResult> OnPostAsync()
         {
-            //インデックス
-            IsIndex = true;
-
             var resetToken = await GetValidTokenAsync();
 
             if (resetToken == null)
