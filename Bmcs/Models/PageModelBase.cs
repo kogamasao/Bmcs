@@ -738,7 +738,8 @@ namespace Bmcs.Models
         public void AddGameBreadcrumb(Game game)
         {
             AddTeamBreadcrumb(game.Team);
-            BreadcrumbList.Add(PageHelper.NavigationLink.Create("/Game/Index", "試合一覧", new Dictionary<string, string> { { "teamID", game.TeamID } }));
+            //※チームIDはチーム側の値を使う（試合側の値と大文字小文字が違う場合に、遷移先の正規URLとずれないように）
+            BreadcrumbList.Add(PageHelper.NavigationLink.Create("/Game/Index", "試合一覧", new Dictionary<string, string> { { "teamID", game.Team.TeamID } }));
             BreadcrumbList.Add(PageHelper.NavigationLink.Create("/GameScore/Details", game.GameDateFormat + " vs " + (string.IsNullOrWhiteSpace(game.OpponentTeamName) ? "相手チーム" : game.OpponentTeamName.Trim()), new Dictionary<string, string> { { "gameID", game.GameID.ToString() } }));
         }
 
@@ -766,7 +767,8 @@ namespace Bmcs.Models
                    && team.PublicFLG
                    && !team.DeleteFLG
                    && !team.SystemDataFLG
-                   && !SystemConstant.SampleDataTeamIDList.Any(r => string.Equals(r, team.TeamID?.Trim(), StringComparison.OrdinalIgnoreCase));
+                   //※サイトマップ（SQL）の条件とそろえる。SQL Server の比較は大文字小文字と末尾の空白を区別しない（先頭の空白は区別する）
+                   && !SystemConstant.SampleDataTeamIDList.Any(r => string.Equals(r, team.TeamID?.TrimEnd(), StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>

@@ -17,6 +17,8 @@ namespace Bmcs.Pages.Seo
     {
         /// <summary>
         /// ログインしないと開けない画面（新規作成・編集・削除・スコア入力・管理者向け）
+        /// ※前方一致のため、「/UserAccount」「/Inquiry」（一覧＝管理者向け）は書かない。書くとユーザ登録・お問い合わせまで除外される。
+        /// 　これらの一覧は未ログインでは NotFound になるため、検索結果には出ない
         /// </summary>
         private static readonly string[] DisallowPathList =
         {
@@ -33,11 +35,9 @@ namespace Bmcs.Pages.Seo
             "/Team/Create",
             "/Team/Edit",
             "/Team/Delete",
-            "/UserAccount/Index",
             "/UserAccount/Details",
             "/UserAccount/Edit",
             "/UserAccount/Delete",
-            "/Inquiry/Index",
             "/Inquiry/Details",
             "/Inquiry/Delete",
         };

@@ -111,7 +111,8 @@ namespace Bmcs.Pages.Game
             BreadcrumbList.Add(PageHelper.NavigationLink.Create("/Game/Index", "試合一覧", new Dictionary<string, string> { { "teamID", Team.TeamID } }));
 
             //検索エンジンに登録する（公開チームのみ）
-            if (IsSearchTargetTeam(Team))
+            //※試合が0件のチームに2ページ目以降を指定した場合（上の転送の対象外）は、中身の無いページのため登録しない
+            if (IsSearchTargetTeam(Team) && Game.PageIndex <= Math.Max(1, Game.TotalPages))
             {
                 SetIndex("/Game/Index", new { teamID = Team.TeamID, pageIndex = Game.PageIndex > 1 ? Game.PageIndex : (int?)null });
             }

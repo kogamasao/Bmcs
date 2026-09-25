@@ -77,14 +77,18 @@ namespace Bmcs.Function
 
             var description = game.GameDate.ToString("yyyy年M月d日") + "の" + game.Team.TeamName + " 対 " + OpponentName(game)
                               + (attributeList.Count > 0 ? "（" + string.Join("・", attributeList) + "）" : string.Empty)
-                              + "の試合結果。";
+                              + (IsFixed(game) ? "の試合結果。" : "の試合情報。");
 
-            if (game.Score != null && game.OpponentTeamScore != null)
+            //確定前の試合は、スコア・成績がまだ確定していないため、結果として書かない（SNS で共有したときの文言が事実と違わないように）
+            if (IsFixed(game))
             {
-                description += game.Score + "対" + game.OpponentTeamScore + WinLoseText(game.WinLoseClass) + "。";
-            }
+                if (game.Score != null && game.OpponentTeamScore != null)
+                {
+                    description += game.Score + "対" + game.OpponentTeamScore + WinLoseText(game.WinLoseClass) + "。";
+                }
 
-            description += "スコアボードと投手・打撃成績を掲載しています。";
+                description += "スコアボードと投手・打撃成績を掲載しています。";
+            }
 
             return Truncate(description);
         }
@@ -251,6 +255,14 @@ namespace Bmcs.Function
             }
 
             return attributeList.Where(r => !string.IsNullOrEmpty(r)).ToList();
+        }
+
+        /// <summary>
+        /// 確定済みの試合か
+        /// </summary>
+        private static bool IsFixed(Game game)
+        {
+            return game.StatusClass == StatusClass.EndGame || game.StatusClass == StatusClass.EndGameLock;
         }
 
         private static string OpponentName(Game game)

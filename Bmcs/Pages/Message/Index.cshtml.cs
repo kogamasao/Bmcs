@@ -318,7 +318,9 @@ namespace Bmcs.Pages.Message
 
             //検索エンジンに登録する（公開メッセージの一覧のみ）
             //※返信（スレッド）・非公開・自チームの一覧は登録しない。送信後の表示（posted）などのクエリ違いは一覧にまとめる
-            if (messagePageClass == MessagePageClass.Public && messageID == null && string.IsNullOrEmpty(privateTeamID))
+            //※存在しないページ番号（中身の無いページ）は登録しない。投稿エラー時の再表示でもここを通るため、転送はしない
+            if (messagePageClass == MessagePageClass.Public && messageID == null && string.IsNullOrEmpty(privateTeamID)
+                && MessageList.PageIndex <= Math.Max(1, MessageList.TotalPages))
             {
                 SetIndex("/Message/Index", new { messagePageClass = MessagePageClass.Public, pageIndex = MessageList.PageIndex > 1 ? MessageList.PageIndex : (int?)null });
                 MetaTitle = "公開メッセージ" + (MessageList.PageIndex > 1 ? "（" + MessageList.PageIndex + "ページ目）" : string.Empty);

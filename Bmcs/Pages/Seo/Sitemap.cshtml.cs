@@ -53,7 +53,7 @@ namespace Bmcs.Pages.Seo
 
             foreach (var scorePageClass in ScorePageClassList)
             {
-                urlList.Add(CreateUrl("/Score/Index", new { scorePageClass, isPublic = true }, null));
+                urlList.Add(CreateUrl("/Score/Index", new { scorePageClass, isPublic = "true" }, null));
             }
 
             urlList.Add(CreateUrl("/Message/Index", new { messagePageClass = MessagePageClass.Public }, null));
@@ -98,7 +98,7 @@ namespace Bmcs.Pages.Seo
 
                 foreach (var scorePageClass in ScorePageClassList)
                 {
-                    urlList.Add(CreateUrl("/Score/Index", new { scorePageClass, teamID = team.TeamID, isPublic = true }, lastModified));
+                    urlList.Add(CreateUrl("/Score/Index", new { scorePageClass, teamID = team.TeamID, isPublic = "true" }, lastModified));
                 }
             }
 
