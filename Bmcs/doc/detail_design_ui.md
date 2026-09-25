@@ -746,7 +746,7 @@ Tailwind の Preflight は `<a>` の色と下線を打ち消すため、ユー�
   それ以外の画面は `noindex` を出す形に改めた（`detail_design_seo.md`）
 - OGP・Twitter Card は `_HeadMeta.cshtml` で設定済み。ただし **共有用の画像（`Site:OgImage`）が未設定**
   （スクリーンショットの用意とあわせて設定する）
-- 計測は Microsoft Clarity を導入済み（`Analytics:ClarityProjectID`）。GA4 は独自ドメイン取得後に検討する
+- 計測は Microsoft Clarity（`Analytics:ClarityProjectID`）と、Google アナリティクス（GA4、`Analytics:GoogleAnalyticsMeasurementID`。2026-09-25 に追加）を導入済み
 - **チームのメールアドレスを使った通知が未実装**。メールアドレスは他チームに表示しない方針としたため
   （2026-09-24）、他チームからのダイレクトメッセージをメールで知らせる機能が今後必要になる
 - **ユーザ情報編集からのチーム参加は、公開チームしか選べない**（プルダウンが公開チーム＋自チームのみ）。

@@ -70,6 +70,7 @@ https://bmcs.azurewebsites.net/
 | `Site:OgImage` | SNS共有時に表示する画像のパス。**未設定の場合は画像なしのカードになる** |
 | `Site:CanonicalHost` | 正規のホスト名（例：`bmcs.app`）。それ以外のホスト名へのアクセスを301で転送し、canonical・サイトマップ・robots.txt のURLにも使う。**未設定の場合は転送せず、URLは `EmailSettings:BaseUrl` から組み立てる** |
 | `Analytics:ClarityProjectID` | Microsoft Clarity のプロジェクトID。**未設定の場合は計測タグを出力しない** |
+| `Analytics:GoogleAnalyticsMeasurementID` | Google アナリティクス(GA4)の測定ID(`G-` で始まる)。**未設定の場合は計測タグを出力しない**。パスワード再設定のURLに含まれるトークン(`token`)は、送信前に取り除く |
 
 ※計測タグを有効にする場合、プライバシーポリシー(`Pages/Privacy.cshtml` 第10条)の
 　記載と実際の運用が一致しているか確認すること。
