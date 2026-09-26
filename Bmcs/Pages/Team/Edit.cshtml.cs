@@ -139,6 +139,8 @@ namespace Bmcs.Pages.Team
             team.TeamEmailAddress = Team.TeamEmailAddress;
             team.MessageDetail = Team.MessageDetail;
             team.PublicFLG = Team.PublicFLG;
+            team.MemberNameHiddenFLG = Team.MemberNameHiddenFLG;
+            team.RepresentativeNameHiddenFLG = Team.RepresentativeNameHiddenFLG;
         }
     }
 }

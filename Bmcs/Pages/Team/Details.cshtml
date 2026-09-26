@@ -40,10 +40,14 @@
             <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Team.TeamAbbreviation)</dt>
             <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Team.TeamAbbreviation)</dd>
         </div>
-        <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
-            <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Team.RepresentativeName)</dt>
-            <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Team.RepresentativeName)</dd>
-        </div>
+        @* 代表者名を公開しないチームは、他チームには表示しない（公開範囲。自チームと管理者には表示する） *@
+        @if (Model.CanShowRepresentativeName(Model.Team))
+        {
+            <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
+                <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Team.RepresentativeName)</dt>
+                <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Team.RepresentativeName)</dd>
+            </div>
+        }
         <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
             <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Team.TeamCategoryClassName)</dt>
             <dd class="whitespace-pre-line break-words text-slate-900">@Html.DisplayFor(model => model.Team.TeamCategoryClassName)</dd>

@@ -136,7 +136,7 @@ namespace Bmcs.Pages.InningScore
                 {
                     if(!string.IsNullOrEmpty(beforeGameSceneDetail.MemberID.NullToEmpty()))
                     {
-                        gameScene.InningScoreListDetail += beforeGameSceneDetail.Member.MemberName.EscapeForHtml() + "が" + beforeGameSceneDetail.DetailResultClass.GetEnumName(); 
+                        gameScene.InningScoreListDetail += MemberDisplayName(beforeGameSceneDetail.Member).EscapeForHtml() + "が" + beforeGameSceneDetail.DetailResultClass.GetEnumName(); 
                     }
                     else
                     {
@@ -153,7 +153,7 @@ namespace Bmcs.Pages.InningScore
                     gameScene.InningScoreListDetail += "<br/>";
                 }
 
-                gameScene.InningScoreListDetail += "投手：" + gameScene.PitcherMember.MemberName.EscapeForHtml() + " 打者：" + gameScene.BatterMember.MemberName.EscapeForHtml() + " ";
+                gameScene.InningScoreListDetail += "投手：" + MemberDisplayName(gameScene.PitcherMember).EscapeForHtml() + " 打者：" + MemberDisplayName(gameScene.BatterMember).EscapeForHtml() + " ";
 
                 gameScene.InningScoreListDetail += GetBatterResultDetail(gameScene);
 
@@ -163,7 +163,7 @@ namespace Bmcs.Pages.InningScore
 
                     if (!string.IsNullOrEmpty(afterGameSceneDetail.MemberID.NullToEmpty()))
                     {
-                        gameScene.InningScoreListDetail += afterGameSceneDetail.Member.MemberName.EscapeForHtml() + "が" + afterGameSceneDetail.DetailResultClass.GetEnumName();
+                        gameScene.InningScoreListDetail += MemberDisplayName(afterGameSceneDetail.Member).EscapeForHtml() + "が" + afterGameSceneDetail.DetailResultClass.GetEnumName();
                     }
                     else
                     {

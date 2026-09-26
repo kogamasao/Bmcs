@@ -90,19 +90,8 @@
             </div>
         </div>
 
-        <div class="mt-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-            <label class="flex cursor-pointer items-start gap-3">
-                <input class="mt-0.5 size-5 shrink-0 rounded border-slate-300 text-sky-700 focus:ring-sky-500" asp-for="Team.PublicFLG" />
-                <span>
-                    @* チーム作成（Team/Create）と同じ説明。「公開フラグ」というシステム用語は出さない *@
-                    <span class="block font-semibold text-slate-800">チームを公開する（おすすめ）</span>
-                    <span class="mt-1 block text-sm text-slate-600">
-                        公開すると、成績・試合結果・メンバー・チーム情報（代表者名・活動拠点・チーム紹介など）を<strong class="font-semibold text-slate-800">誰でも（ログインしていない人も）</strong>見られるようになり、他チームとメッセージのやり取りができます。
-                        <br />非公開の場合、他チームとのメッセージのやり取りはできません。
-                    </span>
-                </span>
-            </label>
-        </div>
+        @* 公開設定（チーム作成と共用） *@
+        @await Html.PartialAsync("_PublicSettings", Model.Team, new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData) { TemplateInfo = { HtmlFieldPrefix = "Team" } })
 
         <div class="mt-6 space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <div>

@@ -96,6 +96,23 @@ namespace Bmcs.Models
         [Display(Name = "公開フラグ")]
         public bool PublicFLG { get; set; }
 
+        /// <summary>
+        /// 選手名を背番号で表示するか（公開範囲。issues.md P-12）
+        /// ※true の場合、他チーム・未ログインの人には、選手名の代わりに「背番号10」のように表示する（自チームと管理者には氏名で表示）。
+        /// 　既存のチームは false（氏名を公開する。この列を追加する前と同じ見え方）
+        /// </summary>
+        [DefaultValue(false)]
+        [Display(Name = "選手名を背番号で表示する")]
+        public bool MemberNameHiddenFLG { get; set; }
+
+        /// <summary>
+        /// 代表者名を公開しないか（公開範囲。issues.md P-12）
+        /// ※true の場合、他チーム・未ログインの人には、チーム情報の代表者名を表示しない
+        /// </summary>
+        [DefaultValue(false)]
+        [Display(Name = "代表者名を公開しない")]
+        public bool RepresentativeNameHiddenFLG { get; set; }
+
         [DefaultValue(false)]
         [Display(Name = "システムデータフラグ")]
         public bool SystemDataFLG { get; set; }

@@ -1,0 +1,65 @@
+@*
+    チームの公開設定（公開する・公開する範囲）。チーム作成（Team/Create）とチーム情報変更（Team/Edit）で共用する。
+    ※呼び出し側で HtmlFieldPrefix を「Team」にして渡す（入力の name が Team.PublicFLG などになる）
+    ※ViewData["IsCreate"] が true のときは「あとから変更できます」を添える
+
+    公開範囲（issues.md P-12）：以前は「成績・メンバー（氏名）・代表者名まで誰でも見られる」か「何も見せない」かの二択で、
+    選手の氏名を出したくないチームは非公開を選ぶしかなかった。氏名や代表者名を出さずに公開できるようにする。
+*@
+@model Bmcs.Models.Team
+@{
+    var isCreate = ViewData["IsCreate"] as bool? == true;
+    var radioClass = "mt-0.5 size-4 shrink-0 border-slate-300 text-sky-700 focus:ring-sky-500";
+}
+<div class="mt-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <label class="flex cursor-pointer items-start gap-3">
+        <input class="mt-0.5 size-5 shrink-0 rounded border-slate-300 text-sky-700 focus:ring-sky-500" asp-for="PublicFLG" />
+        <span>
+            @*
+                ラベルは DisplayNameFor だと「公開フラグ」というシステム用語になるため直接書く。
+                公開範囲は「他チーム」ではなく、ログインしていない人を含む誰でも（Team/Index・Score/Index 等は未ログインで閲覧可）。
+                非公開チームは他チームとのメッセージのやり取りができない（Message/Index）。
+            *@
+            <span class="block font-semibold text-slate-800">チームを公開する（おすすめ）</span>
+            <span class="mt-1 block text-sm text-slate-600">
+                公開すると、成績・試合結果・メンバー・チーム情報を<strong class="font-semibold text-slate-800">誰でも（ログインしていない人も）</strong>見られるようになり、他チームとメッセージのやり取りができます。
+                選手名や代表者名を出したくない場合は、下の「公開する範囲」で選べます。
+                <br />非公開の場合、他チームとのメッセージのやり取りはできません。@(isCreate ? "あとから変更できます。" : "")
+            </span>
+        </span>
+    </label>
+
+    <fieldset class="mt-6 border-t border-slate-200 pt-5">
+        <legend class="sr-only">公開する範囲</legend>
+        <p class="font-semibold text-slate-800">公開する範囲</p>
+        <p class="mt-0.5 text-sm text-slate-500">チームを公開したときに、他のチームやログインしていない人にどう見えるかを選びます。自チームのユーザには、いつも氏名で表示されます。</p>
+
+        <div class="mt-4 grid gap-5 sm:grid-cols-2">
+            <div>
+                <p class="text-sm font-semibold text-slate-700">選手名</p>
+                <label class="mt-2 flex cursor-pointer items-start gap-2 text-sm text-slate-700">
+                    <input type="radio" asp-for="MemberNameHiddenFLG" value="false" class="@radioClass" />
+                    <span>氏名を表示する</span>
+                </label>
+                <label class="mt-2 flex cursor-pointer items-start gap-2 text-sm text-slate-700">
+                    <input type="radio" asp-for="MemberNameHiddenFLG" value="true" class="@radioClass" />
+                    <span>
+                        背番号で表示する（例：背番号10）
+                        <span class="block text-xs text-slate-500">成績・試合結果・メンバーの画面で、氏名の代わりに背番号を表示します。メンバーのメッセージも表示しません。</span>
+                    </span>
+                </label>
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-slate-700">代表者名</p>
+                <label class="mt-2 flex cursor-pointer items-start gap-2 text-sm text-slate-700">
+                    <input type="radio" asp-for="RepresentativeNameHiddenFLG" value="false" class="@radioClass" />
+                    <span>表示する</span>
+                </label>
+                <label class="mt-2 flex cursor-pointer items-start gap-2 text-sm text-slate-700">
+                    <input type="radio" asp-for="RepresentativeNameHiddenFLG" value="true" class="@radioClass" />
+                    <span>表示しない</span>
+                </label>
+            </div>
+        </div>
+    </fieldset>
+</div>

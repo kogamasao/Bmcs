@@ -114,6 +114,8 @@ chmod +x ~/.local/bin/tailwindcss
 - 20260922_session_lastlogin.sql … セッションのSQL Server保持（SessionCacheテーブル）、最終ログイン日時の追加
 - 20260926_member_bulk_help.sql … メンバー追加（まとめて登録）のヘルプ本文の更新。本文だけの変更のため、デプロイの前後どちらに実行してもよい
 - 20260926_uniform_number_halfwidth.sql … 全角数字・前後の空白が入った背番号を半角に直す。先に `doc/query/20260926_uniform_number_check.sql` で件数を確認する
+- 20260926_team_public_range.sql … チームの公開範囲（選手名・代表者名）の列の追加。**起動時に DbInitializer も追加するため、実行しなくても動作する**
+- 20260926_team_public_range_help.sql … チーム作成・チーム情報変更のヘルプに「公開する範囲」の説明を追加
   ※**既存データへの推定値設定のみ手動実行が必要。** テーブル作成と列追加は
   `DbInitializer` が起動時に行うため、実行順序を誤ってもアプリは動作する
 

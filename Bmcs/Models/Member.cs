@@ -29,6 +29,19 @@ namespace Bmcs.Models
         public string UniformNumber { get; set; }
 
         /// <summary>
+        /// 選手名を公開しないチームで、他チーム・未ログインの人に見せる表示（例：背番号10。背番号が無い場合は「選手」）
+        /// ※表示するかどうかの判定は PageModelBase.MemberDisplayName で行う
+        /// </summary>
+        [NotMapped]
+        public string UniformNumberLabel
+        {
+            get
+            {
+                return string.IsNullOrWhiteSpace(UniformNumber) ? "選手" : "背番号" + UniformNumber.Trim();
+            }
+        }
+
+        /// <summary>
         /// 背番号の入力チェックのメッセージ
         /// </summary>
         public const string UniformNumberErrorMessage = "背番号は数字3桁以内で入力してください。";
