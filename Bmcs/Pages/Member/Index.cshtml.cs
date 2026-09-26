@@ -26,8 +26,15 @@ namespace Bmcs.Pages.Member
 
         public Models.Team Team { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string teamID, int? pageIndex)
+        /// <summary>
+        /// メンバー追加で登録した人数（登録直後のみ。「◯人を登録しました」を表示する）
+        /// </summary>
+        public int? RegisteredCount { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(string teamID, int? pageIndex, int? registered)
         {
+            RegisteredCount = registered > 0 ? registered : null;
+
             IsMyTeam = false;
 
             if (teamID == null

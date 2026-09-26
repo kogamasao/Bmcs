@@ -19,7 +19,9 @@ namespace Bmcs.Models
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
 
+        //※並べ替え（OrderUniformNumber）で数値として扱うため、数字のみとする。全角数字は保存時に半角へ変換する
         [StringLength(3)]
+        [RegularExpression("^[0-9０-９]{1,3}$", ErrorMessage = "{0}は数字3桁以内で入力してください。")]
         [Display(Name = "背番号")]
         public string UniformNumber { get; set; }
 
@@ -30,7 +32,13 @@ namespace Bmcs.Models
         {
             get
             {
-                return Convert.ToInt32(string.IsNullOrEmpty(UniformNumber) ? "0" : UniformNumber).ToString("000");
+                //※数字以外が登録されている場合（入力チェックを追加する前のデータ）は、例外にせず末尾に並べる
+                if (string.IsNullOrEmpty(UniformNumber))
+                {
+                    return "000";
+                }
+
+                return int.TryParse(UniformNumber, out var number) ? number.ToString("000") : "999";
             }
         }
 

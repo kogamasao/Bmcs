@@ -142,7 +142,7 @@ namespace Bmcs.Pages.Team
                 //チーム作成の次にやることは選手の登録のため、そのまま登録画面へ進める。
                 //※本番では、チームを作成したまま選手を1人も登録せずに離脱したチームが
                 //  1日離脱118チームのうち43チームあった（doc/detail_design_ui.md 参照）
-                return RedirectToPage("/Member/Create");
+                return RedirectToPage("/Member/Create", new { created = true });
             }
         }
 

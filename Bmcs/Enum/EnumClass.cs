@@ -635,7 +635,8 @@ namespace Bmcs.Enum
         MyTeamMemberIndex = 8,
         [Display(Name = "メンバー一覧")]
         PublicMemberIndex = 9,
-        [Display(Name = "メンバー作成")]
+        //※ヘルプの見出しに使うため、画面のタイトルに合わせる
+        [Display(Name = "メンバー追加")]
         MemberCreate = 10,
         [Display(Name = "メンバー編集")]
         MemberEdit = 11,

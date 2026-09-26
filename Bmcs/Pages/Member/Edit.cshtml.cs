@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Bmcs.Function;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
@@ -143,7 +144,7 @@ namespace Bmcs.Pages.Member
             member.BatClass = Member.BatClass;
             member.ThrowClass = Member.ThrowClass;
             member.PositionGroupClass = Member.PositionGroupClass;
-            member.UniformNumber = Member.UniformNumber;
+            member.UniformNumber = Member.UniformNumber.ToHalfWidthDigits();
             member.MessageDetail = Member.MessageDetail;
         }
 

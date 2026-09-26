@@ -112,6 +112,7 @@ chmod +x ~/.local/bin/tailwindcss
 - 20260921_survey.sql … アンケート機能（Survey関連5テーブル、第1回アンケートの設問）
 - 20260921_help_message.sql … ヘルプ本文の修正（ユーザ作成のチーム選択→チームID入力、チームIDの説明追加、誤字）
 - 20260922_session_lastlogin.sql … セッションのSQL Server保持（SessionCacheテーブル）、最終ログイン日時の追加
+- 20260926_member_bulk_help.sql … メンバー追加（まとめて登録）のヘルプ本文の更新。本文だけの変更のため、デプロイの前後どちらに実行してもよい
   ※**既存データへの推定値設定のみ手動実行が必要。** テーブル作成と列追加は
   `DbInitializer` が起動時に行うため、実行順序を誤ってもアプリは動作する
 

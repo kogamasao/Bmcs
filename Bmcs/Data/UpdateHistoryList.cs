@@ -26,6 +26,20 @@ namespace Bmcs.Data
             {
                 Date = new DateTime(2026, 9, 26),
                 UpdateHistoryClass = UpdateHistoryClass.NewFeature,
+                Title = "メンバー（選手）をまとめて登録できるようにしました",
+                DetailList =
+                {
+                    "「メンバー追加」の画面で、1行に1人ずつ入力して、チーム全員を一度に登録できるようになりました。これまでは1人登録するたびにメンバー一覧へ戻っていました。",
+                    "入力が必要なのは名前だけです。背番号・区分・投・打・ポジションは任意で、あとから変更できます。",
+                    "「＋5人分の行を追加」で入力する行を増やせます（1回に50人まで）。",
+                    "登録が終わると、登録した人数と、次にやること（試合の登録）をご案内します。",
+                    "背番号は数字（3桁まで）で入力してください。全角で入力した数字は半角に直して登録します。",
+                },
+            },
+            new UpdateHistory
+            {
+                Date = new DateTime(2026, 9, 26),
+                UpdateHistoryClass = UpdateHistoryClass.NewFeature,
                 Title = "「アップデート情報」のページを追加しました",
                 DetailList =
                 {

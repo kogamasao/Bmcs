@@ -1,0 +1,67 @@
+@*
+    メンバー追加の入力行1行分。
+    ・Index：行の番号。送信時は「MemberRowList.Index」で番号を送るため、行を削除して欠番になってもよい
+    ・JavaScript で行を追加するときは、Index が「__index__」のひな形（<template>）を複製して置き換える
+    ・スマートフォンでは「背番号・名前・削除」の行と、「区分・投・打・ポジション」の行の2段、PC では1行に並べる
+*@
+@model Bmcs.Pages.Member.MemberCreateRowView
+@using Bmcs.Enum
+@{
+    var prefix = "MemberRowList[" + Model.Index + "].";
+    var inputClass = "block w-full rounded-md border border-slate-300 px-3 py-2 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500";
+    var selectClass = "block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500";
+    var errorInputClass = " border-red-400 bg-red-50";
+
+    var selectItemList = new[]
+    {
+        new { Name = "MemberClass", Label = "区分", Items = EnumClass.GetSelectList<MemberClass>(), Value = (int?)Model.Row.MemberClass },
+        new { Name = "ThrowClass", Label = "投", Items = EnumClass.GetSelectList<ThrowClass>(), Value = (int?)Model.Row.ThrowClass },
+        new { Name = "BatClass", Label = "打", Items = EnumClass.GetSelectList<BatClass>(), Value = (int?)Model.Row.BatClass },
+        new { Name = "PositionGroupClass", Label = "ポジション", Items = EnumClass.GetSelectList<PositionGroupClass>(), Value = (int?)Model.Row.PositionGroupClass },
+    };
+}
+<div class="js-member-row grid grid-cols-[4.5rem_minmax(0,1fr)_auto] items-start gap-2 border-b border-slate-100 py-3 last:border-b-0 sm:grid-cols-[4.5rem_minmax(0,1fr)_7.5rem_5.5rem_5.5rem_7.5rem_auto]">
+    <input type="hidden" name="MemberRowList.Index" value="@Model.Index" />
+
+    <div>
+        <label class="sr-only" for="MemberRowList_@(Model.Index)_UniformNumber">背番号</label>
+        <input id="MemberRowList_@(Model.Index)_UniformNumber" name="@(prefix)UniformNumber" value="@Model.Row.UniformNumber" maxlength="3" inputmode="numeric" autocomplete="off" placeholder="背番号"
+               class="js-member-input @inputClass@(Model.UniformNumberError != null ? errorInputClass : "")" />
+        @if (Model.UniformNumberError != null)
+        {
+            <span class="mt-1 block text-xs text-red-600">@Model.UniformNumberError</span>
+        }
+    </div>
+
+    <div>
+        <label class="sr-only" for="MemberRowList_@(Model.Index)_MemberName">名前</label>
+        <input id="MemberRowList_@(Model.Index)_MemberName" name="@(prefix)MemberName" value="@Model.Row.MemberName" maxlength="50" autocomplete="off" placeholder="名前（例：山田 太郎）"
+               class="js-member-input js-member-name @inputClass@(Model.MemberNameError != null ? errorInputClass : "")" />
+        @if (Model.MemberNameError != null)
+        {
+            <span class="mt-1 block text-xs text-red-600">@Model.MemberNameError</span>
+        }
+    </div>
+
+    @* 区分・投・打・ポジション（任意）。スマートフォンでは2段目、PC では同じ行の列になる（sm:contents） *@
+    <div class="col-span-3 grid grid-cols-4 gap-2 sm:contents">
+        @foreach (var selectItem in selectItemList)
+        {
+            <div>
+                <label class="block text-xs text-slate-500 sm:sr-only" for="MemberRowList_@(Model.Index)_@(selectItem.Name)">@selectItem.Label</label>
+                <select id="MemberRowList_@(Model.Index)_@(selectItem.Name)" name="@(prefix)@(selectItem.Name)" class="@selectClass">
+                    @foreach (var item in selectItem.Items)
+                    {
+                        var isSelected = selectItem.Value != null ? item.Value == selectItem.Value.ToString() : string.IsNullOrEmpty(item.Value);
+                        <option value="@item.Value" selected="@isSelected">@item.Text</option>
+                    }
+                </select>
+            </div>
+        }
+    </div>
+
+    @* 削除。スマートフォンでは名前の右、PC では行の末尾（order-last）に出す *@
+    <button type="button" class="js-member-row-delete row-start-1 col-start-3 inline-flex size-10 items-center justify-center rounded-md text-slate-400 transition hover:bg-red-50 hover:text-red-600 sm:col-start-auto sm:row-start-auto sm:order-last" aria-label="この行を削除">
+        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round" /></svg>
+    </button>
+</div>
