@@ -506,15 +506,30 @@ namespace Bmcs.Models
         }
 
         /// <summary>
-        /// 結果詳細結果区分リスト
+        /// 結果詳細結果区分リスト（打席後ランナー結果）
+        /// ※打者の結果が決まる投球と同時に起こるプレー（三振と同時の盗塁死、四球の投球での盗塁、振り逃げの WP・PB など）も選べるようにする。
+        ///   ボーク・牽制死は打者への投球が完了しないプレーのため、打席後には起こらず選べない（打席中ランナー結果で入力する）。issues.md M-20
         /// </summary>
         public SelectList AfterDetailResultClassList
         {
             get
             {
-                return EnumClass.GetSelectList<DetailResultClass>(true, (int)DetailResultClass.Error);
-            }
+                var detailResultClassList = new[]
+                {
+                    DetailResultClass.WildPitch,
+                    DetailResultClass.PassBall,
+                    DetailResultClass.StolenBaseSccess,
+                    DetailResultClass.StolenBaseOut,
+                    DetailResultClass.Error,
+                    DetailResultClass.AssistOut,
+                };
 
+                var selectList = new List<SelectListItem> { new SelectListItem(string.Empty, string.Empty) };
+
+                selectList.AddRange(detailResultClassList.Select(r => new SelectListItem(r.GetEnumName(), ((int)r).ToString())));
+
+                return new SelectList(selectList, "Value", "Text");
+            }
         }
         /// <summary>
         /// ランナー結果区分リスト
