@@ -143,6 +143,23 @@
                 </div>
             }
 
+            @* アップデート情報（最新3件）。お知らせ（管理者が上書きする1件）とは別に、追加した機能を時系列で残す *@
+            <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                <h2 class="border-b border-slate-200 bg-slate-100 px-5 py-3 text-sm font-bold text-slate-700">アップデート情報</h2>
+                <ul class="divide-y divide-slate-100">
+                    @foreach (var updateHistory in Bmcs.Data.UpdateHistoryList.Latest(3))
+                    {
+                        <li class="px-5 py-3">
+                            <p class="text-xs text-slate-500">@updateHistory.DateFormat　@updateHistory.UpdateHistoryClassName</p>
+                            <p class="mt-0.5 text-sm font-medium text-slate-800">@updateHistory.Title</p>
+                        </li>
+                    }
+                </ul>
+                <div class="border-t border-slate-100 px-5 py-3 text-right">
+                    <a class="text-sm font-medium text-sky-700 underline underline-offset-2 hover:text-sky-800" asp-page="/Updates/Index">すべて見る</a>
+                </div>
+            </div>
+
             @if (Model.PublicMessage != null)
             {
                 <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
