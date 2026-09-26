@@ -239,7 +239,7 @@
                     {
                         <tr>
                             <td class="col-fix-left">
-                                @Html.DisplayFor(modelItem => item.Member.MemberName)
+                                @Model.MemberDisplayName(item.Member)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.GameScorePitcherClassName)
@@ -429,7 +429,7 @@
                                 @{battingOrderValue = item.BattingOrder.NullToZero();}
                             </td>
                             <td class="col-fix-left align-middle">
-                                @Html.DisplayFor(modelItem => item.Member.MemberName)
+                                @Model.MemberDisplayName(item.Member)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.PositionDetail)

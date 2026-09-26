@@ -26,6 +26,18 @@ namespace Bmcs.Data
             {
                 Date = new DateTime(2026, 9, 26),
                 UpdateHistoryClass = UpdateHistoryClass.NewFeature,
+                Title = "チームを公開したときの「公開する範囲」を選べるようにしました",
+                DetailList =
+                {
+                    "チームを公開しても、選手名を背番号で表示したり（例：背番号10）、代表者名を表示しないようにしたりできます。「チーム情報変更」の「公開する範囲」から選べます。",
+                    "選手名を背番号で表示する場合、成績・試合結果・メンバーの画面で、他のチームやログインしていない人には氏名の代わりに背番号が表示されます。自チームのユーザには、これまでどおり氏名で表示されます。",
+                    "これまでは、選手名を出したくない場合はチームを非公開にするしかありませんでした。公開チームは、他チームとのメッセージのやり取りや、公開チームの成績ランキングへの掲載ができます。",
+                },
+            },
+            new UpdateHistory
+            {
+                Date = new DateTime(2026, 9, 26),
+                UpdateHistoryClass = UpdateHistoryClass.NewFeature,
                 Title = "メンバー（選手）をまとめて登録できるようにしました",
                 DetailList =
                 {

@@ -22,7 +22,7 @@
             </div>
         <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
                 <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.MemberName)</dt>
-                <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.MemberName)</dd>
+                <dd class="whitespace-pre-line text-slate-900">@Model.MemberDisplayName(Model.Member)</dd>
             </div>
         <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
                 <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.MemberClassName)</dt>
@@ -42,7 +42,8 @@
             </div>
         <div class="grid gap-1 px-5 py-3 sm:grid-cols-[10rem_1fr] sm:gap-4">
                 <dt class="text-sm font-semibold text-slate-500">@Html.DisplayNameFor(model => model.Member.MessageDetail)</dt>
-                <dd class="whitespace-pre-line text-slate-900">@Html.DisplayFor(model => model.Member.MessageDetail)</dd>
+                @* 選手名を公開しないチームでは、氏名が書かれていることがあるため、他チームにはメッセージも表示しない *@
+                <dd class="whitespace-pre-line text-slate-900">@(Model.IsMemberNameHidden(Model.Member) ? string.Empty : Model.Member.MessageDetail)</dd>
             </div>
         @if (Model.IsAdmin())
         {

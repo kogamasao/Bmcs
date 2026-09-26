@@ -84,23 +84,7 @@
         </div>
 
         @* 公開設定は「決めてもらう」必要があるため、任意項目とは分けて置く *@
-        <div class="mt-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-            <label class="flex cursor-pointer items-start gap-3">
-                <input class="mt-0.5 size-5 shrink-0 rounded border-slate-300 text-sky-700 focus:ring-sky-500" asp-for="Team.PublicFLG" />
-                <span>
-                    @*
-                        ラベルは DisplayNameFor だと「公開フラグ」というシステム用語になるため直接書く。
-                        公開範囲は「他チーム」ではなく、ログインしていない人を含む誰でも（Team/Index・Score/Index 等は未ログインで閲覧可）。
-                        非公開チームは他チームとのメッセージのやり取りができない（Message/Index）。
-                    *@
-                    <span class="block font-semibold text-slate-800">チームを公開する（おすすめ）</span>
-                    <span class="mt-1 block text-sm text-slate-600">
-                        公開すると、成績・試合結果・メンバー・チーム情報（代表者名・活動拠点・チーム紹介など）を<strong class="font-semibold text-slate-800">誰でも（ログインしていない人も）</strong>見られるようになり、他チームとメッセージのやり取りができます。
-                        <br />非公開の場合、他チームとのメッセージのやり取りはできません。あとから変更できます。
-                    </span>
-                </span>
-            </label>
-        </div>
+        @await Html.PartialAsync("_PublicSettings", Model.Team, new Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary(ViewData) { TemplateInfo = { HtmlFieldPrefix = "Team" }, ["IsCreate"] = true })
 
         @* 任意項目。8項目あり、必須と並べると実際より重く見えるため折りたたむ *@
         <details class="group mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm" open="@hasOptionalError">

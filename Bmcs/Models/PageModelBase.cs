@@ -614,6 +614,62 @@ namespace Bmcs.Models
         }
 
         /// <summary>
+        /// 選手名を背番号で表示する（公開範囲で選手名を公開しない）チームのID（リクエストごとに1回だけ取得する）
+        /// </summary>
+        private HashSet<string> _memberNameHiddenTeamIDSet;
+
+        /// <summary>
+        /// 選手の表示名（公開範囲に従う。issues.md P-12）
+        /// ※選手名を公開しないチームの選手は、他チーム・未ログインの人には「背番号10」のように表示する。自チームと管理者には氏名で表示する。
+        /// 　選手名を画面に出す箇所（成績・試合結果・イニング詳細・メンバー）は、MemberName を直接出さずにこれを使う
+        /// </summary>
+        public string MemberDisplayName(Member member)
+        {
+            if (member == null)
+            {
+                return string.Empty;
+            }
+
+            return IsMemberNameHidden(member) ? member.UniformNumberLabel : member.MemberName;
+        }
+
+        /// <summary>
+        /// この閲覧者に、選手の氏名（と、氏名が書かれていることがあるメンバーのメッセージ）を見せないか
+        /// ※選手名を公開しないチームの選手を、他チーム・未ログインの人が見る場合に true
+        /// </summary>
+        public bool IsMemberNameHidden(Member member)
+        {
+            return member != null && IsMemberNameHiddenTeam(member.TeamID);
+        }
+
+        /// <summary>
+        /// この閲覧者に、このチームの選手の氏名を見せないか（チーム単位。イニング詳細の備考など、選手に紐づかない自由記述の判定にも使う）
+        /// </summary>
+        public bool IsMemberNameHiddenTeam(string teamID)
+        {
+            if (string.IsNullOrEmpty(teamID) || IsMyTeamData(teamID))
+            {
+                return false;
+            }
+
+            //※DB の照合順序（SQL_Latin1_General_CP1_CI_AS）と同じく、大文字小文字・全角半角・末尾の空白を区別せずに比べる。
+            //  区別すると、表記の違うチームID（例「ＪＢ」）で保存された選手の氏名が表示されてしまう
+            _memberNameHiddenTeamIDSet ??= new HashSet<string>(
+                Context.Teams.Where(r => r.MemberNameHiddenFLG).Select(r => r.TeamID).ToList().Select(r => r.TrimEnd()),
+                TeamIDComparer.Instance);
+
+            return _memberNameHiddenTeamIDSet.Contains(teamID.TrimEnd());
+        }
+
+        /// <summary>
+        /// 代表者名を表示してよいか（公開範囲に従う。自チームと管理者には常に表示する）
+        /// </summary>
+        public bool CanShowRepresentativeName(Team team)
+        {
+            return team != null && (!team.RepresentativeNameHiddenFLG || IsMyTeamData(team.TeamID));
+        }
+
+        /// <summary>
         /// 未ログインでもPOSTを許可するか
         /// ログイン、ユーザ作成、問い合わせ、アカウント復旧など、
         /// 未ログイン状態で使用する画面のみ true を返すようオーバーライドする。

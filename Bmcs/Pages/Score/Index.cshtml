@@ -816,7 +816,7 @@
                                 </td>
                                             }
                                 <td class="align-middle">
-                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                                 </td>
                                 <td class="text-center align-middle">
                                     @Html.DisplayFor(modelItem => item.Win)
@@ -876,7 +876,7 @@
                                 </td>
                                             }
                                 <td class="col-fix-left align-middle">
-                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                                 </td>
                                 <td class="text-center align-middle">
                                     @Html.DisplayFor(modelItem => item.EarnedRunAverageFormat)
@@ -936,7 +936,7 @@
                                 </td>
                                             }
                                 <td class="col-fix-left align-middle">
-                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                                 </td>
                                 <td class="text-center align-middle">
                                     @Html.DisplayFor(modelItem => item.StrikeOut)
@@ -996,7 +996,7 @@
                                 </td>
                                             }
                                 <td class="col-fix-left align-middle">
-                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                                 </td>
                                 <td class="text-center align-middle">
                                     @Html.DisplayFor(modelItem => item.WinRateFormat)
@@ -1056,7 +1056,7 @@
                                 </td>
                                             }
                                 <td class="col-fix-left align-middle">
-                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                                 </td>
                                 <td class="text-center align-middle">
                                     @Html.DisplayFor(modelItem => item.Hold)
@@ -1116,7 +1116,7 @@
                                 </td>
                                             }
                                 <td class="col-fix-left align-middle">
-                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                                 </td>
                                 <td class="text-center align-middle">
                                     @Html.DisplayFor(modelItem => item.Save)
@@ -1275,7 +1275,7 @@
                         </td>
                                     }
                         <td class="col-fix-left align-middle">
-                            <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                            <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                         </td>
                         <td class="GameCount text-center align-middle">
                             @Html.DisplayFor(modelItem => item.GameCount)
@@ -1522,7 +1522,7 @@
                                 </td>
                                             }
                                 <td class="col-fix-left align-middle">
-                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                                 </td>
                                 <td class="text-center align-middle">
                                     @Html.DisplayFor(modelItem => item.BattingAverageFormat)
@@ -1582,7 +1582,7 @@
                                 </td>
                                             }
                                 <td class="col-fix-left align-middle">
-                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                                 </td>
                                 <td class="text-center align-middle">
                                     @Html.DisplayFor(modelItem => item.HomeRun)
@@ -1642,7 +1642,7 @@
                                 </td>
                                             }
                                 <td class="col-fix-left align-middle">
-                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                                 </td>
                                 <td class="text-center align-middle">
                                     @Html.DisplayFor(modelItem => item.RBI)
@@ -1703,7 +1703,7 @@
                                 </td>
                                             }
                                 <td class="col-fix-left align-middle">
-                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                                 </td>
                                 <td class="text-center align-middle">
                                     @Html.DisplayFor(modelItem => item.OnBasePercentageFormat)
@@ -1763,7 +1763,7 @@
                                 </td>
                                             }
                                 <td class="col-fix-left align-middle">
-                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                                 </td>
                                 <td class="text-center align-middle">
                                     @Html.DisplayFor(modelItem => item.Hit)
@@ -1823,7 +1823,7 @@
                                 </td>
                                             }
                                 <td class="col-fix-left align-middle">
-                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                                    <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                                 </td>
                                 <td class="text-center align-middle">
                                     @Html.DisplayFor(modelItem => item.StolenBase)
@@ -1988,7 +1988,7 @@
                         </td>
                                     }
                         <td class="col-fix-left align-middle">
-                            <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@item.Member.MemberName</a>
+                            <a asp-page="/Member/Details" asp-route-id="@item.Member.MemberID">@Model.MemberDisplayName(item.Member)</a>
                         </td>
                         <td class="GameCount text-center align-middle">
                             @Html.DisplayFor(modelItem => item.GameCount)

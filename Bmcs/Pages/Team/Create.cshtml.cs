@@ -39,6 +39,16 @@ namespace Bmcs.Pages.Team
                 return RedirectToPage("./Edit");
             }
 
+            //公開する（既定）。選手名・代表者名も表示する（既定）
+            //※非公開にするか、選手名などを出さないかは利用者が選ぶ（issues.md P-10〜P-12 の決定事項）。
+            //  以前は既定がオフで、モデルの [DefaultValue(true)] は画面のチェックボックスに反映されていなかった
+            Team = new Models.Team
+            {
+                PublicFLG = true,
+                MemberNameHiddenFLG = false,
+                RepresentativeNameHiddenFLG = false,
+            };
+
             //システム管理データ
             SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.TeamCreate);
 
@@ -164,6 +174,8 @@ namespace Bmcs.Pages.Team
             team.TeamEmailAddress = Team.TeamEmailAddress;
             team.MessageDetail = Team.MessageDetail;
             team.PublicFLG = Team.PublicFLG;
+            team.MemberNameHiddenFLG = Team.MemberNameHiddenFLG;
+            team.RepresentativeNameHiddenFLG = Team.RepresentativeNameHiddenFLG;
             team.DeleteFLG = false;
         }
     }

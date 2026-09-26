@@ -199,7 +199,8 @@
                                     @* 内容・メモは長文になるため折り返す（stat-table は既定で折り返さない） *@
                                     <td class="min-w-64 whitespace-normal align-top">@Html.Raw(item.InningScoreListDetail)</td>
                                     <td class="align-top">@Html.DisplayFor(modelItem => item.InningScoreListGameScore)</td>
-                                    <td class="min-w-40 whitespace-normal align-top">@Html.Raw(item.Note.ReplaceNewLineForHtml())</td>
+                                    @* 備考は自由記述で選手名が書かれやすいため、選手名を背番号で表示するチームでは他チームに表示しない（公開範囲） *@
+                                    <td class="min-w-40 whitespace-normal align-top">@Html.Raw(Model.IsMemberNameHiddenTeam(Model.Game.TeamID) ? string.Empty : item.Note.ReplaceNewLineForHtml())</td>
                                     @if (canModify)
                                     {
                                         <td class="col-fix-right align-top">
