@@ -160,15 +160,24 @@ namespace Bmcs.Models
         {
             get
             {
-                var memberList = Context.Members.Where(r => (r.TeamID == this.TeamID || r.SystemDataFLG) && r.DeleteFLG == false).ToList();
-
-                var memberIDIncludeOpponentMemberList = new SelectList(memberList
-                                                .OrderBy(r => r.SystemDataFLG)
-                                                .ThenBy(r => r.OrderUniformNumber)
-                                                .ThenBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
-
-                return AddFirstItem(memberIDIncludeOpponentMemberList, new SelectListItem(string.Empty, string.Empty));
+                return GetMemberIDIncludeOpponentMemberList(false);
             }
+        }
+
+        /// <summary>
+        /// メンバーIDリスト（相手含む）
+        /// </summary>
+        /// <param name="isOpponentFirst">相手チームの選手を先に並べるか（自チームの攻撃中の打席後ランナー結果では、失策・補殺・WP・PB の対象が相手の守備のため）</param>
+        public SelectList GetMemberIDIncludeOpponentMemberList(bool isOpponentFirst)
+        {
+            var memberList = Context.Members.Where(r => (r.TeamID == this.TeamID || r.SystemDataFLG) && r.DeleteFLG == false).ToList();
+
+            var memberIDIncludeOpponentMemberList = new SelectList(memberList
+                                            .OrderBy(r => r.SystemDataFLG != isOpponentFirst)
+                                            .ThenBy(r => r.OrderUniformNumber)
+                                            .ThenBy(r => r.UniformNumber), nameof(Member.MemberID), nameof(Member.UniformNumberMemberName), string.Empty);
+
+            return AddFirstItem(memberIDIncludeOpponentMemberList, new SelectListItem(string.Empty, string.Empty));
         }
 
         /// <summary>
@@ -507,7 +516,8 @@ namespace Bmcs.Models
 
         /// <summary>
         /// 結果詳細結果区分リスト（打席後ランナー結果）
-        /// ※打者の結果が決まる投球と同時に起こるプレー（三振と同時の盗塁死、四球の投球での盗塁、振り逃げの WP・PB など）も選べるようにする。
+        /// ※打者の結果が決まる投球と同時に起こるプレー（三振と同時の盗塁・盗塁死、振り逃げの WP・PB、四球の投球での WP・PB による進塁など）も選べるようにする。
+        ///   ※四球で押し出される進塁は盗塁にならないため、例に「四球での盗塁」は挙げない。
         ///   ボーク・牽制死は打者への投球が完了しないプレーのため、打席後には起こらず選べない（打席中ランナー結果で入力する）。issues.md M-20
         /// </summary>
         public SelectList AfterDetailResultClassList
