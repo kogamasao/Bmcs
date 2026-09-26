@@ -639,17 +639,26 @@ namespace Bmcs.Models
         /// </summary>
         public bool IsMemberNameHidden(Member member)
         {
-            if (member == null || IsMyTeamData(member.TeamID))
+            return member != null && IsMemberNameHiddenTeam(member.TeamID);
+        }
+
+        /// <summary>
+        /// この閲覧者に、このチームの選手の氏名を見せないか（チーム単位。イニング詳細の備考など、選手に紐づかない自由記述の判定にも使う）
+        /// </summary>
+        public bool IsMemberNameHiddenTeam(string teamID)
+        {
+            if (string.IsNullOrEmpty(teamID) || IsMyTeamData(teamID))
             {
                 return false;
             }
 
-            //※DB の照合順序は大文字小文字・末尾の空白を区別しないため、同じ扱いで比べる
+            //※DB の照合順序（SQL_Latin1_General_CP1_CI_AS）と同じく、大文字小文字・全角半角・末尾の空白を区別せずに比べる。
+            //  区別すると、表記の違うチームID（例「ＪＢ」）で保存された選手の氏名が表示されてしまう
             _memberNameHiddenTeamIDSet ??= new HashSet<string>(
                 Context.Teams.Where(r => r.MemberNameHiddenFLG).Select(r => r.TeamID).ToList().Select(r => r.TrimEnd()),
-                StringComparer.OrdinalIgnoreCase);
+                TeamIDComparer.Instance);
 
-            return _memberNameHiddenTeamIDSet.Contains(member.TeamID?.TrimEnd() ?? string.Empty);
+            return _memberNameHiddenTeamIDSet.Contains(teamID.TrimEnd());
         }
 
         /// <summary>

@@ -206,7 +206,8 @@ namespace Bmcs.Pages.Member
             {
                 var member = new Models.Member
                 {
-                    TeamID = TeamID,
+                    //※送信された値ではなく DB のチームIDで保存する（管理者は表記の違うチームIDでも送信できるため。大文字小文字・全角半角をそろえる）
+                    TeamID = Team.TeamID,
                     MemberName = row.MemberName,
                     UniformNumber = string.IsNullOrEmpty(row.UniformNumber) ? null : row.UniformNumber,
                     MemberClass = row.MemberClass,
