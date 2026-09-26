@@ -13,6 +13,32 @@ namespace Bmcs.Function
     public static class Convert
     {
         /// <summary>
+        /// 全角数字を半角数字に変換し、前後の空白を取り除く（背番号など、数字だけを入力する項目用）
+        /// ※スマートフォンでは全角で入力されやすいため
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string ToHalfWidthDigits(this string value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var chars = value.Trim().ToCharArray();
+
+            for (var i = 0; i < chars.Length; i++)
+            {
+                if (chars[i] >= '０' && chars[i] <= '９')
+                {
+                    chars[i] = (char)('0' + (chars[i] - '０'));
+                }
+            }
+
+            return new string(chars);
+        }
+
+        /// <summary>
         /// NULL値を空文字に変換する
         /// </summary>
         /// <param name="value"></param>

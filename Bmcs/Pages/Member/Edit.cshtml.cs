@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bmcs.Data;
 using Bmcs.Models;
+using Bmcs.Function;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Bmcs.Constans;
@@ -78,6 +79,24 @@ namespace Bmcs.Pages.Member
         {
             try
             {
+                //背番号の入力チェック（全角数字・前後の空白を直してから確認する）
+                //※入力チェックを追加する前に登録された数字以外の背番号は、変更していなければそのまま保存できるようにする。
+                //  チェックで止めると、名前やメッセージだけを直したいときにも保存できなくなるため
+                Member.UniformNumber = Member.UniformNumber.ToHalfWidthDigits();
+
+                if (!Models.Member.IsValidUniformNumber(Member.UniformNumber))
+                {
+                    var dbUniformNumber = await Context.Members
+                                                .Where(r => r.MemberID == Member.MemberID)
+                                                .Select(r => r.UniformNumber)
+                                                .FirstOrDefaultAsync();
+
+                    if (Member.UniformNumber != dbUniformNumber.ToHalfWidthDigits())
+                    {
+                        ModelState.AddModelError($"{nameof(Member)}.{nameof(Models.Member.UniformNumber)}", Models.Member.UniformNumberErrorMessage);
+                    }
+                }
+
                 if (!ModelState.IsValid)
                 {
                     //再表示に使うチームは、POST 値ではなく DB の TeamID から取得する
@@ -143,7 +162,7 @@ namespace Bmcs.Pages.Member
             member.BatClass = Member.BatClass;
             member.ThrowClass = Member.ThrowClass;
             member.PositionGroupClass = Member.PositionGroupClass;
-            member.UniformNumber = Member.UniformNumber;
+            member.UniformNumber = Member.UniformNumber.ToHalfWidthDigits();
             member.MessageDetail = Member.MessageDetail;
         }
 
