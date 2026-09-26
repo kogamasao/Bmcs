@@ -58,6 +58,7 @@ namespace Bmcs.Pages.Seo
 
             urlList.Add(CreateUrl("/Message/Index", new { messagePageClass = MessagePageClass.Public }, null));
             urlList.Add(CreateUrl("/UserAccount/Create", null, null));
+            urlList.Add(CreateUrl("/Updates/Index", null, UpdateHistoryList.All.Max(r => (DateTime?)r.Date)));
             urlList.Add(CreateUrl("/Privacy", null, null));
             urlList.Add(CreateUrl("/Term", null, null));
             urlList.Add(CreateUrl("/Inquiry/Create", null, null));

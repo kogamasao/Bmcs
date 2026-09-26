@@ -122,6 +122,11 @@ chmod +x ~/.local/bin/tailwindcss
 `/sitemap.xml`(公開チーム・試合結果などのURLを自動生成)と `/robots.txt` はアプリが出力する。
 詳細は `Bmcs/doc/detail_design_seo.md` を参照。
 
+## アップデート情報
+利用者から見える変更（新機能・改善・規約の改定など）をデプロイするときは、
+`Bmcs/Data/UpdateHistoryList.cs` の先頭に追加する(`/Updates` とトップページに表示される)。
+運営側で見つけて直した不具合や内部の改修は書かない。詳細は `Bmcs/doc/detail_design_other.md` の3章を参照。
+
 ## その他
 - サービス紹介記事
   https://alivetodayblog.com/bmcs/

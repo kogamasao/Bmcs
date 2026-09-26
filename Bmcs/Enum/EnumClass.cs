@@ -599,6 +599,19 @@ namespace Bmcs.Enum
     }
 
     /// <summary>
+    /// アップデート情報の区分
+    /// </summary>
+    public enum UpdateHistoryClass
+    {
+        [Display(Name = "新機能")]
+        NewFeature = 1,
+        [Display(Name = "改善")]
+        Improvement = 2,
+        [Display(Name = "お知らせ")]
+        Notice = 3,
+    }
+
+    /// <summary>
     /// システム管理区分
     /// </summary>
     public enum SystemAdminClass
