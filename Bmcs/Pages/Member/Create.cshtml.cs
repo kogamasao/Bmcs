@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -126,6 +125,22 @@ namespace Bmcs.Pages.Member
                 return NotFound();
             }
 
+            //登録先のチーム（管理者が存在しないチームIDを送った場合も、ここで止める）
+            Team = await Context.Teams.FirstOrDefaultAsync(r => r.TeamID == TeamID);
+
+            if (Team == null)
+            {
+                return NotFound();
+            }
+
+            //行の番号が重複している場合は受け付けない（画面からは起きない。同じ行が二重に登録されるのを防ぐ）
+            var rowIndexList = Request.Form["MemberRowList.Index"].ToList();
+
+            if (rowIndexList.Count != rowIndexList.Distinct().Count())
+            {
+                return BadRequest();
+            }
+
             MemberRowList ??= new List<MemberRow>();
 
             //入力チェックはここで行う（空の行は登録しないため、行ごとの必須チェックを属性では表せない）
@@ -159,7 +174,7 @@ namespace Bmcs.Pages.Member
                     ModelState.AddModelError($"{nameof(MemberRowList)}[{i}].{nameof(MemberRow.MemberName)}", "名前は50文字以内で入力してください。");
                 }
 
-                if (!string.IsNullOrEmpty(row.UniformNumber) && !Regex.IsMatch(row.UniformNumber, "^[0-9]{1,3}$"))
+                if (!Models.Member.IsValidUniformNumber(row.UniformNumber))
                 {
                     ModelState.AddModelError($"{nameof(MemberRowList)}[{i}].{nameof(MemberRow.UniformNumber)}", "数字3桁まで");
                 }
@@ -177,7 +192,6 @@ namespace Bmcs.Pages.Member
             if (!ModelState.IsValid)
             {
                 //再表示に必要なデータを取り直す
-                Team = await Context.Teams.FirstOrDefaultAsync(r => r.TeamID == TeamID);
                 SystemAdmin = await Context.SystemAdmins.FindAsync(SystemAdminClass.MemberCreate);
 
                 if (MemberRowList.Count == 0)
@@ -210,16 +224,11 @@ namespace Bmcs.Pages.Member
 
             if (!base.IsAdmin())
             {
-                var team = await Context.Teams.FirstOrDefaultAsync(r => r.TeamID == TeamID);
+                //チーム人数更新（以前の1人ずつの登録と同じ数え方）
+                Team.TeamNumber = await Context.Members.CountAsync(r => r.TeamID == TeamID) + inputRowList.Count;
 
-                if (team != null)
-                {
-                    //チーム人数更新（以前の1人ずつの登録と同じ数え方）
-                    team.TeamNumber = await Context.Members.CountAsync(r => r.TeamID == TeamID) + inputRowList.Count;
-
-                    //更新情報セット
-                    base.SetUpdateInfo(team);
-                }
+                //更新情報セット
+                base.SetUpdateInfo(Team);
             }
 
             await Context.SaveChangesAsync();

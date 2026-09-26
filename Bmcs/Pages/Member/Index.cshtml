@@ -16,7 +16,8 @@
         @await Html.PartialAsync("~/Pages/Shared/_HelpTailwind.cshtml")
     </div>
 
-    @if (Model.RegisteredCount != null && Model.Member.Any())
+    @* ※自チーム（と管理者）のみ。URL の registered を書き換えても、他チームの一覧には表示しない *@
+    @if (Model.RegisteredCount != null && Model.Member.Any() && (Model.IsMyTeam || Model.IsAdmin()))
     {
         @*
             メンバー追加の直後。登録できたことと、次にやること（試合の登録）を示す。

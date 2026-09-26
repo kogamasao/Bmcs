@@ -6,6 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Bmcs.Enum;
+using Bmcs.Function;
+using System.Text.RegularExpressions;
 
 namespace Bmcs.Models
 {
@@ -19,11 +21,26 @@ namespace Bmcs.Models
         [Display(Name = "チームID")]
         public string TeamID { get; set; }
 
-        //※並べ替え（OrderUniformNumber）で数値として扱うため、数字のみとする。全角数字は保存時に半角へ変換する
+        //※並べ替え（OrderUniformNumber）で数値として扱うため、数字のみとする（IsValidUniformNumber）。
+        //  入力チェックは属性ではなく各画面で行う。全角数字・前後の空白を直してから確認するためと、
+        //  入力チェックを追加する前に登録された数字以外の背番号があっても、背番号を変えなければ他の項目を保存できるようにするため
         [StringLength(3)]
-        [RegularExpression("^[0-9０-９]{1,3}$", ErrorMessage = "{0}は数字3桁以内で入力してください。")]
         [Display(Name = "背番号")]
         public string UniformNumber { get; set; }
+
+        /// <summary>
+        /// 背番号の入力チェックのメッセージ
+        /// </summary>
+        public const string UniformNumberErrorMessage = "背番号は数字3桁以内で入力してください。";
+
+        /// <summary>
+        /// 背番号として正しいか（空、または半角数字3桁以内）
+        /// ※全角数字・前後の空白は、ToHalfWidthDigits で直してから確認する
+        /// </summary>
+        public static bool IsValidUniformNumber(string uniformNumber)
+        {
+            return string.IsNullOrEmpty(uniformNumber) || Regex.IsMatch(uniformNumber, "^[0-9]{1,3}$");
+        }
 
 
         [NotMapped]
@@ -38,7 +55,8 @@ namespace Bmcs.Models
                     return "000";
                 }
 
-                return int.TryParse(UniformNumber, out var number) ? number.ToString("000") : "999";
+                //※全角数字で保存されている背番号（入力チェックを追加する前のデータ）も、数値として並べる
+                return int.TryParse(UniformNumber.ToHalfWidthDigits(), out var number) ? number.ToString("000") : "999";
             }
         }
 

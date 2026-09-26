@@ -106,7 +106,9 @@
 
     //Enter で送信せず、次の入力欄（背番号→名前→次の行の背番号）へ移る
     rows.addEventListener("keydown", function (event) {
-        if (event.key !== "Enter" || !event.target.classList.contains("js-member-input") || event.isComposing) {
+        //※日本語入力の変換を確定する Enter では移動しない。
+        //  Safari（iPhone を含む）は確定後に keydown を出し、isComposing が false になるため、keyCode 229 でも判定する
+        if (event.key !== "Enter" || !event.target.classList.contains("js-member-input") || event.isComposing || event.keyCode === 229) {
             return;
         }
 
