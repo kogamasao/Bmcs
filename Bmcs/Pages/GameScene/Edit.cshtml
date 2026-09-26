@@ -410,18 +410,11 @@
                                 @for (int i = 0; i < Model.AfterGameSceneDetailList.Count; i++)
                                 {
                                     <tr id="@("AfterGameSceneDetailList_" + i.ToString())">
-                                        @if (Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)
-                                        {
-                                            <td>
-                                                <select asp-for="@Model.AfterGameSceneDetailList[i].MemberID" class="js-memberid js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.OpponentMemberIDList"></select>
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                <select asp-for="@Model.AfterGameSceneDetailList[i].MemberID" class="js-memberid js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.MemberIDList"></select>
-                                            </td>
-                                        }
+                                        @* 盗塁・盗塁死は攻撃側の走者、失策・補殺・WP・PB は守備側の選手が対象のため、両チームの選手を選べるようにする（打席中ランナー結果と同じ。M-20）。
+                                            自チームの攻撃中は、失策・補殺・WP・PB の対象（相手の守備）を探しやすいよう相手チームの選手を先に並べる *@
+                                        <td>
+                                            <select asp-for="@Model.AfterGameSceneDetailList[i].MemberID" class="js-memberid js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.GetMemberIDIncludeOpponentMemberList(Model.GameScene.OffenseDefenseClass == OffenseDefenseClass.Offense)"></select>
+                                        </td>
                                         <td>
                                             <select asp-for="@Model.AfterGameSceneDetailList[i].DetailResultClass" class="js-result js-rename block w-full rounded-md border border-slate-300 bg-white px-2 py-2 text-sm shadow-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500" asp-items="@Model.AfterDetailResultClassList"></select>
                                         </td>

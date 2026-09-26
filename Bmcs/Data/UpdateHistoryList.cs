@@ -25,6 +25,18 @@ namespace Bmcs.Data
             new UpdateHistory
             {
                 Date = new DateTime(2026, 9, 26),
+                UpdateHistoryClass = UpdateHistoryClass.Improvement,
+                Title = "スコア入力の「打席後ランナー結果」で、盗塁・盗塁死・WP・PB を選べるようにしました",
+                DetailList =
+                {
+                    "三振と同時の盗塁・盗塁死（三振ゲッツーなど）、振り逃げ（WP・PB）など、打者の結果が決まった投球と同時に起きたプレーを、実際の流れのとおりに記録できます。",
+                    "これまでは失策・補殺しか選べませんでした。「対象選手」では、相手チームの選手も選べます（盗塁した走者など）。",
+                    "ボーク・牽制死は、これまでどおり「打席中ランナー結果」で入力してください。",
+                },
+            },
+            new UpdateHistory
+            {
+                Date = new DateTime(2026, 9, 26),
                 UpdateHistoryClass = UpdateHistoryClass.NewFeature,
                 Title = "チームを公開したときの「公開する範囲」を選べるようにしました",
                 DetailList =
