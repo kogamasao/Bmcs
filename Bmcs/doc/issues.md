@@ -220,7 +220,7 @@
 | R-5 | **Linux（B1）・.NET 10・独自ドメイン（bmcs.app）への本番移行**。手順は `doc/deploy_linux_net10.md` | 完了（2026-09-25 に、独自ドメインの設定が終わったとユーザから連絡） |
 | R-6 | **Google Search Console への登録とサイトマップの送信**（P-8）。ドメイン プロパティ `bmcs.app` を Cloudflare の DNS（TXT レコード）で確認し、`https://bmcs.app/sitemap.xml` を送信する。手順と確認項目は `doc/detail_design_seo.md` 4章 | 完了（2026-09-25 にサイトマップを送信。リッチリザルト テストはトップ・試合結果・チーム情報の3画面ともエラーなし。トップの `aggregateRating`（任意）と試合のイベントの任意項目の警告のみで、対応不要） |
 | R-7 | `doc/migration/20260926_member_bulk_help.sql` の実行（メンバー追加のヘルプ本文を、まとめて登録する画面に合わせる。デプロイの前後どちらでもよい） | **未実施** |
-| R-8 | `doc/query/20260926_uniform_number_check.sql` で数字以外の背番号の件数を確認し、`doc/migration/20260926_uniform_number_halfwidth.sql` で全角数字・前後の空白を半角に直す。**「数字以外の文字を含む」（例「10a」）が残った場合は件数と内容を見て扱いを決める**（アプリでは末尾に並べ、背番号を変えなければ編集もできる） | **未実施** |
+| R-8 | `doc/query/20260926_uniform_number_check.sql` で数字以外の背番号の件数を確認し、`doc/migration/20260926_uniform_number_halfwidth.sql` で全角数字・前後の空白を半角に直す。**「数字以外の文字を含む」（例「10a」）が残った場合は件数と内容を見て扱いを決める**（アプリでは末尾に並べ、背番号を変えなければ編集もできる） | 完了（2026-09-26 本番で実行。「数字以外の文字を含む」背番号は0件） |
 
 ---
 
